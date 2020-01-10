@@ -1,0 +1,7 @@
+Site_Number,Site_Name,Sample_Name,Latitude,Longitude,Road-River_Access,Location,Research Rationale,Notes:
+1,Weeks Main Creek,Weeks-out ,48.57567885,-123.8455689,"Weeks Main near WM290, upstream of culvert","Downstream of Bridge, Cedar tree, River-right","headwaters West, character of fen (tannin-rich)","Installed 2018-10-24 (Odyssey SN 11719, 1.5m)"
+2,Leech River Head,Leech-head,48.566468,-123.825671,End of Weeks Main (filling site),"Red Alder, River-right","Mainstem headwaters, below Chris Creek + Weeks Outlet confluence ","Installed 2018-10-24 (Odyssey SN 12040, 2.0m)"
+3,Chris Creek,Chris-crk,48.577394,-123.840265,"crossing on Chris Creek, secondary pump station","Downstream of Bridge, boulder, River-left","headwaters East, non-wetland","Installed 2018-10-24, updated 2018-11-07 (Odyssey SN 11967, 1.5m)"
+4,Cragg Creek,Cragg-crk,48.5478274,-123.7710629,Cragg Main bridge near Survey Main S (Hydromet stn),"Staff Gauge / bedrock, River-left","Mainstem, East ","Installed 2018-10-25 (Odyssey SN 12041, 2.0m)"
+5,West Leech River,West-Leech,48.50688101,-123.7846764,"Miners Trail on West Leech Main, above conflunece with main stem ","Large Boulder (downstream),  pool on river-right","Mainstem, West ","Installed 2018-10-26 (Odyssey SN 12038, 2.0m)"
+6,Leech Tunnel,Tunnel,48.50701281,-123.7674148,"End of Leech River Tunnel Access road, foot trail down to river from corner of road","Large boulder (downstream side), river left","Mainsteam, lowest reach. forWater DBP-FP analysis + mixing study","Installed 2018-12-06 (Odyssey SN 12042, 2.0m)"

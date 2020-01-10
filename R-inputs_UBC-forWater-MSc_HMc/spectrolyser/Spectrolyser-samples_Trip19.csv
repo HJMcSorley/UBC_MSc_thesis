@@ -1,0 +1,33 @@
+# 2019-11-24,,,,,,
+# Leech samples collected Nov 22,,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Rithet,Grab,Grab,2019-11-22 14:30,,19
+2,Jarvis,Grab,Grab,2019-11-22 14:00,,19
+3,Lazar,Grab,Grab,2019-11-22 13:30,,19
+4,Weeks-out,Grab,Grab,2019-11-22 12:30,,19
+5,Weeks-out,Rack,L1,,49,19
+6,Weeks-out,Rack,L2,,63,19
+7,Weeks-out,Rack,L3,,79,19
+8,Chris-crk,Grab,Grab,2019-11-22 13:00,25,19
+9,Chris-crk,Rack,L1,,28,19
+10,Chris-crk,Rack,L2,,37,19
+11,Leech-head,Grab,Grab,2019-11-22 11:50,115,19
+12,Leech-head,Rack,L1,,105,19
+13,Leech-head,Rack,L2,,117,19
+14,Cragg-crk,Grab,Grab,2019-11-22 11:00,37,19
+15,Cragg-crk,Rack,L1,,24,19
+16,Cragg-crk,Rack,L2,,41,19
+17,Cragg-crk,Rack,L3,,60,19
+18,West-Leech,Grab,Grab,2019-11-22 8:45,28,19
+19,West-Leech,Rack,L1,,27,19
+20,West-Leech,Rack,L2,,47,19
+21,West-Leech,Rack,L3,,67,19
+22,West-Leech,Rack,L4,,84,19
+23,Tunnel,Grab,Grab,2019-11-22 10:00,23,19
+24,Tunnel,Rack,L1,,19,19
+25,Tunnel,Rack,L2,,35,19
+26,Tunnel,Rack,L3,,54,19
+27,Tunnel,Rack,L4,,70,19
+28,Tunnel,Rack,L5,,86,19

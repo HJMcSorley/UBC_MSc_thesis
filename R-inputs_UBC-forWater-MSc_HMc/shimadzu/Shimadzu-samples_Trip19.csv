@@ -1,0 +1,35 @@
+# 2019-11-24,,,,,,,
+# Leech samples collected Nov 22,,,,,,,
+,,,,,,,
+"# Results file: ""2019-11-24_Leech_Nov21-22_trip19_001""""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Rithet,Grab,Grab,2019-11-22 2:30PM,,DOC,19
+2,Jarvis,Grab,Grab,2019-11-22 2:00PM,,DOC,19
+3,Lazar,Grab,Grab,2019-11-22 1:30PM,,DOC,19
+4,Weeks-out,Grab,Grab,2019-11-22 12:30PM,,DOC,19
+5,Weeks-out,Rack,L1,,49,DOC,19
+6,Weeks-out,Rack,L2,,63,DOC,19
+7,Weeks-out,Rack,L3,,79,DOC,19
+8,Chris-crk,Grab,Grab,2019-11-22 1:00PM,25,DOC,19
+9,Chris-crk,Rack,L1,,28,DOC,19
+10,Chris-crk,Rack,L2,,37,DOC,19
+11,Leech-head,Grab,Grab,2019-11-22 11:50AM,115,DOC,19
+12,Leech-head,Rack,L1,,105,DOC,19
+13,Leech-head,Rack,L2,,117,DOC,19
+14,Cragg-crk,Grab,Grab,2019-11-22 11:00AM,37,DOC,19
+15,Cragg-crk,Rack,L1,,24,DOC,19
+16,Cragg-crk,Rack,L2,,41,DOC,19
+17,Cragg-crk,Rack,L3,,60,DOC,19
+18,West-Leech,Grab,Grab,2019-11-22 8:45AM,28,DOC,19
+19,West-Leech,Rack,L1,,27,DOC,19
+20,West-Leech,Rack,L2,,47,DOC,19
+21,West-Leech,Rack,L3,,67,DOC,19
+22,West-Leech,Rack,L4,,84,DOC,19
+23,Tunnel,Grab,Grab,2019-11-22 10:00AM,23,DOC,19
+24,Tunnel,Rack,L1,,19,DOC,19
+25,Tunnel,Rack,L2,,35,DOC,19
+26,Tunnel,Rack,L3,,54,DOC,19
+27,Tunnel,Rack,L4,,70,DOC,19
+28,Tunnel,Rack,L5,,86,DOC,19
+29,Lab,QA-QC,tap-water,,,DOC,19
+30,Lab,QA-QC,RO,,,DOC,19

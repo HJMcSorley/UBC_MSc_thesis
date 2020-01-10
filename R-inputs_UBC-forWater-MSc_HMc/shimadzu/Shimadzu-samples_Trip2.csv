@@ -1,0 +1,47 @@
+2018-11-13,,,,,,,
+# Leech samples collected Nov5-7  ,,,,,,,
+"# samples sat for 4 days acidifed in vials with caps, ASI malfaunction weekend - Vial 13 re-run because skipped (added here)",,,,,,,
+"# Results file(s): 1=""2018-11-13_Leech_Nov5-7_001"", 2=""2018-11-13_Leech_Nov5-7_002(vial13)""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Weeks-out,Rack,L1,,30,DOC,2
+2,Weeks-out,Rack,L2,,35,DOC,2
+3,Weeks-out,Rack,L3,,40,DOC,2
+4,Weeks-out,Rack,L4,,45,DOC,2
+5,Weeks-out,Rack,L5,,50,DOC,2
+6,Weeks-out,Grab,Grab,2018-11-06 13:55,,DOC,2
+7,Leech-head,Rack,L1,,80,DOC,2
+8,Leech-head,Rack,L2,,90,DOC,2
+9,Leech-head,Rack,L3,,100,DOC,2
+10,Leech-head,Rack,L4,,110,DOC,2
+11,Leech-head,Rack,L5,,120,DOC,2
+12,Leech-head,Grab,Grab,2018-11-06 12:20,,DOC,2
+13,Chris-crk,Rack,L1,,30,DOC,2
+14,Chris-crk,Rack,L2,,35,DOC,2
+15,Chris-crk,Rack,L3,,45,DOC,2
+16,Chris-crk,Rack,L4,,55,DOC,2
+17,Chris-crk,Grab,Grab,2018-11-06 9:05,,DOC,2
+18,Cragg-crk,Rack,L1,,22,DOC,2
+19,Cragg-crk,Rack,L2,,35,DOC,2
+20,Cragg-crk,Rack,L3,,45,DOC,2
+21,Cragg-crk,Rack,L4,,50,DOC,2
+22,Cragg-crk,Rack,L5,,75,DOC,2
+23,Cragg-crk,Grab,Grab,2018-11-06 8:30,,DOC,2
+24,West-Leech,Rack,L1,,40,DOC,2
+25,West-Leech,Rack,L2,,45,DOC,2
+26,West-Leech,Rack,L3,,56,DOC,2
+27,West-Leech,Rack,L4,,69,DOC,2
+28,West-Leech,Rack,L5,,75,DOC,2
+29,West-Leech,Grab,Grab,2018-11-07 9:00,,DOC,2
+30,Weeks-Lk-NE,Grab,Grab,,,DOC,2
+31,Leech-main-confl,Grab,Grab,,,DOC,2
+32,West-jordan,Grab,Grab,,,DOC,2
+33,Jarvis,Grab,Grab,,,DOC,2
+34,W.trib-to-Weeks,Grab,Grab,,,DOC,2
+35,Boneyard,Grab,Grab,,,DOC,2
+36,Weeks-Gate,Grab,Grab,,,DOC,2
+37,Weeks-Lk-SE,Grab,Grab,,,DOC,2
+38,Lower-Leech-blw-confl,Grab,Grab,,,DOC,2
+39,Lab,QA-QC,CAL-VER_5.7ppm,,,DOC,2
+40,Lab,QA-QC,CAL-VER_11.4ppm,,,DOC,2
+41,Lab,QA-QC,RO_pH<2,,,DOC,2
+42,Lab,QA-QC,RO,,,DOC,2

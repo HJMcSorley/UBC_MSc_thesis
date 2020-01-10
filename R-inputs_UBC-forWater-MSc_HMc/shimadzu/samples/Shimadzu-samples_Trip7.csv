@@ -1,0 +1,31 @@
+# 2019-04-12,,,,,,,
+# Leech samples collected Apr 10-11,,,,,,,
+,,,,,,,
+"# Results file: ""2019-04-12_Leech_Apr10-11_002""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Leech-head,Grab,Grab,2019-04-10 10:15,118,DOC,7
+2,Weeks-out,Grab,R1,2019-04-10 11:00,61,DOC,7
+3,Weeks-out,Grab,R2,2019-04-10 11:00,61,DOC,7
+4,Weeks-out,Grab,R3,2019-04-10 11:00,61,DOC,7
+5,Chris-crk,Grab,Grab,2019-04-10 12:15,25,DOC,7
+6,Cragg-crk,Grab,R1,2019-04-10 14:00,41,DOC,7
+7,Cragg-crk,Grab,R2,2019-04-10 14:00,,DOC,7
+8,Cragg-crk,Grab,R3,2019-04-10 14:00,,DOC,7
+9,West-Leech,Rack,L1,,32,DOC,7
+10,West-Leech,Grab,Grab,2019-04-11 9:45,30,DOC,7
+11,Tunnel,Grab,R1,2019-04-11 11:30,23,DOC,7
+12,Tunnel,Grab,R2,2019-04-11 11:30,23,DOC,7
+13,Tunnel,Grab,R3,2019-04-11 11:30,23,DOC,7
+14,Lab,QA-QC,CAL-VER_A1_5.60ppm,,,DOC,7
+15,Lab,QA-QC,CAL-VER_A2_5.31ppm,,,DOC,7
+16,Lab,QA-QC,RO_pH<2,,,DOC,7
+17,Lab,QA-QC,RO,,,DOC,7
+18,Lab,QA-QC,CAL-VER_B1_5.08ppm,,,DOC,7
+19,Lab,QA-QC,CAL-VER_B2_5.35ppm,,,DOC,7
+20,Lab,QA-QC,RO_pH<2,,,DOC,7
+21,Lab,QA-QC,RO,,,DOC,7
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,, ,,

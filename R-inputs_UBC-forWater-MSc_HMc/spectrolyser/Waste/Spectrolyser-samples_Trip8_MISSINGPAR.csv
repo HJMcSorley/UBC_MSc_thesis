@@ -1,0 +1,45 @@
+# 2019-05-17,,,,,,
+# Leech samples collected May 15,,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Rithet,Grab,Grab,2019-05-15 8:20,,8
+2,Rithet-S,Grab,Grab,2019-05-15 15:30,,8
+3,Leech-head,Grab,Grab,2019-05-15 9:45,,8
+4,Weeks-out,Grab,Grab,2019-05-15 10:30,,8
+5,Chris-crk,Grab,Grab,2019-05-15 11:15,,8
+6,Cragg-crk,Grab,Grab,2019-05-15 12:15,10,8
+7,Cragg-crk,Rack,L1,,46,8
+8,Tunnel,Grab,Grab,2019-05-15 13:15,,8
+9,Tunnel,Rack,L1,,24,8
+10,Tunnel,Rack,L2,,35,8
+11,Tunnel,Grab,R1,2019-05-15 13:15,,8
+12,Tunnel,Grab,R2,2019-05-15 13:15,,8
+13,Tunnel,Grab,R3,2019-05-15 13:15,,8
+14,Tunnel,Grab,R4,2019-05-15 13:15,,8
+15,Tunnel,Grab,R5,2019-05-15 13:15,,8
+16,West-Leech,Grab,Grab,2019-05-15 14:30,17,8
+17,West-Leech,Rack,L1,,31,8
+18,West-Leech,Rack,L2,,48,8
+19,Boneyard,Grab,R1,2019-05-15 15:10,,8
+20,Boneyard,Grab,R2,2019-05-15 15:10,,8
+21,Boneyard,Grab,R3,2019-05-15 15:10,,8
+22,Boneyard,Grab,R4,2019-05-15 15:10,,8
+23,Boneyard,Grab,R5,2019-05-15 15:10,,8
+24,Judge-crk,Grab,Grab,2019-05-15 15:45,,8
+25,Lab,QA-QC,Lid-blank,, ,8
+26,Lab,QA-QC,Lid-blank,, ,8
+27,Lab,QA-QC,Lid-blank,, ,8
+28,Lab,QA-QC,Lid-blank,, ,8
+29,Lab,QA-QC,Lid-blank,, ,8
+30,Lab,QA-QC,Lid-untreated,,,8
+31,Lab,QA-QC,Lid-untreated,,,8
+32,Lab,QA-QC,Lid-untreated,,,8
+33,Lab,QA-QC,Lid-untreated,,,8
+34,Lab,QA-QC,Lid-untreated,,,8
+35,Lab,QA-QC,Lid-treated,,,8
+36,Lab,QA-QC,Lid-treated,,,8
+37,Lab,QA-QC,Lid-treated,,,8
+38,Lab,QA-QC,Lid-treated,,,8
+39,Lab,QA-QC,Lid-treated,,,8
+40,Boneyard,Grab,metals,2019-05-15 15:10,,8

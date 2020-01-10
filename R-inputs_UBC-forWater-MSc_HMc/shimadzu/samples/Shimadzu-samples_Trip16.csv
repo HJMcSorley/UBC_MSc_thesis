@@ -1,0 +1,22 @@
+# 2019-10-13,,,,,,,
+# Leech samples collected Oct 12 (trip 16),,,,,,,
+,,,,,,,
+"# Results file: ""2019-10-13_Leech_Oct12-trip16_001""""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Weeks-out,Grab,Grab,2019-10-12 13:30,40,DOC,16
+2,Weeks-out,Rack,L1,,31,DOC,16
+3,Leech-head,Grab,Grab,2019-10-12 10:45,95,DOC,16
+4,Leech-head,Rack,L1,,88,DOC,16
+5,Cragg-crk,Grab,Grab,2019-10-12 9:00,15,DOC,16
+6,Chris-crk,Grab,Grab,2019-10-12 15:00,,DOC,16
+7,J-Trib,Grab,Grab,2019-10-12 14:00,,DOC,16
+8,Jarvis,Grab,Grab,2019-10-12 8:30,,DOC,16
+9,Lazar,Grab,Grab,2019-10-12 8:00,,DOC,16
+10,West-Leech,Grab,Grab,2019-10-12 8:00,18,DOC,16
+11,West-Leech,Rack,L1,,23,DOC,16
+12,Tunnel,Grab,Grab,2019-10-12 10:30,0,DOC,16
+13,Tunnel,QA-QC,HoldTime-A1,2019-10-12 10:30,,DOC,16
+14,Tunnel,QA-QC,HoldTime-A2,2019-10-12 10:30,,DOC,16
+15,Tunnel,QA-QC,HoldTime-A3,2019-10-12 10:30,,DOC,16
+16,Tunnel,QA-QC,HoldTime-A4,2019-10-12 10:30,,DOC,16
+17,Tunnel,QA-QC,HoldTime-A5,2019-10-12 10:30,,DOC,16

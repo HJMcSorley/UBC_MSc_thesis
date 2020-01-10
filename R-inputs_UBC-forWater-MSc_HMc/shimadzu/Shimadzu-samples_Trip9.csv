@@ -1,0 +1,31 @@
+# 2019-06-03,,,,,,,
+# Leech samples collected May 31 (trip 9),,,,,,,
+"# vials 1-11 were F/P on 05-31, 13-23 were F/P 06-03",,,,,,,
+"# Results file: ""2019-6-03_Leech-May31_001""""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Judge-crk,Grab,FP0531,2019-05-31 7:10,,DOC,9
+2,Rithet-N,Grab,FP0531,2019-05-31 7:30,,DOC,9
+3,Lazar,Grab,FP0531,2019-05-31 7:50,,DOC,9
+4,Jarvis,Grab,FP0531,2019-05-31 8:00,,DOC,9
+5,Leech-head,Grab,FP0531,2019-05-31 8:45,,DOC,9
+6,Weeks-out,Grab,FP0531,2019-05-31 9:00,,DOC,9
+7,Weeks-out,Grab,FP0531,2019-05-31 9:00,,DOC,9
+8,Chris-crk,Grab,FP0531,2019-05-31 9:30,,DOC,9
+9,Cragg-crk,Grab,FP0531,2019-05-31 10:15,,DOC,9
+10,West-Leech,Grab,FP0531,2019-05-31 11:15,,DOC,9
+11,Tunnel,Grab,FP0531,2019-05-31 12:15,,DOC,9
+12,Lab,QA-QC,CalVer_5.816ppm,,,DOC,9
+13,Judge-crk,Grab,FP0603,2019-05-31 7:10,,DOC,9
+14,Rithet-N,Grab,FP0603,2019-05-31 7:30,,DOC,9
+15,Lazar,Grab,FP0603,2019-05-31 7:50,,DOC,9
+16,Jarvis,Grab,FP0603,2019-05-31 8:00,,DOC,9
+17,Leech-head,Grab,FP0603,2019-05-31 8:45,,DOC,9
+18,Weeks-out,Grab,FP0603,2019-05-31 9:00,,DOC,9
+19,Weeks-out,Grab,FP0603,2019-05-31 9:00,,DOC,9
+20,Chris-crk,Grab,FP0603,2019-05-31 9:30,,DOC,9
+21,Cragg-crk,Grab,FP0603,2019-05-31 10:15,,DOC,9
+22,West-Leech,Grab,FP0603,2019-05-31 11:15,,DOC,9
+23,Tunnel,Grab,FP0603,2019-05-31 12:15,,DOC,9
+24,Lab,QA-QC,RO,,,DOC,9
+,,,,,,,
+ ,,,,,,,

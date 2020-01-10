@@ -1,0 +1,30 @@
+# 2019-04-12,,,,,,
+# Leech samples collected Apr 10-11,,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Leech-head,Grab,Grab,2019-04-10 10:15,118,7
+2,Weeks-out,Grab,R1,2019-04-10 11:00,61,7
+3,Weeks-out,Grab,R2,2019-04-10 11:00,61,7
+4,Weeks-out,Grab,R3,2019-04-10 11:00,61,7
+5,Chris-crk,Grab,Grab,2019-04-10 12:15,25,7
+6,Cragg-crk,Grab,R1,2019-04-10 14:00,41,7
+7,Cragg-crk,Grab,R2,2019-04-10 14:00,,7
+8,Cragg-crk,Grab,R3,2019-04-10 14:00,,7
+9,West-Leech,Rack,L1,,32,7
+10,West-Leech,Grab,Grab,2019-04-11 9:45,30,7
+11,Tunnel,Grab,R1,2019-04-11 11:30,23,7
+12,Tunnel,Grab,R2,2019-04-11 11:30,23,7
+13,Tunnel,Grab,R3,2019-04-11 11:30,23,7
+14,Lab,QA-QC,RO,,,
+15,Lab,QA-QC,CAL-VER_A1_5.614ppm,,,7
+16,Lab,QA-QC,CAL-VER_A2_5.319ppm,,,7
+17,Lab,QA-QC,RO,,,7
+18,Lab,QA-QC,CAL-VER_B1_5.083ppm,,,7
+19,Lab,QA-QC,CAL-VER_B2_5.346ppm,,,7
+20,Lab,QA-QC,RO,,,7
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,, ,

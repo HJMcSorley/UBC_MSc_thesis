@@ -1,0 +1,55 @@
+# 2019-10-29,,,,,,,
+# Leech samples collected Oct 23-24,,,,,,,
+,,,,,,,
+"# Results file: ""2019-10-29_Leech_Oct23-24-trip17_001""""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Leech-head,Grab,Grab,2019-10-23 12:35PM,137,DOC,17
+2,Leech-head,Rack,L1,,98,DOC,17
+3,Leech-head,Rack,L2,,117,DOC,17
+4,Leech-head,Rack,L3,,131,DOC,17
+5,Leech-head,Grab,Grab,2019-10-24 8:15AM,125,DOC,17
+6,Weeks-out,Grab,Grab,2019-10-23 1:15PM,84,DOC,17
+7,Weeks-out,Rack,L1,,43,DOC,17
+8,Weeks-out,Rack,L2,,58,DOC,17
+9,Weeks-out,Rack,L3,,71,DOC,17
+10,Weeks-out,Grab,Grab,2019-10-24 8:54AM,,DOC,17
+11,Chris-crk,Grab,Grab,2019-10-23 2:10PM,28,DOC,17
+12,Chris-crk,Rack,L1,,28,DOC,17
+13,Chris-crk,Rack,L2,,38,DOC,17
+14,Chris-crk,Grab,Grab,2019-10-24 9:01AM,26,DOC,17
+15,Cragg-crk,Grab,Grab,2019-10-23 11:25AM,52,DOC,17
+16,Cragg-crk,Rack,L1,,25,DOC,17
+17,Cragg-crk,Rack,L2,,43,DOC,17
+18,Cragg-crk,Rack,L3,,65,DOC,17
+19,Cragg-crk,Grab,Grab,2019-10-24 9:30AM,43,DOC,17
+20,Tunnel,Rack,SG1,,0,DOC,17
+21,Tunnel,Rack,SG2,,6,DOC,17
+22,Tunnel,Rack,L1,,19,DOC,17
+23,Tunnel,Rack,L2,,39,DOC,17
+24,Tunnel,Rack,L3,,56,DOC,17
+25,Tunnel,Rack,L4,,71,DOC,17
+26,Tunnel,Grab,Grab,2019-10-24 11:11AM,34,DOC,17
+27,Lab,QA-QC,Cal-ver1,,,DOC,17
+28,Lazar,Grab,Grab,2019-10-23 9:00AM,,DOC,17
+29,Rithet,Grab,Grab,2019-10-23 8:00AM,,DOC,17
+30,Jarvis,Grab,Grab,2019-10-23 10:00AM, ,DOC,17
+31,West-Leech,Grab,Grab,2019-11-23 8:45AM,38,DOC,17
+32,West-Leech,Rack,L1,,23,DOC,17
+33,West-Leech,Rack,L2,,36,DOC,17
+34,West-Leech,Rack,L3,,53,DOC,17
+35,West-Leech,Rack,L4,,71,DOC,17
+36,West-Leech,Grab,Grab,2019-10-24 10:25AM,32,DOC,17
+37,Tunnel,QA-QC,HoldTime-B1,2019-10-12,,DOC,17
+38,Tunnel,QA-QC,HoldTime-B2,2019-10-12,,DOC,17
+39,Tunnel,QA-QC,HoldTime-B3,2019-10-12,,DOC, 
+40,Tunnel,QA-QC,HoldTime-B4,2019-10-12,,DOC,
+41,Tunnel,QA-QC,HoldTime-B5,2019-10-12,,DOC,
+42,Tunnel,QA-QC,HoldTime-A6,2019-11-23 10:12AM,,DOC,
+43,Tunnel,QA-QC,HoldTime-A7,2019-11-23 10:12AM,,DOC,
+44,Tunnel,QA-QC,HoldTime-A8,2019-11-23 10:12AM,,DOC,
+45,Tunnel,QA-QC,HoldTime-A9,2019-11-23 10:12AM,,DOC,
+46,Tunnel,QA-QC,HoldTime-A10,2019-11-23 10:12AM,,DOC,
+47,Lab,QA-QC,Cal-ver2,,,DOC,
+48,Lab,QA-QC,RO,,,DOC,
+49,Lab,QA-QC,RO,,,DOC,
+50,Lab,QA-QC,RO,,,DOC,

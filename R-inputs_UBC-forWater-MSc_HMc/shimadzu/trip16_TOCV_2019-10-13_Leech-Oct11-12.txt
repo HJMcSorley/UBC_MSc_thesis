@@ -1,0 +1,81 @@
+[Header]	
+System	UBCECO_TOCVcsh	
+File Ver.	2.00	
+User		
+Date of Creation	10/13/2019 8:32:39 PM	
+Comments		
+
+[System]	
+Detector	Combustion	
+Catalyst	High Sensitivity	
+ASI Tray	40 mL Vials	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Origin	Cal. Curve	Manual Dilution	Notes	Date / Time	Spl. No.	Inj. No.	Analysis(Inj.)	Area	Conc.	Result	Excluded	Inj. Vol.	
+Unknown	NPOC	NPOC_1	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:41:09 PM	1	1	NPOC	50.97	16.93	NPOC:18.74mg/L	1	80	
+Unknown	NPOC	NPOC_1	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:43:55 PM	1	2	NPOC	55.43	18.41	NPOC:18.74mg/L	0	80	
+Unknown	NPOC	NPOC_1	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:46:52 PM	1	3	NPOC	56.50	18.77	NPOC:18.74mg/L	0	80	
+Unknown	NPOC	NPOC_1	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:49:53 PM	1	4	NPOC	57.31	19.04	NPOC:18.74mg/L	0	80	
+Unknown	NPOC	NPOC_2	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:55:40 PM	1	1	NPOC	52.97	17.59	NPOC:17.86mg/L	0	80	
+Unknown	NPOC	NPOC_2	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 8:58:25 PM	1	2	NPOC	54.28	18.03	NPOC:17.86mg/L	0	80	
+Unknown	NPOC	NPOC_2	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:01:16 PM	1	3	NPOC	54.09	17.97	NPOC:17.86mg/L	0	80	
+Unknown	NPOC	NPOC_3	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:06:47 PM	1	1	NPOC	37.26	12.38	NPOC:11.64mg/L	1	80	
+Unknown	NPOC	NPOC_3	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:09:24 PM	1	2	NPOC	35.19	11.69	NPOC:11.64mg/L	0	80	
+Unknown	NPOC	NPOC_3	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:12:08 PM	1	3	NPOC	34.83	11.57	NPOC:11.64mg/L	0	80	
+Unknown	NPOC	NPOC_3	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:14:49 PM	1	4	NPOC	35.12	11.67	NPOC:11.64mg/L	0	80	
+Unknown	NPOC	NPOC_4	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:19:59 PM	1	1	NPOC	22.35	7.424	NPOC:9.223mg/L	1	80	
+Unknown	NPOC	NPOC_4	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:22:23 PM	1	2	NPOC	29.27	9.722	NPOC:9.223mg/L	1	80	
+Unknown	NPOC	NPOC_4	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:24:52 PM	1	3	NPOC	28.15	9.350	NPOC:9.223mg/L	0	80	
+Unknown	NPOC	NPOC_4	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:27:24 PM	1	4	NPOC	27.33	9.078	NPOC:9.223mg/L	0	80	
+Unknown	NPOC	NPOC_4	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:29:52 PM	1	5	NPOC	27.82	9.241	NPOC:9.223mg/L	0	80	
+Unknown	NPOC	NPOC_5	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:35:01 PM	1	1	NPOC	22.42	7.447	NPOC:7.473mg/L	0	80	
+Unknown	NPOC	NPOC_5	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:37:31 PM	1	2	NPOC	22.44	7.454	NPOC:7.473mg/L	0	80	
+Unknown	NPOC	NPOC_5	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:39:57 PM	1	3	NPOC	22.63	7.517	NPOC:7.473mg/L	0	80	
+Unknown	NPOC	NPOC_6	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:45:12 PM	1	1	NPOC	20.87	6.932	NPOC:6.853mg/L	0	80	
+Unknown	NPOC	NPOC_6	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:47:35 PM	1	2	NPOC	20.59	6.839	NPOC:6.853mg/L	0	80	
+Unknown	NPOC	NPOC_6	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:50:03 PM	1	3	NPOC	20.43	6.786	NPOC:6.853mg/L	0	80	
+Unknown	NPOC	NPOC_7	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:55:23 PM	1	1	NPOC	19.48	6.471	NPOC:6.454mg/L	0	80	
+Unknown	NPOC	NPOC_7	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 9:57:45 PM	1	2	NPOC	19.62	6.517	NPOC:6.454mg/L	0	80	
+Unknown	NPOC	NPOC_7	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:00:07 PM	1	3	NPOC	19.19	6.374	NPOC:6.454mg/L	0	80	
+Unknown	NPOC	NPOC_8	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:05:42 PM	1	1	NPOC	46.89	15.58	NPOC:16.73mg/L	1	80	
+Unknown	NPOC	NPOC_8	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:08:25 PM	1	2	NPOC	50.06	16.63	NPOC:16.73mg/L	0	80	
+Unknown	NPOC	NPOC_8	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:11:08 PM	1	3	NPOC	50.65	16.82	NPOC:16.73mg/L	0	80	
+Unknown	NPOC	NPOC_8	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:13:52 PM	1	4	NPOC	50.40	16.74	NPOC:16.73mg/L	0	80	
+Unknown	NPOC	NPOC_9	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:19:01 PM	1	1	NPOC	22.18	7.367	NPOC:8.646mg/L	1	80	
+Unknown	NPOC	NPOC_9	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:21:16 PM	1	2	NPOC	21.99	7.304	NPOC:8.646mg/L	1	80	
+Unknown	NPOC	NPOC_9	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:23:46 PM	1	3	NPOC	26.64	8.849	NPOC:8.646mg/L	0	80	
+Unknown	NPOC	NPOC_9	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:26:21 PM	1	4	NPOC	25.84	8.583	NPOC:8.646mg/L	0	80	
+Unknown	NPOC	NPOC_9	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:28:47 PM	1	5	NPOC	25.61	8.507	NPOC:8.646mg/L	0	80	
+Unknown	NPOC	NPOC_10	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:34:05 PM	1	1	NPOC	21.80	7.241	NPOC:7.188mg/L	0	80	
+Unknown	NPOC	NPOC_10	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:36:31 PM	1	2	NPOC	21.36	7.095	NPOC:7.188mg/L	0	80	
+Unknown	NPOC	NPOC_10	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:38:53 PM	1	3	NPOC	20.54	6.823	NPOC:7.188mg/L	1	80	
+Unknown	NPOC	NPOC_10	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:41:25 PM	1	4	NPOC	21.76	7.228	NPOC:7.188mg/L	0	80	
+Unknown	NPOC	NPOC_11	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:46:47 PM	1	1	NPOC	27.30	9.068	NPOC:9.442mg/L	1	80	
+Unknown	NPOC	NPOC_11	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:49:15 PM	1	2	NPOC	28.43	9.443	NPOC:9.442mg/L	0	80	
+Unknown	NPOC	NPOC_11	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:52:03 PM	1	3	NPOC	28.61	9.503	NPOC:9.442mg/L	0	80	
+Unknown	NPOC	NPOC_11	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:54:34 PM	1	4	NPOC	28.24	9.380	NPOC:9.442mg/L	0	80	
+Unknown	NPOC	NPOC_12	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 10:59:57 PM	1	1	NPOC	24.33	8.082	NPOC:7.625mg/L	1	80	
+Unknown	NPOC	NPOC_12	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:02:36 PM	1	2	NPOC	23.21	7.710	NPOC:7.625mg/L	0	80	
+Unknown	NPOC	NPOC_12	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:05:15 PM	1	3	NPOC	22.35	7.424	NPOC:7.625mg/L	1	80	
+Unknown	NPOC	NPOC_12	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:07:44 PM	1	4	NPOC	22.41	7.444	NPOC:7.625mg/L	0	80	
+Unknown	NPOC	NPOC_12	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:10:15 PM	1	5	NPOC	23.25	7.723	NPOC:7.625mg/L	0	80	
+Unknown	NPOC	NPOC_13	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:15:34 PM	1	1	NPOC	23.02	7.646	NPOC:7.526mg/L	0	80	
+Unknown	NPOC	NPOC_13	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:17:59 PM	1	2	NPOC	22.47	7.464	NPOC:7.526mg/L	0	80	
+Unknown	NPOC	NPOC_13	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:20:31 PM	1	3	NPOC	22.48	7.467	NPOC:7.526mg/L	0	80	
+Unknown	NPOC	NPOC_14	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:25:54 PM	1	1	NPOC	23.26	7.726	NPOC:7.610mg/L	0	80	
+Unknown	NPOC	NPOC_14	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:28:33 PM	1	2	NPOC	23.00	7.640	NPOC:7.610mg/L	0	80	
+Unknown	NPOC	NPOC_14	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:30:57 PM	1	3	NPOC	21.95	7.291	NPOC:7.610mg/L	1	80	
+Unknown	NPOC	NPOC_14	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:33:21 PM	1	4	NPOC	22.47	7.464	NPOC:7.610mg/L	0	80	
+Unknown	NPOC	NPOC_15	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:38:45 PM	1	1	NPOC	22.96	7.627	NPOC:7.527mg/L	0	80	
+Unknown	NPOC	NPOC_15	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:41:10 PM	1	2	NPOC	21.92	7.281	NPOC:7.527mg/L	1	80	
+Unknown	NPOC	NPOC_15	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:43:39 PM	1	3	NPOC	22.43	7.450	NPOC:7.527mg/L	0	80	
+Unknown	NPOC	NPOC_15	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:46:10 PM	1	4	NPOC	22.59	7.504	NPOC:7.527mg/L	0	80	
+Unknown	NPOC	NPOC_16	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:51:35 PM	1	1	NPOC	22.98	7.633	NPOC:7.536mg/L	0	80	
+Unknown	NPOC	NPOC_16	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:54:01 PM	1	2	NPOC	22.00	7.308	NPOC:7.536mg/L	1	80	
+Unknown	NPOC	NPOC_16	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:56:26 PM	1	3	NPOC	22.63	7.517	NPOC:7.536mg/L	0	80	
+Unknown	NPOC	NPOC_16	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/13/2019 11:58:47 PM	1	4	NPOC	21.42	7.115	NPOC:7.536mg/L	1	80	
+Unknown	NPOC	NPOC_16	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/14/2019 12:01:15 AM	1	5	NPOC	22.45	7.457	NPOC:7.536mg/L	0	80	
+Unknown	NPOC	NPOC_17	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/14/2019 12:06:29 AM	1	1	NPOC	22.76	7.560	NPOC:7.503mg/L	0	80	
+Unknown	NPOC	NPOC_17	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/14/2019 12:08:56 AM	1	2	NPOC	22.35	7.424	NPOC:7.503mg/L	0	80	
+Unknown	NPOC	NPOC_17	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/14/2019 12:11:20 AM	1	3	NPOC	21.68	7.201	NPOC:7.503mg/L	1	80	
+Unknown	NPOC	NPOC_17	Leech-Oct11-12	C:\TOC3201\Methods\forWater_HMc_NPOC_pH2.met	C:\TOC3201\CalCurves\forWater\2019-07-09_forWater-CalCurve(current-cal).cal	1.00		10/14/2019 12:13:50 AM	1	4	NPOC	22.65	7.524	NPOC:7.503mg/L	0	80	

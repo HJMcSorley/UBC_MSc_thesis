@@ -1,0 +1,4 @@
+10230382_350_0x0100_spectro::lyser_RIVER000V120	results of s::canpoint: LAB2                                
+Date/Time	Status	Turbid. [FTUeq]200.00-0.00_2	[Turbid._0.0_1.0_0.0_0.0]	NO3-Neq [mg/l]10.00-0.00_2	[NO3-Neq_0.0_1.0_0.0_0.0]	TOCeq [mg/l]25.00-0.00_2	[TOCeq_0.0_1.0_0.0_0.0]	DOCeq [mg/l]12.00-0.00_2	[DOCeq_0.0_1.0_0.0_0.0]	SAC254 [Abs/m]NaN-NaN_2	[SAC254_0.0_1.0_0.0_0.0]	SAC436 [Abs/m]NaN-NaN_2	[SAC436_0.0_1.0_0.0_0.0]	254-436 [Abs/m]NaN-NaN_2	[254-436_0.0_1.0_0.0_0.0]	analogIN []NaN-NaN_2	[analogIN_0.0_1.0_0.0_0.0]
+2019.07.04  12:31:50	Ok	0	1	0	1	1.424	0	1.265	0	3.085	0	0.110	0	NaN	-15	NaN	NaN
+2019.07.04  12:32:10	Ok	0	1	0	1	1.403	0	1.273	0	3.106	0	0.109	0	NaN	-15	NaN	NaN

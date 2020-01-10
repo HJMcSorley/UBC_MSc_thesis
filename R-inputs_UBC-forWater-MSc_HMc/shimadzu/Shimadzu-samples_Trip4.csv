@@ -1,0 +1,95 @@
+# 2018-12-13,,,,,,,
+"# Leech samples collected Dec.6-7 *** the filling stages here were measured on a stick, prior to tape addition to stilling wells",,,,,,,
+"# ASI failure, had to start a second run (002) afer vial 22",,,,,,,
+"# Results file(s): 1=""2018-12-13_Leech_Dec6-7_TOC_001"", 2=""2018-12-13_Leech_Dec6-7_002""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Weeks-out,Rack,L1,,65,TOC,4
+2,Weeks-out,Rack,L2,,72,TOC,4
+3,Weeks-out,Rack,L3,,79,TOC,4
+4,Weeks-out,Rack,L4,,86,TOC,4
+5,Weeks-out,Rack,L5,,90,TOC,4
+6,Weeks-out,Rack,L6,,95,TOC,4
+7,Weeks-out,Rack,L7,,105,TOC,4
+8,Weeks-out,Grab,Grab,2018-12-07 12:15,50,TOC,4
+9,Chris-crk,Rack,L1,,20,TOC,4
+10,Chris-crk,Rack,L2,,27,TOC,4
+11,Chris-crk,Rack,L3,,34,TOC,4
+12,Chris-crk,Rack,L4,,41,TOC,4
+13,Chris-crk,Rack,L5,,48,TOC,4
+14,Chris-crk,Rack,L6,,56,TOC,4
+15,Chris-crk,Rack,L7,,66,TOC,4
+16,Leech-head,Rack,L1,,122,TOC,4
+17,Leech-head,Rack,L2,,129,TOC,4
+18,Leech-head,Rack,L3,,133,TOC,4
+19,Leech-head,Rack,L4,,140,TOC,4
+20,Leech-head,Rack,L5,,150,TOC,4
+21,Leech-head,Rack,L6,,162,TOC,4
+22,Leech-head,Rack,L7,,171,TOC,4
+1,Leech-head,Grab,Grab,2018-12-07 10:30,109,TOC,4
+2,Cragg-crk,Rack,L1,,53,TOC,4
+3,Cragg-crk,Rack,L2,,62,TOC,4
+4,Cragg-crk,Rack,L3,,73,TOC,4
+5,Cragg-crk,Rack,L4,,84,TOC,4
+6,Cragg-crk,Rack,L5,,96,TOC,4
+7,Cragg-crk,Rack,L6,,110,TOC,4
+8,Cragg-crk,Grab,Grab,2018-12-07 8:45,29,TOC,4
+9,West-Leech,Rack,L1,,50,TOC,4
+10,West-Leech,Rack,L2,,60,TOC,4
+11,West-Leech,Rack,L3,,71,TOC,4
+12,West-Leech,Rack,L4,,80,TOC,4
+13,West-Leech,Rack,L5,,90,TOC,4
+14,West-Leech,Rack,L6,,105,TOC,4
+15,West-Leech,Grab,Grab,2018-12-06 13:30,25,TOC,4
+16,Tunnel,Grab,Grab,2018-12-06 10:00,16,TOC,4
+17,5S-above,Grab,Grab,2018-12-06 8:00,,TOC,4
+18,5S-below,Grab,Grab,2018-12-06 8:00,,TOC,4
+19,Mystery-bottle,Grab,Grab,,,TOC,4
+20,Lab,QA-QC,RO_pH<2,,,DOC,4
+21,Lab,QA-QC,CAL-VER_5.7ppm,,,DOC,4
+22,Lab,QA-QC,RO_pH<2,,,DOC,4
+23,Lab,QA-QC,RO ,,,DOC,4
+24,Weeks-out,Rack,L1,,65,DOC,4
+25,Weeks-out,Rack,L2,,72,DOC,4
+26,Weeks-out,Rack,L3,,79,DOC,4
+27,Weeks-out,Rack,L4,,86,DOC,4
+28,Weeks-out,Rack,L5,,90,DOC,4
+29,Weeks-out,Rack,L6,,95,DOC,4
+30,Weeks-out,Rack,L7,,105,DOC,4
+31,Weeks-out,Grab,Grab,2018-12-07 12:15,50,DOC,4
+32,Chris-crk,Rack,L1,,20,DOC,4
+33,Chris-crk,Rack,L2,,27,DOC,4
+34,Chris-crk,Rack,L3,,34,DOC,4
+35,Chris-crk,Rack,L4,,41,DOC,4
+36,Chris-crk,Rack,L5,,48,DOC,4
+37,Chris-crk,Rack,L6,,56,DOC,4
+38,Chris-crk,Rack,L7,,66,DOC,4
+39,Leech-head,Rack,L1,,122,DOC,4
+40,Leech-head,Rack,L2,,129,DOC,4
+41,Leech-head,Rack,L3,,133,DOC,4
+42,Leech-head,Rack,L4,,140,DOC,4
+43,Leech-head,Rack,L5,,150,DOC,4
+44,Leech-head,Rack,L6,,162,DOC,4
+45,Leech-head,Rack,L7,,171,DOC,4
+46,Leech-head,Grab,Grab,2018-12-07 10:30,109,DOC,4
+47,Cragg-crk,Rack,L1,,53,DOC,4
+48,Cragg-crk,Rack,L2,,62,DOC,4
+49,Cragg-crk,Rack,L3,,73,DOC,4
+50,Cragg-crk,Rack,L4,,84,DOC,4
+51,Cragg-crk,Rack,L5,,96,DOC,4
+52,Cragg-crk,Rack,L6,,110,DOC,4
+53,Cragg-crk,Grab,Grab,2018-12-07 8:45,29,DOC,4
+54,West-Leech,Rack,L1,,50,DOC,4
+55,West-Leech,Rack,L2,,60,DOC,4
+56,West-Leech,Rack,L3,,71,DOC,4
+57,West-Leech,Rack,L4,,80,DOC,4
+58,West-Leech,Rack,L5,,90,DOC,4
+59,West-Leech,Rack,L6,,105,DOC,4
+60,West-Leech,Grab,Grab,2018-12-06 13:30,25,DOC,4
+61,Tunnel,Grab,Grab,2018-12-06 10:00,16,DOC,4
+62,5S-above,Grab,Grab,,,DOC,4
+63,5S-below,Grab,Grab,,,DOC,4
+64,Mystery-bottle,Grab,Grab,,,DOC,4
+65,Lab,QA-QC,RO_pH<2,,,DOC,4
+66,Lab,QA-QC,5.7ppm_cal-ver,,,DOC,4
+67,Lab,QA-QC,RO_pH<2,,,DOC,4
+68,Lab,QA-QC,RO ,,,DOC,4
