@@ -13,22 +13,25 @@ knitr::opts_chunk$set(echo = TRUE)
 If needed, install required packages:
 ```
 install.packages("tidyverse")
-install.packages("lubridate")  
 install.packages("knitr")      
 install.packages("gridExtra")  
 install.packages("grid")      
-install.packages("forcats") 
 ```
+Note that the tidyverse includes a suite of useful packages, such as:
+
+*readr: for read_csv()
+*dplyr: for MANY functions, including mutate() and piping,
+*tidyr: for unnest()
+*purrr: for map(), reduce()
+
 ```{r packages, include = FALSE}
 # load packages
 
-suppressPackageStartupMessages(library(tidyverse))  # included package 'dplyr', 'ggplot2', and 'purrr'
-suppressPackageStartupMessages(library(lubridate))  # ease dealing with Dates
-suppressPackageStartupMessages(library(knitr))      # tidy tables
+suppressPackageStartupMessages(library(tidyverse))  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
+suppressPackageStartu
+pMessages(library(knitr))      # tidy tables
 suppressPackageStartupMessages(library(gridExtra))  # rapid runoff hydrograph/precip plots
 suppressPackageStartupMessages(library(grid))       # for rapid runoff plots
-suppressPackageStartupMessages(library(forcats))    # friendly factors
-suppressPackageStartupMessages(library(readr))      # read in delimited files
 
 ```
 
@@ -102,16 +105,63 @@ In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::ca
 
 ```{r samples}
 ## Shimadzu TOC-V samples and results
-# list all sample identifier files
-shimadzu_sample_files <- list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/",
-                                    recursive = TRUE,
-                                    full.names = TRUE)
+
+# create a data frame, holding file names in a new column
+shimadzu_samples <- data_frame(filename = dir("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/")) %>% 
+  dplyr::mutate(file_contents = purrr::map(filename, ~ readr::read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", .),
+                                                  skip = 4,
+                                                  col_names = TRUE))) %>% 
+  tidyr::unnest(cols = c(file_contents))
+shimadzu_samples
+  
+  purrr::map(~ readr::read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", .), skip = 4, col_names = TRUE)) %>%
+  purrr::reduce(rbind)
+shimadzu_samples
+
+# hmmm try it again but different
+shimadzu_samples <- dir("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/")) %>% 
+  dplyr::mutate(file_contents = purrr::map(filename, ~ readr::read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", .),
+                                                  skip = 4,
+                                                  col_names = TRUE))) %>% 
+  tidyr::unnest(cols = c(file_contents))
+shimadzu_samples
+
+# --------- you are here
+# try again
+shimadzu_sample_files <- list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", pattern = "*.csv", full.names = TRUE)
+
+sampleFUN <- function(x){
+    read_csv(file = x, skip = 4, col_names = TRUE, col_types = list("d", "c", "c", "c", "c", "d", "f", "f"))}
+
+shimadzu_samples <- purrr::map_dfr(shimadzu_sample_files, sampleFUN)
+
+# ---------
+# try again
+shimadzu_sample_files <- list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", pattern = "*.csv", full.names = TRUE)
+
+sampleIDmerge <-  function(mypath){
+  filenames = list.files(path = mypath)
+  datalist = lapply(filenames, function(x) {
+    read_csv(file = x, skip = 4, col_names = TRUE,
+             #col_types = list(col_double(), 
+                              #col_character(),
+                              #col_character(),
+                              #col_character(),
+                              #col_datetime(),
+                              #col_double(),
+                              #col_character(),
+                              #col_factor())
+             )})
+  purrr::reduce(function(x, y) {full_join(x, y)}, datalist)
+}
+
+shimadzu_samples <- sampleIDmerge("/R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples")
 
 # list all TOC-V results files
-shimadzu_results_files <- list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/",
+shimadzu_results_files <- list.files(path = "/R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/",
                                     recursive = TRUE,
                                     full.names = TRUE)
-
+# ---- OLD ---- #
 ## vertical rack sample results
 # read in the (pre-sorted and organized) vertical rack sample results file
 racks_df <- read.csv(file = "2019-04-17_Vertical-Rack_Results.csv", header = TRUE)

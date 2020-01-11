@@ -1,17 +1,17 @@
-# 2020-01-08,,,,,,,,,,
-# Leech samples collected Jan.7 (trip22),,,,,,,,,,
-# the ASI was failing so I restarted at vial 5,,,,,,,,,,
-"# Results file: ""2020-01-08_Leech_Trip22_001"" + ""2020-01-08_Leech_Trip22_002_5-12""",,,,,,,,,,
-vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip,,,
-1,Lab,QA-QC,RO,,,DOC,22,,,
-2,Judge-crk,Grab,Grab,2020-01-07,,DOC,22,,,
-3,Rithet,Grab,Grab,2020-01-07,,DOC,22,,,
-4,Jarvis,Grab,Grab,2020-01-07,,DOC,22,,,
-5,Cragg-crk,Grab,Grab,2020-01-07,,DOC,22,,, 
-6,Tunnel,Grab,R1,2020-01-07,,DOC,22,,,
-7,Tunnel,Grab,R2,2020-01-07,,DOC,22,,,
-8,Lab,QA-QC,RO,,,DOC,22,,,
-9,Lab,QA-QC,CalVer-1_5.55ppm,,,DOC,22,,,
-10,Lab,QA-QC,RO,,,DOC,22,,,
-11,Lab,QA-QC,CalVer-2_5.77ppm,,,DOC,22,,,
-12,Lab,QA-QC,RO,,,DOC,22,,,
+# 2020-01-08,,,,,,,
+# Leech samples collected Jan.7 (trip22),,,,,,,
+# the ASI was failing so I restarted at vial 5,,,,,,,
+"# Results file: ""2020-01-08_Leech_Trip22_001"" + ""2020-01-08_Leech_Trip22_002_5-12""",,,,,,,
+vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
+1,Lab,QA-QC,RO,,,DOC,22
+2,Judge-crk,Grab,Grab,2020-01-07,,DOC,22
+3,Rithet,Grab,Grab,2020-01-07,,DOC,22
+4,Jarvis,Grab,Grab,2020-01-07,,DOC,22
+5,Cragg-crk,Grab,Grab,2020-01-07,,DOC,22
+6,Tunnel,Grab,R1,2020-01-07,,DOC,22
+7,Tunnel,Grab,R2,2020-01-07,,DOC,22
+8,Lab,QA-QC,RO,,,DOC,22
+9,Lab,QA-QC,CalVer-1_5.55ppm,,,DOC,22
+10,Lab,QA-QC,RO,,,DOC,22
+11,Lab,QA-QC,CalVer-2_5.77ppm,,,DOC,22
+12,Lab,QA-QC,RO,,,DOC,22
