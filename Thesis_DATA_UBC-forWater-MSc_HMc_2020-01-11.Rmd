@@ -102,8 +102,11 @@ Water samples were collected and transported via coolers (on ice) to UBC's EcoHy
 In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH); all samples resulted in phosphate concentrations below detectable limits (XXXXXX mg/L).   
 
 
-```{r samples}
+```{r TOC-V samples}
 ## Shimadzu TOC-V samples and results
+
+
+# ------------ SAMPLES ------------ #
 
 # create a data frame of all sample ID data
 # for all samples analyzed on Shimadzu TOC-V (UBC ESB 3062)
@@ -111,7 +114,7 @@ In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::ca
 # input directory path
 sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/"
 # read in all the files
-shimadzu_samples <- list.files(sampledata_path_TOCV, pattern = "*.csv") %>% 
+shimadzu_samples <- list.files(path = sampledata_path_TOCV, pattern = "*.csv") %>% 
   map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
 # check structure
@@ -128,21 +131,73 @@ shimadzu_samples <- shimadzu_samples %>%
                    analysis = as_factor(analysis),
                    trip = as_factor(trip))
 str(shimadzu_samples)
+head(shimadzu_samples)
+
+#check that there are 22 trips
+levels(shimadzu_samples$trip)
+
+# check which sites are included
+levels(shimadzu_samples$site)
+
+# fix naming errors for sites
+shimadzu_samples$site <- shimadzu_samples$site %>% 
+  plyr::revalue(c(
+    "Chris" = "Chris-crk",
+    "Lower-Leech-blw-confl" = "Leech-downstreamconf",
+    "Leech-main-confl" = "Leech-downstreamconf",
+    "J-Trib" = "West-Jordan",
+    "West-jordan" = "West-Jordan",
+    "W.Jarvis" = "Jarvis",
+    "Rithet-N" = "Rithet",
+    "Judge" = "Judge-crk"
+  ))
+# check sites again
+levels(shimadzu_samples$site)
+
+length(levels(shimadzu_samples$site))
+#---- samples were collected from a total of 30 sites, 6 were permanent installations ---- #
 
 
 
+# ------------ RESULTS ------------ #
+
+# input directory path
+resultsdata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/"
+# read in all the files
+shimadzu_results <- list.files(path = resultsdata_path_TOCV, pattern = "*.txt") %>% 
+  map(~ read_delim(file = file.path(resultsdata_path_TOCV, .), delim = " ", skip = 13, col_names = TRUE)) %>% 
+  reduce(rbind)
+# check structure
+str(shimadzu_results)
 
 
 
-
-
-
+# correct the sructure/format
+shimadzu_results <- shimadzu_results %>% 
+  dplyr::transmute(vial = as.numeric(vial),
+                   site = forcats::as_factor(site),
+                   sample_type = forcats::as_factor(`sample-type`),
+                   sample = forcats::as_factor(sample),
+                   dt_sampled = head(lubridate::ymd_hms(`date-time_sampled`, frac = TRUE, tz = TZ, truncated = 3), -1),
+                   fillStage_cm = as.numeric(`fill-stage`),
+                   analysis = as_factor(analysis),
+                   trip = as_factor(trip))
+str(shimadzu_results)
+head(shimadzu_results)
 
 
 # list all TOC-V results files
 shimadzu_results_files <- list.files(path = "/R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/",
                                     recursive = TRUE,
                                     full.names = TRUE)
+
+
+
+
+
+
+
+
 # ---- OLD ---- #
 ## vertical rack sample results
 # read in the (pre-sorted and organized) vertical rack sample results file
