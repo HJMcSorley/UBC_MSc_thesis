@@ -110,72 +110,26 @@ In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::ca
 
 # input directory path
 sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/"
-
+# read in all the files
 shimadzu_samples <- list.files(sampledata_path_TOCV, pattern = "*.csv") %>% 
-  map(~ read_csv(file.path(sampledata_path_TOCV, .), 
-                 skip = 4, col_names = TRUE)) %>% # read in all the files
+  map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
-
+# check structure
 str(shimadzu_samples)
 
-# get the sructure correct
+# correct the sructure/format
 shimadzu_samples <- shimadzu_samples %>% 
   dplyr::transmute(vial = as.numeric(vial),
-                site = forcats::as_factor(site),
-                sample_type = forcats::as_factor(`sample-type`),
-                sample = forcats::as_factor(sample),
-                dt_sampled = head(lubridate::ymd_hms(`date-time_sampled`, frac = TRUE, tz = TZ, truncated = 3), -1),
-                fillStage_cm = as.numeric(`fill-stage`),
-                analysis = as_factor(analysis),
-                trip = as_factor(trip))
-
+                   site = forcats::as_factor(site),
+                   sample_type = forcats::as_factor(`sample-type`),
+                   sample = forcats::as_factor(sample),
+                   dt_sampled = head(lubridate::ymd_hms(`date-time_sampled`, frac = TRUE, tz = TZ, truncated = 3), -1),
+                   fillStage_cm = as.numeric(`fill-stage`),
+                   analysis = as_factor(analysis),
+                   trip = as_factor(trip))
 str(shimadzu_samples)
 
-# --- did not work ------------------------------------
-# read in all file names in directory
-shimadzu_sample_files <- list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/", 
-                                    pattern = "*.csv", 
-                                    full.names = TRUE)
-# specify read_csv details 
-# skip first 4 rows, update headers (no dashes)
-sampleFUN <- function(x){
-    read_csv(file = x, skip = 5, 
-             #col_names = c("vial", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm", "analysis", "trip"),
-             #col_types = c("d", "f", "f", "c", "d", "d", "f", "f")
-             )
-  }
 
-# read and bind all sample ID files -----------
-# try with map_dfr()
-shimadzu_samples <- purrr::map_dfr(shimadzu_sample_files, sampleFUN) 
-# try with reduce() and full_join -- don't think this will work unless each is an individual dataframe already
-
-# Load everything into the Global Environment
-df_list_read2 # Assign to a list
-<- shimadzu_sample_files %>%
-  purrr::map(function(file_name){ # iterate through each file name
-    read_csv(paste0(file_path, file_name))})
-
-
-# reduce() and full_join -when each is an individual dataframe already
- shimadzu_samples <- purrr::reduce(shimadzu_sample_files, sampleFUN full_join(by = "trip"))
-# ---------------------------------------------not working
- 
- 
-
-
-# ---------
-# try again
-sampleID_filemerge <-  function(mypath){
-  filenames = list.files(path = mypath, full.names = TRUE)
-  datalist = lapply(filenames, function(x)
-    { read_csv(file = x, skip = 4, 
-               #col_names = c("vial", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm", "analysis", "trip"),
-               #col_types = c("d", "f", "f", "c", "T", "n", "f", "f") 
-               )})
-    purrr::reduce(f = function(x, y) {merge(x, y)}, x = datalist) }
-
-shimadzu_samples <- sampleID_filemerge("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples")
 
 
 
