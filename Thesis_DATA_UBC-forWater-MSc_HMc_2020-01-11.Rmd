@@ -161,82 +161,51 @@ length(levels(shimadzu_samples$site))
 
 
 
-# ------------ RESULTS ------------ # YOU ARE HERE __ THIS CODE DOES NOT WORK YET & Files for 17 and 18 are short
+# ------------ RESULTS ------------ # 
 
-# input results directory path
-resultsdata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/"
-# read in all the files
-shimadzu_results <- list.files(path = resultsdata_path_TOCV, pattern = "*.txt") %>% 
-  map(~ read_delim(file = file.path(resultsdata_path_TOCV, .), delim = " ", skip = 14, quote = NULL, escape_double = FALSE, escape_backslash = FALSE,
-                   col_names = c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution Notes",	"Date", "hms", "Am/PM",	"Spl. No.",	"Inj. No.",	"Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol."))) %>% 
+# Note: annoying TOC-V export issue
+# data files for analysis of trips 1-8 have 19 columns, while trips 9-22 have 18 columns
+# import as two separate blocks (from two subdirectories), then alter and then merge
+
+# assign column names = col.names():
+nineteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
+
+eighteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
+
+# directory 1 (trips 2-8) with 19 columns
+# input results directory path-1
+resultsdata_path1_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/"
+# read in all the files (trips 2-8)
+shimadzu_results1 <- list.files(path = resultsdata_path1_TOCV, pattern = "*.txt") %>% 
+  map(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
+                   row.names = NULL, skip = 14, header = FALSE,
+                   col.names = nineteencolumns)) %>% 
+  reduce(rbind) %>% 
+  select(-Mean.Area)  # drop mean area
+# check that there are 18 columns now
+str(shimadzu_results1)
+
+## directory 2 (trips 9-22) with 18 columns
+# input results directory path-2
+resultsdata_path2_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/"
+# read in all the files (trips 9 -22)
+shimadzu_results2 <- list.files(path = resultsdata_path2_TOCV, pattern = "*.txt") %>% 
+  map(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
+                   row.names = NULL, skip = 14, header = FALSE,
+                   col.names = eighteencolumns)) %>% 
   reduce(rbind)
+
 # check structure
+str(shimadzu_results2)
+
+# combine the two blocks into one shimadzu results dataframe
+shimadzu_results <- rbind(shimadzu_results1, shimadzu_results2)
 str(shimadzu_results)
-head(shimadzu_results)
-
-# test
-read_delim(file = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/trip10_TOCV_2019-06-13_Leech-June12.txt", delim = " ",
-           skip = 13, 
-           col_names = c("Type",	"Analysis",	"Sample Name",	"Sample ID",	"method",	"Cal Curve",	"Manual Dilution Notes",	"Date", "hms", "Am/PM",	"Spl. No.",	"Inj. No.",	"Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol."))
-
-
-# correct the sructure/format
-shimadzu_results <- shimadzu_results %>% 
-  dplyr::transmute(vial = as.numeric(vial),
-                   site = forcats::as_factor(site),
-                   sample_type = forcats::as_factor(`sample-type`),
-                   sample = forcats::as_factor(sample),
-                   dt_sampled = head(lubridate::ymd_hms(`date-time_sampled`, frac = TRUE, tz = TZ, truncated = 3), -1),
-                   fillStage_cm = as.numeric(`fill-stage`),
-                   analysis = as_factor(analysis),
-                   trip = as_factor(trip))
-str(shimadzu_results)
-head(shimadzu_results)
-
-
-# list all TOC-V results files
-shimadzu_results_files <- list.files(path = "/R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/",
-                                    recursive = TRUE,
-                                    full.names = TRUE)
 
 
 
 
 
-
-
-
-# ---- OLD ---- #
-## vertical rack sample results
-# read in the (pre-sorted and organized) vertical rack sample results file
-racks_df <- read.csv(file = "2019-04-17_Vertical-Rack_Results.csv", header = TRUE)
-str(racks_df)
-
-# format dates
-racks_df$analysis_date <- as.POSIXct(racks_df$analysis_date, format="%Y-%m-%d", tz = TZ)
-
-# check structure again
-str(racks_df)
-
-
-# --- #
-## grab sample results
-# read in the (pre-sorted and organized) grab sample results file
-grabs_df <- read.csv(file = "2019-04-17_Grab-Sample_Results.csv", header = TRUE)
-str(grabs_df)
-
-# format dates
-grabs_df$analysis_date <- as.POSIXct(grabs_df$analysis_date, format="%Y-%m-%d", tz = TZ)
-grabs_df$collection.date <- as.POSIXct(grabs_df$collection.date, format="%Y-%m-%d", tz = TZ)
-
-# assign DateTime for grab samples
-grabs_df <- grabs_df %>% 
-  mutate(Grab_DateTime = as.POSIXct(paste(collection.date, Grab.Time), format="%Y-%m-%d %H:%M", tz = TZ))
-
-# check structure again
-str(grabs_df)
-head(grabs_df)
-tail(grabs_df)
 
 ```
 
