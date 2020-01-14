@@ -59,6 +59,7 @@ site_captions <- c("Weeks Main Creek",
 TZ <- "Etc/GMT+8"
 
 # use forWater defined colours (hexadecimal codes) for plots
+# all colours defined by forWater admin, except 'MyOrange' which I made
 forWater_colours <- c(MainBlue = "#09A4D2", 
                       MainGreen = "#668536", 
                       AccentBlue = "#5B99CC", 
@@ -97,13 +98,14 @@ str(install_df)
 
 ## Water sample data and analytic results
 
-Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations. Samples were filtered (0.45-micron PES filter), acidified to bring pH below 2, and analyzed to quantify DOC (as non-purgeable organic carbon, NPOC) using a Shimadzu TOC-V auto-analyzer (High-Temperature COmbustion Method, 5310-B [@EatonA.D.ClesceriL.S.GreenbergA.E.Franson2000a]).
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations. Samples were filtered through 0.45-micron PES filters; acidified, to bring pH below 2; and analyzed with a Shimadzu TOC-V to quantify DOC (as non-purgeable organic carbon, NPOC) via High-Temperature Combustion Method (5310-B) [@EatonA.D.ClesceriL.S.GreenbergA.E.Franson2000a].
 
-In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH); all samples resulted in phosphate concentrations below detectable limits (XXXXXX mg/L).   
+In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH). Each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
 
 
 ```{r TOC-V samples}
 ## Shimadzu TOC-V samples and results
+# sample IDs and results from analysis of DOC (as NPOC)
 
 
 # ------------ SAMPLES ------------ #
@@ -111,8 +113,8 @@ In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::ca
 # create a data frame of all sample ID data
 # for all samples analyzed on Shimadzu TOC-V (UBC ESB 3062)
 
-# input directory path
-sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples/"
+# input samples directory path
+sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/"
 # read in all the files
 shimadzu_samples <- list.files(path = sampledata_path_TOCV, pattern = "*.csv") %>% 
   map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
@@ -159,17 +161,23 @@ length(levels(shimadzu_samples$site))
 
 
 
-# ------------ RESULTS ------------ #
+# ------------ RESULTS ------------ # YOU ARE HERE __ THIS CODE DOES NOT WORK YET & Files for 17 and 18 are short
 
-# input directory path
-resultsdata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results/"
+# input results directory path
+resultsdata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/"
 # read in all the files
 shimadzu_results <- list.files(path = resultsdata_path_TOCV, pattern = "*.txt") %>% 
-  map(~ read_delim(file = file.path(resultsdata_path_TOCV, .), delim = " ", skip = 13, col_names = TRUE)) %>% 
+  map(~ read_delim(file = file.path(resultsdata_path_TOCV, .), delim = " ", skip = 14, quote = NULL, escape_double = FALSE, escape_backslash = FALSE,
+                   col_names = c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution Notes",	"Date", "hms", "Am/PM",	"Spl. No.",	"Inj. No.",	"Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol."))) %>% 
   reduce(rbind)
 # check structure
 str(shimadzu_results)
+head(shimadzu_results)
 
+# test
+read_delim(file = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/trip10_TOCV_2019-06-13_Leech-June12.txt", delim = " ",
+           skip = 13, 
+           col_names = c("Type",	"Analysis",	"Sample Name",	"Sample ID",	"method",	"Cal Curve",	"Manual Dilution Notes",	"Date", "hms", "Am/PM",	"Spl. No.",	"Inj. No.",	"Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol."))
 
 
 # correct the sructure/format
