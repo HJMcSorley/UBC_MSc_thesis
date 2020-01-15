@@ -117,7 +117,7 @@ In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::ca
 sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/"
 # read in all the files
 shimadzu_samples <- list.files(path = sampledata_path_TOCV, pattern = "*.csv") %>% 
-  map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
+  purrr::map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
 # check structure
 str(shimadzu_samples)
@@ -172,16 +172,37 @@ nineteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal
 
 eighteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
 
-# directory 1 (trips 2-8) with 19 columns
-# input results directory path-1
+
+
+
+
+# try to add an ID column to each file
+filenames <-  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/", pattern = "*.txt") 
+fileIDs <- str_extract(filenames, "([a-z]{4,}+[0-9]*+)")  
+
+# 1 example:  "  ans <- map2(filenames, sites, ~read_csv(.x) %>% mutate(id = .y)) "
+head(
+  purrr::map2_dfr(.x = filenames, .y = fileIDs, 
+                  ~read.table(.x, row.names = NULL, skip = 14, header = FALSE, col.names = nineteencolumns) %>%  
+                    mutate(id = .y))  
+  )
+
+# got it! 
+# read in multiple files and add a column indicating trip based on course file name
+# set directory path
 resultsdata_path1_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/"
+
 # read in all the files (trips 2-8)
 shimadzu_results1 <- list.files(path = resultsdata_path1_TOCV, pattern = "*.txt") %>% 
-  map(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
-                   row.names = NULL, skip = 14, header = FALSE,
-                   col.names = nineteencolumns)) %>% 
-  reduce(rbind) %>% 
-  select(-Mean.Area)  # drop mean area
+  set_names(str_extract(., "([a-z]{4,}+[0-9]*+)")) %>%
+  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
+                              row.names = NULL, skip = 14, header = FALSE, col.names = nineteencolumns), .id = "source") %>% 
+  select(-Mean.Area)
+str(shimadzu_results1)
+
+
+
+
 # check that there are 18 columns now
 str(shimadzu_results1)
 
@@ -190,7 +211,7 @@ str(shimadzu_results1)
 resultsdata_path2_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/"
 # read in all the files (trips 9 -22)
 shimadzu_results2 <- list.files(path = resultsdata_path2_TOCV, pattern = "*.txt") %>% 
-  map(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
+  purrr::map(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
                    row.names = NULL, skip = 14, header = FALSE,
                    col.names = eighteencolumns)) %>% 
   reduce(rbind)
@@ -204,7 +225,12 @@ str(shimadzu_results)
 
 
 
+# ------------ SHIMADZU ANALYSIS RESULTS ------------ # 
 
+# combine 'shimadzu_samples' with 'shimadzu_results'
+
+# isolate required data from results files (vial, trip, )
+# the NPOC results are in column called "Result"
 
 
 ```
