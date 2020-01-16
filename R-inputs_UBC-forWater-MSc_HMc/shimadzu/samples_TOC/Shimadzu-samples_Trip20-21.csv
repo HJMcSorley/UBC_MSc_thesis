@@ -21,9 +21,9 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 16,Cragg-crk,Rack,L3,,75,DOC,20
 17,Chris-crk,Grab,Grab,2019-12-17 11:45,26,DOC,20
 18,Cragg-crk,Grab,Grab,2019-12-17 14:00,,DOC,20
-19,Cragg-crk,Grab,Grab,2019-12-19 12:00,63,DOC,21
-20,Cragg-crk,Rack,L1,,45,DOC,21
-21,Cragg-crk,Rack,L2,,63,DOC,21
+19,Cragg-crk,Grab,Grab,2019-12-19 12:00,63,DOC,20
+20,Cragg-crk,Rack,L1,,45,DOC,20
+21,Cragg-crk,Rack,L2,,63,DOC,20
 22,Chris-crk,Grab,Grab,2019-12-16 13:35,27,DOC,20
 23,Chris-crk,Rack,L1,,26,DOC,20
 24,Chris-crk,Rack,L2,,36,DOC,20

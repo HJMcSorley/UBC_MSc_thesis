@@ -233,10 +233,30 @@ str(shimadzu_results)
 TOCV_results <- shimadzu_results %>% 
   select(trip, vial, NPOC_mgL) %>% 
   group_by(trip, vial) %>% 
-  right_join(shimadzu_samples)
+  summarize(NPOC_ppm = mean(NPOC_mgL)) %>% 
+  right_join(shimadzu_samples, by = c("trip" = "trip", "vial" = "vial")) %>% 
+  ungroup() 
+
+# check lengths match
+nrow(TOCV_results) == nrow(shimadzu_samples)
+# check head
+head(TOCV_results)
+# check structure
+str(TOCV_results)
 
 
+# what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
+TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
+# update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
+TOCV_results <- TOCV_results %>% 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
+                          TRUE ~ trip))
+
+# check to make sure it's updated:
+TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
+
+# good!
 ```
 
 Import weather data to generate rapid-runoff plots.
