@@ -1,0 +1,17 @@
+# 2020-01-08,,,,,,
+# Leech samples collected Jan.7 (trip22),,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Lab,QA-QC,RO,,,22
+2,Judge-crk,Grab,Grab,2020-01-07,,22
+3,Rithet,Grab,Grab,2020-01-07,,22
+4,Jarvis,Grab,Grab,2020-01-07,,22
+5,Cragg-crk,Grab,Grab,2020-01-07,,22
+6,Tunnel,Grab,R1,2020-01-07,,22
+7,Tunnel,Grab,R2,2020-01-07,,22
+8,Lab,QA-QC,RO,,,22
+9,Lab,QA-QC,CalVer-1_5.55ppm,,,22
+10,Lab,QA-QC,RO,,,22
+11,Lab,QA-QC,CalVer-2_5.77ppm,,,22
+12,Lab,QA-QC,RO,,,22

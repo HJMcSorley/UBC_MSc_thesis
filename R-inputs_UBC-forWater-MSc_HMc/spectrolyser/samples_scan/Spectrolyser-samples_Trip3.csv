@@ -1,0 +1,19 @@
+2018-11-27,,,,,,
+# Leech samples collected Nov.23,,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Lab,QA-QC,RO,,,
+2,W.Jarvis,Grab,Grab,2019-11-23 8:25,,3
+3,Chris-crk,Rack,L1,,22,3
+4,Chris-crk,Grab,Grab,2019-11-23 8:55,,3
+5,Weeks-out,Grab,Grab,2019-11-23 9:15,,3
+6,Leech-head,Grab,Grab,2019-11-23 10:00,,3
+7,Cragg-crk,Rack,L1,,45,3
+8,Cragg-crk,Grab,Grab,2019-11-23 11:15,,3
+9,West-Leech,Rack,L1,,40,3
+10,West-Leech,Rack,L2,,48,3
+11,West-Leech,Grab,Grab,2019-11-23 12:15,,3
+12,Boneyard,Grab,Grab,2019-11-23 13:20,,3
+13,Tunnel,Grab,Grab,2019-11-23 13:45,,3
+14,Lab,QA-QC,RO,,,3

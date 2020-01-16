@@ -1,0 +1,57 @@
+# 2019-10-13,,,,,,
+# Leech samples collected Oct 12 (trip 16),,,,,,
+,,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Weeks-out,Grab,Grab,2019-10-12 13:30,40,16
+2,Weeks-out,Grab,Grab,2019-10-12 13:30,40,16
+3,Weeks-out,Grab,Grab,2019-10-12 13:30,40,16
+4,Weeks-out,Rack,L1,,31,16
+5,Weeks-out,Rack,L1,,31,16
+6,Weeks-out,Rack,L1,,31,16
+7,Leech-head,Grab,Grab,2019-10-12 10:45,95,16
+8,Leech-head,Grab,Grab,2019-10-12 10:45,95,16
+9,Leech-head,Grab,Grab,2019-10-12 10:45,95,16
+10,Leech-head,Rack,L1,,88,16
+11,Leech-head,Rack,L1,,88,16
+12,Leech-head,Rack,L1,,88,16
+13,Cragg-crk,Grab,Grab,2019-10-12 9:00,15,16
+14,Cragg-crk,Grab,Grab,2019-10-12 9:00,15,16
+15,Cragg-crk,Grab,Grab,2019-10-12 9:00,15,16
+16,Chris-crk,Grab,Grab,2019-10-12 15:00,,16
+17,Chris-crk,Grab,Grab,2019-10-12 15:00,,16
+18,Chris-crk,Grab,Grab,2019-10-12 15:00,,16
+19,J-Trib,Grab,Grab,2019-10-12 14:00,,16
+20,J-Trib,Grab,Grab,2019-10-12 14:00,,16
+21,J-Trib,Grab,Grab,2019-10-12 14:00,,16
+22,Jarvis,Grab,Grab,2019-10-12 8:30,,16
+23,Jarvis,Grab,Grab,2019-10-12 8:30,,16
+24,Jarvis,Grab,Grab,2019-10-12 8:30,,16
+25,Lazar,Grab,Grab,2019-10-12 8:00,,16
+26,Lazar,Grab,Grab,2019-10-12 8:00,,16
+27,Lazar,Grab,Grab,2019-10-12 8:00,,16
+28,West-Leech,Grab,Grab,2019-10-12 8:00,18,16
+29,West-Leech,Grab,Grab,2019-10-12 8:00,18,16
+30,West-Leech,Grab,Grab,2019-10-12 8:00,18,16
+31,West-Leech,Rack,L1,,23,16
+32,West-Leech,Rack,L1,,23,16
+33,West-Leech,Rack,L1,,23,16
+34,Tunnel,Grab,Grab,2019-10-12 10:30,0,16
+35,Tunnel,Grab,Grab,2019-10-12 10:30,0,16
+36,Tunnel,Grab,Grab,2019-10-12 10:30,0,16
+37,Tunnel,QA-QC,HoldTime-A1,2019-10-12 10:30,,16
+38,Tunnel,QA-QC,HoldTime-A1,2019-10-12 10:30,,16
+39,Tunnel,QA-QC,HoldTime-A1,2019-10-12 10:30,,16
+40,Tunnel,QA-QC,HoldTime-A2,2019-10-12 10:30,,16
+41,Tunnel,QA-QC,HoldTime-A2,2019-10-12 10:30,,16
+42,Tunnel,QA-QC,HoldTime-A2,2019-10-12 10:30,,16
+43,Tunnel,QA-QC,HoldTime-A3,2019-10-12 10:30,,16
+44,Tunnel,QA-QC,HoldTime-A3,2019-10-12 10:30,,16
+45,Tunnel,QA-QC,HoldTime-A3,2019-10-12 10:30,,16
+46,Tunnel,QA-QC,HoldTime-A4,2019-10-12 10:30,,16
+47,Tunnel,QA-QC,HoldTime-A4,2019-10-12 10:30,,16
+48,Tunnel,QA-QC,HoldTime-A4,2019-10-12 10:30,,16
+49,Tunnel,QA-QC,HoldTime-A5,2019-10-12 10:30,,16
+50,Tunnel,QA-QC,HoldTime-A5,2019-10-12 10:30,,16
+51,Tunnel,QA-QC,HoldTime-A5,2019-10-12 10:30,,16
+52,Tunnel,QA-QC,HoldTime-A6,2019-10-12 10:30,,17

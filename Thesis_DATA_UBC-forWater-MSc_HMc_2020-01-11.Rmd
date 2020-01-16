@@ -259,6 +259,162 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 # good!
 ```
 
+
+```{r Spectrolyser samples and results}
+## Spectrolyser samples and results
+# sample IDs and results from analysis of optical properties
+# three part data munge
+# 1. bring in sample tracking data, format appropriately
+# 2. bring in results data, format appropriately
+# 3. bring them together as meanigful results data
+
+
+# 1. ------------ SAMPLES ------------ #
+
+# create a data frame of all sample ID data
+# for all samples analyzed on Scan Spectrolyser (UBC ESB 3062)
+
+# input samples directory path
+sampledata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/samples_scan/"
+# read in all the files
+spectrolyser_samples <- list.files(path = sampledata_path_scan, pattern = "*.csv") %>% 
+  purrr::map(~ read_csv(file.path(sampledata_path_scan, .), skip = 4, col_names = TRUE)) %>% 
+  reduce(rbind)
+# check structure
+str(spectrolyser_samples)
+
+# correct the sructure/format
+spectrolyser_samples <- spectrolyser_samples %>% 
+  dplyr::transmute(measurement = as.numeric(measurement),
+                   site = forcats::as_factor(site),
+                   sample_type = forcats::as_factor(`sample-type`),
+                   sample = forcats::as_factor(sample),
+                   dt_sampled = head(lubridate::ymd_hms(`date-time_sampled`, frac = TRUE, tz = TZ, truncated = 3), -1),
+                   fillStage_cm = as.numeric(`fill-stage`),
+                   trip = as_factor(trip))
+str(spectrolyser_samples)
+head(spectrolyser_samples)
+
+#check which trips were included
+levels(spectrolyser_samples$trip)
+
+# check which sites are included
+levels(spectrolyser_samples$site)
+
+# fix naming errors for sites
+spectrolyser_samples$site <- spectrolyser_samples$site %>% 
+  plyr::revalue(c(
+    "Chris" = "Chris-crk",
+    "Lower-Leech-blw-confl" = "Leech-downstreamconf",
+    "Leech-main-confl" = "Leech-downstreamconf",
+    "J-Trib" = "West-Jordan",
+    "West-jordan" = "West-Jordan",
+    "W.Jarvis" = "Jarvis",
+    "Rithet-N" = "Rithet",
+    "Judge" = "Judge-crk"
+  ))
+# check sites again
+levels(spectrolyser_samples$site)
+
+length(levels(spectrolyser_samples$site))
+#---- samples were collected from a total of 30 sites (including lab), 6 were permanent installations ---- #
+
+
+
+# 2. ------------ RESULTS ------------ # 
+
+# assign column names = col.names():
+scancolumns <- c("Date", "Time",	"Status",	"Turbid.FTUeq",	"NULLTurbid",	"NO3-Neq_ppm",	"NULLNO3-Neq",	"TOCeq_ppm",	"NULLTOCeq", "DOCeq_ppm", "NULLDOCeq", "SAC254_Abs/m", "SAC254_0", "SAC436_Abs/m",	"SAC436_0",	"254-436_Abs/m", "254-436_0",	"analogIN_", "analogIN_0")
+
+## read in files and add a column indicating trip #, based on source file name
+
+## directory 1 (trips 2-8) with 19 columns
+# input results directory path-1
+resultsdata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/results_scan/"
+# read in all the files (trips 2-8)
+spectrolyser_results <- list.files(path = resultsdata_path_scan, pattern = c("*.par", "*.txt")) %>% 
+  set_names(str_extract(., "([A-Za-z]{3,}+[0-9]*+)")) %>%
+  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
+                              row.names = NULL, skip = 14, header = FALSE, col.names = nineteencolumns), .id = "source") %>% 
+  select(-Mean.Area)
+# check that there are 19 columns now (minus "Mean.Area")
+str(shimadzu_results1)
+
+
+## directory 2 (trips 9-22) with 18 columns
+# input results directory path-2
+resultsdata_path2_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/"
+# read in all the files (trips 9 -22)
+shimadzu_results2 <- list.files(path = resultsdata_path2_TOCV, pattern = "*.txt") %>% 
+  set_names(str_extract(., "([a-z]{4,}+[0-9]*+)")) %>%
+  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
+                              row.names = NULL, skip = 14, header = FALSE, col.names = eighteencolumns), .id = "source") 
+
+# check structure
+str(shimadzu_results2)
+
+# combine the two blocks into one shimadzu results dataframe
+shimadzu_results <- bind_rows(shimadzu_results1, shimadzu_results2)
+str(shimadzu_results)
+
+# ---- Alpha-numeric extraction function ---- #
+# from http://stla.github.io/stlapblog/posts/Numextract.html
+NumberXtract <- function(alphnum){
+  unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
+  }
+
+## pull out numbers from alphanumerics & create:
+# factor variable for trip numbers   (from 'source')
+# numeric variable for NPOC-results  (from 'Result')
+# factor variable for vial number    (from 'Sample.Name')
+shimadzu_results <- shimadzu_results %>% 
+  mutate(trip = as_factor(NumberXtract(source)),
+         NPOC_mgL = as.numeric(NumberXtract(Result)),
+         vial = as.numeric(NumberXtract(Sample.Name)))
+# check it out
+str(shimadzu_results)
+
+
+
+# 3. ------------ SHIMADZU ANALYSIS RESULTS ------------ # 
+
+# combine 'shimadzu_samples' with 'shimadzu_results'
+TOCV_results <- shimadzu_results %>% 
+  select(trip, vial, NPOC_mgL) %>% 
+  group_by(trip, vial) %>% 
+  summarize(NPOC_ppm = mean(NPOC_mgL)) %>% 
+  right_join(shimadzu_samples, by = c("trip" = "trip", "vial" = "vial")) %>% 
+  ungroup() 
+
+# check lengths match
+nrow(TOCV_results) == nrow(shimadzu_samples)
+# check head
+head(TOCV_results)
+# check structure
+str(TOCV_results)
+
+
+# what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
+TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
+
+# update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
+TOCV_results <- TOCV_results %>% 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
+                          TRUE ~ trip))
+
+# check to make sure it's updated:
+TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
+
+# good!
+```
+
+
+
+
+
+
+
+
 Import weather data to generate rapid-runoff plots.
 
 ```{r FWx.data}
