@@ -317,7 +317,7 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
 levels(spectrolyser_samples$site)
 
 length(levels(spectrolyser_samples$site))
-#---- samples were collected from a total of 30 sites (including lab), 6 were permanent installations ---- #
+#---- samples were collected from a total of 31 sites (including lab), 6 were permanent field installations ---- #
 
 
 
@@ -327,83 +327,58 @@ length(levels(spectrolyser_samples$site))
 scancolumns <- c("Date", "Time",	"Status",	"Turbid.FTUeq",	"NULLTurbid",	"NO3-Neq_ppm",	"NULLNO3-Neq",	"TOCeq_ppm",	"NULLTOCeq", "DOCeq_ppm", "NULLDOCeq", "SAC254_Abs/m", "SAC254_0", "SAC436_Abs/m",	"SAC436_0",	"254-436_Abs/m", "254-436_0",	"analogIN_", "analogIN_0")
 
 ## read in files and add a column indicating trip #, based on source file name
-
-## directory 1 (trips 2-8) with 19 columns
-# input results directory path-1
 resultsdata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/results_scan/"
 # read in all the files (trips 2-8)
-spectrolyser_results <- list.files(path = resultsdata_path_scan, pattern = c("*.par", "*.txt")) %>% 
+spectrolyser_results <- list.files(path = resultsdata_path_scan) %>% 
   set_names(str_extract(., "([A-Za-z]{3,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
-                              row.names = NULL, skip = 14, header = FALSE, col.names = nineteencolumns), .id = "source") %>% 
-  select(-Mean.Area)
-# check that there are 19 columns now (minus "Mean.Area")
-str(shimadzu_results1)
+  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path_scan, .), 
+                              skip = 2, header = FALSE, col.names = scancolumns), .id = "source") 
 
-
-## directory 2 (trips 9-22) with 18 columns
-# input results directory path-2
-resultsdata_path2_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/"
-# read in all the files (trips 9 -22)
-shimadzu_results2 <- list.files(path = resultsdata_path2_TOCV, pattern = "*.txt") %>% 
-  set_names(str_extract(., "([a-z]{4,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
-                              row.names = NULL, skip = 14, header = FALSE, col.names = eighteencolumns), .id = "source") 
-
-# check structure
-str(shimadzu_results2)
-
-# combine the two blocks into one shimadzu results dataframe
-shimadzu_results <- bind_rows(shimadzu_results1, shimadzu_results2)
-str(shimadzu_results)
-
-# ---- Alpha-numeric extraction function ---- #
-# from http://stla.github.io/stlapblog/posts/Numextract.html
-NumberXtract <- function(alphnum){
-  unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
-  }
-
-## pull out numbers from alphanumerics & create:
-# factor variable for trip numbers   (from 'source')
-# numeric variable for NPOC-results  (from 'Result')
-# factor variable for vial number    (from 'Sample.Name')
-shimadzu_results <- shimadzu_results %>% 
-  mutate(trip = as_factor(NumberXtract(source)),
-         NPOC_mgL = as.numeric(NumberXtract(Result)),
-         vial = as.numeric(NumberXtract(Sample.Name)))
 # check it out
-str(shimadzu_results)
+str(spectrolyser_results)
+
+# pull out numbers from alphanumeric 'source' to create factor variable 'trip'
+# use function 'NumberXtract()'
+# add measurement numbers to each trip group (analysis order)
+# drop null variables for tidiness
+spectrolyser_results <- spectrolyser_results %>% 
+  mutate(trip = as_factor(NumberXtract(source))) %>% 
+  group_by(trip) %>% 
+  mutate(measurement = row_number()) 
+# check it out
+str(spectrolyser_results)
+
+unique(spectrolyser_results$trip)
+
+nrow(spectrolyser_results) == nrow(spectrolyser_samples)
 
 
+# 3. ------------ SPECTROLYSER ANALYSIS RESULTS ------------ # 
 
-# 3. ------------ SHIMADZU ANALYSIS RESULTS ------------ # 
-
-# combine 'shimadzu_samples' with 'shimadzu_results'
-TOCV_results <- shimadzu_results %>% 
-  select(trip, vial, NPOC_mgL) %>% 
-  group_by(trip, vial) %>% 
-  summarize(NPOC_ppm = mean(NPOC_mgL)) %>% 
-  right_join(shimadzu_samples, by = c("trip" = "trip", "vial" = "vial")) %>% 
-  ungroup() 
+# combine 'spectrolyser_samples' with 'spectrolyser_results'
+SCAN_results <- spectrolyser_results %>% 
+  select(-c(Date, Time, Status, NULLTurbid, NULLNO3.Neq, NULLTOCeq, NULLDOCeq, SAC254_0, SAC436_0, X254.436_Abs.m, X254.436_0, analogIN_, analogIN_0)) %>% 
+  right_join(spectrolyser_samples, by = c("trip" = "trip", "measurement" = "measurement")) %>% 
+  ungroup()
 
 # check lengths match
-nrow(TOCV_results) == nrow(shimadzu_samples)
+nrow(SCAN_results) == nrow(spectrolyser_samples)
 # check head
-head(TOCV_results)
+head(SCAN_results)
 # check structure
-str(TOCV_results)
+str(SCAN_results)
 
 
 # what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
-TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
+SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
-TOCV_results <- TOCV_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
+SCAN_results <- SCAN_results %>% 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
                           TRUE ~ trip))
 
 # check to make sure it's updated:
-TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
+SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
 # good!
 ```
@@ -412,12 +387,12 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 
 
-
+## the following code chunks and text are old (to be updated):
 
 
 Import weather data to generate rapid-runoff plots.
 
-```{r FWx.data}
+```{r FWx.data OLD}
 
 # read in csv file provided by CRD technologist
 # combine separate files and update DateTime format to Posixct

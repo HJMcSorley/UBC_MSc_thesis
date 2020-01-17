@@ -16,7 +16,7 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 11,Tunnel,Grab,R1,2019-04-11 11:30,23,7
 12,Tunnel,Grab,R2,2019-04-11 11:30,23,7
 13,Tunnel,Grab,R3,2019-04-11 11:30,23,7
-14,Lab,QA-QC,RO,,,
+14,Lab,QA-QC,RO,,,7
 15,Lab,QA-QC,CAL-VER_A1_5.614ppm,,,7
 16,Lab,QA-QC,CAL-VER_A2_5.319ppm,,,7
 17,Lab,QA-QC,RO,,,7
