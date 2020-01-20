@@ -26,7 +26,6 @@ Note that the tidyverse includes a suite of useful packages, such as:
 
 ```{r packages, include = FALSE}
 # load packages
-
 suppressPackageStartupMessages(library(tidyverse))  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
 suppressPackageStartupMessages(library(knitr))      # tidy tables
 suppressPackageStartupMessages(library(gridExtra))  # rapid runoff hydrograph/precip plots
@@ -34,11 +33,9 @@ suppressPackageStartupMessages(library(grid))       # for rapid runoff plots
 
 ```
 
-
 Create vectors to easily call installation site names from, rather than typing words (efficient and consistent for updating and calling).
 
 ```{r tidy-names}
-
 # create a vector of site captions
 # NOTE: The site "Weeks Outlet" is being called "Weeks Main Creek"
 # match the order of installation from headwaters to mouth/diversion
@@ -101,7 +98,6 @@ str(install_df)
 Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations. Samples were filtered through 0.45-micron PES filters; acidified, to bring pH below 2; and analyzed with a Shimadzu TOC-V to quantify DOC (as non-purgeable organic carbon, NPOC) via High-Temperature Combustion Method (5310-B) [@EatonA.D.ClesceriL.S.GreenbergA.E.Franson2000a].
 
 In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH). Each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
-
 
 ```{r TOC-V samples and results}
 ## Shimadzu TOC-V samples and results
@@ -259,7 +255,6 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 # good!
 ```
 
-
 ```{r Spectrolyser samples and results}
 ## Spectrolyser samples and results
 # sample IDs and results from analysis of optical properties
@@ -382,6 +377,149 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 # good!
 ```
+
+``` {r output sample analysis files}
+## save all compiled sample analysis as .csv files 
+# *add a hash after writing to avoid accidental over-writing later*
+
+# write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")  # Shimadzu sample analyses results
+# write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv", na = "NA")  # Spectrolyser sample analyses results
+```
+
+Six pirmary research location in the Leech River watershed were equipped with vertical sampling racks which combined passive (siphon) samplers and compact river stage loggers (Odyssey capacitiance water level loggers).
+
+```{r stage}
+
+# bring in logger data and add a id column from the site file name
+# note, each of the 6 sites has files named except 'Leech-Head' is named by the logger serial number (12040) 
+
+# input samples directory path
+odyssey_path <-  "R-inputs_UBC-forWater-MSc_HMc/odyssey/"
+
+# check files  
+list.files(path = odyssey_path, pattern = "*.CSV") 
+# check source extract is reasonable   
+list.files(path = odyssey_path, pattern = "*.CSV") %>%
+  str_extract("([A-Z0-9]{4,}+)")
+# Note that source names will have to be updated (mutate)
+
+# read in all the files as one dataframe
+# add source (ID) based on file names
+# adjust date-time (note that there were multiple date formats output by loggers)
+# time is in 24 hour clock and it seems that lubridate does not like that...
+odyssey_data <- list.files(path = odyssey_path, pattern = "*.CSV") %>% 
+  set_names(str_extract(., "([A-Z0-9]{4,}+)")) %>%
+  purrr::map_dfr(~ read_csv(file.path(odyssey_path, .), skip = 12, 
+                            col_names = c("scan_no.", "Date", "Time", "Capacitance", "stage_cm")), .id = "source") %>% 
+  mutate(source = forcats::as_factor(source),
+         Date = lubridate::parse_date_time(Date, c("dmy", "ydm"), tz = TZ),
+         DateTime = lubridate::ymd_hms(paste(Date, Time), tz = TZ))
+
+# check structure
+str(odyssey_data)
+
+# check levels
+levels(odyssey_data$source)
+# rename site IDs
+odyssey_data$source <- forcats::fct_recode(odyssey_data$source, 
+                                  LeechHead = "12040",
+                                  ChrisCrk = "CHRIS",
+                                  CraggCrk = "CRAGG",
+                                  Tunnel = "LEECH",
+                                  Weeks = "WEEKS",
+                                  WestLeech = "WEST")
+# re-check levels
+levels(odyssey_data$source)
+
+
+# there is certainly a better way to do this -- with a loop or map or apply or metaprogramming
+# I don't know yet and I need to move on. 
+# bad technique: copy and paste x22 (I know this is bad and ugly, sorry)
+stage_df <- odyssey_data %>%
+  select(Date, source, stage_cm, DateTime) %>%
+  mutate(interval = case_when(  
+    # note that interval (stage_df) is the same as (trip_df) trip number of analysis/collection 
+    Date %within% interval(trip_df$trip.start[1], trip_df$trip.start[2]) ~ trip_df$trip[2],
+    Date %within% interval(trip_df$trip.start[2], trip_df$trip.start[3]) ~ trip_df$trip[3],
+    Date %within% interval(trip_df$trip.start[3], trip_df$trip.start[4]) ~ trip_df$trip[4],
+    Date %within% interval(trip_df$trip.start[4], trip_df$trip.start[5]) ~ trip_df$trip[5],
+    Date %within% interval(trip_df$trip.start[5], trip_df$trip.start[6]) ~ trip_df$trip[6],
+    Date %within% interval(trip_df$trip.start[6], trip_df$trip.start[7]) ~ trip_df$trip[7],
+    Date %within% interval(trip_df$trip.start[7], trip_df$trip.start[8]) ~ trip_df$trip[8],
+    Date %within% interval(trip_df$trip.start[8], trip_df$trip.start[9]) ~ trip_df$trip[9],
+    Date %within% interval(trip_df$trip.start[9], trip_df$trip.start[10]) ~ trip_df$trip[10],
+    Date %within% interval(trip_df$trip.start[10], trip_df$trip.start[11]) ~ trip_df$trip[11],
+    Date %within% interval(trip_df$trip.start[11], trip_df$trip.start[12]) ~ trip_df$trip[12],
+    Date %within% interval(trip_df$trip.start[12], trip_df$trip.start[13]) ~ trip_df$trip[13],
+    Date %within% interval(trip_df$trip.start[13], trip_df$trip.start[14]) ~ trip_df$trip[14],
+    Date %within% interval(trip_df$trip.start[14], trip_df$trip.start[15]) ~ trip_df$trip[15],
+    Date %within% interval(trip_df$trip.start[15], trip_df$trip.start[16]) ~ trip_df$trip[16],
+    Date %within% interval(trip_df$trip.start[16], trip_df$trip.start[17]) ~ trip_df$trip[17],
+    Date %within% interval(trip_df$trip.start[17], trip_df$trip.start[18]) ~ trip_df$trip[18],
+    Date %within% interval(trip_df$trip.start[18], trip_df$trip.start[19]) ~ trip_df$trip[19],
+    Date %within% interval(trip_df$trip.start[19], trip_df$trip.start[20]) ~ trip_df$trip[20],
+    Date %within% interval(trip_df$trip.start[20], trip_df$trip.start[21]) ~ trip_df$trip[21],
+    Date %within% interval(trip_df$trip.start[21], trip_df$trip.start[22]) ~ trip_df$trip[22],
+    Date %within% interval(trip_df$trip.start[22], trip_df$trip.start[23]) ~ trip_df$trip[23] ) )
+  
+ # check out the head tail and middle
+head(stage_df)
+tail(stage_df, - 0.2*length(stage_df$Date))
+tail(stage_df, - 0.5*length(stage_df$Date))
+tail(stage_df, - 0.7*length(stage_df$Date))
+tail(stage_df)
+       
+
+
+# ----- ----------- OLD -------------- ------- #
+# not sure if these offsets are correct #
+
+## stream level data (second try - bring them in, add a column with site ID combnine them into one then adjust date-times)
+# Odyssey Capacitance Water level Loggers installed at 6 sites 
+# sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
+# 3 data blocks exist for each site, date formats are irregular in most
+
+# correct all water level values with offset calculated based on observed and recorded stage 
+offset_L.Head   <- 60.84
+offset_WksOut   <- 29 # 9.5
+offset_ChrisCrk <- 30 # 7.27
+offset_CraggCrk <- 9.25
+offset_W.Leech  <- 4.85
+offset_Tunnel   <- 3.17
+
+# ---------  reworking ---------- #
+
+# what I want to do:
+# create a subset of odyssey_data and add a column of interval numbers based on whether the logger date falls within an interval of trip_df
+stage_df <- odyssey_data %>% select(Date, source, stage_cm, DateTime)  # subset
+interval <- trip_df$trip.start %>% 
+  purrr::map_dbl(.l = stage_df, 
+                 .f = for (i in seq_along(trip_df)) {
+        interval <- case_when(stage_df$Date %within% interval(trip_df$trip.start[i], trip_df$trip.start[i+1]) ~ i)
+      })
+
+# try with map_
+interval <- map_dbl(
+  odyssey_data, case_when(Date %within% interval(trip_df$trip.start[1], trip_df$trip.start[2]) ~ "1"
+))...
+
+# try loop?
+stage_df <- odyssey_data %>%
+  select(Date, source, stage_cm, DateTime) %>%
+  mutate(interval = ...)
+       
+stage_df <- stage_df %>% mutate(interval =   
+                     for (i in seq_along(nrow(trip_df))) {
+                       interval <- case_when(odyssey_data$Date %within% interval(trip_df$trip.start[i], trip_df$trip.start[i+1]) ~ trip_df$trip[i+1])
+                     }  
+)
+interval
+
+# meta programming and map?
+# learn from "https://stackoverflow.com/questions/57861055/how-can-i-use-mutate-and-case-when-in-a-for-loop"
+
+```
+
 
 
 
@@ -506,215 +644,7 @@ gpt_wx_MG <- ggplot_gtable(ggplot_build(plot_wx_MG))
 
 Bring in stage data from Odyssey capacitance water level loggers. Each site has multiple data blocks. Watch for alternating formats of dates.
 
-```{r stage}
 
-## stream level data (second try - bring them in, add a column with site ID combnine them into one then adjust date-times)
-# Odyssey Capacitance Water level Loggers installed at 6 sites 
-# sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
-# 3 data blocks exist for each site, date formats are irregular in most
-
-# correct all water level values with offset calculated based on observed and recorded stage 
-offset_L.Head   <- 60.84
-offset_WksOut   <- 29 # 9.5
-offset_ChrisCrk <- 30 # 7.27
-offset_CraggCrk <- 9.25
-offset_W.Leech  <- 4.85
-offset_Tunnel   <- 3.17
-
-
-# Weeks Outlet (Drainage from Jordan Meadows) -------------------------------
-# import all data blocks (3)
-stage_Wksout1 <- read.csv(file = "WEEKS-OUTLET_1.csv", header = TRUE, sep = ",", skip = 3)
-stage_Wksout2 <- read.csv(file = "WEEKS-OUTLET_2.csv", header = TRUE, sep = ",", skip = 3)
-stage_Wksout3 <- read.csv(file = "WEEKS-OUTLET_3.csv", header = TRUE, sep = ",", skip = 3)
-
-# check structures 
-str(stage_Wksout1)
-str(stage_Wksout2)
-str(stage_Wksout3)
-
-# merge into one dateframe 
-# add column of site name
-# add column of corrected stage (based on calculated offset from observed + logged stage)
-stage_Wksout <- rbind(stage_Wksout1, stage_Wksout2, stage_Wksout3) %>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>% 
-  mutate(site = site_names[1]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_WksOut)
-
-str(stage_Wksout)
-head(stage_Wksout)
-tail(stage_Wksout)
-
-# Leech River Head ----------------------------------------------------------
-# import all data blocks (3)
-stage_LHead1 <- read.csv(file = "LEECH-HEAD_1.csv", header = TRUE, sep = ",", skip = 3)
-stage_LHead2 <- read.csv(file = "LEECH-HEAD_2.csv", header = TRUE, sep = ",", skip = 3)
-stage_LHead3 <- read.csv(file = "LEECH-HEAD_3.csv", header = TRUE, sep = ",", skip = 3)
-
-# check structures
-str(stage_LHead1)
-str(stage_LHead2)
-str(stage_LHead3)
-
-# merge into one dateframe 
-# add column of site name
-# add column of corrected stage 
-stage_LHead <- rbind(stage_LHead1, stage_LHead2, stage_LHead3) %>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>% 
-  mutate(site = site_names[2]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_L.Head)
-
-str(stage_LHead)
-head(stage_LHead)
-tail(stage_LHead)
-
-
-# Chris Creek ---------------------------------------------------------------
-# import all data blocks (3)
-stage_Chris1 <- read.csv(file = "CHRIS-CREEK_1.csv", header = TRUE, sep = ",", skip = 3)
-stage_Chris2 <- read.csv(file = "CHRIS-CREEK_2.csv", header = TRUE, sep = ",", skip = 3)
-stage_Chris3 <- read.csv(file = "CHRIS-CREEK_3.csv", header = TRUE, sep = ",", skip = 3)
-
-# check structures (attention to Date formats)
-str(stage_Chris1)
-str(stage_Chris2)
-str(stage_Chris3)
-
-# merge into one dateframe 
-# add column of site name
-# add column of corrected stage 
-stage_Chris <- rbind(stage_Chris1, stage_Chris2, stage_Chris3) %>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>%
-  mutate(site = site_names[3]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_ChrisCrk)
-
-str(stage_Chris)
-head(stage_Chris)
-tail(stage_Chris)
-
-
-# Cragg Creek ------------------------------- 
-# import all data blocks (3)
-stage_Cragg1 <- read.csv(file = "CRAGG-CREEK_1.csv", header = TRUE, sep = ",", skip = 3)
-stage_Cragg2 <- read.csv(file = "CRAGG-CREEK_2.csv", header = TRUE, sep = ",", skip = 3)
-stage_Cragg3 <- read.csv(file = "CRAGG-CREEK_3.csv", header = TRUE, sep = ",", skip = 3)
-
-# check structures (attention to Date formats)
-str(stage_Cragg1)
-str(stage_Cragg2)
-str(stage_Cragg3)
-
-# merge into one dateframe 
-# add column of site name
-# add column of corrected stage 
-stage_Cragg <- rbind(stage_Cragg1, stage_Cragg2, stage_Cragg3)%>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>%
-  mutate(site = site_names[4]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_CraggCrk)
-
-str(stage_Cragg)
-head(stage_Cragg)
-tail(stage_Cragg)
-
-# West Leech River -------------------------------
-# import all data blocks (3)
-stage_WestL1 <- read.csv(file = "WEST-LEECH_1.csv", header = TRUE, sep = ",", skip = 3)
-stage_WestL2 <- read.csv(file = "WEST-LEECH_2.csv", header = TRUE, sep = ",", skip = 3)
-stage_WestL3 <- read.csv(file = "WEST-LEECH_3.csv", header = TRUE, sep = ",", skip = 3)
-
-# check structures (attention to Date formats)
-str(stage_WestL1)
-str(stage_WestL2)
-str(stage_WestL3)
-
-# merge into one dateframe 
-# add column of site name
-# add column of corrected stage 
-stage_WestL <- rbind(stage_WestL1, stage_WestL2, stage_WestL3) %>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>%
-  mutate(site = site_names[5]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_W.Leech)
-
-str(stage_WestL)
-head(stage_WestL)
-tail(stage_WestL)
-
-
-# Leech River near the Tunnel -------------------------------
-# import stage data
-stage_Tunnel <- read.csv(file = "LEECH-TUNNEL_1.csv", header = TRUE, sep = ",", skip = 3)
-
-# only one dateframe 
-# add column of site name
-# add column of corrected stage 
-stage_Tunnel <- stage_Tunnel %>% 
-  rename("Scans" = X,"Date" = X.1, "Time" = X.2, "Raw.Capacitive.Water.Level" = X.3, "Calibrated.Water.Level_cm" = X.4) %>%
-  mutate(site = site_names[6]) %>% 
-  mutate(Stage_cm = Calibrated.Water.Level_cm + offset_Tunnel)
-
-str(stage_Tunnel)
-head(stage_Tunnel)
-tail(stage_Tunnel)
-
-
-# --- join dataframes --- #
-# chack all structures match 
-# bind all stage dataframes
-# adjust Date formats
-# note heterogeneous date formatting: "%d-%m-%Y" AND "%Y-%d-%m"
-# use Lubridate::parse_date_time
-# create a DateTime column
-str(stage_Wksout)
-str(stage_LHead)
-str(stage_Chris)
-str(stage_Cragg)
-str(stage_WestL)
-str(stage_Tunnel)
-
-stage_df <- rbind(stage_Wksout, stage_LHead, stage_Chris, stage_Cragg, stage_WestL, stage_Tunnel) %>% 
-  mutate(Date = parse_date_time(Date, c("dmy", "ydm"), tz = TZ)) %>% 
-  mutate(Date = as.POSIXct(Date, tz = TZ)) %>% 
-  mutate(DateTime = as.POSIXct(paste(Date, Time), format="%Y-%m-%d %H:%M:%S", tz = TZ))
-
-# check structure and format
-str(stage_df)
-head(stage_df)
-tail(stage_df)
-
-
-# add a column to stage_df with event ID (based on trip_df)
-# trip bounds
-strt <- trip_df$trip.start
-endt <- trip_df$trip.end
-evnt <- trip_df$event_capture
-
-# use logic to identify date intervals and events
-# use lubridate:: %within% and 'interval'
-stage.event_df <- stage_df %>%
-  select(Date, site, Stage_cm, DateTime) %>%
-  mutate(
-    event = case_when(
-    Date %within% interval(strt[1], strt[2]) ~ evnt[1],
-    Date %within% interval(strt[2], strt[3]) ~ evnt[2],
-    Date %within% interval(strt[3], strt[4]) ~ evnt[3],
-    Date %within% interval(strt[4], strt[5]) ~ evnt[4],
-    Date %within% interval(strt[5], strt[6]) ~ evnt[5],
-    Date %within% interval(strt[6], strt[7]) ~ evnt[6]
-  ))
-
-# check out the head tail and middle
-head(stage.event_df)
-tail(stage.event_df, - 0.2*length(stage.event_df$Date))
-tail(stage.event_df, - 0.5*length(stage.event_df$Date))
-tail(stage.event_df, - 0.7*length(stage.event_df$Date))
-tail(stage.event_df)
-
-
-# subset to match length of FWx data for rapid runoff plots (sites 1-5)
-stage.event_dfSS5 <- subset(stage.event_df, (DateTime >= "2018-10-26 10:00") & (DateTime <= "2019-04-11 13:00"))
-# subset to match length of FWx data for rapid runoff plots (site 6)
-stage.event_dfSS6 <- subset(stage.event_df, (DateTime >= "2018-12-07 01:00") & (DateTime <= "2019-04-11 13:00"))
-```
 
 
 Make hydrographs with stage (desire is to obtain Q)

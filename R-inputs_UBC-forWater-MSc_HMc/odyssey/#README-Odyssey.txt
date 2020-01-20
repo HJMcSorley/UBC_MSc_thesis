@@ -1,4 +1,7 @@
+READ ME
 Odyssey Capacitance Water Level Logger files
+
+this folder ("odyssey") belongs in the R-inputs directory for Hannah's Master's research ("UBC_MSc/Thesis_UBC-forWater-MSc_HMc/R_UBC-forWater-MSc_HMc/R-inputs_UBC-forWater-MSc_HMc")
 
 When a CSV file is exported from the logger and saved to a (Windows OS) computer, the file format is:
 
@@ -21,4 +24,4 @@ When a CSV file is exported from the logger and saved to a (Windows OS) computer
 	row(9) = empty
 	row(10:n) = data values
 	
-Note that row 8 variable names in columns 3 & 4 should be in row 7	columns 4 & 5	
+Note that row 8 variable names in columns 3 & 4 should be in row 7, columns 4 & 5	
