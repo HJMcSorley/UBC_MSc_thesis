@@ -610,6 +610,18 @@ TOCV_results %>%
   theme_bw() +
   labs(y = "DOC (mg/L)", x = "time span") 
 
+# --- odyssey stage data --- 
+# --- facet wrap scatter plots of conc ---
+stage_df %>% 
+  mutate(source = factor(source, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech",  "Tunnel"))) %>%
+  mutate(interval = factor(interval, levels = (1:22))) %>% 
+ 
+  ggplot(aes(x = DateTime, y = stage_cm)) + 
+  geom_line() +
+  theme_bw() +
+  labs(y = "stage (cm)", x = "") +
+  facet_wrap(~source, ncol = 1) +
+  theme(legend.position = NULL)  
 
 ```
 
