@@ -524,7 +524,8 @@ TOCV_results %>%
                   site == "Cragg-crk" |
                   site == "West-Leech"| 
                   site == "Tunnel", 
-                analysis == "DOC") %>% 
+                analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.2) +
@@ -571,6 +572,43 @@ TOCV_results %>%
 
 
 # --- facet wrap scatter plots of conc ---
+TOCV_results %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel",
+         analysis == "DOC",
+         sample_type == "Grab" | sample_type == "Rack") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  mutate(trip = factor(trip, levels = (1:22))) %>% 
+ 
+  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, colour = sample_type)) + 
+  geom_jitter() +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "time span") +
+  facet_wrap(~site, ncol = 2, nrow = 3) +
+  theme(axis.text.x = element_text(angle = 90))  # rotate tick labels for clarity
+
+# --- scatter plot bunched ---
+TOCV_results %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel",
+         analysis == "DOC",
+         sample_type == "Grab" | sample_type == "Rack") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  mutate(trip = factor(trip, levels = (1:22))) %>% 
+ 
+  ggplot(aes(x = trip, y = NPOC_ppm)) + 
+  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 23, alpha = 0.8) +
+  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "time span") 
 
 
 ```
@@ -697,8 +735,6 @@ gpt_wx_MG <- ggplot_gtable(ggplot_build(plot_wx_MG))
 ```
 
 Bring in stage data from Odyssey capacitance water level loggers. Each site has multiple data blocks. Watch for alternating formats of dates.
-
-
 
 
 Make hydrographs with stage (desire is to obtain Q)
