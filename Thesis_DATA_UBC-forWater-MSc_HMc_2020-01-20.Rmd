@@ -386,6 +386,33 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 # good!
 ```
+```{r compile results of lab analyses}
+
+# join the results files from the Shimadzu TOC-V and Spectrolyser
+# use long format for easy plotting later
+
+str(TOCV_results)
+str(SCAN_results)
+
+# both have c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")
+# the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
+# the instrument was TOCV or SCAN
+
+sample_results <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  mutate(site = as_factor(site),
+         sample_type = as_factor(sample_type),
+         sample = as_factor(sample),
+         analysis = factor(analysis, exclude = "TOC"), 
+         analysis = factor(analysis)) %>% # drop residual NA from removing "TOC"
+  select(-c(vial, source, measurement, analysis)) %>%   # drop unneccesary variables
+  tidyr::pivot_longer(cols = c(NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m),
+                      names_to = "analyte",
+                      values_to = "result") %>% 
+  mutate(analyte = as_factor(analyte))
+  
+# long format will be easier to plot from and nicer for comprehensive analyses & stats
+
+```
 
 
 Six pirmary research location in the Leech River watershed were equipped with vertical sampling racks which combined passive (siphon) samplers and compact river stage loggers (Odyssey capacitiance water level loggers).
@@ -661,6 +688,10 @@ stage_df %>%
   facet_wrap(~source, ncol = 1) +
   #scale_colour_brewer(palette="Accent") +
   theme(legend.position = NULL)  
+
+
+# --- Spectrolyser data
+SCAN_results
 
 ```
 
