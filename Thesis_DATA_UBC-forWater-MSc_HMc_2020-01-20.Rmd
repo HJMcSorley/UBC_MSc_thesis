@@ -663,8 +663,8 @@ TOCV_results %>%
   theme(legend.position = "none") 
 # ----
 
-
 # --- facet wrap scatter plots of conc ---
+# DOC over time (by trip) -- try mutating in a month-year for clarity
 TOCV_results %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -676,7 +676,6 @@ TOCV_results %>%
          sample_type == "Grab" | sample_type == "Rack") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   mutate(trip = factor(trip, levels = (1:22))) %>% 
- 
   ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, colour = sample_type)) +
   scale_colour_brewer(palette="Accent") +
   geom_jitter() +
@@ -687,6 +686,7 @@ TOCV_results %>%
         axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
 
 # --- scatter plot bunched ---
+# DOC over time (by trip) -- try mutating in a month-year for clarity
 TOCV_results %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -698,7 +698,6 @@ TOCV_results %>%
          sample_type == "Grab" | sample_type == "Rack") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   mutate(trip = factor(trip, levels = (1:22))) %>% 
- 
   ggplot(aes(x = trip, y = NPOC_ppm)) + 
   geom_jitter(aes(fill = sample_type), size = 2.5, shape = 23, alpha = 0.8) +
   scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
@@ -707,17 +706,15 @@ TOCV_results %>%
   labs(y = "DOC (mg/L)", x = "time span", fill = "sample type") 
 
 # --- odyssey stage data --- 
-# --- facet wrap scatter plots of conc ---
+# --- facet wrap scatter plots of river stage over time (hydrograph) ---
 stage_df %>% 
   mutate(source = factor(source, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech",  "Tunnel"))) %>%
   mutate(interval = factor(interval, levels = (1:22))) %>% 
- 
   ggplot(aes(x = DateTime, y = stage_cm)) + 
   geom_line(aes(colour = source)) +
   theme_bw() +
   labs(y = "stage (cm)", x = "") +
   facet_wrap(~source, ncol = 1) +
-  #scale_colour_brewer(palette="Accent") +
   theme(legend.position = NULL)  
 
 
@@ -752,7 +749,6 @@ seasonal_wideresults %>%
   theme(legend.position = "bottom") +
   labs(x = "DOC (mg/L as NPOC)", y = "Proxy (mg/L as CDOM)", fill = "sampling season:",
        caption = "Grab sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification show seasonal disparity. ...")
-
 # ------ neat
 
 # --- UV-Vis parameters
@@ -772,7 +768,7 @@ seasonal_wideresults %>%
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   theme(legend.position = "bottom") +
-  labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (proxy, mg/L)", fill = "sampling season:",
+  labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (mg/L)", fill = "sampling season:",
        caption = "Grab sample DOC and nitrate concentrations (via spectrophotometry)...")
 
 # --- UV-Vis parameters
@@ -827,7 +823,44 @@ seasonal_wideresults %>%
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
 
 
+# --- RACK SAMPLES
 
+#install.packages("viridis")
+library(viridis)
+
+# --- DOC versus CDOM on rack samples
+sampleresults_wide %>% 
+  filter(sample_type == "Rack",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  viridis::scale_fill_viridis(discrete = TRUE) 
+  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "Rack Position:",
+       caption = "Rack sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification...")
+
+# --- DOC versus NO3- on rack samples
+sampleresults_wide %>% 
+  filter(sample_type == "Rack",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(x = "DOC (mg/L as NPOC)", y = "nitrate (mg/L)", fill = "Rack Position:",
+       caption = "Rack sample DOC and nitrate concentrations (via spectrophotometry)...")
 
 ```
 
