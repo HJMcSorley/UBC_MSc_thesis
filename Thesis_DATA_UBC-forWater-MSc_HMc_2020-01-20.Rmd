@@ -67,6 +67,16 @@ forWater_colours <- c(MainBlue = "#09A4D2",
                       AccentBlue = "#5B99CC", 
                       DarkGrey = "#3B3838", 
                       MyOrange = "#f4AB0E")
+
+# colour-blind friendly pallet with grey (no black)
+cbPalette <- c(grey = "#999999", 
+               orange = "#E69F00", 
+               lightblue = "#56B4E9", 
+               green = "#009E73", 
+               yellow = "#F0E442", 
+               darkblue = "#0072B2", 
+               red = "#D55E00", 
+               pink = "#CC79A7")
 ```
 
 Bring in data for trip tracking and installation locations:
@@ -398,7 +408,28 @@ str(SCAN_results)
 # the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
 # the instrument was TOCV or SCAN
 
-sample_results <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+# WIDE
+sampleresults_wide <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  mutate(site = as_factor(site),
+         sample_type = as_factor(sample_type),
+         sample = as_factor(sample),
+         analysis = factor(analysis, exclude = "TOC"), 
+         analysis = factor(analysis)) %>% # drop residual NA from removing "TOC"
+  select(-c(vial, source, measurement, analysis))   # drop unneccesary variables
+
+# augment with a seaonal ID
+seasonal_wideresults <- sampleresults_wide %>% 
+   mutate(trip = factor(trip, levels = 0:22),
+          season = case_when(
+    trip == 0 ~ "SCAN QA-QC", 
+    trip %in% 1:4 ~ "early wet [Oct-Dec]",   # (second half) Oct-Dec 2018
+    trip %in% 5:9 ~ "late wet [Jan-May]",           # Jan-May 2019 
+    trip %in% 10:16 ~ "summer [June-Oct]",  # June-Oct (first half) 2019
+    trip %in% 17:21 ~ "early wet [Oct-Dec]", # Oct-Dec 2019
+    trip == 22 ~ "late wet [Jan-May]"))             # Jan-Feb 2020 
+
+# LONG 
+sampleresults_long <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -410,8 +441,6 @@ sample_results <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "
                       values_to = "result") %>% 
   mutate(analyte = as_factor(analyte))
   
-# long format will be easier to plot from and nicer for comprehensive analyses & stats
-
 ```
 
 
@@ -467,28 +496,28 @@ levels(odyssey_data$source)
 stage_df <- odyssey_data %>%
   select(Date, source, stage_cm, DateTime) %>%
   mutate(interval = case_when(  
-    Date %within% interval(trip_df$trip.start[1], trip_df$trip.start[2]) ~ trip_df$trip[2],
-    Date %within% interval(trip_df$trip.start[2], trip_df$trip.start[3]) ~ trip_df$trip[3],
-    Date %within% interval(trip_df$trip.start[3], trip_df$trip.start[4]) ~ trip_df$trip[4],
-    Date %within% interval(trip_df$trip.start[4], trip_df$trip.start[5]) ~ trip_df$trip[5],
-    Date %within% interval(trip_df$trip.start[5], trip_df$trip.start[6]) ~ trip_df$trip[6],
-    Date %within% interval(trip_df$trip.start[6], trip_df$trip.start[7]) ~ trip_df$trip[7],
-    Date %within% interval(trip_df$trip.start[7], trip_df$trip.start[8]) ~ trip_df$trip[8],
-    Date %within% interval(trip_df$trip.start[8], trip_df$trip.start[9]) ~ trip_df$trip[9],
-    Date %within% interval(trip_df$trip.start[9], trip_df$trip.start[10]) ~ trip_df$trip[10],
-    Date %within% interval(trip_df$trip.start[10], trip_df$trip.start[11]) ~ trip_df$trip[11],
-    Date %within% interval(trip_df$trip.start[11], trip_df$trip.start[12]) ~ trip_df$trip[12],
-    Date %within% interval(trip_df$trip.start[12], trip_df$trip.start[13]) ~ trip_df$trip[13],
-    Date %within% interval(trip_df$trip.start[13], trip_df$trip.start[14]) ~ trip_df$trip[14],
-    Date %within% interval(trip_df$trip.start[14], trip_df$trip.start[15]) ~ trip_df$trip[15],
-    Date %within% interval(trip_df$trip.start[15], trip_df$trip.start[16]) ~ trip_df$trip[16],
-    Date %within% interval(trip_df$trip.start[16], trip_df$trip.start[17]) ~ trip_df$trip[17],
-    Date %within% interval(trip_df$trip.start[17], trip_df$trip.start[18]) ~ trip_df$trip[18],
-    Date %within% interval(trip_df$trip.start[18], trip_df$trip.start[19]) ~ trip_df$trip[19],
-    Date %within% interval(trip_df$trip.start[19], trip_df$trip.start[20]) ~ trip_df$trip[20],
-    Date %within% interval(trip_df$trip.start[20], trip_df$trip.start[21]) ~ trip_df$trip[21],
-    Date %within% interval(trip_df$trip.start[21], trip_df$trip.start[22]) ~ trip_df$trip[22],
-    Date %within% interval(trip_df$trip.start[22], trip_df$trip.start[23]) ~ trip_df$trip[23] ) )
+    Date %within% interval(trip_df$trip.start[1], trip_df$trip.end[2]) ~ trip_df$trip[2],
+    Date %within% interval(trip_df$trip.end[2], trip_df$trip.end[3]) ~ trip_df$trip[3],
+    Date %within% interval(trip_df$trip.end[3], trip_df$trip.end[4]) ~ trip_df$trip[4],
+    Date %within% interval(trip_df$trip.end[4], trip_df$trip.end[5]) ~ trip_df$trip[5],
+    Date %within% interval(trip_df$trip.end[5], trip_df$trip.end[6]) ~ trip_df$trip[6],
+    Date %within% interval(trip_df$trip.end[6], trip_df$trip.end[7]) ~ trip_df$trip[7],
+    Date %within% interval(trip_df$trip.end[7], trip_df$trip.end[8]) ~ trip_df$trip[8],
+    Date %within% interval(trip_df$trip.end[8], trip_df$trip.end[9]) ~ trip_df$trip[9],
+    Date %within% interval(trip_df$trip.end[9], trip_df$trip.end[10]) ~ trip_df$trip[10],
+    Date %within% interval(trip_df$trip.end[10], trip_df$trip.end[11]) ~ trip_df$trip[11],
+    Date %within% interval(trip_df$trip.end[11], trip_df$trip.end[12]) ~ trip_df$trip[12],
+    Date %within% interval(trip_df$trip.end[12], trip_df$trip.end[13]) ~ trip_df$trip[13],
+    Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[14]) ~ trip_df$trip[14],
+    Date %within% interval(trip_df$trip.end[14], trip_df$trip.end[15]) ~ trip_df$trip[15],
+    Date %within% interval(trip_df$trip.end[15], trip_df$trip.end[16]) ~ trip_df$trip[16],
+    Date %within% interval(trip_df$trip.end[16], trip_df$trip.end[17]) ~ trip_df$trip[17],
+    Date %within% interval(trip_df$trip.end[17], trip_df$trip.end[18]) ~ trip_df$trip[18],
+    Date %within% interval(trip_df$trip.end[18], trip_df$trip.end[19]) ~ trip_df$trip[19],
+    Date %within% interval(trip_df$trip.end[19], trip_df$trip.end[20]) ~ trip_df$trip[20],
+    Date %within% interval(trip_df$trip.end[20], trip_df$trip.end[21]) ~ trip_df$trip[21],
+    Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
+    Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23] ) )
 # note that interval (stage_df) is the same as (trip_df) trip number of analysis/collection 
   
 # check out the head tail and middle
@@ -526,10 +555,12 @@ save the reformatted results files as .csv files:
 ## save all compiled sample analysis as .csv files 
 # keep as code note to avoid accidental over-writing later*
 
-write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")  # Shimadzu sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv", na = "NA")  # Spectrolyser sample analyses results
-write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")     # stage (cm) compiled with interval/trip
-write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")  # stage data compiled 
+write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")               # Shimadzu sample analyses results
+write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv", na = "NA")               # Spectrolyser sample analyses results
+write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")      # stage data compiled 
+write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")                  # stage (cm) compiled with interval/trip
+write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_wide.csv", na = "NA")  # compiled sample analyses results (wide)
+write_csv(sampleresults_long, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_long.csv", na = "NA")  # compiled sample analyses results (long)
 
 ```
 
@@ -690,8 +721,24 @@ stage_df %>%
   theme(legend.position = NULL)  
 
 
-# --- Spectrolyser data
-SCAN_results
+# --- Spectrolyser data with TOCV data
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = season)) +
+  geom_point(shape = 21, size = 2) +
+  geom_abline(lty = "dotted", slope=1, intercept=0) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme(legend.position = "bottom") +
+  labs(x = "DOC (mg/L as NPOC)", y = "Proxy (mg/L as C-DOM)", fill = "sampling season:",
+       caption = "Grab sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification show seasonal disparity. ...")
 
 ```
 
