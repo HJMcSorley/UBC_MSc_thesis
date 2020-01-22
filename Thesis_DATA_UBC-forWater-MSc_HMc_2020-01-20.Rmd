@@ -721,7 +721,20 @@ stage_df %>%
   theme(legend.position = NULL)  
 
 
-# --- Spectrolyser data with TOCV data
+# --- Spectrolyser data with TOCV data --- #
+# all sites: DOC vs CDOM
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  theme(legend.position = "bottom") +
+  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "sampling season:",
+       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
+
+
+# six primary sites: DOC vs CDOM
 seasonal_wideresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
          site == "Weeks-out" |
@@ -733,12 +746,88 @@ seasonal_wideresults %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = season)) +
   geom_point(shape = 21, size = 2) +
-  geom_abline(lty = "dotted", slope=1, intercept=0) +
+  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   theme(legend.position = "bottom") +
-  labs(x = "DOC (mg/L as NPOC)", y = "Proxy (mg/L as C-DOM)", fill = "sampling season:",
+  labs(x = "DOC (mg/L as NPOC)", y = "Proxy (mg/L as CDOM)", fill = "sampling season:",
        caption = "Grab sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification show seasonal disparity. ...")
+
+# ------ neat
+
+# --- UV-Vis parameters
+# --- Spectrolyser data with TOCV data
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme(legend.position = "bottom") +
+  labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (proxy, mg/L)", fill = "sampling season:",
+       caption = "Grab sample DOC and nitrate concentrations (via spectrophotometry)...")
+
+# --- UV-Vis parameters
+# --- Spectrolyser data - SAC254_Abs.m vs SAC436_Abs.m
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = SAC254_Abs.m, y = SAC436_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme(legend.position = "bottom") +
+  labs(x = "SAC254_Abs.m", y = "SAC436_Abs.m", fill = "sampling season:",
+       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
+
+# --- UV-Vis parameters
+# --- Spectrolyser data - NPOC vs SAC254_Abs.m
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab",
+         site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme(legend.position = "bottom") +
+  labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
+       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
+
+
+
+# all sites DOC versus SAC 254
+seasonal_wideresults %>% 
+  filter(sample_type == "Grab" & sample == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  geom_point(shape = 21, size = 2) +
+  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  theme(legend.position = "bottom") +
+  labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
+       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
+
+
+
 
 ```
 
