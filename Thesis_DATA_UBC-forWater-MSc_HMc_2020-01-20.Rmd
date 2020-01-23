@@ -271,6 +271,17 @@ TOCV_results$NPOC_ppm = as.numeric(TOCV_results$NPOC_ppm)
 TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
 # good!
+
+# add a seasonal ID (wet or dry)
+# 2 seasons wide TOCV
+TOCV_wetdry_results <- TOCV_results %>% 
+   mutate(trip = factor(trip, levels = 0:22),
+          season = case_when(
+    trip == 0 ~ "SCAN QA-QC", 
+    trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
+    trip %in% 10:16 ~ "dry",  # June to mid-Oct 2019
+    trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020 
+
 ```
 
 ```{r Spectrolyser samples and results}
@@ -408,16 +419,16 @@ str(SCAN_results)
 # the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
 # the instrument was TOCV or SCAN
 
-# WIDE
+# --- WIDE --- #
 sampleresults_wide <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
          analysis = factor(analysis, exclude = "TOC"), 
          analysis = factor(analysis)) %>% # drop residual NA from removing "TOC"
-  select(-c(vial, source, measurement, analysis))   # drop unneccesary variables
+  select(-c(vial, source, measurement))   # drop unneccesary variables
 
-# augment with a seaonal ID
+# 3 seasons wide 
 seasonal_wideresults <- sampleresults_wide %>% 
    mutate(trip = factor(trip, levels = 0:22),
           season = case_when(
@@ -428,14 +439,24 @@ seasonal_wideresults <- sampleresults_wide %>%
     trip %in% 17:21 ~ "early wet [Oct-Dec]", # Oct-Dec 2019
     trip == 22 ~ "late wet [Jan-May]"))             # Jan-Feb 2020 
 
-# LONG 
+# 2 seasons wide 
+twoseasonal_wideresults <- sampleresults_wide %>% 
+   mutate(trip = factor(trip, levels = 0:22),
+          season = case_when(
+    trip == 0 ~ "SCAN QA-QC", 
+    trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
+    trip %in% 10:16 ~ "summer",  # June to mid-Oct 2019
+    trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020
+
+
+# --- LONG --- # 
 sampleresults_long <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
          analysis = factor(analysis, exclude = "TOC"), 
          analysis = factor(analysis)) %>% # drop residual NA from removing "TOC"
-  select(-c(vial, source, measurement, analysis)) %>%   # drop unneccesary variables
+  select(-c(vial, source, measurement)) %>%   # drop unneccesary variables
   tidyr::pivot_longer(cols = c(NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m),
                       names_to = "analyte",
                       values_to = "result") %>% 
@@ -493,6 +514,7 @@ levels(odyssey_data$source)
 # there is certainly a better way to do this -- with a loop or map or apply or metaprogramming
 # I don't know yet and I need to move on. 
 # bad technique: copy and paste x22 (I know this is bad and ugly, sorry)
+# ----
 stage_df <- odyssey_data %>%
   select(Date, source, stage_cm, DateTime) %>%
   mutate(interval = case_when(  
@@ -560,6 +582,7 @@ write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv"
 write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")      # stage data compiled 
 write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")                  # stage (cm) compiled with interval/trip
 write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_wide.csv", na = "NA")  # compiled sample analyses results (wide)
+write_csv(seasonal_wideresults, path = "R-outputs_UBC-forWater-MSc_HMc/seasonal3-results_wide.csv", na = "NA")  # seasonal sample analyses results (wide)
 write_csv(sampleresults_long, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_long.csv", na = "NA")  # compiled sample analyses results (long)
 
 ```
@@ -569,17 +592,66 @@ write_csv(sampleresults_long, path = "R-outputs_UBC-forWater-MSc_HMc/sample-resu
 # first:
 # how many of each sample_type are there at the 6 main sites?
 sample_count_df <- TOCV_results %>% 
-  filter(analysis == "DOC", sample_type == "Rack" | sample_type == "Grab") %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel",
+                analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   group_by(site, sample_type) %>% 
   summarise(number_of_samples = n())
-# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/sample-count-df_2020-01-19.csv", na = "NA")  
+# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
+
+seasonal_count_df <- TOCV_wetdry_results %>% 
+  select("NPOC_ppm", "site", "sample_type", "sample", "season", "analysis") %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel",
+                analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  group_by(site, season) %>% 
+  summarise(number_of_samples = n())
+# write_csv(seasonal_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_seasonal-DOCcount-df.csv", na = "NA")  
+
+
 
 #  ---- PLOTS! ---- #
-# colour-blind friendly colours:
-# "#D55E00" = "red", "#009E73" = "green", "#CC79A7" = "pink", "#999999" = "grey", "#F0E442" = "yellow", "#0072B2" = "blue")
-cbPalette <- c("#D55E00", "#009E73", "#CC79A7", "#999999",  "#F0E442", "#0072B2")
 
+# ----
 # Boxplot with jitter scatter (DOC by site)
+TOCV_results %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel", 
+                analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>% 
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  #stat_summary(fun.y = min, geom = "point", shape = 24, size = 2, inherit.aes = TRUE) +
+  #stat_summary(fun.y = max, geom = "point", shape = 25, size = 2, inherit.aes = TRUE) +
+  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  # hash this out to plot all samples together
+  labs(caption = "DOC concentration by sample type (grab samples vs. rising limb rack sample)", x = "", y = "DOC (mg/L)")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-Grab-vs-Rack.png") Boxplot
+# ----
+
+# ----
+# Boxplot with jitter scatter (DOC all together)
 TOCV_results %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -594,13 +666,14 @@ TOCV_results %>%
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
   scale_fill_brewer(palette="Accent") +
-  theme_light() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  stat_summary(fun.y = min, geom = "point", shape = 24, size = 2, inherit.aes = TRUE) +
-  stat_summary(fun.y = max, geom = "point", shape = 25, size = 2, inherit.aes = TRUE) +
-  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  # hash this out to plot all samples together
-  labs(caption = "DOC concentration overall", x = "", y = "DOC (mg/L)")
+  theme_bw() +
+  theme(legend.position = "none") +
+  #stat_summary(fun.y = min, geom = "point", shape = 24, size = 2, inherit.aes = TRUE) +
+  #stat_summary(fun.y = max, geom = "point", shape = 25, size = 2, inherit.aes = TRUE) +
+  labs(caption = "DOC concentration across six sites over 15 months (342 samples)", x = "", y = "DOC (mg/L)")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-alltogether.png")
+# ----
+
 
 # --- Density ridge plots ---
 # Grab samples -- density ridge plots (individual sample_type)
@@ -612,16 +685,14 @@ TOCV_results %>%
                   site == "West-Leech"| 
                   site == "Tunnel",
          analysis == "DOC", 
-         sample_type == "Grab", 
-         sample == "Grab") %>% 
+         sample_type == "Grab", sample == "Grab") %>% 
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   scale_fill_brewer(palette="Accent") +
-  theme_light() +
+  theme_bw() +
   labs(y = "", x = "Grab sample DOC (mg/L)") +
   theme(legend.position = "none")  
-
 
 # Rack sampes -- density ridge plots (individual sample_type)
 TOCV_results %>% 
@@ -637,12 +708,13 @@ TOCV_results %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   scale_fill_brewer(palette="Accent") +
-  theme_light() +
+  theme_bw() +
   labs(y = "", x = "Rack sample DOC (mg/L)") +
   theme(legend.position = "none") 
 
-
 # density ridge plots (facet wrap by sample_type)
+# Grab: n = 114
+# Rack: n = 171
 TOCV_results %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -658,14 +730,66 @@ TOCV_results %>%
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~sample_type, ncol = 1, nrow = 2) +
   scale_fill_brewer(palette="Accent") +
-  theme_light() +
-  labs(y = "", x = "DOC (mg/L)") +
+  theme_bw() +
+  labs(y = "", x = "DOC (mg/L)", 
+       caption = "Density distribution plots of DOC concentration at six sites based on sampling method (Grab: n = 114, Rack: n = 171)") +
   theme(legend.position = "none") 
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot_GvsR.png")
+# ---
+
+
+# --- SEASONAL ----
+
+# Boxplot with jitter scatter (DOC by season)
+TOCV_wetdry_results %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel", 
+                analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>% 
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~season, ncol = 2, nrow = 1) +  
+  labs(caption = "DOC concentration by season (dry: n = 45, wet: n = 240)", 
+       x = "", y = "DOC (mg/L)")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonal.png") 
+
+
+# density ridge plots (facet wrap by season)
+TOCV_wetdry_results %>% 
+  dplyr::filter(site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel",
+                analysis == "DOC",
+         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~season, ncol = 1, nrow = 2) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  labs(y = "", x = "DOC (mg/L)", 
+       caption = "Density distribution plots of DOC concentration by season (dry: n = 45, wet: n = 240)") +
+  theme(legend.position = "none") 
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
+
 # ----
 
 # --- facet wrap scatter plots of conc ---
 # DOC over time (by trip) -- try mutating in a month-year for clarity
-TOCV_results %>% 
+TOCV_wetdry_results %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -676,14 +800,16 @@ TOCV_results %>%
          sample_type == "Grab" | sample_type == "Rack") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   mutate(trip = factor(trip, levels = (1:22))) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, colour = sample_type)) +
-  scale_colour_brewer(palette="Accent") +
-  geom_jitter() +
+  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, fill = season)) +
+  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
+  geom_jitter(shape = 21, size = 2) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "time span", colour = "sample type:") +
+  labs(y = "DOC (mg/L)", x = "field trip", colour = "sample type:") +
   facet_wrap(~site, ncol = 2, nrow = 3) +
   theme(legend.position = "top",
         axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_facet-scatter-seasonal.png") 
+
 
 # --- scatter plot bunched ---
 # DOC over time (by trip) -- try mutating in a month-year for clarity
@@ -703,7 +829,9 @@ TOCV_results %>%
   scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
   #  scale_colour_brewer(palette="Accent") +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "time span", fill = "sample type") 
+  labs(y = "DOC (mg/L)", x = "field trip", fill = "sample type")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-sampletype.png") 
+
 
 # --- odyssey stage data --- 
 # --- facet wrap scatter plots of river stage over time (hydrograph) ---
@@ -715,7 +843,7 @@ stage_df %>%
   theme_bw() +
   labs(y = "stage (cm)", x = "") +
   facet_wrap(~source, ncol = 1) +
-  theme(legend.position = NULL)  
+  theme(legend.position = "none")  
 
 
 # --- Spectrolyser data with TOCV data --- #
@@ -726,9 +854,11 @@ seasonal_wideresults %>%
   geom_point(shape = 21, size = 2) +
   geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "sampling season:",
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC-CDOM_scatter-sampletype.png") 
 
 
 # six primary sites: DOC vs CDOM
@@ -746,6 +876,7 @@ seasonal_wideresults %>%
   geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "DOC (mg/L as NPOC)", y = "Proxy (mg/L as CDOM)", fill = "sampling season:",
        caption = "Grab sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification show seasonal disparity. ...")
@@ -767,6 +898,7 @@ seasonal_wideresults %>%
   geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (mg/L)", fill = "sampling season:",
        caption = "Grab sample DOC and nitrate concentrations (via spectrophotometry)...")
@@ -787,6 +919,7 @@ seasonal_wideresults %>%
   geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "SAC254_Abs.m", y = "SAC436_Abs.m", fill = "sampling season:",
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
@@ -806,6 +939,7 @@ seasonal_wideresults %>%
   geom_point(shape = 21, size = 2) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
@@ -818,6 +952,7 @@ seasonal_wideresults %>%
   ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
+  theme_bw() +
   theme(legend.position = "bottom") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
@@ -840,6 +975,7 @@ sampleresults_wide %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
+  theme_bw() +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   viridis::scale_fill_viridis(discrete = TRUE) 
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "Rack Position:",
@@ -857,10 +993,33 @@ sampleresults_wide %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
+  theme_bw() +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   viridis::scale_fill_viridis(discrete = TRUE) +
   labs(x = "DOC (mg/L as NPOC)", y = "nitrate (mg/L)", fill = "Rack Position:",
        caption = "Rack sample DOC and nitrate concentrations (via spectrophotometry)...")
+
+# --- facet wrap scatter plots of conc --- ## W.I.P. ###
+# DOC over time (by trip) -- try mutating in a month-year for clarity
+sampleresults_wide %>% 
+  dplyr::filter(sample_type == "Rack",
+                site == "Weeks-out" |
+                  site == "Leech-head" |
+                  site == "Chris-crk" |
+                  site == "Cragg-crk" |
+                  site == "West-Leech"| 
+                  site == "Tunnel") %>%
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+  mutate(trip = factor(trip, levels = (1:22))) %>% 
+  ggplot(aes(x = trip, y = NPOC_ppm, fill = sample)) +
+  geom_jitter(shape = 21, size = 2) +
+  #facet_wrap(~site, ncol = 2, nrow = 3) +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  #geom_jitter() +
+  #theme_bw() +
+  #labs(y = "DOC (mg/L)", x = "time span", colour = "sample type:") +
+  #theme(legend.position = "top",
+       # axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
 
 ```
 
