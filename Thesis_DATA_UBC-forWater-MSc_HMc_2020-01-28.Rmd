@@ -927,7 +927,7 @@ sampleresults_wide %>%
 
 
 # Boxplot with jitter scatter (DOC by season)
-sampleresults_wide %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -951,7 +951,7 @@ sampleresults_wide %>%
 
 # ----- Boxplots - Grab only with Sooke Tribs
 # Boxplot with jitter scatter (DOC by season)
-sampleresults_wide %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -975,7 +975,7 @@ sampleresults_wide %>%
        x = "", y = "DOC (mg/L)")
 
 # Scatter main sites including sooke tribs
-sampleresults_wide %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -997,7 +997,7 @@ sampleresults_wide %>%
   facet_wrap(~site, ncol = 2, nrow = 4)  
 
 # density ridge plots (facet wrap by season)
-sampleresults_wide %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -1021,7 +1021,7 @@ sampleresults_wide %>%
 
 # --- facet wrap scatter plots of conc ---
 # DOC over time (by trip) -- try mutating in a month-year for clarity
-sampleresults_wide %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -1045,7 +1045,7 @@ sampleresults_wide %>%
 
 # --- scatter plot bunched ---
 # DOC over time (by trip) -- try mutating in a month-year for clarity
-TOCV_results %>% 
+sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -1091,11 +1091,11 @@ The spectrophotometer can only measure the fraction of organic matter that is ab
 ```{r DOC conc and C-DOM}
 # --- Spectrolyser data with TOCV data --- #
 # all sites: DOC vs CDOM
-seasonal_wideresults %>% 
+sampleresults %>% 
   filter(sample_type == "Grab" & sample == "Grab") %>%
   mutate(site = factor(site, exclude = "Lab"),
          site = factor(site)) %>% 
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 3) +
   geom_abline(lty = "dotted", slope = 1, intercept = 0) +
   scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
