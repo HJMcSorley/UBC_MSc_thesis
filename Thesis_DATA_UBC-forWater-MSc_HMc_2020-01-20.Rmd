@@ -34,8 +34,10 @@ suppressPackageStartupMessages(library(grid))       # for rapid runoff plots
 suppressPackageStartupMessages(library(ggplot2))    # plots
 suppressPackageStartupMessages(library(lubridate))  # dates and times
 
-
 ```
+
+# --------------
+# Data
 
 Create vectors to easily call installation site names from, rather than typing words (efficient and consistent for updating and calling).
 
@@ -618,10 +620,9 @@ sampleresults_wide  <-  sampleresults_wide %>%
 ```
 
 
+# Stage data
 
-
-
-Six pirmary research location in the Leech River watershed were equipped with vertical sampling racks which combined passive (siphon) samplers and compact river stage loggers (Odyssey capacitiance water level loggers).
+The six pirmary research location in the Leech River watershed equipped with vertical sampling racks (which combined passive (siphon) samplers and compact river stage loggers) colected continuous water level via Odyssey capacitiance water level loggers. 
 
 ```{r stage}
 
@@ -739,11 +740,11 @@ write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv"
 write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")      # stage data compiled 
 write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")                  # stage (cm) compiled with interval/trip
 write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_wide.csv", na = "NA")  # compiled sample analyses results (wide)
-write_csv(seasonal_wideresults, path = "R-outputs_UBC-forWater-MSc_HMc/seasonal3-results_wide.csv", na = "NA")  # seasonal sample analyses results (wide)
-write_csv(sampleresults_long, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_long.csv", na = "NA")  # compiled sample analyses results (long)
+
 
 ```
-
+# --------------
+# Results
 
 ```{r samples count}
 
