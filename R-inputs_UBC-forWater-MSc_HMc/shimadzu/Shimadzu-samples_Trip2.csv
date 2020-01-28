@@ -1,0 +1,47 @@
+2018-11-13,,
+# Leech samples collected Nov5-7  ,,
+"# samples sat for 4 days acidifed in vials with caps, ASI malfaunction weekend - Vial 13 re-run because skipped (added here)",,
+"# Results file(s): 1=""2018-11-13_Leech_Nov5-7_001"", 2=""2018-11-13_Leech_Nov5-7_002(vial13)""",,
+vial,site,sample
+1,Weeks-out,L1
+2,Weeks-out,L2
+3,Weeks-out,L3
+4,Weeks-out,L4
+5,Weeks-out,L5
+6,Weeks-out,Grab
+7,Leech-head,L1
+8,Leech-head,L2
+9,Leech-head,L3
+10,Leech-head,L4
+11,Leech-head,L5
+12,Leech-head,Grab
+13,Chris-crk,L1
+14,Chris-crk,L2
+15,Chris-crk,L3
+16,Chris-crk,L4
+17,Chris-crk,Grab
+18,Cragg-crk,L1
+19,Cragg-crk,L2
+20,Cragg-crk,L3
+21,Cragg-crk,L4
+22,Cragg-crk,L5
+23,Cragg-crk,Grab
+24,West-Leech,L1
+25,West-Leech,L2
+26,West-Leech,L3
+27,West-Leech,L4
+28,West-Leech,L5
+29,West-Leech,Grab
+30,Weeks-Lk-NE,Grab
+31,Leech-main-confl,Grab
+32,West-jordan,Grab
+33,Jarvis-NW,Grab
+34,W.trib-to-Weeks,Grab
+35,Boneyard,Grab
+36,Weeks-Gate,Grab
+37,Weeks-Lk-SE,Grab
+38,Lower-Leech-blw-confl,Grab
+39,QA-QC,CAL-VER_5.7ppm
+40,QA-QC,CAL-VER_11.4ppm
+41,QA-QC,RO_pH<2
+42,QA-QC,RO

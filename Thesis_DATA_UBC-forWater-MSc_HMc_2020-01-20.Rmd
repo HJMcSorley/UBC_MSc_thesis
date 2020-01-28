@@ -320,6 +320,7 @@ sampledata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/samples_sca
 spectrolyser_samples <- list.files(path = sampledata_path_scan, pattern = "*.csv") %>% 
   purrr::map(~ read_csv(file.path(sampledata_path_scan, .), skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
+
 # check structure
 str(spectrolyser_samples)
 
@@ -462,61 +463,56 @@ The Spectrolyser outputs a fingerprint file containing absorbance values at all 
 
 # 2. ------------ FULLSCAN RESULTS ------------ # 
 
-
+# assign column names
+fullscan_colnames <- c("Date", "Time", "Status", seq(200.0, 750.0, by = 2.5))
 ## read in files and add a column indicating trip #, based on source file name
 resultsdata_path_fullscan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/"
 # read in all the files
 spectrolyser_fullscan <- list.files(path = resultsdata_path_fullscan) %>% 
   set_names(str_extract(., "([A-Za-z]{3,}+[0-9]*+)")) %>%
   purrr::map_dfr(~ read.table(file = file.path(resultsdata_path_fullscan, .), 
-                              skip = 1, header = TRUE), .id = "source") 
+                              skip = 2, header = FALSE, col.names = fullscan_colnames), .id = "source") 
 
 # check it out
-str(spectrolyser_results)
+# str(spectrolyser_fullscan)
 
 # pull out numbers from alphanumeric 'source' to create factor variable 'trip'
 # use function 'NumberXtract()'
 # add measurement numbers to each trip group (analysis order)
 # drop null variables for tidiness
-spectrolyser_results <- spectrolyser_results %>% 
+spectrolyser_fullscan <- spectrolyser_fullscan %>% 
   mutate(trip = as_factor(NumberXtract(source))) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) 
 # check it out
-str(spectrolyser_results)
+# str(spectrolyser_fullscan)
 
-unique(spectrolyser_results$trip)
+unique(spectrolyser_fullscan$trip)
 
-nrow(spectrolyser_results) == nrow(spectrolyser_samples)
+nrow(spectrolyser_fullscan) == nrow(spectrolyser_samples)
 
 
-# 3. ------------ SPECTROLYSER ANALYSIS RESULTS ------------ # 
+# 3. ------------ SPECTROLYSER FULLSCAN RESULTS ------------ # 
+# str(spectrolyser_fullscan)
+# str(spectrolyser_samples)
 
-# combine 'spectrolyser_samples' with 'spectrolyser_results'
-SCAN_results <- spectrolyser_results %>% 
-  select(-c(Date, Time, Status, NULLTurbid, NULLNO3.Neq, NULLTOCeq, NULLDOCeq, SAC254_0, SAC436_0, X254.436_Abs.m, X254.436_0, analogIN_, analogIN_0)) %>% 
-  right_join(spectrolyser_samples, by = c("trip" = "trip", "measurement" = "measurement")) %>% 
+# combine 'spectrolyser_samples' with 'spectrolyser_fullscan'
+FULLSCAN_results <- right_join(spectrolyser_fullscan, spectrolyser_samples, 
+                               by = c("trip" = "trip", "measurement" = "measurement")) %>% 
   ungroup()
 
 # check lengths match
-nrow(SCAN_results) == nrow(spectrolyser_samples)
-# check head
-head(SCAN_results)
-# check structure
-str(SCAN_results)
+nrow(FULLSCAN_results) == nrow(spectrolyser_samples)
+# check columnnames
+colnames(FULLSCAN_results)
 
-
-# what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
-SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
-
-# update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
-SCAN_results <- SCAN_results %>% 
+# for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
+# update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
+FULLSCAN_results <- FULLSCAN_results %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
                           TRUE ~ trip))
-
-# check to make sure it's updated:
-SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
-
+# check
+unique(FULLSCAN_results$trip)
 # good!
 
 # 4. -------------  triplicates!  ------------- 
@@ -525,14 +521,10 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 # these measurements are counted as unique samples (though they are not)
 # create an average for those measured in triplicate 
 # split / apply / combine
-SCAN_results <- SCAN_results %>%  
+FULLSCAN_results <- FULLSCAN_results %>% 
+  select(-c("source", "Date", "Time", "Status")) %>% 
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
-  summarise(Turbid.FTUeq = mean(Turbid.FTUeq),
-            NO3.Neq_ppm = mean(NO3.Neq_ppm),
-            TOCeq_ppm = mean(TOCeq_ppm), 
-            DOCeq_ppm = mean(DOCeq_ppm),
-            SAC254_Abs.m = mean(SAC254_Abs.m),
-            SAC436_Abs.m = mean(SAC436_Abs.m)) %>% 
+  summarise_all(list(~mean(.))) %>% 
   ungroup()
 
 ```
