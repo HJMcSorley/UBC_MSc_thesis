@@ -37,7 +37,7 @@ suppressPackageStartupMessages(library(lubridate))  # dates and times
 ```
 
 # --------------
-# Data
+# Data Wrangling
 
 Create vectors to easily call installation site names from, rather than typing words (efficient and consistent for updating and calling).
 
@@ -531,7 +531,7 @@ FULLSCAN_results <- FULLSCAN_results %>%
 
 ```
 
-## Join results files from Shimadzu and Spectrolyser (direct and indirect measures of DOC)
+## Join results files from Shimadzu and Spectrolyser (direct and indirect measures of DOC pluss full scan data)
 
 Bringing together the results from both the Shimadzu and Spectrolyser. 
 Join data frames and create additional variables to help classify the data for plotting. 
@@ -549,7 +549,8 @@ str(SCAN_results)
 # the instrument was TOCV or SCAN
 
 # --- WIDE SUMMARY DF --- # 
-sampleresults_wide <- full_join(TOCV_results, SCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+sampleresults_wide <- full_join(TOCV_results, SCAN_results, 
+                                by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -557,7 +558,9 @@ sampleresults_wide <- full_join(TOCV_results, SCAN_results, by = c("trip", "site
          analysis = factor(analysis),   # drop residual NA from removing "TOC"
          site = factor(site, exclude = "Mystery-bottle"),
          site = factor(site)) %>%      # drop residual NA from removing "mystery bottle"
-  select(-c(vial))   # drop unneccesary variables
+full_join(FULLSCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  select(-c(vial, measurement))  # drop unneccesary variables
+
 
 # add a column of "trip_end" to have a date for each trip (plotting)
 ## this is a terrible method
@@ -744,10 +747,11 @@ write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-resu
 
 ```
 # --------------
-# Results
+# Data Analysis
 
 ```{r samples count}
 
+# Rack samples
 # how many of each sample_type are there at the 6 main sites?
 sample_count_df <- TOCV_results %>% 
   dplyr::filter(site == "Weeks-out" |
@@ -760,12 +764,13 @@ sample_count_df <- TOCV_results %>%
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   group_by(site, sample_type) %>% 
-  summarise(number_of_samples = n())
+  summarise(number_of_samples = n()) %>% 
+  knitr::kable(., caption = "Installation sites sample counts")
 # write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
 
 # how many samples by season?
-seasonal_count_df <- TOCV_wetdry_results %>% 
-  select("NPOC_ppm", "site", "sample_type", "sample", "season", "analysis") %>% 
+seasonal_count_df <- sampleresults_wide %>% 
+  select("NPOC_ppm", "site", "sample_type", "sample", "two_seasons", "analysis") %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -775,8 +780,9 @@ seasonal_count_df <- TOCV_wetdry_results %>%
                 analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  group_by(site, season) %>% 
-  summarise(number_of_samples = n())
+  group_by(site, two_seasons) %>% 
+  summarise(number_of_samples = n())  %>% 
+  knitr::kable(., caption = "Installation sites sample counts by season")
 # write_csv(seasonal_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_seasonal-DOCcount-df.csv", na = "NA")  
 
 ```
@@ -787,7 +793,7 @@ seasonal_count_df <- TOCV_wetdry_results %>%
 
 # ----
 # Boxplot with jitter scatter (DOC by sample_type)
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -813,7 +819,7 @@ TOCV_results %>%
 
 # ----
 # Boxplot with jitter scatter (grab and rack combined)
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -838,7 +844,7 @@ TOCV_results %>%
 
 # --- Density ridge plots ---
 # Grab samples -- density ridge plots (grab samples)
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -857,7 +863,7 @@ TOCV_results %>%
 
 
 # Rack sampes -- density ridge plots (rack samples)
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -877,7 +883,7 @@ TOCV_results %>%
 # density ridge plots (facet wrap by sample_type)
 # Grab: n = 114
 # Rack: n = 171
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -907,7 +913,7 @@ TOCV_results %>%
 
 
 # Boxplot with jitter scatter (DOC by season)
-TOCV_wetdry_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -924,14 +930,14 @@ TOCV_wetdry_results %>%
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~season, ncol = 2, nrow = 1) +  
+  facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
   labs(caption = "DOC concentration by season (dry: n = 45, wet: n = 240)", 
        x = "", y = "DOC (mg/L)")
 # ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonal.png") 
 
 # ----- Boxplots - Grab only with Sooke Tribs
 # Boxplot with jitter scatter (DOC by season)
-TOCV_wetdry_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -950,12 +956,12 @@ TOCV_wetdry_results %>%
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~season, ncol = 2, nrow = 1) +  
+  facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
   labs(caption = "DOC concentration by season (dry: n = 45, wet: n = 240)", 
        x = "", y = "DOC (mg/L)")
 
 # Scatter main sites including sooke tribs
-TOCV_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -977,7 +983,7 @@ TOCV_results %>%
   facet_wrap(~site, ncol = 2, nrow = 4)  
 
 # density ridge plots (facet wrap by season)
-TOCV_wetdry_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -989,7 +995,7 @@ TOCV_wetdry_results %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~season, ncol = 1, nrow = 2) +
+  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
@@ -1001,7 +1007,7 @@ TOCV_wetdry_results %>%
 
 # --- facet wrap scatter plots of conc ---
 # DOC over time (by trip) -- try mutating in a month-year for clarity
-TOCV_wetdry_results %>% 
+sampleresults_wide %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -1009,10 +1015,10 @@ TOCV_wetdry_results %>%
                   site == "West-Leech"| 
                   site == "Tunnel",
          analysis == "DOC",
-         sample_type == "Grab" | sample_type == "Rack") %>%
+         sample_type == "Grab" | sample_type == "Rack", sample == "Grab") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   mutate(trip = factor(trip, levels = (1:22))) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, fill = season)) +
+  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, fill = two_seasons)) +
   scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
   geom_jitter(shape = 21, size = 2) +
   theme_bw() +
