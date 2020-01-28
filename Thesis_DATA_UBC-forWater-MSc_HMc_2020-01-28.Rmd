@@ -15,7 +15,8 @@ If needed, install required packages:
 install.packages("tidyverse")
 install.packages("knitr")      
 install.packages("gridExtra")  
-install.packages("grid")      
+install.packages("grid") 
+install.packages("viridis")
 ```
 Note that the tidyverse includes a suite of useful packages, such as:
 
@@ -33,6 +34,7 @@ suppressPackageStartupMessages(library(gridExtra))  # rapid runoff hydrograph/pr
 suppressPackageStartupMessages(library(grid))       # for rapid runoff plots
 suppressPackageStartupMessages(library(ggplot2))    # plots
 suppressPackageStartupMessages(library(lubridate))  # dates and times
+suppressPackageStartupMessages(library(viridis))    # nice colours for plots gradient fills
 
 ```
 
@@ -466,7 +468,7 @@ The Spectrolyser outputs a fingerprint file containing absorbance values at all 
 # 2. ------------ FULLSCAN RESULTS ------------ # 
 
 # assign column names
-fullscan_colnames <- c("Date", "Time", "Status", seq(200.0, 750.0, by = 2.5))
+fullscan_colnames <- c("Date", "Time", "Status", paste("fp", seq(200.0, 750.0, by = 2.5)))
 ## read in files and add a column indicating trip #, based on source file name
 resultsdata_path_fullscan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/"
 # read in all the files
@@ -539,28 +541,30 @@ Join data frames and create additional variables to help classify the data for p
 ```{r compile results of lab analyses}
 
 # join the results files from the Shimadzu TOC-V and Spectrolyser
-# use long format for easy plotting later
-
-str(TOCV_results)
-str(SCAN_results)
+str(TOCV_results)   # shimadzu NPOC results (direct measure of DOC)
+str(SCAN_results)   # spectrolyser indirect results of DOC (UV-Vis)
+str(FULLSCAN_results)  # spectrolyser full scan 250-700nm
 
 # both have c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")
 # the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
 # the instrument was TOCV or SCAN
 
 # --- WIDE SUMMARY DF --- # 
-sampleresults_wide <- full_join(TOCV_results, SCAN_results, 
+sampleresults <- full_join(TOCV_results, SCAN_results, 
                                 by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  full_join(FULLSCAN_results, 
+            by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
-         analysis = factor(analysis, exclude = "TOC"), 
+         analysis = factor(analysis, exclude = "TOC"),  # drop "TOC"
          analysis = factor(analysis),   # drop residual NA from removing "TOC"
-         site = factor(site, exclude = "Mystery-bottle"),
-         site = factor(site)) %>%      # drop residual NA from removing "mystery bottle"
-full_join(FULLSCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+         site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
+         site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
   select(-c(vial, measurement))  # drop unneccesary variables
 
+# check it out
+str(sampleresults)
 
 # add a column of "trip_end" to have a date for each trip (plotting)
 ## this is a terrible method
@@ -570,7 +574,7 @@ full_join(FULLSCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_
 #    for (i in seq(1:22)) {case_when(
 #        trip == "i" ~ trip_df$trip.end[i])
 #        })
-sampleresults_wide <- sampleresults_wide %>% 
+sampleresults <- sampleresults %>% 
   mutate(trip_end = case_when(  
     trip == "1" ~ trip_df$trip.end[1],
     trip == "2" ~ trip_df$trip.end[2],
@@ -598,7 +602,7 @@ sampleresults_wide <- sampleresults_wide %>%
 # add a variable to identify season 
 # three seasons (early/late wet and dry) 
 # and two seasons (wet/dry))    
-sampleresults_wide <- sampleresults_wide %>% 
+sampleresults <- sampleresults %>% 
   mutate(trip = factor(trip, levels = 0:22),
          three_seasons = case_when(
            trip == 0 ~ "SCAN QA-QC", 
@@ -615,7 +619,7 @@ sampleresults_wide <- sampleresults_wide %>%
 
 # SUVA ------ 
 # add a variable for SUVA = [DOC]/SAC254
-sampleresults_wide  <-  sampleresults_wide %>% 
+sampleresults  <-  sampleresults %>% 
   mutate(SUVA = NPOC_ppm/SAC254_Abs.m)
 
 # good!
@@ -753,7 +757,7 @@ write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-resu
 
 # Rack samples
 # how many of each sample_type are there at the 6 main sites?
-sample_count_df <- TOCV_results %>% 
+sample_count_df <- sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
                   site == "Chris-crk" |
@@ -769,7 +773,7 @@ sample_count_df <- TOCV_results %>%
 # write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
 
 # how many samples by season?
-seasonal_count_df <- sampleresults_wide %>% 
+seasonal_count_df <- sampleresults %>% 
   select("NPOC_ppm", "site", "sample_type", "sample", "two_seasons", "analysis") %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -783,7 +787,17 @@ seasonal_count_df <- sampleresults_wide %>%
   group_by(site, two_seasons) %>% 
   summarise(number_of_samples = n())  %>% 
   knitr::kable(., caption = "Installation sites sample counts by season")
-# write_csv(seasonal_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_seasonal-DOCcount-df.csv", na = "NA")  
+# write_csv(seasonal_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_seasonal-DOCcount-df.csv", na = "NA") 
+
+# what were the primary sysnoptic sampling sites
+# n > 1
+synpotic_count_df <- sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab") %>%
+  group_by(forcats::fct_explicit_na(site)) %>% 
+  summarise(number_of_samples = n()) %>% 
+  filter(number_of_samples > 1)
+
 
 ```
 
