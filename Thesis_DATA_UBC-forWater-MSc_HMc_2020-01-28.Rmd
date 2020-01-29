@@ -233,7 +233,7 @@ str(shimadzu_results)
 # from http://stla.github.io/stlapblog/posts/Numextract.html
 NumberXtract <- function(alphnum){
   unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
-  }
+}
 
 ## pull out numbers from alphanumerics & create:
 # factor variable for trip numbers   (from 'source')
@@ -257,7 +257,7 @@ TOCV_results <- shimadzu_results %>%
   summarize(NPOC_ppm = mean(NPOC_mgL)) %>% 
   right_join(shimadzu_samples, by = c("trip" = "trip", "vial" = "vial")) %>% 
   ungroup() 
-  
+
 
 # check lengths match
 nrow(TOCV_results) == nrow(shimadzu_samples)
@@ -286,12 +286,12 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 # add a seasonal ID (wet or dry)
 # 2 seasons wide TOCV
 TOCV_wetdry_results <- TOCV_results %>% 
-   mutate(trip = factor(trip, levels = 0:22),
-          season = case_when(
-    trip == 0 ~ "SCAN QA-QC", 
-    trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
-    trip %in% 10:16 ~ "dry",  # June to mid-Oct 2019
-    trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020 
+  mutate(trip = factor(trip, levels = 0:22),
+         season = case_when(
+           trip == 0 ~ "SCAN QA-QC", 
+           trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
+           trip %in% 10:16 ~ "dry",  # June to mid-Oct 2019
+           trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020 
 
 ```
 
@@ -551,7 +551,7 @@ str(FULLSCAN_results)  # spectrolyser full scan 250-700nm
 
 # --- WIDE SUMMARY DF --- # 
 sampleresults <- full_join(TOCV_results, SCAN_results, 
-                                by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+                           by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   full_join(FULLSCAN_results, 
             by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
@@ -597,8 +597,9 @@ sampleresults <- sampleresults %>%
     trip == "19" ~ trip_df$trip.end[19],
     trip == "20" ~ trip_df$trip.end[20],
     trip == "21" ~ trip_df$trip.end[21],
-    trip == "22" ~ trip_df$trip.end[22] ))
-    
+    trip == "22" ~ trip_df$trip.end[22] )) %>% 
+  mutate(trip_end = lubridate::ymd(trip_end))
+
 # add a variable to identify season 
 # three seasons (early/late wet and dry) 
 # and two seasons (wet/dry))    
@@ -665,12 +666,12 @@ str(odyssey_data)
 levels(odyssey_data$source)
 # rename site IDs
 odyssey_data$source <- forcats::fct_recode(odyssey_data$source, 
-                                  LeechHead = "12040",
-                                  ChrisCrk = "CHRIS",
-                                  CraggCrk = "CRAGG",
-                                  Tunnel = "LEECH",
-                                  Weeks = "WEEKS",
-                                  WestLeech = "WEST")
+                                           LeechHead = "12040",
+                                           ChrisCrk = "CHRIS",
+                                           CraggCrk = "CRAGG",
+                                           Tunnel = "LEECH",
+                                           Weeks = "WEEKS",
+                                           WestLeech = "WEST")
 # re-check levels
 levels(odyssey_data$source)
 
@@ -705,14 +706,14 @@ stage_df <- odyssey_data %>%
     Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
     Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23] ) )
 # note that interval (stage_df) is the same as (trip_df) trip number of analysis/collection 
-  
+
 # check out the head tail and middle
 head(stage_df)
 tail(stage_df, - 0.2*length(stage_df$Date))
 tail(stage_df, - 0.5*length(stage_df$Date))
 tail(stage_df, - 0.7*length(stage_df$Date))
 tail(stage_df)
-       
+
 
 
 
@@ -755,48 +756,54 @@ write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-resu
 
 ```{r samples count}
 
-# Rack samples
-# how many of each sample_type are there at the 6 main sites?
-sample_count_df <- sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-                analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
-  group_by(site, sample_type) %>% 
-  summarise(number_of_samples = n()) %>% 
-  knitr::kable(., caption = "Installation sites sample counts")
-# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
+# filter for the six install sites for tidier calling
+sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
+                                        site == "Leech-head" |
+                                        site == "Chris-crk" |
+                                        site == "Cragg-crk" |
+                                        site == "West-Leech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel")))
 
-# how many samples by season?
-seasonal_count_df <- sampleresults %>% 
-  select("NPOC_ppm", "site", "sample_type", "sample", "two_seasons", "analysis") %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-                analysis == "DOC", 
+
+# how many of each sample_type are there at the 6 main sites?
+# and how many in each season? 
+sample_count_df <- sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  group_by(site, two_seasons) %>% 
-  summarise(number_of_samples = n())  %>% 
-  knitr::kable(., caption = "Installation sites sample counts by season")
-# write_csv(seasonal_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_seasonal-DOCcount-df.csv", na = "NA") 
+  group_by(site, two_seasons, sample_type) %>% 
+  summarise(number_of_samples = n()) %>% 
+  knitr::kable(., caption = "Installation sites sample counts",
+               col.names = c("installation site", "season", "sample type", "number of samples"))
+# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
 
 # what were the primary sysnoptic sampling sites
 # n > 1
-synpotic_count_df <- sampleresults %>% 
+synoptic_count_df <- sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab") %>%
-  group_by(forcats::fct_explicit_na(site)) %>% 
+  group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(number_of_samples = n()) %>% 
-  filter(number_of_samples > 1)
+  filter(number_of_samples > 1) 
+
+synopticfilter <- sampleresults %>% filter(site == "West-Leech"|
+                                             site == "Tunnel"|
+                                             site == "Cragg-crk"|
+                                             site == "Leech-head"|
+                                             site == "Weeks-out"|
+                                             site == "Chris-crk"|
+                                             site == "Jarvis"|
+                                             site == "Lazar"|
+                                             site == "Rithet"|
+                                             site == "Deception-res"|
+                                             site == "West-Jordan"|
+                                             site == "Leech-downstreamconf"|
+                                             site == "Judge-crk"|
+                                             site == "Deception-crk"|
+                                             site == "Boneyard") %>% 
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel",
+                                        "Leech-downstreamconf", "Boneyard", 
+                                        "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
 
 
 ```
@@ -805,18 +812,12 @@ synpotic_count_df <- sampleresults %>%
 
 ```{r DOC plots}
 
-# ----
-# Boxplot with jitter scatter (DOC by sample_type)
-sampleresults_wide %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel", 
-                analysis == "DOC", 
+# Boxplot with jitter scatter 
+# site vs DOC
+# wrap by sample type
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -824,90 +825,34 @@ sampleresults_wide %>%
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
-  #stat_summary(fun.y = min, geom = "point", shape = 24, size = 2, inherit.aes = TRUE) +
-  #stat_summary(fun.y = max, geom = "point", shape = 25, size = 2, inherit.aes = TRUE) +
-  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  # hash this out to plot all samples together
+  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
   labs(caption = "DOC concentration by sample type (grab samples vs. rising limb rack sample)", x = "", y = "DOC (mg/L)")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-Grab-vs-Rack.png") 
-# ----
 
-# ----
-# Boxplot with jitter scatter (grab and rack combined)
-sampleresults_wide %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel", 
-                analysis == "DOC", 
+
+# Boxplot with jitter scatter 
+# site vs DOC 
+# grab and rack combined
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none") +
-  #stat_summary(fun.y = min, geom = "point", shape = 24, size = 2, inherit.aes = TRUE) +
-  #stat_summary(fun.y = max, geom = "point", shape = 25, size = 2, inherit.aes = TRUE) +
   labs(caption = "DOC concentration across six sites over 15 months (342 samples)", x = "", y = "DOC (mg/L)")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-alltogether.png")
-# ----
 
 
-# --- Density ridge plots ---
-# Grab samples -- density ridge plots (grab samples)
-sampleresults_wide %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-         analysis == "DOC", 
-         sample_type == "Grab", sample == "Grab") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  labs(y = "", x = "Grab sample DOC (mg/L)") +
-  theme(legend.position = "none") 
-
-
-# Rack sampes -- density ridge plots (rack samples)
-sampleresults_wide %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-         analysis == "DOC", 
-         sample_type == "Rack") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  labs(y = "", x = "Rack sample DOC (mg/L)") +
-  theme(legend.position = "none") 
-
-# density ridge plots (facet wrap by sample_type)
+# density ridge 
+# wrap by sample_type
 # Grab: n = 114
 # Rack: n = 171
-sampleresults_wide %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-         analysis == "DOC", 
-         sample_type == "Rack" | 
-         sample_type == "Grab" & sample == "Grab") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~sample_type, ncol = 1, nrow = 2) +
@@ -917,7 +862,7 @@ sampleresults_wide %>%
        caption = "Density distribution plots of DOC concentration at six sites based on sampling method (Grab: n = 114, Rack: n = 171)") +
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot_GvsR.png")
-# ---
+
 
 ```
 
@@ -926,17 +871,11 @@ sampleresults_wide %>%
 ```{r seasonal DOC plots}
 
 
+
 # Boxplot with jitter scatter (DOC by season)
-sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel", 
-                analysis == "DOC", 
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -948,6 +887,7 @@ sampleresults %>%
   labs(caption = "DOC concentration by season (dry: n = 45, wet: n = 240)", 
        x = "", y = "DOC (mg/L)")
 # ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonal.png") 
+
 
 # ----- Boxplots - Grab only with Sooke Tribs
 # Boxplot with jitter scatter (DOC by season)
@@ -962,7 +902,8 @@ sampleresults %>%
                   site == "Judge-crk", 
                 analysis == "DOC", 
                 sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
+  mutate(site = factor(site, 
+                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -985,9 +926,10 @@ sampleresults %>%
                   site == "Rithet" |
                   site == "Judge-crk", 
                 analysis == "DOC", 
-                sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
-  ggplot(aes(x = dt_sampled, y = NPOC_ppm, fill = site)) +
+                sample_type == "Grab" & sample == "Grab", sample_type == "Rack") %>% 
+  mutate(site = factor(site, 
+                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
+  ggplot(aes(x = dt_sampled, y = NPOC_ppm, fill = sample_type)) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21, size = 3) +
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
@@ -997,16 +939,9 @@ sampleresults %>%
   facet_wrap(~site, ncol = 2, nrow = 4)  
 
 # density ridge plots (facet wrap by season)
-sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-                analysis == "DOC",
-         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>% 
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
@@ -1017,52 +952,37 @@ sampleresults %>%
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
 
-# ----
-
-# --- facet wrap scatter plots of conc ---
-# DOC over time (by trip) -- try mutating in a month-year for clarity
-sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-         analysis == "DOC",
-         sample_type == "Grab" | sample_type == "Rack", sample == "Grab") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+# --- DOC scatter plot ---
+# DOC over time all 6 sites in the Leech together
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Grab" | sample_type == "Rack") %>%
   mutate(trip = factor(trip, levels = (1:22))) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm, shape = sample_type, fill = two_seasons)) +
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
-  geom_jitter(shape = 21, size = 2) +
+  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
+  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 23, alpha = 0.8) +
+  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "field trip", colour = "sample type:") +
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-sampletype.png") 
+
+
+# --- DOC facet wrap scatter plots ---
+# DOC over time (including seasons)
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = trip_end, y = NPOC_ppm, colour = sample_type, shape = two_seasons)) +
+  geom_jitter(size = 2) +
+  scale_colour_manual(values = c("#f4AB0E", "#09A4D2")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "", colour = "sample type:", shape = "season:") +
   facet_wrap(~site, ncol = 2, nrow = 3) +
-  theme(legend.position = "top",
-        axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
+  theme(legend.position = "top")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_facet-scatter-seasonal.png") 
 
 
-# --- scatter plot bunched ---
-# DOC over time (by trip) -- try mutating in a month-year for clarity
-sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel",
-         analysis == "DOC",
-         sample_type == "Grab" | sample_type == "Rack") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  mutate(trip = factor(trip, levels = (1:22))) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm)) + 
-  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 23, alpha = 0.8) +
-  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
-  #  scale_colour_brewer(palette="Accent") +
-  theme_bw() +
-  labs(y = "DOC (mg/L)", x = "field trip", fill = "sample type")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-sampletype.png") 
+
+
 
 ```
 
@@ -1110,11 +1030,11 @@ sampleresults %>%
 seasonal_wideresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = season)) +
   geom_point(shape = 21, size = 2) +
@@ -1133,11 +1053,11 @@ seasonal_wideresults %>%
 seasonal_wideresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
@@ -1153,11 +1073,11 @@ seasonal_wideresults %>%
 seasonal_wideresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = SAC254_Abs.m, y = SAC436_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
@@ -1173,11 +1093,11 @@ seasonal_wideresults %>%
 seasonal_wideresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = season)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
@@ -1211,29 +1131,29 @@ library(viridis)
 sampleresults_wide %>% 
   filter(sample_type == "Rack",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
   theme_bw() +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   viridis::scale_fill_viridis(discrete = TRUE) 
-  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "Rack Position:",
-       caption = "Rack sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification...")
+labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "Rack Position:",
+     caption = "Rack sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification...")
 
 # --- DOC versus NO3- on rack samples
 sampleresults_wide %>% 
   filter(sample_type == "Rack",
          site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
+           site == "Leech-head" |
+           site == "Chris-crk" |
+           site == "Cragg-crk" |
+           site == "West-Leech"| 
+           site == "Tunnel") %>%
   mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
   ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
   geom_point(shape = 21, size = 2) +
@@ -1263,9 +1183,9 @@ sampleresults_wide %>%
   #theme_bw() +
   #labs(y = "DOC (mg/L)", x = "time span", colour = "sample type:") +
   #theme(legend.position = "top",
-       # axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
-
-```
+  # axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
+  
+  ```
 
 
 
@@ -1436,9 +1356,9 @@ for (i in seq_along(site_names[1:5])) {
 
 # plot the tunnel separately becasue it has a truncated stage df
 s <- ggplot(filter(stage.event_dfSS5, site == site_names[6]), aes(x = DateTime, y = Stage_cm)) + 
-    geom_point(col = forWater_col) + 
-    stageplottheme +
-    labs(x = "", y = "Stage (cm)", caption = site_captions[6])
+  geom_point(col = forWater_col) + 
+  stageplottheme +
+  labs(x = "", y = "Stage (cm)", caption = site_captions[6])
 stagePlots_list[[6]] <- s  # save plot to list for calls later (in order of 'site_names')
 ggsave(filename = paste("Stage_Plot_",6,"_",site_names[6],".png"), s)
 
@@ -1821,7 +1741,7 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
+site.visit.plot 
 
 
 # save as a picture
@@ -2099,8 +2019,8 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
-  
+site.visit.plot 
+
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
        path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
@@ -2371,8 +2291,8 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
-  
+site.visit.plot 
+
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
        path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
@@ -2643,8 +2563,8 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
- 
+site.visit.plot 
+
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
        path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
@@ -2914,8 +2834,8 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
- 
+site.visit.plot 
+
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
        path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
@@ -3120,7 +3040,7 @@ site.visit.plot <-
   #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
   geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
   geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
- site.visit.plot 
+site.visit.plot 
 
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
@@ -3271,7 +3191,7 @@ grabsDOC <- grabs_df %>%
          analysis, 
          Result,
          sample_DateTime = Grab_DateTime 
-         ) %>% 
+  ) %>% 
   mutate(sample_type = "Grab",
          racksample_stage = "NA"
   )
@@ -3306,7 +3226,7 @@ DOCresults_df <- DOCresults_df %>%
       DOCresults_df$site == site_names[4] ~ install_df$Longitude[4],
       DOCresults_df$site == site_names[5] ~ install_df$Longitude[5],
       DOCresults_df$site == site_names[6] ~ install_df$Longitude[6])
-    )
+  )
 
 # check structure
 str(DOCresults_df)
@@ -3320,7 +3240,7 @@ write.csv(DOCresults_df, file = "2019-05-26_combined-DOC-results.csv")
 
 
 # --- --- --- --- #  
-  
+
 # summary stats
 str(DOCresults_df)
 
@@ -3435,24 +3355,24 @@ ggsave(filename = "DOC_facet-scatterPlot_allSites.png", DOC_facet_SPlot)
 
 for (i in seq_along(site_names)) {
   g <- DOCresults_df %>% filter(analysis == "DOC" & site == site_names[i]) %>% group_by(sample_type) %>% 
-  ggplot(aes(x = sample_DateTime, y = Result)) + 
-  geom_point(aes(colour = sample_type), size = 5) +
-  theme_bw() +
-  theme(plot.caption = textformat,
-        legend.position = c(0.8, 0.8),
-        legend.text = textformat,
-        legend.title = textformat,
-        axis.text = textformat,
-        axis.title = textformat) +
-  labs(colour = "Sample Type") +
-       #caption = paste("DOC over 2018-2019 wet season at ", site_captions[i])) +
-  scale_color_manual(values=c(forWater_colours[4], forWater_colours[5]),
-                     labels = c("Grab", "Rack")) +
-  ylab("NPOC (mg/L DOC)") + 
-  xlab("")
-
-ggsave(filename = paste("DOC_scatterPlot_",i,"_",site_names[i],".png"),
-       width = 7.29, height = 4.5, units = "in")
+    ggplot(aes(x = sample_DateTime, y = Result)) + 
+    geom_point(aes(colour = sample_type), size = 5) +
+    theme_bw() +
+    theme(plot.caption = textformat,
+          legend.position = c(0.8, 0.8),
+          legend.text = textformat,
+          legend.title = textformat,
+          axis.text = textformat,
+          axis.title = textformat) +
+    labs(colour = "Sample Type") +
+    #caption = paste("DOC over 2018-2019 wet season at ", site_captions[i])) +
+    scale_color_manual(values=c(forWater_colours[4], forWater_colours[5]),
+                       labels = c("Grab", "Rack")) +
+    ylab("NPOC (mg/L DOC)") + 
+    xlab("")
+  
+  ggsave(filename = paste("DOC_scatterPlot_",i,"_",site_names[i],".png"),
+         width = 7.29, height = 4.5, units = "in")
 }
 
 # YAY that worked!!!! 
@@ -3494,7 +3414,7 @@ str(metals_df)
 # this works, but only if the SCV format never changes
 for(i in c(9, 11, 12, 14:20, 22:26, 28, 30:36, 39, 41)) {
   is.na(metals_df[,i]) <- startsWith(metals_df[,i], "<")
-  }
+}
 
 # convert from wide to long format
 # The arguments to gather():
@@ -3737,23 +3657,23 @@ b
 
 for (i in seq_along(site_names)) {
   g <- DOCresults_df %>% filter(analysis == "DOC" & site == site_names[i]) %>% group_by(sample_type) %>% 
-  ggplot(aes(x = sample_DateTime, y = Result)) + 
-  geom_point(aes(colour = sample_type), size = 5) +
-  theme_bw() +
-  theme(plot.caption = textformat,
-        legend.position = c(0.8, 0.8),
-        legend.text = textformat,
-        legend.title = textformat,
-        axis.text = textformat,
-        axis.title = textformat) +
-  labs(colour = "Sample Type",
-       caption = paste("DOC over 2018-2019 wet season at ", site_captions[i])) +
-  scale_color_manual(values=c(forWater_colours[4], forWater_colours[5]),
-                     labels = c("Grab", "Rack")) +
-  ylab("NPOC (mg/L DOC)") + 
-  xlab("")
-
-ggsave(filename = paste("DOC_scatterPlot_",i,"_",site_names[i],".png"), g)
+    ggplot(aes(x = sample_DateTime, y = Result)) + 
+    geom_point(aes(colour = sample_type), size = 5) +
+    theme_bw() +
+    theme(plot.caption = textformat,
+          legend.position = c(0.8, 0.8),
+          legend.text = textformat,
+          legend.title = textformat,
+          axis.text = textformat,
+          axis.title = textformat) +
+    labs(colour = "Sample Type",
+         caption = paste("DOC over 2018-2019 wet season at ", site_captions[i])) +
+    scale_color_manual(values=c(forWater_colours[4], forWater_colours[5]),
+                       labels = c("Grab", "Rack")) +
+    ylab("NPOC (mg/L DOC)") + 
+    xlab("")
+  
+  ggsave(filename = paste("DOC_scatterPlot_",i,"_",site_names[i],".png"), g)
 }
 
 # save as a picture
@@ -3870,7 +3790,7 @@ plot_west_stg <- ggplot(filter(stage.event_dfSS5, site == site_names[5]),
                         aes(x = DateTime, y = Stage_cm)) + 
   geom_point(col = forWater_col) + 
   theme_minimal() + 
-   theme(axis.text.x = element_blank(),
+  theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         text = element_text(colour = forWater_colours[4]),
         axis.text = element_text(colour = forWater_colours[4])) +
@@ -3887,10 +3807,10 @@ plot_tunnel_stg <- ggplot(filter(stage.event_dfSS6, site == site_names[6]),
                           aes(x = DateTime, y = Stage_cm)) + 
   geom_point(col = forWater_col) + 
   theme_minimal() + 
-   theme(#axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        text = element_text(colour = forWater_colours[4]),
-        axis.text = element_text(colour = forWater_colours[4])) +
+  theme(#axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    text = element_text(colour = forWater_colours[4]),
+    axis.text = element_text(colour = forWater_colours[4])) +
   labs(x = "", y = "Stage (cm)", caption = site_captions[6])
 plot_tunnel_stg 
 
