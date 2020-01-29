@@ -295,7 +295,7 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 4,Leech-head,Rack,L1,NA,122,0,0.519,12.683,10.326,NaN,NaN
 4,Leech-head,Rack,L2,NA,129,0,0.504,12.41,9.938,NaN,NaN
 4,Leech-head,Rack,L3,NA,133,0,0.391,11.675,9.329,NaN,NaN
-4,Leech-head,Rack,L4,NA,140,0,0.387,11.304,8.96,NaN,NaN
+4,Leech-head,Rack,L4,NA,140,0,NaN,NaN,NaN,NaN,NaN
 4,Leech-head,Rack,L5,NA,150,0,0.542,12.953,10.24,NaN,NaN
 4,Leech-head,Rack,L6,NA,162,0,0.537,13.349,10.567,NaN,NaN
 4,Leech-head,Rack,L7,NA,171,0,0.622,12.883,10.109,NaN,NaN
@@ -316,7 +316,7 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 4,Chris-crk,Rack,L7,NA,66,0,0.166,7.944,6.17,NaN,NaN
 4,5S-above,Grab,Grab,2018-12-06T16:00:00Z,NA,0,0.444,6.66,5.72,NaN,NaN
 4,5S-below,Grab,Grab,2018-12-06T16:00:00Z,NA,0,0.482,6.666,5.748,NaN,NaN
-4,Mystery-bottle,Grab,Grab,NA,NA,6.053,NaN,9.905,5.248,NaN,NaN
+4,Mystery-bottle,Grab,Grab,NA,NA,NaN,NaN,NaN,NaN,NaN,NaN
 7,Lab,QA-QC,RO,NA,NA,0,0,1.2926666666666666,1.2323333333333333,NaN,NaN
 7,Lab,QA-QC,CAL-VER_A1_5.614ppm,NA,NA,0,1.128,5.41,5.25,NaN,NaN
 7,Lab,QA-QC,CAL-VER_A2_5.319ppm,NA,NA,0,1.237,5.504,5.233,NaN,NaN

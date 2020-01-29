@@ -381,7 +381,7 @@ spectrolyser_results <- list.files(path = resultsdata_path_scan) %>%
                               skip = 2, header = FALSE, col.names = scancolumns), .id = "source") 
 
 # check it out
-str(spectrolyser_results)
+#str(spectrolyser_results)
 
 # pull out numbers from alphanumeric 'source' to create factor variable 'trip'
 # use function 'NumberXtract()'
@@ -390,9 +390,11 @@ str(spectrolyser_results)
 spectrolyser_results <- spectrolyser_results %>% 
   mutate(trip = as_factor(NumberXtract(source))) %>% 
   group_by(trip) %>% 
-  mutate(measurement = row_number()) 
+  mutate(measurement = row_number()) %>% 
+  ungroup()
+
 # check it out
-str(spectrolyser_results)
+#str(spectrolyser_results)
 
 unique(spectrolyser_results$trip)
 
@@ -487,7 +489,9 @@ spectrolyser_fullscan <- list.files(path = resultsdata_path_fullscan) %>%
 spectrolyser_fullscan <- spectrolyser_fullscan %>% 
   mutate(trip = as_factor(NumberXtract(source))) %>% 
   group_by(trip) %>% 
-  mutate(measurement = row_number()) 
+  mutate(measurement = row_number()) %>% 
+  ungroup()
+
 # check it out
 # str(spectrolyser_fullscan)
 
@@ -513,7 +517,10 @@ colnames(FULLSCAN_results)
 # for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
 # update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
 FULLSCAN_results <- FULLSCAN_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+  mutate(trip = case_when(trip == "20" & 
+                            site =="Cragg-crk" & 
+                            (measurement == 19 | measurement == 20 | measurement == 21) 
+                          ~ "21", 
                           TRUE ~ trip))
 # check
 unique(FULLSCAN_results$trip)
@@ -743,11 +750,24 @@ save the reformatted results files as .csv files:
 ## save all compiled sample analysis as .csv files 
 # keep as code note to avoid accidental over-writing later*
 
-write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")               # Shimadzu sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv", na = "NA")               # Spectrolyser sample analyses results
-write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")      # stage data compiled 
-write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")                  # stage (cm) compiled with interval/trip
-write_csv(sampleresults_wide, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_wide.csv", na = "NA")  # compiled sample analyses results (wide)
+# Shimadzu sample analyses results
+write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")   
+
+# Spectrolyser sample analyses results
+write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN_results.csv", na = "NA")               
+
+# Spectrolyser fullscan (.fp) analyses results
+write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/FINGERPRINT-scan_results.csv", na = "NA")               
+
+# compiled sample analyses results (wide)
+write_csv(sampleresults, path = "R-outputs_UBC-forWater-MSc_HMc/sample-results_wide.csv", na = "NA")  
+
+# stage data compiled 
+write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/odyssey-data_compiled.csv", na = "NA")
+
+# stage (cm) compiled with interval/trip
+write_csv(stage_df, path = "R-outputs_UBC-forWater-MSc_HMc/stage_results.csv", na = "NA")                  
+
 
 
 ```
