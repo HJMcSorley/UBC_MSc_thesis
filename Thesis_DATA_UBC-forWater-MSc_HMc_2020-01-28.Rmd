@@ -791,10 +791,10 @@ sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
 sample_count_df <- sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  group_by(site, two_seasons, sample_type) %>% 
+  group_by(site, sample_type) %>%  # add 'two_seasons' for wet/dry breakdown 
   summarise(number_of_samples = n()) %>% 
   knitr::kable(., caption = "Installation sites sample counts",
-               col.names = c("installation site", "season", "sample type", "number of samples"))
+               col.names = c("installation site", "sample type", "number of samples"))
 # write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount-df.csv", na = "NA")  
 
 # what were the primary sysnoptic sampling sites
