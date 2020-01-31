@@ -815,12 +815,14 @@ sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
 
 
 # how many of each sample_type are there at the 6 main sites?
+# 324 samples overall
+# 153 Grab (some ~30 duplicates) 
+# 171 Rack
 sixsites_samplecount_df <- sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  group_by(site, sample_type) %>%  # add 'two_seasons' for wet/dry breakdown 
-  summarise(number_of_samples = n()) %>% 
-  knitr::kable(., caption = "Installation sites sample counts", col.names = c("installation site", "sample type", "number of samples"))
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  group_by(site, sample_type) %>%   
+  summarise(number_of_samples = n()) 
 # write_csv(sixsites_samplecount_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount.csv", na = "NA")  
 
 # primary synoptic sampling sites (n > 1)
@@ -878,12 +880,12 @@ synoptic_count_df <- synopticfilter %>%
 
 # ------
 # 15 synoptic sites (including the install sites)
-## 215 synoptic grab samples 
+## 215 synoptic grab samples (44 outside of the six sites)
 # 6 installation sites
-## 285 samples were collected/analyzed at the 6 installation sites:
-### 171 rack samples 
-### 114 grab samples
-# an additional 14 grab samples were collected (synoptically) but as one-offs (totaling 229 grabs overall)
+## 324 samples were collected/analyzed at the 6 installation sites:
+### 153 Grab (39 replicates/treatability) 
+### 171 Rack
+# an additional 18 grab samples were collected (synoptically) but as one-offs (totaling 229 grabs overall)
 # in total 400 samples were collected and analyzed
 # ------
 ```
@@ -906,7 +908,7 @@ sixfilter %>%
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
   facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
-  labs(caption = "DOC concentration by sample type (grab samples vs. rising limb rack sample)", x = "", y = "DOC (mg/L)")
+  labs(caption = "DOC concentration by sample type: grab samples (n = 153) and rising limb rack samples (n = 171)", x = "", y = "DOC (mg/L)")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-Grab-vs-Rack.png") 
 
 
@@ -922,7 +924,7 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(caption = "DOC concentration across six sites over 15 months (342 samples)", x = "", y = "DOC (mg/L)")
+  labs(caption = "DOC concentration across six sites over 15 months (324 samples)", x = "", y = "DOC (mg/L)")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-alltogether.png")
 
 
@@ -939,7 +941,7 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
-       caption = "Density distribution plots of DOC concentration at six sites based on sampling method (Grab: n = 114, Rack: n = 171)") +
+       caption = "Density distribution plots of DOC concentration at six sites based on sampling method (Grab: n = 153, Rack: n = 171)") +
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot_GvsR.png")
 
@@ -949,8 +951,6 @@ sixfilter %>%
 ### Plots of DOC concentration by season 
 
 ```{r seasonal DOC plots}
-
-
 
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
@@ -997,6 +997,54 @@ sampleresults %>%
 # ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonalwithSooketribs.png") 
 
 
+# density ridge plots (facet wrap by season)
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  labs(y = "", x = "DOC (mg/L)", 
+       caption = "Density distribution plots of DOC concentration by season (dry: n = 45, wet: n = 240)") +
+  theme(legend.position = "none") 
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
+
+
+# --- DOC scatter plot ---
+
+# DOC over time all 6 sites in the Leech together
+synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Grab" | sample_type == "Rack") %>%
+  mutate(trip_end = factor(trip_end)) %>% 
+  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
+  geom_jitter(aes(fill = sample_type), size = 2, shape = 22, alpha = 0.7) +
+  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
+       caption = "DOC over fifteen months (Oct 2018-Jan 2020) from 386 synoptic samples (grab samples and vertical rack collection") +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-total-sampletype.png") 
+
+# at each of the six sites (DOC over time)
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  mutate(trip = factor(trip)) %>% 
+  ggplot(aes(x = trip, y = NPOC_ppm)) +
+  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
+  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type:") +
+  facet_wrap(~site, ncol = 2, nrow = 3) +
+  theme(axis.text.x = element_blank(), legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_facet-scatter-sampletype.png") 
+
+
+# --- DOC facet wrap scatter plots ---
+# I don't think these are good graphics
 # Scatter main sites including sooke tribs
 sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
@@ -1017,57 +1065,8 @@ sampleresults %>%
   viridis::scale_fill_viridis(discrete = TRUE) +
   labs(caption = "DOC concentrations", x = "", y = "DOC (mg/L, as NPOC)") +
   theme(axis.text.x = element_text(angle = 90), legend.position = "none") +
-  facet_wrap(~site, ncol = 2, nrow = 4)  
-
-# density ridge plots (facet wrap by season)
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  labs(y = "", x = "DOC (mg/L)", 
-       caption = "Density distribution plots of DOC concentration by season (dry: n = 45, wet: n = 240)") +
-  theme(legend.position = "none") 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
-
-
-# --- DOC scatter plot ---
-# count samples
-synopticfilter %>% 
-  dplyr::filter(analysis == "DOC", sample_type == "Grab"| sample_type == "Rack") %>%
-  summarise(number_of_samples = n())
-# DOC over time all 6 sites in the Leech together
-synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Grab" | sample_type == "Rack") %>%
-  mutate(trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
-  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 21, alpha = 0.6) +
-  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
-  theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
-       caption = "DOC over fifteen months (Oct 2018-Jan 2020) from 386 synoptic samples (grab samples and vertical rack collection") +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-total-sampletype.png") 
-
-
-# --- DOC facet wrap scatter plots ---
-# I don't think this is a good graphic
-# DOC over time (including seasons)
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab") %>%
-  mutate(trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = NPOC_ppm)) +
-  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
-  scale_colour_manual(values = c("#f4AB0E", "#09A4D2")) +
-  theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type:") +
-  facet_wrap(~site, ncol = 2, nrow = 3) +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+  facet_wrap(~site, ncol = 2, nrow = 4)
+# this is not a useful plot
 
 ```
 
