@@ -2,7 +2,7 @@
 title: "Profiling water quality changes during stormflow"
 subtitle: "Reproducible data analysis: Pacific Maritime forWater Masters Project"
 author: "Hannah J McSorley"
-date: "2020-01-09"
+date: "2020-01-29"
 output: html_document
   theme: Cerulean
 ---
@@ -10,6 +10,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 If needed, install required packages:
 ```
 install.packages("tidyverse")
@@ -115,9 +116,18 @@ str(install_df)
 
 # Water sample data and analytic results
 
-Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations. Samples were filtered through 0.45-micron PES filters; acidified, to bring pH below 2; and analyzed with a Shimadzu TOC-V to quantify DOC (as non-purgeable organic carbon, NPOC) via High-Temperature Combustion Method (5310-B) [@EatonA.D.ClesceriL.S.GreenbergA.E.Franson2000a].
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. 
 
-In addition, samples were analyzed using a Spectrolyser spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH). Each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
+For quantification of DOC, samples were filtered with 0.45-micron PES filters; acidified to bring pH below 2; and analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V [@StdMet2000].
+
+Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
+
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. 
+- SUVA254 --- Specific UV absorbance at 254nm is the ratio of UV absorption (sspectral absorbance coeffeicient, SAC, m^-1^) at 254nm normalized to DOC concentration (mgL^-1^). SUVA254 correlates strongly with DOM aromaticity [@Helms2008].
+It was been shown that UV spectral slopes are useful semiquantitative indicators for assessing NOM molecular weights [@Helms2008]. 
+- Spectral slopes 1 & 2 --- the slope of spectral intensity over the shorter wavelength range of 275-295nm (1) and longer wavelength range of 350-400nm (2). 
+- Slope Ratio --- The ratio of spectral slopes 1 and 2, correlates well with CDOM molecular weight [@Helms2008]
+
 
 ## Shimadzu TOC-V for DOC concentrations (as NPOC)
 
@@ -128,9 +138,9 @@ Water samples were filtered (0.45-micron PES filters) and acidified to bring pH 
 ## Shimadzu TOC-V samples and results
 # sample IDs and results from analysis of DOC (as NPOC)
 # three part data munge
-# 1. bring in sample tracking data, format appropriately
-# 2. bring in results data, format appropriately
-# 3. bring them together as meanigful results data
+# 1. bring in sample tracking data (vial number, name, etc), format appropriately
+# 2. bring in results data (from instrument), format appropriately
+# 3. bring them together as meanigful results data (sample IDs + results)
 
 
 # 1. ------------ SAMPLES ------------ #
@@ -160,7 +170,7 @@ shimadzu_samples <- shimadzu_samples %>%
 str(shimadzu_samples)
 head(shimadzu_samples)
 
-#check that there are 22 trips
+#check that there are 22 trips (see 'trip_df')
 levels(shimadzu_samples$trip)
 
 # check which sites are included
@@ -190,13 +200,13 @@ length(levels(shimadzu_samples$site))
 
 # Note: annoying TOC-V export issue
 # data files for analysis of trips 1-8 have 19 columns, while trips 9-22 have 18 columns
-# import as two separate blocks (from two subdirectories), then alter and then merge
+# import as two separate blocks (from two subdirectories), then alter, then merge
 
 # assign column names = col.names():
 nineteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
 
+# no "mean area" variable
 eighteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
-
 
 ## read in files and add a column indicating trip #, based on source file name
 
@@ -279,19 +289,6 @@ TOCV_results$NPOC_ppm = as.numeric(TOCV_results$NPOC_ppm)
 TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
 # good!
-
-# the first few batched measured unfiltered samples for TOC
-
-
-# add a seasonal ID (wet or dry)
-# 2 seasons wide TOCV
-TOCV_wetdry_results <- TOCV_results %>% 
-  mutate(trip = factor(trip, levels = 0:22),
-         season = case_when(
-           trip == 0 ~ "SCAN QA-QC", 
-           trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
-           trip %in% 10:16 ~ "dry",  # June to mid-Oct 2019
-           trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020 
 
 ```
 
@@ -414,7 +411,7 @@ nrow(SCAN_results) == nrow(spectrolyser_samples)
 # check head
 head(SCAN_results)
 # check structure
-str(SCAN_results)
+#str(SCAN_results)
 
 
 # what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
@@ -470,7 +467,7 @@ The Spectrolyser outputs a fingerprint file containing absorbance values at all 
 # 2. ------------ FULLSCAN RESULTS ------------ # 
 
 # assign column names
-fullscan_colnames <- c("Date", "Time", "Status", paste("fp", seq(200.0, 750.0, by = 2.5)))
+fullscan_colnames <- c("Date", "Time", "Status", paste("Abs", seq(200.0, 750.0, by = 2.5)))
 ## read in files and add a column indicating trip #, based on source file name
 resultsdata_path_fullscan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/"
 # read in all the files
@@ -548,9 +545,9 @@ Join data frames and create additional variables to help classify the data for p
 ```{r compile results of lab analyses}
 
 # join the results files from the Shimadzu TOC-V and Spectrolyser
-str(TOCV_results)   # shimadzu NPOC results (direct measure of DOC)
-str(SCAN_results)   # spectrolyser indirect results of DOC (UV-Vis)
-str(FULLSCAN_results)  # spectrolyser full scan 250-700nm
+#str(TOCV_results)   # shimadzu NPOC results (direct measure of DOC)
+#str(SCAN_results)   # spectrolyser indirect results of DOC (UV-Vis)
+#str(FULLSCAN_results)  # spectrolyser full scan 250-700nm
 
 # both have c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")
 # the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
@@ -571,7 +568,7 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
   select(-c(vial, measurement))  # drop unneccesary variables
 
 # check it out
-str(sampleresults)
+#str(sampleresults)
 
 # add a column of "trip_end" to have a date for each trip (plotting)
 ## this is a terrible method
@@ -634,6 +631,37 @@ sampleresults  <-  sampleresults %>%
 
 ```
 
+# Precip data (CRD fire weather stations)
+```{r Wx-precip}
+
+# bring in WxStn data and add a id column from the site file name
+
+# input samples directory path
+Wx_path <-  "R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/"
+
+# check files  
+list.files(path = Wx_path, pattern = "*.CSV") 
+# check source extract is reasonable   
+list.files(path = Wx_path, pattern = "*.CSV") %>%
+  str_extract("([A-Za-z]{8,}+)")
+
+# read in all the files as one dataframe
+# add source (ID) based on file names
+# adjust date-time
+precip_data <- list.files(path = Wx_path, pattern = "*.CSV") %>% 
+  set_names(str_extract("([A-Za-z]{8,}+)")) %>%
+  purrr::map_dfr(~ readr::read_CSV(file.path(Wx_path, .), skip = 0,
+                            col_names = TRUE, .id = "source")) %>% 
+  mutate(source = forcats::as_factor(source),
+         Date = lubridate::parse_date_time(Date, c("dmy", "ydm"), tz = TZ),
+         DateTime = lubridate::ymd_hms(paste(Date, Time), tz = TZ))
+
+## This isn't working!!!!!!! 
+# Error in type(pattern) : argument "pattern" is missing, with no default
+# BUT I SPECIFIED THE PATTERN!!!!!!
+
+
+```
 
 # Stage data
 
@@ -787,7 +815,6 @@ sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
 
 
 # how many of each sample_type are there at the 6 main sites?
-# and how many in each season? 
 sample_count_df <- sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
@@ -805,6 +832,7 @@ synoptic_count_df <- sampleresults %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(number_of_samples = n()) %>% 
   filter(number_of_samples > 1) 
+# write_csv(synoptic_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_synoptic-DOCcount-df.csv", na = "NA")  
 
 synopticfilter <- sampleresults %>% filter(site == "West-Leech"|
                                              site == "Tunnel"|
@@ -910,7 +938,7 @@ sixfilter %>%
 
 
 # ----- Boxplots - Grab only with Sooke Tribs
-# Boxplot with jitter scatter (DOC by season)
+# Boxplot with jitter scatter 
 sampleresults %>% 
   dplyr::filter(site == "Weeks-out" |
                   site == "Leech-head" |
@@ -932,8 +960,10 @@ sampleresults %>%
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
   facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
-  labs(caption = "DOC concentration by season (dry: n = 45, wet: n = 240)", 
+  labs(caption = "DOC concentrations in the Leech and two main tribs to the Sooke Reservoir", 
        x = "", y = "DOC (mg/L)")
+# ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonalwithSooketribs.png") 
+
 
 # Scatter main sites including sooke tribs
 sampleresults %>% 
@@ -946,16 +976,15 @@ sampleresults %>%
                   site == "Rithet" |
                   site == "Judge-crk", 
                 analysis == "DOC", 
-                sample_type == "Grab" & sample == "Grab", sample_type == "Rack") %>% 
+                sample_type == "Grab" & sample == "Grab") %>% 
   mutate(site = factor(site, 
                        levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
   ggplot(aes(x = dt_sampled, y = NPOC_ppm, fill = sample_type)) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21, size = 3) +
-  scale_fill_brewer(palette="Accent") +
   theme_bw() +
   viridis::scale_fill_viridis(discrete = TRUE) +
   labs(caption = "DOC concentrations", x = "", y = "DOC (mg/L, as NPOC)") +
-  theme(axis.text.x = element_text(angle = 90)) +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "none") +
   facet_wrap(~site, ncol = 2, nrow = 4)  
 
 # density ridge plots (facet wrap by season)
@@ -972,18 +1001,25 @@ sixfilter %>%
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
 
+
 # --- DOC scatter plot ---
+# count samples
+synopticfilter %>% 
+  dplyr::filter(analysis == "DOC", sample_type == "Grab"| sample_type == "Rack") %>%
+  summarise(number_of_samples = n())
 # DOC over time all 6 sites in the Leech together
-sixfilter %>% 
+synopticfilter %>% 
   dplyr::filter(analysis == "DOC",
                 sample_type == "Grab" | sample_type == "Rack") %>%
-  mutate(trip = factor(trip, levels = (1:22))) %>% 
+  mutate(trip_end = factor(trip_end)) %>% 
   ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
-  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 23, alpha = 0.8) +
+  geom_jitter(aes(fill = sample_type), size = 2.5, shape = 21, alpha = 0.6) +
   scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-sampletype.png") 
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
+       caption = "DOC over fifteen months (Oct 2018-Jan 2020) from 386 synoptic samples (grab samples and vertical rack collection") +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-total-sampletype.png") 
 
 
 # --- DOC facet wrap scatter plots ---
@@ -991,13 +1027,14 @@ sixfilter %>%
 sixfilter %>% 
   dplyr::filter(analysis == "DOC",
                 sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = trip_end, y = NPOC_ppm, colour = sample_type, shape = two_seasons)) +
-  geom_jitter(size = 2) +
+  mutate(trip_end = factor(trip_end)) %>% 
+  ggplot(aes(x = trip_end, y = NPOC_ppm)) +
+  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
   scale_colour_manual(values = c("#f4AB0E", "#09A4D2")) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", colour = "sample type:", shape = "season:") +
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type:") +
   facet_wrap(~site, ncol = 2, nrow = 3) +
-  theme(legend.position = "top")
+  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_facet-scatter-seasonal.png") 
 
 
