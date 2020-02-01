@@ -132,7 +132,7 @@ It was been shown that UV spectral slopes are useful semiquantitative indicators
 
 ## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
 
-Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed.
+Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed [@StdMet2000].
 
 ```{r TOC-V samples and analytical results}
 
