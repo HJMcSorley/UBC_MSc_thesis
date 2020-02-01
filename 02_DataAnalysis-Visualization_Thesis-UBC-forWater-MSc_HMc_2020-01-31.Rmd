@@ -11,7 +11,10 @@ bibliography: library.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+
+TZ <- "Etc/GMT+8"
+
 ```
 
 If needed, install required packages:
@@ -42,62 +45,50 @@ Results of data wrangling (01) were saved as .csv files for tidy loading. Load t
 Keep this as a code-note so to prevent accidental mis-handling of data.
 
 ``` 
-# {r output sample analysis files}
+#{r input 01_files}
+# keep as code note to avoid accidental over-writing later
 
-## save all compiled sample analysis as .csv files 
-# keep as code note to avoid accidental over-writing later*
 
-# TOCV_results df
-# Shimadzu sample analyses results
-write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_TOCV_results.csv", na = "NA")   
-
-# SCAN_results df
-# Spectrolyser sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_SCAN-par_results.csv", na = "NA")               
-
-# FULLSCAN_results df
-# Spectrolyser fullscan (.fp) analyses results
-write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_SCAN-fp_results.csv", na = "NA")               
+## read all compiled data files & format
 
 # sampleresults df
 # compiled sample analyses results (wide)
-write_csv(sampleresults, path = "R-outputs_UBC-forWater-MSc_HMc/01_Lab-analyses_sample-results_wide.csv", na = "NA")  
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_Lab-analyses_sample-results_wide.csv",
+                          col_names = TRUE) %>%   
+  mutate(trip = factor(trip, levels = c(1:22)),
+         site = factor(site), 
+         sample_type = factor(sample_type),
+         sample = factor(sample),
+         #dt_sampled = lubridate::ymd(dt_sampled),
+         analysis = factor(analysis),
+         #trip_end = lubridate::ymd(trip_end),
+         three_seasons = factor(three_seasons),
+         two_seasons = factor(two_seasons))
+
 
 # odyssey_data df
 # stage data compiled with interval/trip
-write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/01_Odyssey-stage_compiled.csv", na = "NA")
+odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_Odyssey-stage_compiled.csv",
+                         col_names = TRUE) %>% 
+   mutate(source = factor(source),
+         interval = factor(interval),
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
+  
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-write_csv(precip_data, path = "R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_compiled.csv", na = "NA")                 
+precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_compiled.csv", 
+                        col_names = TRUE,
+                        col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
+  mutate(StationName = factor(StationName),
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))             
 
 ```
 
 
 # Data Summarization 
 
-```{r samples count}
-
-# filter for the six install sites for tidier calling
-sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
-                                        site == "Leech-head" |
-                                        site == "Chris-crk" |
-                                        site == "Cragg-crk" |
-                                        site == "West-Leech"| 
-                                        site == "Tunnel") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel")))
-
-
-# how many of each sample_type are there at the 6 main sites?
-# 324 samples overall
-# 153 Grab (some ~30 duplicates) 
-# 171 Rack
-sixsites_samplecount_df <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>%
-  group_by(site, sample_type) %>%   
-  summarise(number_of_samples = n()) 
-# write_csv(sixsites_samplecount_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount.csv", na = "NA")  
+```{r samples count, include=FALSE}
 
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -108,18 +99,8 @@ synoptic_grabcount_df <- sampleresults %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
   filter(grab_sample_count > 1) %>% 
-  mutate(what = "synoptic grab count")
-# write_csv(synoptic_grabcount_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_synoptic-DOCcount-df.csv", na = "NA") 
-
-# How many samples were collected overall
-# 400 total
-sample_count_df <- sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>%
-  group_by(sample_type) %>% 
-  summarise(sample_count = n()) %>% 
-  mutate(what = "all analysed samples")
-# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_allsamples-DOCcount-df.csv", na = "NA") 
+  mutate(what = "synoptic grab count") %>% 
+  ungroup()
 
 # create a subset dataframe for the synoptically sampled sites 
 # see 'snoptic_grabcount_df)
@@ -142,6 +123,39 @@ synopticfilter <- sampleresults %>% filter(site == "West-Leech"|
                                         "Leech-downstreamconf", "Boneyard", 
                                         "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
 
+# filter for the six install sites for tidier calling
+sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
+                                        site == "Leech-head" |
+                                        site == "Chris-crk" |
+                                        site == "Cragg-crk" |
+                                        site == "West-Leech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel")))
+
+
+# how many of each sample_type are there at the 6 main sites?
+# 324 samples overall
+# 153 Grab (some ~30 duplicates) 
+# 171 Rack
+sixsites_samplecount_df <- sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  group_by(site, sample_type) %>%   
+  summarise(number_of_samples = n()) 
+# write_csv(sixsites_samplecount_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount.csv", na = "NA")  
+
+# How many samples were collected overall
+# 400 total
+sample_count_df <- sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  group_by(sample_type) %>% 
+  summarise(sample_count = n()) %>% 
+  mutate(what = "all analysed samples") %>% 
+  ungroup()
+# write_csv(sample_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_allsamples-DOCcount-df.csv", na = "NA") 
+
+
 # How many synoptic site samples were collected overall
 # 386 total
 synoptic_count_df <- synopticfilter %>% 
@@ -149,8 +163,10 @@ synoptic_count_df <- synopticfilter %>%
                 sample_type == "Rack" | sample_type == "Grab") %>%
   group_by(sample_type) %>% 
   summarise(sample_count = n()) %>% 
-  mutate(what = "synoptic count (rack and grabs)")
+  mutate(what = "synoptic count (rack and grabs)") %>% 
+  ungroup()
 # write_csv(synoptic_count_df, path = "R-outputs_UBC-forWater-MSc_HMc/synopticsamples-DOCcount-df.csv", na = "NA")
+
 
 # ------
 # 15 synoptic sites (including the install sites)
@@ -161,41 +177,37 @@ synoptic_count_df <- synopticfilter %>%
 ### 171 Rack
 # an additional 18 grab samples were collected (synoptically) but as one-offs (totaling 229 grabs overall)
 # in total 400 samples were collected and analyzed
+
 # ------
 
 ```
 
-# Data Visualization
 
-Plot data.
+# Data Visualization & Summary
 
-## DOC overall
+plots.
 
-These are plots of DOC concentration over time and space.
+## DOC concentrations
 
-```{r DOC plots}
+Figure 1 shows DOC concentrations were highest at Weeks Creek, the headwaters monitoring point for a sub-basin which included Weeks Lake and surrounding wetlands. On average, Chris Creek DOC concentration was 51% lower than Weeks creek. Below the confluence of Weeks and Chris Creek, the head of Leech River had a mean DOC concentration slightly less than the average of the two headwater tributatires. West Leech River had higher DOC than Cragg Creek by about 20%. Below the confluences of West Leech and Cragg Creek, the Leech Tunnel site had DOC concentrations that were 54% lower than the average at the Leech head, and closer to those of Cragg Creek.
 
-# Boxplot with jitter scatter 
-# site vs DOC
-# wrap by sample type
+```{r DOC-space plot all}
+# summary table
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
-  labs(caption = "DOC concentration by sample type: grab samples (n = 153) and rising limb rack samples (n = 171)", x = "", y = "DOC (mg/L)")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-Grab-vs-Rack.png") 
-
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm),
+            DOC_sd = sd(NPOC_ppm),
+            RSD = (DOC_sd/DOC_mean)*100) %>% 
+  ungroup() %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
+               caption = "summary of DOC concentrations at the six main sites")
 
 # Boxplot with jitter scatter 
-# site vs DOC 
-# grab and rack combined
+# DOC by site 
+# grab and rack combined (all)
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
@@ -205,14 +217,40 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(caption = "DOC concentration across six sites over 15 months (324 samples)", x = "", y = "DOC (mg/L)")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-alltogether.png")
+  labs(caption = "Fig.1 DOC concentration across six sites over 15 months (324 samples)", 
+       x = "", y = "DOC (mg/L)")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig1_DOC_boxplot-alltogether.png")
 
+```
 
+At the six sub-basin monitoring sites, vertical racks were installed to collect samples as the rivers rose in response to precipitation events.
+ 
+These vertical racks collected samples on the rising hydrograph limb, which has ben shown to have higher DOC concentration that non-storm flow [@Yang2015, @Raymond2016, @Raymond2010]. As the vertical racks require a hydrologic response to collect samples, they are only applicable during the wet season. Comparing wet season Grab samples to those collected on Racks confirms that the rack samplers were able to capture more samples, and many during periods with higher DOC concentrations (Fig.2).  
+
+```{r DOC space-time boxplot}
+# Boxplot with jitter scatter 
+# site vs DOC
+# facet wrap by sample type
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab",
+                two_seasons == "wet") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
+  labs(caption = "Fig.2 West season DOC concentration by sample type:\n Grab samples (n = 112) and rising limb Rack samples (n = 166)", x = "", y = "DOC (mg/L)")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig2_DOC_boxplot-Grab-vs-Rack.png") 
+```
+
+```{r sample_type ridge plots, include = FALSE}
 # density ridge 
 # wrap by sample_type
-# Grab: n = 114
-# Rack: n = 171
+
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
@@ -229,9 +267,88 @@ sixfilter %>%
 
 ```
 
-### Plots of DOC concentration by season 
+Over the study period, a total of 229 Grab samples were collected. 215 samples were collected from 15 synoptically sampled sites (which included the six installation sites), as well 14 samples collected from one-off opportunistic sample locations around the water supply area. The synoptic sampling program was enhanced by collection of stormflow on the six vertical racks. Over the study period, DOC concentrations decreased throughout the wet season, and increased again during the dry summer months (Fig.3).
 
-```{r seasonal DOC plots}
+```{r DOC scatter plots by sample_type}
+
+# DOC over time by sample_type
+synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Grab" | sample_type == "Rack") %>%
+  mutate(trip_end = factor(trip_end)) %>% 
+  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
+  geom_jitter(aes(fill = sample_type), size = 2, shape = 22, alpha = 0.75) +
+  scale_fill_manual(values = c("#D55E00", "#999999")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
+       caption = "Fig.3 DOC over fifteen months (Oct 2018 to Jan 2020) in 386 samples \n(synoptic Grab samples (n = 215) and vertical Rack collection (n = 171)") +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig3_DOC_scatter-total-sampletype.png") 
+```
+
+Figure 4 shows DOC concentrations over the study period at each of the six installation locations in the Leech.
+
+
+```{r DOC over time at 6 sites by sample_type}
+# at each of the six sites (DOC over time)
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  mutate(trip = factor(trip)) %>% 
+  ggplot(aes(x = trip, y = NPOC_ppm)) +
+  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
+  scale_fill_manual(values = c("#D55E00", "#999999")) +
+  theme_bw() +
+  labs(y = "DOC (mg/L)", x = "field trip", fill = "sample type:",
+       caption = "Fig.4 DOC over fifteen months (Oct 2018 to Jan 2020) in 324 samples \n(Grab samples (n = 153) and vertical Rack collection (n = 171)") +
+  facet_wrap(~site, ncol = 2, nrow = 3) +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig4_DOC_facet-scatter-sampletype.png") 
+
+```
+
+
+### Seasonal examination of DOC dynamics 
+
+Here, a categorical season ID was used to assess temporal variations in DOC. Seasons were separated based on months of the year: the wet season was October through May, and the dry season was June until October.
+
+* Precipitation data will be employed to operationally separate season (data obtained January 31, 2020 from CRD).
+
+These seasonal plots show DOC data from both Rack and Grab samples in order to include the full range of concentrations. 
+
+While DOC concentrations generally increased during stormflow (relative to between-storm peaks) in the wet season, the dry season (summer) baseflow conditions showed elevated levels of DOC compared to wet season DOC (Fig.5).
+
+```{r seasonal DOC table and ridge plot}
+# summary table
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, two_seasons) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm),
+            DOC_sd = sd(NPOC_ppm),
+            RSD = (DOC_sd/DOC_mean)*100) %>% 
+  ungroup() %>% 
+  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
+               label = "DOC concentrations by seasonal category at the six main sites")
+
+
+# density ridge plots (facet wrap by season)
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  labs(y = "", x = "DOC (mg/L)", 
+       caption = "Density distribution of DOC concentration by season (dry: n = 45, wet: n = 240)") +
+  theme(legend.position = "none") 
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig5_DOC_ridgeplot-seasonal.png") 
+
+```
+
+```{r seasonal boxplots, include = FALSE}
 
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
@@ -278,52 +395,6 @@ sampleresults %>%
 # ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonalwithSooketribs.png") 
 
 
-# density ridge plots (facet wrap by season)
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  labs(y = "", x = "DOC (mg/L)", 
-       caption = "Density distribution plots of DOC concentration by season (dry: n = 45, wet: n = 240)") +
-  theme(legend.position = "none") 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot-seasonal.png") 
-
-
-# --- DOC scatter plot ---
-
-# DOC over time all 6 sites in the Leech together
-synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Grab" | sample_type == "Rack") %>%
-  mutate(trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
-  geom_jitter(aes(fill = sample_type), size = 2, shape = 22, alpha = 0.7) +
-  scale_fill_manual(values = c("#09A4D2", "#f4AB0E")) +
-  theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
-       caption = "DOC over fifteen months (Oct 2018-Jan 2020) from 386 synoptic samples (grab samples and vertical rack collection") +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_scatter-total-sampletype.png") 
-
-# at each of the six sites (DOC over time)
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab") %>%
-  mutate(trip = factor(trip)) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm)) +
-  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
-  theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type:") +
-  facet_wrap(~site, ncol = 2, nrow = 3) +
-  theme(axis.text.x = element_blank(), legend.position = "top")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_facet-scatter-sampletype.png") 
-
-
 # --- DOC facet wrap scatter plots ---
 # I don't think these are good graphics
 # Scatter main sites including sooke tribs
@@ -354,42 +425,48 @@ sampleresults %>%
 
 ### Plots of DOC & proxy
 
-DOC was quantified as non-purgeable organic carbon on the Shimadzu TOC autoanalyzer, and samples were also measured on a Spectrolyser spectrophotometer. 
-The spectrophotometer can only measure the fraction of organic matter that is able to absorb UV or Visible light (C-DOM), and therefore DOC measured on the Spectrolyser is a proxy measure of aromaticity (character).
+DOC was quantified as non-purgeable organic carbon (NPOC) on the Shimadzu TOC autoanalyzer, and samples were also measured on a Spectrolyser spectrophotometer. A spectrophotometer can only measure the fraction of organic matter that is able to absorb UV or Visible light, and therefore DOC measured on the Spectrolyser was a measure of CDOM and an indicator of aromaticity (molecular character).
 
-```{r DOC conc and C-DOM}
+Figure 6 shows results from all samples comparing DOC concentrations (as NPOC, direct measure) to CDOM concentrations (UV-Vis, proxy measure of DOC). There was a strong seasonal separation of the relationship between these two measurements. These results indicate a seasonally-driven physiochemical difference in the aquatic NOM in this drinking water supply area.
 
-# --- Spectrolyser data with TOCV data --- #
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab") %>% 
-  summarise(n = n())
+```{r DOC vs CDOM}
+
 # all sites: DOC vs CDOM
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab") %>%
+synopticfilter %>% 
+  filter(analysis == "DOC",
+         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   mutate(site = factor(site, exclude = "Lab"),
          site = factor(site)) %>% 
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +  
-  geom_point(shape = 21, size = 3, alpha = 0.6) +
-  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
+  geom_jitter(shape = 21, size = 3, alpha = 0.6) +
+  xlim(0, 20) +
+  ylim(0, 20) +
+  geom_abline(slope = 1, intercept = 0, lty = "dotted",) +  
+  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) + 
   theme_bw() +
-  xlim(NA, 20) +
   theme(legend.position = "top") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis) ", fill = "sampling season:",
-       caption = "Grab samples (n = 194) DOC concentrations from direct measure (as NPOC) and from UV-Vis absorbance (C-DOM, or spectral DOM-equivalent)") 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC-CDOM_scatter-sampletype.png") 
+       caption = "Fig.6 DOC concentration from direct measure versus CDOM from UV-Vis absorbance") 
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig6_DOCvsCDOM_scatterplot.png") 
+```
 
+Figure 7 shows the same DOC:CDOM comparison from Figure 6, isolated to the six sub-basin monitoring sites. The seasonal relationship appears similar for the six sites.
+
+```{r DOC vs CDOM at 6 sites}
 # six primary sites: DOC vs CDOM
-sixfilter %>% filter(analysis == "DOC") %>%
+sixfilter %>% filter(analysis == "DOC",
+         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +
-  geom_point(shape = 21, size = 2) +
-  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
+  geom_jitter(shape = 21, size = 2, alpha = 0.6) +
+  xlim(0, 20) +
+  ylim(0, 20) +
+  geom_abline(slope = 1, intercept = 0, lty = "dotted",) + 
   scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
   facet_wrap(~site, nrow = 3, ncol = 2) +
   theme_bw() +
   theme(legend.position = "top") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis)", fill = "sampling season:",
-       caption = "Grab sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification show seasonal disparity. ...")
+       caption = "Fig.7 Six installation sites showing DOC concentration versus CDOM from UV-Vis absorbance")
 
 # SUVA vs time
 sampleresults %>% 
@@ -547,7 +624,6 @@ sampleresults_wide %>%
   # axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
   
   ```
-
 
 
 
