@@ -2,7 +2,7 @@
 title: "Reproducible data analysis: thesis data wrangling"
 subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
 author: "Hannah J McSorley"
-date: "2020-01-31"
+date: "2020-02-03"
 output:
   word_document:
     toc: true
@@ -559,8 +559,6 @@ FULLSCAN_results <- FULLSCAN_results %>%
 # --- WIDE SUMMARY DF --- # 
 sampleresults <- full_join(TOCV_results, SCAN_results, 
                            by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  full_join(FULLSCAN_results, 
-            by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -568,7 +566,11 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
          analysis = factor(analysis),   # drop residual NA from removing "TOC"
          site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
          site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
-  select(-c(vial, measurement))  # drop unneccesary variables
+  select(-c(vial))  # drop unneccesary variables
+
+#%>% removed this -- get fp right before joining 
+#  full_join(FULLSCAN_results, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  
 
 # check it out
 #str(sampleresults)
@@ -632,6 +634,118 @@ sampleresults  <-  sampleresults %>%
 
 # good!
 
+```
+
+
+```{r CRD metals data}
+
+# I collected metals samples from trip 3 to 10
+# CRD provded results files (PDF report) for trips 3 to 8
+# data was manually sorted from PDF (there must be a better way)
+# load data
+metals <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Metals_CRD-forWaterMSc_HMc/CRD-metals-data_collated-trips3-8_nocharacternulls.csv", 
+                   col_names = TRUE) %>% 
+  mutate(Trip = factor(Trip)) %>% 
+  tidyr::pivot_longer(cols = WESTLEECH:BONEYARD,
+                      names_to = "Site",
+                      values_to = "Value") 
+  
+
+# check site names
+levels(metals$Site)
+
+# add data for NPOC, DOC_eq, and SUVA
+# subset for the six installation sites & rename
+metalssixfilter <- sampleresults %>% filter(site == "Weeks-out" |
+                                        site == "Leech-head" |
+                                        site == "Chris-crk" |
+                                        site == "Cragg-crk" |
+                                        site == "West-Leech"| 
+                                        site == "Tunnel",
+                                        sample_type == "Grab" & sample == "Grab",
+                                        analysis == "DOC") %>% 
+  mutate(site = fct_recode(site, WEEKSOUT = "Weeks-out", CHRISCREEK = "Chris-crk", LEECHHEAD = "Leech-head", CRAGGCREEK = "Cragg-crk", WESTLEECH = "West-Leech", TUNNEL = "Tunnel"))
+  
+    
+
+metalslab <- left_join(x = metals, 
+                       y = (sampleresults %>% filter(site == "Weeks-out" |
+                                                       site == "Leech-head" |
+                                                       site == "Chris-crk" |
+                                                       site == "Cragg-crk" |
+                                                       site == "West-Leech"| 
+                                                       site == "Tunnel",
+                                                     sample_type == "Grab" & sample == "Grab",
+                                                     analysis == "DOC") %>% 
+                              mutate(site = fct_recode(site, 
+                                                       WEEKSOUT = "Weeks-out", 
+                                                       CHRISCREEK = "Chris-crk", 
+                                                       LEECHHEAD = "Leech-head", 
+                                                       CRAGGCREEK = "Cragg-crk", 
+                                                       WESTLEECH = "West-Leech", 
+                                                       TUNNEL = "Tunnel"))),
+                       by = c("Site" = "site", "Trip" = "trip")) %>%
+  mutate(Site = factor(Site, exclude = "BONEYARD"),
+         Parameters = factor(Parameters, exclude = c("Total Silicon (Si)",
+                                                     "Total Antimony (Sb)",
+                                                     "Total Beryllium (Be)",
+                                                     "Total Bismuth (Bi)",
+                                                     "Total Boron (B)",
+                                                     "Total Cadmium (Cd)",
+                                                     "Total Chromium (Cr)",
+                                                     "Total Cobalt (Co)",
+                                                     "Total Lead (Pb)",
+                                                     "Total Lithium (Li)",
+                                                     "Total Mercury (Hg)",
+                                                     "Total Nickel (Ni)",
+                                                     "Total Molybdenum (Mo)",
+                                                     "Total Selenium (Se)",
+                                                     "Total Sulphur (S)",
+                                                     "Total Thallium (Tl)",
+                                                     "Total Tin (Sn)",
+                                                     "Total Titanium (Ti)",
+                                                     "Total Uranium (U)",
+                                                     "Total Vanadium (V)",
+                                                     "Total Zinc (Zn)",
+                                                     "Total Zirconium (Zr)"))) %>% 
+  drop_na(Site, Parameters) %>% 
+  mutate(Trip = factor(Trip))
+
+# ----- metals plots?
+# limited metals with NPOC
+metalslab %>% filter(Parameters == "Total Aluminum (Al)"|
+                       Parameters == "Total Barium (Ba)"|
+                       Parameters == "Total Copper (Cu)"|
+                       Parameters == "Total Iron (Fe)"|
+                       Parameters == "Total Manganese (Mn)") %>% 
+  ggplot(aes(x = NPOC_ppm, 
+             y = Value)) +
+  geom_point(aes(colour = Site)) +
+  facet_wrap(~Parameters,
+             scales = "free") +
+  stat_smooth(method=lm) +
+  theme_bw() +
+  scale_colour_brewer(palette="Accent") +
+  theme(legend.position ="top") +
+  labs(y = "ug/L", x = "DOC (mg/L)")
+  
+
+# limited metals with DOC_eq
+metalslab %>% filter(Parameters == "Total Aluminum (Al)"|
+                       Parameters == "Total Barium (Ba)"|
+                       Parameters == "Total Copper (Cu)"|
+                       Parameters == "Total Iron (Fe)"|
+                       Parameters == "Total Manganese (Mn)") %>% 
+  ggplot(aes(x = DOCeq_ppm, 
+             y = Value)) +
+  geom_point(aes(colour = Site)) +
+  facet_wrap(~Parameters,
+             scales = "free") +
+  stat_smooth(method=lm) +
+  theme_bw() +
+  theme(legend.position ="top") +
+  labs(y = "ug/L", x = "CDOM (mg/L)")
+                   
 ```
 
 
