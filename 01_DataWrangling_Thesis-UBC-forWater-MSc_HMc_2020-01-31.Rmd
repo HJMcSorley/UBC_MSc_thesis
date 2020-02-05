@@ -645,26 +645,29 @@ sampleresults  <-  sampleresults %>%
 # load data
 metals <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Metals_CRD-forWaterMSc_HMc/CRD-metals-data_collated-trips3-8_nocharacternulls.csv", 
                    col_names = TRUE) %>% 
-  mutate(Trip = factor(Trip)) %>% 
-  tidyr::pivot_longer(cols = WESTLEECH:BONEYARD,
-                      names_to = "Site",
-                      values_to = "Value") 
+  tidyr::pivot_longer(cols = WESTLEECH:CHRISCREEK,
+                      names_to = "site",
+                      values_to = "metals_values") %>% 
+  mutate(Trip = factor(Trip),
+         Parameters = factor(Parameters),
+         site = factor(site))
   
 
 # check site names
-levels(metals$Site)
+levels(metals$site)
 
 # add data for NPOC, DOC_eq, and SUVA
 # subset for the six installation sites & rename
 metalslab <- left_join(x = metals, 
-                       y = (sampleresults %>% filter(site == "Weeks-out" |
-                                                       site == "Leech-head" |
-                                                       site == "Chris-crk" |
-                                                       site == "Cragg-crk" |
-                                                       site == "West-Leech"| 
-                                                       site == "Tunnel",
-                                                     sample_type == "Grab" & sample == "Grab",
-                                                     analysis == "DOC") %>% 
+                       y = (sampleresults %>% 
+                              filter(site == "Weeks-out" |
+                                       site == "Leech-head" |
+                                       site == "Chris-crk" |
+                                       site == "Cragg-crk" |
+                                       site == "West-Leech"| 
+                                       site == "Tunnel",
+                                     sample_type == "Grab" & sample == "Grab",
+                                     analysis == "DOC") %>% 
                               mutate(site = fct_recode(site, 
                                                        WEEKSOUT = "Weeks-out", 
                                                        CHRISCREEK = "Chris-crk", 
@@ -672,54 +675,13 @@ metalslab <- left_join(x = metals,
                                                        CRAGGCREEK = "Cragg-crk", 
                                                        WESTLEECH = "West-Leech", 
                                                        TUNNEL = "Tunnel"))),
-                       by = c("Site" = "site", "Trip" = "trip")) %>%
-  mutate(Site = factor(Site, exclude = "BONEYARD"),
-         Parameters = factor(Parameters)) %>% 
-  drop_na(Site, Parameters) %>% 
-  mutate(Trip = factor(Trip))
-         
-         
-  # remove filter       
-         Parameters = factor(Parameters, exclude = c("Total Silicon (Si)",
-                                                     "Total Antimony (Sb)",
-                                                     "Total Beryllium (Be)",
-                                                     "Total Bismuth (Bi)",
-                                                     "Total Boron (B)",
-                                                     "Total Cadmium (Cd)",
-                                                     "Total Chromium (Cr)",
-                                                     "Total Cobalt (Co)",
-                                                     "Total Lead (Pb)",
-                                                     "Total Lithium (Li)",
-                                                     "Total Mercury (Hg)",
-                                                     "Total Nickel (Ni)",
-                                                     "Total Molybdenum (Mo)",
-                                                     "Total Selenium (Se)",
-                                                     "Total Sulphur (S)",
-                                                     "Total Thallium (Tl)",
-                                                     "Total Tin (Sn)",
-                                                     "Total Titanium (Ti)",
-                                                     "Total Uranium (U)",
-                                                     "Total Vanadium (V)",
-                                                     "Total Zinc (Zn)",
-                                                     "Total Zirconium (Zr)"))) %>% 
-  
-
-metalslab %>% filter(Parameters == "Total Aluminum (Al)"|
-                       Parameters == "Total Barium (Ba)"|
-                       Parameters == "Total Copper (Cu)"|
-                       Parameters == "Total Iron (Fe)"|
-                       Parameters == "Total Manganese (Mn)") %>% 
-  ggplot(aes(x = NPOC_ppm, 
-             y = Value)) +
-  geom_point(aes(colour = Site)) +
-  facet_wrap(~Parameters,
-             scales = "free") +
-  stat_smooth(method=lm) +
-  theme_bw() +
-  scale_colour_manual(palette = "cbPalette") +
-  theme(legend.position ="top") +
-  labs(y = "ug/L", x = "DOC (mg/L)")
-
+                       by = c("site" = "site", "Trip" = "trip")) %>%
+  mutate(Trip = factor(Trip),
+         Site = factor(site),
+         metal_parameters = factor(Parameters)) %>% 
+  drop_na(site, metal_parameters) %>% 
+  select(-"BONEYARD") %>% 
+  mutate()
 
 ```
 
@@ -901,6 +863,10 @@ write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_SCAN-fp_re
 # sampleresults df
 # compiled sample analyses results (wide)
 write_csv(sampleresults, path = "R-outputs_UBC-forWater-MSc_HMc/01_Lab-analyses_sample-results_wide.csv", na = "NA")  
+
+# metalslab df
+# metals sample analyses results with OC (long)
+write_csv(metalslab, path = "R-outputs_UBC-forWater-MSc_HMc/01_metals-OC_sample-results_long.csv", na = "NA")  
 
 # odyssey_data df
 # stage data compiled with interval/trip
