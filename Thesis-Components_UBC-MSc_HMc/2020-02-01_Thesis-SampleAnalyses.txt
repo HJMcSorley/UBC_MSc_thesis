@@ -1,0 +1,30 @@
+# Vertical racks at six sites
+six sites were selected across the Leech River watershed system; three of these sites were located at the headwaters of Leech river, two were assiciated with the mainstem rivers that feed the Leech from the West and East, and one was at the Leech River Tunnel (the future point of diversion).
+
+At each of the six research sites, a vertical sampling rack was installed. These racks collect discrete water samples as the river rises and record continuous stage measurements (at ten minute intervals). Vertical sampling racks supplement a synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access.  Each rack included a central stilling well (1.5" PCV pipe with 1/2" holes along the length) with a measuring tape affixed to the front; inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with siphon lids. By combining the stage observed on the stilling-well tape with logged river stage and the height at which each siphon bottle filled, the date and time for each rising-stage sample collection was determined. 
+
+It is widely understood that DOC is higher during stormflow than during baseflow and these vertical racks collect whole water samples that can be analyzed to determine just how much stormflow increases the concentration of solutes relative to low-flow samples collected between storm peaks.   
+
+The benefits of these vertical racks as a method of sampling include: low cost (about $500 CND per installation, all in), low power (two 1/2-AA batteries in each logger), self-contained logger (no external data logger required), customizable design, passive sampling (no pumps). 
+
+# ---- 2020-01-31 \/
+# Sample Analyses
+
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a field portable colourmetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
+
+## Quantifying dissolved organic carbon (DOC)
+For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct method of measuring DOC, as all natural organic carbon in the sample is measured. Although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM DOC analytes would be lost [@StdMet2000; @Matilainen2011].
+
+## Qualifying dissolved organic matter (proxy measures of DOC)
+Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). A caveat to interpreting the Spectrolyser results is that, for NOM to be detected by UV-Vis absorption the molecules must absorb ultraviolet (UV) or visible (Vis) light (not all molecules do). UV-Vis absorption occurs only if the applied energy (light) can be absorbed by the molecule; in general, this required the presence of aromatic bonds (i.e. conjugated pi-bond systems in the molecule, a.k.a chromophore). Therefore, UV-Vis absorption is proportional to the molecule's degree of aromaticity and is a measure of chromophoric DOM (CDOM).
+
+The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These absorbance values can provide information about the character of NOM. For example, the ratio of the slope between absorbance at 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), is an indicator of molecular weight [@Helms2008], and specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM reactivity [@Chow2008]. 
+
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined {_in progress_}:
+
+- SUVA~254~ --- Specific ultraviolet absorbance at 254nm is the ratio of UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254nm, normalized to DOC concentration (mgL^-1^). SUVA~254~ correlates strongly with DOM aromaticity and reactivity [@Helms2008; @Chow2008].
+
+- Spectral slopes --- it has been shown that UV spectral slopes are useful semi quantitative indicators for assessing NOM molecular weights [@Helms2008]: 
+
+  *Spectral slopes 1 & 2 --- the slope of spectral intensity over the shorter wavelength range of 275-295nm (1) and longer wavelength range of 350-400nm (2). 
+  *Slope Ratio --- The ratio of spectral slopes 1 and 2, correlates well with CDOM molecular weight [@Helms2008]

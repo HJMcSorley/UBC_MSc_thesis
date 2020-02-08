@@ -1,0 +1,103 @@
+MSc CRD forWater Research Plan 
+
+{INSTERESTS}
+	exploring an understudied area (Leech)
+	changes in water quality over space - 3 main stems from different head water types and different geologies
+	changes in water quality over time - seasonal changes over a year (4 seasons), and changes within stormflow
+	identifying the origins of streamflow flow paths (seasonally) based on DOM character
+		groundwater derived baseflow
+		shallow subsurface soil water flow / pre-event water
+		overland flow
+		direct channel precipitation
+	characterizing treatability across seasons
+		mixing study of Leech with Sooke/Deception Gulch water and changes in treatability dynamics
+	
+OBJECTIVES
+	Identify temporal and Spatial variations and differences in DOC concentration, DOM character
+		RESEARCH QUESTIONS (based on scale of temporal and spatial changes):
+			A. Spatial Scale Research Questions:
+				1.Is Wetland charcter maintained or diluted from head to mouth?
+				2.Is there a dominant signature from one of the 3 mainstems in the source water near Leech Tunnel?
+			B. Temporal Scale Research Questions:
+				1. Over a storm, how much higher is [DOC] in the hydrograph rising limb than falling, and how does the DOM character change over the course of an event?
+				2. What are the seasonal variations and differences in [DOC] + DOM character? 
+				3. *If possible* Characterize the source of stormflow DOM + How much stormflow (what portion of the hydrograph) is pre-event water? AND how does that change over a year?
+		HYPOTHESES:	
+			A1. Wetland character will be diluted along the length of Leech River
+			A2. If there is a signature from one mainstem, is may shift seasonally
+			B1.+B2. [DOC] is dominant in the rising limb and will have a stronger landscape signature in the fall than the spring
+			B3. Stormflow following antecedant dry conditions will result in greater proportions of pre-event water
+TASKS:
+	Identify sites
+		SITE RATIONALE
+			1 - Weeks Outlet Leech Head -- character of Fen
+			2 - Cragg Creek -- Character of east mainstem
+			3 - Leech Below Cragg Confluence -- is there wetland character remaining or does this water look more like Cragg Creek?
+			4 - West Leech -- Character of west mainstem
+			5 - Leech Below West Confluence -- wetland character remaining? Dominant signature of either mainstem?
+			6 - Leech near Tunnel -- Any noteable character of mainstems? 
+				+ DBP-FP in source water --> Waterloo
+				+ BDP-FP for different mixed ratios (Matching Mazumder's ratios) of Deception Gulch water with Leech Source 
+			7 - NE Trib (culvert) to Weeks Lake -- less fenny inlet
+			8 - SE Weeks Lake -- is the Lake character dominant in Outlet/Leech Head?
+			9 - NW Trib (cobble bed) to Weeks Lake -- more fenny inlet + near TimberWest land (active harvest)
+				+ Phillips samplers deployed for Mike Stone
+			10 - West Jordan Creek -- TimberWest fresh roads, harvest maybe spring 2019
+			* not included but should be 
+				* Leech River East Head from Worley Lake headwaters -- non-wetland headwaters of Leech River (what's character?)
+				* Leech River head below East/West confluence -- is there wetland signature here? IF NOT, why would you excpect it to get to the south confluence?
+				* stream from TimberWest at most NW corner of CRD land (North of fresh cut/roads)
+				* stream from TimberWest South of Site 10
+	Instal Equipment
+		Vertical rack samplers
+			Rising limb sample collection with time stamps at each stage
+		Phillips Samplers
+			Passive collection of fine suspended sediment 
+		MAYBE Horizontal/roticery-float samplers	
+			falling limb sample collection with time stamp
+	Perform Field Work
+		Site visits
+			collect water samples for analysis at UBC
+				+ samples for CRD to have analyzed for metals at Maxxam
+				+ sediment for Mike Stone at main stems near confluence and maybe the TimberWest Site(s)
+				+ source water for DBP-FP experiments - Monica Emelko
+					provide whole source water PLUS a range of mixing ratio samples of Leech + Deception Gulch water
+			download stage data
+			perform velocity measurements at culverts (for Q calculation)
+			renew rack sampler bottles		
+		Re-assess sites and methods when sampling is underway
+			re-establish or improve site locations (access) if needed
+			augment methods when/where appropriate
+		Maintain equipment	
+			Repair damage and update desings as needed
+			Batteries
+METHODS:
+	Lab Analysis: 
+		DOC+POC concentration and ratio quantification - Shimadzu TOC-V analyzer 
+		DOM optical/molecular characterization - Aqualog spectrofluorometer + PARFAC analysis
+		Stable isotope analysis (maybe) - PICARRO cavity ringdown spectrometer
+	Field Work: 
+		Vertical rack sampler - rising limb sample collection with time stamps at each stage
+		Grab samples	
+		Q measurements at culverts (velocity-area) + Q with Tobi when approproiate / helpful
+		Soil water extraction - if origin water remains of interest and is manageable within the timeframe
+	Data Work:
+		PARAFAC analysis of DOM optical data
+		Work up historical data of WQ parameters (provided)
+		BC protocol for watershed characterization (desktop framework)
+			scale of forest regeneration
+OUTCOME
+	Publication
+		Automatic sampler design for passive sampling of recession limb stormflow
+		Origins of stormflow 
+	Graph 
+		hydrograph showing relative [DOC] over time
+		hydrograph showing changed in DOM character over time (aromatic -> aliphatic character)
+	Table/matrices (seaonal hydroclimatic attributes 
+		Columns = landcover (Scale of forest regeneration (young, medium, old) + Fen)
+		Rows = Seasonal Flow Regime (rain-event, rain-on-snow, snow-melt, low-flow)
+		Values
+			[DOC] concentration (+/- std) 
+			DOM character (more or less aromatic)
+			DBP-FP hazard/risk ("high/med/low")
+			Q or stage ?

@@ -1,0 +1,89 @@
+MSc CRD forWater Research Plan 
+
+{INSTERESTS}
+	exploring an understudied area (Leech)
+	changes in water quality over space - 3 main stems from different head water types and different geologies
+	changes in water quality over time - seasonal changes over a year (4 seasons), and changes within stormflow
+	identifying the origins of streamflow flow paths (seasonally) based on DOM character
+		groundwater derived baseflow
+		shallow subsurface soil water flow / pre-event water
+		overland flow
+		direct channel precipitation
+	characterizing treatability across seasons
+		mixing study of Leech with Sooke/Deception Gulch water and changes in treatability dynamics
+	
+OBJECTIVES
+	Identify temporal and Spatial variations and differences in DOC concentration, DOM character
+		RESEARCH QUESTIONS (based on scale of temporal and spatial changes):
+			A. Spatial Scale Research Questions:
+				1.Is Wetland character maintained or diluted from head to mouth?
+				2.Is there a dominant signature from one of the 3 mainstems in the source water near Leech Tunnel?
+			B. Temporal Scale Research Questions:
+				1. Over a storm, how much higher is [DOC] in the hydrograph rising limb than falling, and how does the DOM character change over the course of an event?
+				2. What are the seasonal variations and differences in [DOC] + DOM character? 
+				3. *If possible* Characterize the source of stormflow DOM + How much stormflow (what portion of the hydrograph) is pre-event water? AND how does that change over a year?
+		HYPOTHESES:	
+			A1. Wetland character will be diluted along the length of Leech River
+			A2. If there is a signature from one mainstem, is may shift seasonally
+			B1.+B2. [DOC] is dominant in the rising limb and will have a stronger landscape signature in the fall than the spring
+			B3. Stormflow following antecedant dry conditions will result in greater proportions of pre-event water
+TASKS:
+	Identify sites
+		SITE RATIONALE
+			1 - Weeks Outlet:	character of fen and lake 
+			2 - Chris Creek:	non-wetland headwaters
+			3 - Leech River Head:	headwaters below confluence of Weeks Lake and Chris Creek
+			4 - Cragg Creek:	East mainstem tributary
+			5 - West Leech River:	West mainstem tributary
+			6 - Leech River Tunnel:	Leech River Mainstem near diversion to Sooke Lake Reservoir (source water)
+			
+	Install Equipment
+		Vertical rack samplers
+			Rising limb sample collection and 10-minute stage recordings to reference timing of stage-based sample collection
+			Falling limb sample collection - prototype under development 
+	Perform Field Work
+		Site visits
+			collect water samples for analysis at UBC
+				+ samples for CRD to have analyzed for metals at Maxxam
+				+ source water for DBP-FP experiments - Monica Emelko
+					provide whole source water PLUS a range of mixing ratio samples of Leech + Deception Gulch water
+			download stage data
+			perform velocity measurements / discharge gauging 
+			renew rack sampler bottles		
+		Re-assess sites and methods when sampling is underway
+			re-establish or improve site locations (access) if needed
+			augment methods when/where appropriate
+		Maintain equipment	
+			Repair damage and update desings as needed
+			Batteries
+METHODS:
+	Lab Analysis: 
+		DOC concentration - Shimadzu TOC-V analyzer 
+		* DOM optical/molecular characterization - Aqualog spectrofluorometer + PARFAC analysis * 
+		* Stable isotope analysis (maybe) - PICARRO cavity ringdown spectrometer * 
+	Field Work: 
+		Vertical rack sampler - rising limb sample collection with time stamps at each stage
+		Grab samples	
+		Q measurements at culverts (velocity-area) + Q with Tobi when approproiate / helpful
+		Soil water extraction - if origin water remains of interest and is manageable within the timeframe
+	Data Work:
+		PARAFAC analysis of DOM optical data
+		Work up historical data of WQ parameters (provided)
+		BC protocol for watershed characterization (desktop framework)
+			scale of forest regeneration
+			
+OUTCOME
+	Publication
+		Automatic sampler design for passive sampling of recession limb stormflow
+		Origins of stormflow 
+	Graph 
+		hydrograph showing relative [DOC] over time
+		hydrograph showing changed in DOM character over time (aromatic -> aliphatic character)
+	Table/matrices (seaonal hydroclimatic attributes 
+		Columns = landcover (Scale of forest regeneration (young, medium, old) + Fen)
+		Rows = Seasonal Flow Regime (rain-event, rain-on-snow, snow-melt, low-flow)
+		Values
+			[DOC] concentration (+/- std) 
+			DOM character (more or less aromatic)
+			DBP-FP hazard/risk ("high/med/low")
+			Q or stage ?

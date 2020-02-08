@@ -1,0 +1,57 @@
+CRD forWater VIU+UBC meeting
+June 24 Meeting Agenda
+
+1. quick overview of May 28 meeting
+2. HMc MSc plan for summer 2019 + fall/winter 2019/2020
+	Reservoirs and Lake sampling (summer)
+	Network-wide treatability sample sharing
+	storm profiling fall + winter
+	acquiring Tobi's data to supplement my own
+	Currently measured parameters – are we missing any keys?
+		dissolved organic carbon, DOC (focus)
+		nitrate, turbidity, TOC (supplemental)
+		option to add phosphate to analysis 
+		network-wide treatability sample sharing
+			disinfection by-product formation potential (U.Calg)
+			natural Organic Matter characterization (U.AB)
+			colloid / sediment surface charge (U.W)
+			fine sediments and transport of contaminants (U.W)
+
+3. Discussions beyond my MSc
+	should another student be recruited
+	collaborative goals
+
+Hannah McSorley MSc Leech Water Supply Research, UBC & VIU
+Summer sampling plan	
+1. Rivers
+	Continue to sample streams on a regular basis to collect summer baseflow data
+	Measure cross-sectional areas of each stream channel at vertical racks 
+		For discharge calculations in the fall/winter
+	Add temperature sensors to each river rack installation (one in stream, one in air)
+		Hobo TidbiTs, air sensors to be equipped with radiation shields
+	Continue working on falling limb siphon sampler for deployment in late summer
+	
+2. Reservoirs and Lakes
+		1. Deception Gulch (possible future reservoir for Leech River water)
+		2. Weeks Lake (headwaters of Leech River)
+		3. Jarvis Lake (headwaters of Cragg Creek)
+		water and sediment sampling	
+			integrated depth sampling in photic zone
+				share samples with forWater algae and treatability folks 
+				collect temp, EC, etc.
+				stream side alkalinity and phosphate (HACH digital titrator)?
+			benthic sediment sample collection for Mike Stone?
+				particulate-bound phosphate and internal loading
+	
+Questions for June 24 meeting with CRD
+	1. Where does the tunnel actually terminate? In Deception Gulch (at depth or near surface) or in a stream that feeds it?
+	2. How is this work meaningful to CRD & how can we frame it to be most meaningful?
+	3. Does Kapoor Lumber give a heads-up about harvest, is there any planned near the watershed for next year?
+		*one way to frame the value of protecting the water supply is to compare it to harvest (the alternative)
+		Note: Kapoor owns part of the land the CRD roads cross to access the Sooke Water Supply Area
+	
+	
+Tobi -- I'd like to discuss stream gauging, data sharing, PhD and career options	
+	
+	
+	

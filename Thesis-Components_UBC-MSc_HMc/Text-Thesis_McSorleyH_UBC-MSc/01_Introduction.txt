@@ -1,0 +1,97 @@
+"Not only is it vital to all biological functions on earth, water links abiotic and biotic, connects the earth to the atmosphere, and creates a dynamic fluid continuum between ecosystems." ~ Hannah McSorley
+
+#1	Introduction
+##1.1 	forested source water, treatment, DBPS
+	
+Surface water is the primary source of drinking water for over 85% of the Canadian population and in the province of British Columbia, approximately 80% of drinking water originates from forested headwaters [@Pike2010]. Forests offer a variety of ecosystem services (e.g. biodiversity) and also slow and filter runoff, resulting in high quality source water supply [@Dudley2003]. Surface water quality varies over time and space due to climate, weather, and physical characteristics of the watershed (such as topography, land cover and geology) with terrestrial sediments, nutrients, and organic material (e.g. leaf litter) entering surface water through erosion and precipitation events [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015]. 
+
+ In Canada, all source water is treated to meet Health Canada drinking water quality guidelines, which specify allowable levels of biological, physical and chemical parameters that are safe for human use and consumption [@BC2019]. Drinking water treatment processes vary from chlorination alone (at the simplest level) to multiple stages of chemically assisted filtration in combination with advanced oxidative processes. Water treatment protocols differ between communities based on source water quality, infrastructure capabilities, budget, and regional water quality regulations [REFS]. Chlorination remains the most widely used method of inactivating potentially harmful microorganisms, whether it stands alone as the primary and sole treatment protocol, or is used in combination with other processes [@HealthCanada2006; HealthLinkBC2018]. 
+ 
+ When natural source water is chlorinated, chemical reactions with natural organic matter (NOM) can form a variety of chlorinated organic compounds which are broadly classified as disinfection by-products (DBPs). [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet2000]. A number of DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their potential or known health affects (i.e. genotoxicity and carcinogenicity) [@Richardson2007; @BC2019].   
+ 
+ The molecular composition and physical structure of NOM influence its reactivity, therefore different types of NOM have different DBP formation potentials (DBP-FP) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. NOM is a diverse family of molecules, which contain nitrogen, silica, oxygen and hydrogen but are composed primarily of organic carbon, therefore organic carbon is often measured as a proxy for NOM concentration [@HealthCanada2019]. Total organic carbon (TOC) is composed of particulate and dissolved fractions (POC and DOC, respectively). Generally, DOC comprises a larger component of TOC relative to POC, and is more likely to generate DBPs during treatment, the concentration of DOC  in raw water is generally proportional to the amount of DBPs in treated water [@Chow2008; @ REFS]. Because NOM is a precursor for DBPs, and TOC is a surrogate measure of NOM, source water quality guidelines in British Columbia specify that TOC should remain below 4mg/L in source water [@BC2019]. 
+ 
+	##1.2 	watershed processes and water quality variability
+Water quality, including a range of physiochemical and biological components, changes with time and changes across an area. For example, DOC is higher on the rising limb of a hydrograph, and tends to decrease as streamflow recedes [@REFS].   
+---
+Flow-paths at the catchment scale are controlled largely by preferential flow paths and macro-pores...
+
+Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@REFS]. The origins, transport and fate of biogeochemicals in in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and character) governs treatment requirements and largely dictates the quality of treated water, particularly with respect to disinfection byproducts. 
+
+Land use - for example, forest management - can influence biogeochemical processes and alter preferential flow-paths which can effect mobilization, transport and dilution processes of biogeochemcial components which ultimately effects water treatability metrics. 
+
+Aqueous biogeochemicals represent an important link between physical hydrological processes, ecosystem processes and water resources. Hydochemistry is a dynamic fluid continuum with endless opportunity for study, which our water resources rely on.   
+ 
+		###1.2.1 	DOC & NOM variability (stormflow, seasons, spatial)
+Natural organic matter (NOM) comprises a dynamic collection of molecules from a variety of sources. NOM can be introduced to a water body from terrestrial sources (allochthonous NOM), or generated through in-stream processes (autochthonous NOM). Terrestrial organic matter includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff processes [@HealthCanada2019].  
+Aqueous NOM composes complex and diverse combinations of particulate, colloidal and dissolved fractions.  
+The dissolved portion of NOM (DOM) travels in solution and may therefore be transported further than particulate NOM which tends to settle out [@REFSREFSREFS].
+
+DOC is an important parameter to monitor in source water because of it's relations to DBP-FPs. In addition, NOM has the ability to bind and transport contaminants in solution (e.g. metals, organic pollutants, nutrients), and can cause service disruption in treatment plants, and contribute to biofouling water supply infrastructure [@REFSREFSREFS].
+
+			####1.2.1.1 	NOM character & implications for treatment	
+
+Within a watershed, characteristics and concentrations of DOM and dissolved organic carbon (DOC, a major fraction of DOM) naturally fluctuate over space and through time [@Li2014, @Yang2015]. This means that the treatability of source water is variable.			
+
+			####1.2.1.2 	NOM role in transport of contaminants
+
+	##1.3 	forWater & CRD GVWSA
+
+		###1.3.1 		forWater 
+
+The NSERC Strategic Network, forWater, is a transdisciplinary cross-Canada applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, but the connection between upstream forest management and downstream treatment remains poorly understood. forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic *** with the ultimate goal of providing a framework for treatement demands???***
+
+The Capital Regional District, a forWater Partner, is committed to the multiple barrier approach to clean drinking water, and has taken control of source water protection by purchasing and privatizing the water supply areas for Greater Victoria. In 2007 and 2010, a large portion of the Leech River watershed was purchased from private timber company, and that 96km2 is now protected and designated as a future supplemental water supply area: the Leech Water Supply Area (LWSA).   
+  
+		###1.3.2		Greater Victoria Water Supply Areas
+The Capital Regional District (CRD) owns 205.49 km^2^ (20,549 hectares) of catchment lands which are protected as part of the multiple-barrier approach to clean drinking water. Currently, Greater Victoria's water supply is sourced from five surface water reservoirs in the Sooke and Goldstream watersheds (109.27 km^2^  total), located on southeastern Vancouver Island, British Columbia. 
+In 2007 and 2010, the CRD purchased and additional 96.28 km^2^ (9,628 hectares) of land which included the majority of the Leech River watershed (a major sub-catchment of the Sooke River watershed). In anticipation of future water demands, this area was designated as a supplemental water supply Greater Victoria: the Leech Water Supply Area (LWSA). In the future (possibly 2050), inter-basin transfer will supplement the primary drinking water supply by moving Leech River water through a diversion tunnel to Sooke Reservoir. Approximately 92% of the Leech River watershed above the point of diversion (Leech Tunnel) is protected as WSA. 
+
+			####1.3.2.1 	Forest Management
+Previously, the LWSA was privately managed forest land, which was extensively harvested over the past 70 years (nearly 96% clearcut); as a result, a large portion of the WSA is densely forested with softwood stands less than 35 years of age. The second growth forests of the LWSA are no longer managed for timber supply, they are now managed to improve drinking source water quality and to reduce the risk of landscape level wildfire. Due to harvest, reforestation and active fire suppression, forest fire fuels have accumulated and pose a threat in the event that a fire occurs. In the Sooke WSA, the CRD implements forest treatments designed to foster healthy forest stands capable of reducing fire intensity, such as reducing fuel hazards and creating conditions that are safe for crews to action a fire. Similarly, preventative fire treatments may be applied in the LWSA prior to inter-basin transfers.    
+
+			####1.3.2.2 	Water Treatment 
+Island Health is the Vancouver Island Health Authority which oversees drinking water systems regulated under the provincial Drinking Water Protection Act and Drinking Water Protection Regulation frameworks. In keeping with Health Canada's drinking water quality guidelines, the Act sets out requirements for drinking water operators & suppliers to ensure the provision of safe drinking water. The CRD complies with all drinking water requirements as well as several that are not enforced in the province of BC. Treatment of source water from the Greater Victoria Water Supply Area is fairly simple: raw water (unfiltered) is treated with ultraviolet light as primary disinfection, chlorination is secondary  ( *free*{switched from liquid to gas in 2018??} chlorine), and finally ammonia is added to produce chloramine (ClNH~2~, a long-lasting disinfectant that persists through distribution).
+
+A better understanding of hydrochemistry in the LWSA is needed to anticipate possible treatment challenges that may accompany inter-basin transfer from the LWSA.   
+
+
+	##1.4 	Research Objectives
+	
+the objectives of this  research were to contribute information to help characterize the LWSA and to contribute to our understanding of "natural" variations in source water quality (with respect to DOC concentrations, NOM character) across a watershed with nested catchments. 
+
+This research contributes to understanding the "natural" variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are minimal in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). Like most forested areas on Vancouver Island, the Leech watershed is second-growth softwood forest with a history of extensive harvest (nearly 96% cleared). 
+
+As a member of the Watershed Science and Forest Management Theme of forWater, I am working in partnership with the CRD to contribute to their ongoing pursuit of characterizing the LWSA. 
+The objective of my master's research project is to establish a baseline understanding of hydrologic responses and water quality variabilty in rivers across the LWSA. The approach includes advanced synoptic sampling within stormflow, supplemented with standard grab samples between storm events and during summer baseflow. Discrete samples of river water were collected passively during the rising limb of stormflow (falling limb prototype in progress) using low-powered, low-cost, custom-built vertical rack samplers including water level loggers (Odyssey) and reference staff gauges. By collecting samples during stormflow, a more robust understanding of water quality dynamics is achievable. Using low-powered passive sampling techniques allowed for multiple (six) sites to be equipped with monitoring/sampling racks, providing fairly good spatial resolution of hydrochemical variability across the watershed.  
+
+--- ... ---- ... ---- ... ---
+Profiling Stormflow with Vertical Sampling
+The streams in the Leech River watershed respond rapidly to rainfall events, they are “flashy” streams.
+How important is it to capture the surges of water that follow a precipitation event, the stormflow?
+Would collecting standard grab samples be informative enough to understand the water quality dynamics in this new water supply area?
+How can stormflow inform treatment requirements?
+
+Preliminary Monitoring
+Assess physical and chemical parameters of the Leech Water Supply Area source water & identify potential areas of interest for future monitoring, and understand the Leech system
+---
+Inform Treatability:
+	Monitoring Leech River water quality in collaboration with forWater research partners will provide insights for treatment strategy
+ 
+Coordinated Efforts: 
+	-CRD Hydrology is acquiring streamflow, turbidity and temperature at 3 of these sites
+	- Paired time-series of stream-level (to be flow) and water quality conditions can help to inform decisions on when and how to best utilize Leech River water 
+	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained
+	- This research assists in quantifying the availability and variability of Leech River water as supplemental water for the GVWSA
+		###1.4.1 	research questions
+---Overall---
+Topic:	water quality in a regional water supply.
+question:	how does water quality change over space and time? What does it mean for treatability?
+
+---Methods---
+Topic:	sampling techniques for difficult to collect samples
+question:	how can low-cost, low-power technology be combined with passive sampling techniques to collect discrete water samples as well as time-stamped hydrologic data?
+
+---DOC---
+Topic:	dissolved organic carbon as a treatability metric
+Question:	how is DOC related to other water quality parameters and what does is mean for drinking water treatment?

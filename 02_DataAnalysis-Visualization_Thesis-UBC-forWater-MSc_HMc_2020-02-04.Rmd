@@ -759,6 +759,28 @@ sampleresults %>%
 ```
 
 
+```{r Wx-Stn}
+# I want to know precip totals over the study period
+# by month and by season
+# use rain to define storm events
+
+# Rn15 is 15-minute rainfall (mm) 
+# Prec_1 is hourly accummulated precipitation (mm)
+# Temp is 15 minute intervals (degrees C)
+precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(StationName, date) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col() +
+  scale_y_reverse() +
+  labs(x = "", y = "rain (mm/day)") +
+  theme_bw() +
+  facet_wrap(~StationName, ncol = 1)
+
+```
 
 
 
