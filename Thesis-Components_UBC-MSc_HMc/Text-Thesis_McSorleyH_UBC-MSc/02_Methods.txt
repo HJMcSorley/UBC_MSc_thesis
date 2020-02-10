@@ -5,21 +5,33 @@
 The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir, western hemlock and western red cedar; subspecies include white pine, amabalis fir, alder, broad-leaf maple and arbutus. The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%). 
 While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons: approximately 90% of precipitation falls from September to April (primarily Oct-Feb), and May through August is regularly in drought (~215 - 330mm rain). 
 The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake). 
-
-
 			
 		###2.1.2 		sub-basin monitoring sites (6)
-the six sites I selected were accessible and important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the future point of diversion (the Leech River Tunnel).		
+the six sites I selected were accessible and important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the future point of diversion (the Leech River Tunnel).	
+	
 			####2.1.2.1 	sub-basin characteristics 	
+			
 		###2.1.3		synoptic sampling sites (15)
+		
 		###2.1.4	 	forWater coordinated treatability analyses sampling sites (4)
+Four sites were selected to collect source water treatability data in collaboration with researchers in the forWater Network. The sites were: 
+
+1. the Leech River at the future point of diversion, 	
+2. Deception Reservoir
+3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
+4. Judge Creek (largest tributary to Sooke Reservoir)
+
+These sites were selected to represent the future supplemental source water, the terminus or future balancing reservoir between Leech and Sooke water supply areas, and the current tributary source waters in the Sooke WSA.
+
+Replicate samples were collected November 12, 2019 and * January 18, 2020 * and were shippied to the Universities of Alberta and Waterloo for treatability analyses.
+At the University of Waterloo, samples were analyzed for maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). 
+At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer and excitation emission matrices spectra, as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
+	
 	##2.2 	analytical techniques & data
 
--------------
 Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a field portable colourmetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
 
-
--------------	
+All data were analyzed with R using RStudio IDE. 
 	
 		###2.2.1 	Quantifying dissolved organic carbon (DOC, as NPOC)
 
