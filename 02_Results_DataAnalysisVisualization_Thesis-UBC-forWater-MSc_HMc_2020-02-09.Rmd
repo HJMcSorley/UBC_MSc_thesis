@@ -820,8 +820,8 @@ rainplot <- precip_data %>%
   scale_y_reverse() +
   labs(x = "", y = "rain (mm/day)") +
   theme_bw() +
-  scale_x_discrete(position = "top") +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
   facet_wrap(~StationName, nrow = 1)
 
 # plot temperature
@@ -838,10 +838,10 @@ tempplot <- precip_data %>%
              linetype = "dotted") +
   labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
   theme_bw() +
+  scale_x_discrete(labels = NULL) +
   theme(legend.position = "none",
         strip.background = element_blank(),
-        strip.text.x = element_blank(),
-        axis.text.x = element_text(angle = 90)) +
+        strip.text.x = element_blank()) +
   facet_wrap(~StationName, nrow = 1) 
 
 
