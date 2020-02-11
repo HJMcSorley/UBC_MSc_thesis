@@ -30,10 +30,33 @@ suppressPackageStartupMessages(library(ggplot2))    # plots
 suppressPackageStartupMessages(library(viridis))    # nice colours for plots gradient fills
 suppressPackageStartupMessages(library(ggpmisc))    # linear regression line values
 suppressPackageStartupMessages(library(cowplot))    # add-on to ggplot
+suppressPackageStartupMessages(library(gghighlight))# plot highlighting
 
 ```
 
-``` {r input 01_files}
+```{r vectorize colours}
+# use forWater defined colours (hexadecimal codes) for plots
+# all colours defined by forWater admin, except 'MyOrange' which I made
+forWater_colours <- c(MainBlue = "#09A4D2", 
+                      MainGreen = "#668536", 
+                      AccentBlue = "#5B99CC", 
+                      DarkGrey = "#3B3838", 
+                      MyOrange = "#f4AB0E")
+
+# colour-blind friendly pallet with grey (no black)
+cbPalette <- c(grey = "#999999", 
+               orange = "#E69F00", 
+               lightblue = "#56B4E9", 
+               green = "#009E73", 
+               yellow = "#F0E442", 
+               darkblue = "#0072B2", 
+               red = "#D55E00", 
+               pink = "#CC79A7")
+
+
+```
+
+```{r input 01_files}
 # assign timezone
 TZ <- "Etc/GMT+8"
 
@@ -111,21 +134,23 @@ n_SynopticGrabs <- sampleresults %>%
 # synsites <- c("West-Leech","Tunnel","Cragg-crk","Leech-head","Weeks-out","Chris-crk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
 
 # create a subset dataframe for the synoptically sampled sites for tidier calling
-synopticfilter <- sampleresults %>% filter(site == "West-Leech"|
-                                             site == "Tunnel"|
-                                             site == "Cragg-crk"|
-                                             site == "Leech-head"|
-                                             site == "Weeks-out"|
+synopticfilter <- sampleresults %>% filter(site == "Weeks-out"|
                                              site == "Chris-crk"|
+                                             site == "Leech-head"|
+                                             site == "Cragg-crk"|
+                                             site == "West-Leech"|
+                                             site == "Tunnel"|
+                                             
                                              site == "Jarvis"|
+                                             site == "Judge-crk"|
                                              site == "Lazar"|
                                              site == "Rithet"|
-                                             site == "Deception-res"|
+                                             site == "Boneyard"|
                                              site == "West-Jordan"|
+                                             site == "Deception-res"|
                                              site == "Leech-downstreamconf"|
-                                             site == "Judge-crk"|
-                                             site == "Deception-crk"|
-                                             site == "Boneyard") %>% 
+                                             site == "Deception-crk"
+                                             ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
                        levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
 
@@ -849,20 +874,62 @@ tempplot <- precip_data %>%
 cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
 ```
 
+```{r malahat wx}
+
+# plot malahat rain and highlight my study period
+malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
+                         skip = 16,
+                        col_names = TRUE,
+                        col_types = list("f", "c", "d", "d")) %>% 
+  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
+         Date = lubridate::as_date(Datetime))
+
+malahat_rn <- malahat_data %>% 
+  filter(Analysis == "Precipitation Amount (mm)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "rain (mm/day)") +
+  theme_bw() +
+  #scale_x_discrete(labels = NULL) +
+  theme(legend.position = "none") +
+  gghighlight::gghighlight(Datetime > "2018-10-22",
+                           unhighlighted_params = list(colour = "#3B3838"))
+
+# plot malahat temperature and highligh my study period
+malahat_temp <- malahat_data %>% 
+  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  gghighlight::gghighlight(Datetime > "2018-10-22",
+                           unhighlighted_params = list(colour = "#3B3838"))
+  
+
+# try a cowplot
+cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
+
+```
 
 
 ```{r stage plots, include=FALSE}
 
 # --- facet wrap scatter plots of river stage over time (hydrograph) ---
 odyssey_data %>% 
-  mutate(source = factor(source, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech",  "Tunnel"))) %>%
-  mutate(interval = factor(interval, levels = (1:22))) %>% 
+  mutate(source = factor(source, 
+                         levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech",  "Tunnel"))) %>%
+  #mutate(interval = factor(interval, levels = (1:22))) %>% 
   ggplot(aes(x = DateTime, y = stage_cm)) + 
   geom_line(aes(colour = source)) +
   theme_bw() +
-  labs(y = "stage (cm)", x = "") +
-  facet_wrap(~source, ncol = 1) +
-  theme(legend.position = "none")  
+  labs(y = "stage (cm)", x = "") #+
+  #facet_wrap(~source, ncol = 1) +
+  #theme(legend.position = "none")  
+
+
 
 ```
 

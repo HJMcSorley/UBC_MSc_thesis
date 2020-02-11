@@ -43,16 +43,6 @@ Create vectors to easily call installation site names from, rather than typing w
 
 ```{r tidy-names}
 
-# create a vector of site captions
-# NOTE: The site "Weeks Outlet" is being called "Weeks Main Creek"
-# match the order of installation from headwaters to mouth/diversion
-site_captions <- c("Weeks Main Creek", 
-                   "Chris Creek", 
-                   "Leech River Head", 
-                   "Cragg Creek", 
-                   "West Leech River", 
-                   "Leech River Tunnel")
-
 # vector for site names (used in data sets variable "site")
 (site_names <- c("Weeks-out", "Leech-head", "Chris-crk", "Cragg-crk", "West-Leech", "Tunnel"))
 
@@ -62,23 +52,6 @@ site_captions <- c("Weeks Main Creek",
 
 TZ <- "Etc/GMT+8"
 
-# use forWater defined colours (hexadecimal codes) for plots
-# all colours defined by forWater admin, except 'MyOrange' which I made
-forWater_colours <- c(MainBlue = "#09A4D2", 
-                      MainGreen = "#668536", 
-                      AccentBlue = "#5B99CC", 
-                      DarkGrey = "#3B3838", 
-                      MyOrange = "#f4AB0E")
-
-# colour-blind friendly pallet with grey (no black)
-cbPalette <- c(grey = "#999999", 
-               orange = "#E69F00", 
-               lightblue = "#56B4E9", 
-               green = "#009E73", 
-               yellow = "#F0E442", 
-               darkblue = "#0072B2", 
-               red = "#D55E00", 
-               pink = "#CC79A7")
 ```
 
 # Tracking field activity
