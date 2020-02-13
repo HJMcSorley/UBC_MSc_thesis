@@ -7,6 +7,8 @@
 	-3 	forWater & CRD GVWSA
 		-1 	forWater
 		-2 	the Leech
+			-1 	forest management 
+			-2 	water treatment
 	-4 	objectives
 	
 02 	Methods
@@ -19,10 +21,10 @@
 		-4	 	forWater coordinated treatability analyses sampling sites (4)
 	- 2 	analytical techniques & data
 		-1 	DOC as NPOC
-		-2 	UV-Vis for character
+		-2 	spectrophotometry (UV-Vis for character)
 			-1 	CDOM as DOC proxy
 			-2 	SUVA
-			-3 	slope ratios
+			-3 	spectral indices & slope ratios
 		-3 	CRD data
 			-1 	metals analyses results
 			-2 	weather data from 3 stations 

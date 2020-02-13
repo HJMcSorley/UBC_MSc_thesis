@@ -1,6 +1,7 @@
 #02 	Methods
 	##2.1 	Study Site
 		###2.1.1 	Leech River Watershed
+		
 			####2.1.1.1 	Climate, Weather, Forests
 The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir, western hemlock and western red cedar; subspecies include white pine, amabalis fir, alder, broad-leaf maple and arbutus. The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%). 
 While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons: approximately 90% of precipitation falls from September to April (primarily Oct-Feb), and May through August is regularly in drought (~215 - 330mm rain). 
@@ -27,28 +28,43 @@ Replicate samples were collected November 12, 2019 and * January 18, 2020 * and 
 At the University of Waterloo, samples were analyzed for maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). 
 At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer and excitation emission matrices spectra, as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
 	
-	##2.2 	analytical techniques & data
+	##2.2 	Analytical techniques & data
 
-Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a field portable colourmetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentrations below detectable limits (0.1 mg/L).   
 
-All data were analyzed with R using RStudio IDE. 
+All data were analyzed with R (3.6.2) using RStudio IDE (Version 1.3.820). 
 	
 		###2.2.1 	Quantifying dissolved organic carbon (DOC, as NPOC)
 
-For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct method of measuring DOC, as all natural organic carbon in the sample is measured. Although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM DOC analytes would be lost [@StdMet2000; @Matilainen2011].
+For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
 
 		###2.2.2 	Qualifying organic matter through spectrophotometry
- 			####2.2.2.1 	CDOM as DOC proxy
-Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). A caveat to interpreting the Spectrolyser results is that, for NOM to be detected by UV-Vis absorption the molecules must absorb ultraviolet (UV) or visible (Vis) light (not all molecules do). UV-Vis absorption occurs only if the applied energy (light) can be absorbed by the molecule; in general, this required the presence of aromatic bonds (i.e. conjugated pi-bond systems in the molecule, a.k.a chromophore). Therefore, UV-Vis absorption is proportional to the molecule's degree of aromaticity and is a measure of chromophoric DOM (CDOM).
+ 			####2.2.2.1 	Proxy DOC
+Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC quantified by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have an aromatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character.
 
-The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These absorbance values can provide information about the character of NOM. For example, the ratio of the slope between absorbance at 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), is an indicator of molecular weight [@Helms2008], and specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM reactivity [@Chow2008]. 
+For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, reactivity [@Weishaar2003; @Chow2008]. Additionally, the spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. For example, the ratio of absorbance slopes between 275-295 nm and 350-400 nm, is an indicator of DOM molecular weight [@Helms2008]. 
 
-			####2.2.2.2 	SUVA
-SUVA~254~ --- Specific ultraviolet absorbance at 254nm is the ratio of UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254nm, normalized to DOC concentration (mgL^-1^). SUVA~254~ correlates strongly with DOM aromaticity and reactivity [@Helms2008; @Chow2008].		
+				####2.2.2.1.1 	Quality control
+The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, spectral indices were not calculated for several unfiltered water samples that had detectable turbidity (greater than 0.000 FTU); this reduced the spectral dataset by 9.5%, from 347 to 314 spectral samples.   
+ 
+			####2.2.2.2 	SUVA~254~
+Specific ultraviolet absorbance at 254nm (SUVA~254~) is the ratio of UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254nm wavelength, normalized to DOC concentration (mgL^-1^) (i.e., SAC~254~ divided by mgL^-1^-DOC) [@Weishaar2003]. SUVA~254~ correlates strongly with DOM aromaticity, and loosely with reactivity [@Weishaar2003; @Helms2008; @Chow2008]. A higher SUVA value indicates greater aromaticity, and a lower SUVA value indicates more alliphatic DOM. Because humic substances are more aromatic, SUVA~254~ is a good indicator of DOM from humic sources (i.e., allochthonous NOM) [@Weishaar2003; @Vidon2008; @Abbott2018]. 
+
+With respect to SUVA~254~ and drinking water treatability, it's important to consider the diversity of DOM and DBP species and the heterogeneous character contained in a water sample. While SUVA~254~ may indicate reactivity, it is not necessarily a strong indicator of DBP-FPs [@Weishaar2003; @Chow2008]. This is because some DBP precursor NOM components (e.g., alliphatics), which have negligible absorptivities in the UV-Vis range, may contribute to DBPs but not SUVA~254~; additionally, not all NOM with measurable SUVA~254~ will create DBPs [@Weishaar2003]. 
+
+SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
+
+ 	
+		
 			####2.2.2.3 	spectral indices of NOM character
-Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined {_in progress_}:				
+			
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined.
+				
 *Spectral slopes --- it has been shown that UV spectral slopes are useful semi quantitative indicators for assessing NOM molecular weights [@Helms2008]: 
-*Spectral slopes 1 & 2 --- the slope of spectral intensity over the shorter wavelength range of 275-295nm (1) and longer wavelength range of 350-400nm (2). 
+
+Slope ratio (S~R~) is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm.
+Spectral slopes over the wavelength range of 275-295 nm (S~275-295~) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. 
+
 *Slope Ratio --- The ratio of spectral slopes 1 and 2, correlates well with CDOM molecular weight [@Helms2008]			
 			
 		###2.2.3 	CRD data
@@ -56,9 +72,11 @@ Based on full scan data from the Spectrolyser (250-700nm), several indices of NO
 			####2.2.3.2 	weather data from 3 stations 
 				#####2.2.3.2.1 	storm delineation
 				#####2.2.3.2.2 	IDF
+	
 	##2.3 	synoptic sampling campaign
 		###2.3.1 	15 sites
 			####2.3.1.1 	analysis of DOC and NOM
+	
 	##2.4 	sub-basin monitoring 
 		###2.4.1 	6 sites
 		###2.4.2 	vertical rack installations

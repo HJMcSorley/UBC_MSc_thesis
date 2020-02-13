@@ -30,9 +30,10 @@ Note that the tidyverse includes a suite of useful packages, such as:
 ```{r packages, include = FALSE}
 
 # load packages
-suppressPackageStartupMessages(library(tidyverse))  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
-suppressPackageStartupMessages(library(knitr))      # tidy tables
-suppressPackageStartupMessages(library(lubridate))  # dates and times
+suppressPackageStartupMessages(library(tidyverse))  
+# tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
+suppressPackageStartupMessages(library(knitr))      # tidy tables, knitting docs
+suppressPackageStartupMessages(library(lubridate))  # dates, times, ranges
 
 ```
 
@@ -51,6 +52,13 @@ Create vectors to easily call installation site names from, rather than typing w
 # So UTC-8 means a timezone abbreviated "UTC" that is ???8 hours behind the real UTC, or UTC + 8 hours
 
 TZ <- "Etc/GMT+8"
+
+# create a function:
+# ---- Alpha-numeric extraction function ---- #
+# from http://stla.github.io/stlapblog/posts/Numextract.html
+NumberXtract <- function(alphnum){
+  unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
+  }
 
 ```
 
@@ -122,16 +130,19 @@ Water samples were filtered (0.45-micron PES filters) and acidified to bring pH 
 # create a data frame of all sample ID data
 # for all samples analyzed on Shimadzu TOC-V (UBC ESB 3062)
 
-# input samples directory path
-sampledata_path_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/"
+ 
 # read in all the files
-shimadzu_samples <- list.files(path = sampledata_path_TOCV, pattern = "*.csv") %>% 
-  purrr::map(~ read_csv(file.path(sampledata_path_TOCV, .), skip = 4, col_names = TRUE)) %>% 
+shimadzu_samples <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/", 
+             pattern = "*.csv") %>% 
+  purrr::map(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/", .), 
+                        skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
-# check structure
-str(shimadzu_samples)
 
-# correct the sructure/format
+# check structure
+# str(shimadzu_samples)
+
+# correct the structure/format
 shimadzu_samples <- shimadzu_samples %>% 
   dplyr::transmute(vial = as.numeric(vial),
                    site = forcats::as_factor(site),
@@ -185,41 +196,38 @@ eighteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal
 ## read in files and add a column indicating trip #, based on source file name
 
 ## directory 1 (trips 2-8) with 19 columns
-# input results directory path-1
-resultsdata_path1_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/"
 # read in all the files (trips 2-8)
-shimadzu_1 <- list.files(path = resultsdata_path1_TOCV, pattern = "*.txt") %>% 
+shimadzu_1 <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/", 
+             pattern = "*.txt") %>% 
   set_names(str_extract(., "([a-z]{4,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path1_TOCV, .), 
+  purrr::map_dfr(~ read.table(file = file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block1_19columns/", .), 
                               row.names = NULL, skip = 14, header = FALSE, col.names = nineteencolumns), .id = "source") %>% 
   select(-Mean.Area)
 # check that there are 19 columns now (minus "Mean.Area")
-str(shimadzu_1)
+# str(shimadzu_1)
 
 
 ## directory 2 (trips 9-22) with 18 columns
-# input results directory path-2
-resultsdata_path2_TOCV <-  "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/"
 # read in all the files (trips 9 -22)
-shimadzu_2 <- list.files(path = resultsdata_path2_TOCV, pattern = "*.txt") %>% 
+shimadzu_2 <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/", 
+             pattern = "*.txt") %>% 
   set_names(str_extract(., "([a-z]{4,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path2_TOCV, .), 
+  purrr::map_dfr(~ read.table(file = file.path("R-inputs_UBC-forWater-MSc_HMc/shimadzu/results_TOC/block2_18columns/", .), 
                               row.names = NULL, skip = 14, header = FALSE, col.names = eighteencolumns), .id = "source") 
-
 # check structure
-str(shimadzu_2)
+# str(shimadzu_2)
+
 
 # combine the two blocks into one shimadzu results dataframe
 shimadzu_results <- bind_rows(shimadzu_1, shimadzu_2)
-str(shimadzu_results)
+# str(shimadzu_results)
 
-# ---- Alpha-numeric extraction function ---- #
-# from http://stla.github.io/stlapblog/posts/Numextract.html
-NumberXtract <- function(alphnum){
-  unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
-}
 
-## pull out numbers from alphanumerics & create:
+# ---
+## use function 'NumberXtract()'
+# pull out numbers from alphanumerics to create:
 # factor variable for trip numbers   (from 'source')
 # numeric variable for NPOC-results  (from 'Result')
 # factor variable for vial number    (from 'Sample.Name')
@@ -228,7 +236,7 @@ shimadzu_results <- shimadzu_results %>%
          NPOC_mgL = as.numeric(NumberXtract(Result)),
          vial = as.numeric(NumberXtract(Sample.Name)))
 # check it out
-str(shimadzu_results)
+# str(shimadzu_results)
 
 
 
@@ -243,12 +251,12 @@ TOCV_results <- shimadzu_results %>%
   ungroup() 
 
 
-# check lengths match
-nrow(TOCV_results) == nrow(shimadzu_samples)
 # check head
 head(TOCV_results)
 # check structure
 str(TOCV_results)
+# check lengths match
+nrow(TOCV_results) == nrow(shimadzu_samples)
 
 
 # what about trip 21, which was actually in trip 20 (Cragg on 2019-12-19)
@@ -290,17 +298,19 @@ The .par files generated by the spectrolyser contain results of equivalent conce
 # create a data frame of all sample ID data
 # for all samples analyzed on Scan Spectrolyser (UBC ESB 3062)
 
-# input samples directory path
-sampledata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/samples_scan/"
+ 
 # read in all the files
-spectrolyser_samples <- list.files(path = sampledata_path_scan, pattern = "*.csv") %>% 
-  purrr::map(~ read_csv(file.path(sampledata_path_scan, .), skip = 4, col_names = TRUE)) %>% 
+spectrolyser_samples <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/samples_scan/", 
+             pattern = "*.csv") %>% 
+  purrr::map(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/spectrolyser/samples_scan/", .), 
+                        skip = 4, col_names = TRUE)) %>% 
   reduce(rbind)
 
 # check structure
 str(spectrolyser_samples)
 
-# correct the sructure/format
+# correct the structure/format
 spectrolyser_samples <- spectrolyser_samples %>% 
   dplyr::transmute(measurement = as.numeric(measurement),
                    site = forcats::as_factor(site),
@@ -311,8 +321,9 @@ spectrolyser_samples <- spectrolyser_samples %>%
                                                         truncated = 3), -1),
                    fillStage_cm = as.numeric(`fill-stage`),
                    trip = as_factor(trip))
-str(spectrolyser_samples)
-head(spectrolyser_samples)
+# check it
+# str(spectrolyser_samples)
+# head(spectrolyser_samples)
 
 #check which trips were included
 levels(spectrolyser_samples$trip)
@@ -329,7 +340,6 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
     "J-Trib" = "West-Jordan",
     "West-jordan" = "West-Jordan",
     "W.Jarvis" = "Jarvis",
-    "Rithet-N" = "Rithet",
     "Judge" = "Judge-crk"
   ))
 # check sites again
@@ -345,15 +355,15 @@ length(levels(spectrolyser_samples$site))
 scancolumns <- c("Date", "Time",	"Status",	"Turbid.FTUeq",	"NULLTurbid",	"NO3-Neq_ppm",	"NULLNO3-Neq",	"TOCeq_ppm",	"NULLTOCeq", "DOCeq_ppm", "NULLDOCeq", "SAC254_Abs/m", "SAC254_0", "SAC436_Abs/m",	"SAC436_0",	"254-436_Abs/m", "254-436_0",	"analogIN_", "analogIN_0")
 
 ## read in files and add a column indicating trip #, based on source file name
-resultsdata_path_scan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/results_scan/"
-# read in all the files
-spectrolyser_results <- list.files(path = resultsdata_path_scan) %>% 
+spectrolyser_results <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/results_scan/") %>% 
   set_names(str_extract(., "([A-Za-z]{3,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path_scan, .), 
-                              skip = 2, header = FALSE, col.names = scancolumns), .id = "source") 
+  purrr::map_dfr(~ read.table(
+    file = file.path("R-inputs_UBC-forWater-MSc_HMc/spectrolyser/results_scan/", .),
+    skip = 2, header = FALSE, col.names = scancolumns), .id = "source") 
 
 # check it out
-#str(spectrolyser_results)
+# str(spectrolyser_results)
 
 # pull out numbers from alphanumeric 'source' to create factor variable 'trip'
 # use function 'NumberXtract()'
@@ -371,6 +381,8 @@ spectrolyser_results <- spectrolyser_results %>%
 unique(spectrolyser_results$trip)
 
 nrow(spectrolyser_results) == nrow(spectrolyser_samples)
+# oh?! they should be the same length...
+# several triplicate measurements -- see section 4 for solution
 
 
 # 3. ------------ SPECTROLYSER ANALYSIS RESULTS ------------ # 
@@ -399,11 +411,10 @@ SCAN_results <- SCAN_results %>%
 
 # check to make sure it's updated:
 SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
-
 # good!
 
 # 4. -------------  triplicates!  ------------- 
-# several analyses measured the same sample in triplicate to assess intrument precision
+# several analyses measured the same sample in triplicate to assess instrument precision
 # trips c(10, 11, 12, 13, 15, 16)
 # these measurements are counted as unique samples (though they are not)
 # create an average for those measured in triplicate 
@@ -442,14 +453,14 @@ The Spectrolyser outputs a fingerprint file containing absorbance values at all 
 # 2. ------------ FULLSCAN RESULTS ------------ # 
 
 # assign column names
-fullscan_colnames <- c("Date", "Time", "Status", paste("Abs", seq(200.0, 750.0, by = 2.5)))
+fullscan_colnames <- c("Date", "Time", "Status", paste0("Abs_", seq(200.0, 750.0, by = 2.5)))
 ## read in files and add a column indicating trip #, based on source file name
-resultsdata_path_fullscan <-  "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/"
-# read in all the files
-spectrolyser_fullscan <- list.files(path = resultsdata_path_fullscan) %>% 
+spectrolyser_fullscan <- 
+  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/") %>% 
   set_names(str_extract(., "([A-Za-z]{3,}+[0-9]*+)")) %>%
-  purrr::map_dfr(~ read.table(file = file.path(resultsdata_path_fullscan, .), 
-                              skip = 2, header = FALSE, col.names = fullscan_colnames), .id = "source") 
+  purrr::map_dfr(~ read.table(
+    file = file.path("R-inputs_UBC-forWater-MSc_HMc/spectrolyser/fingerprints_scan_fp/", .), 
+    skip = 2, header = FALSE, col.names = fullscan_colnames), .id = "source") 
 
 # check it out
 # str(spectrolyser_fullscan)
@@ -463,43 +474,48 @@ spectrolyser_fullscan <- spectrolyser_fullscan %>%
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
+# note that trip "0" was an external calibration
 
 # check it out
 # str(spectrolyser_fullscan)
-
 unique(spectrolyser_fullscan$trip)
 
+colnames(spectrolyser_fullscan)
+
+# str(spectrolyser_fullscan)
+# str(spectrolyser_samples)
+# combine?
 nrow(spectrolyser_fullscan) == nrow(spectrolyser_samples)
+# will have to handle triplicates as for .par files
 
 
 # 3. ------------ SPECTROLYSER FULLSCAN RESULTS ------------ # 
-# str(spectrolyser_fullscan)
-# str(spectrolyser_samples)
-
 # combine 'spectrolyser_samples' with 'spectrolyser_fullscan'
 FULLSCAN_results <- right_join(spectrolyser_fullscan, spectrolyser_samples, 
                                by = c("trip" = "trip", "measurement" = "measurement")) %>% 
-  ungroup()
-
-# check lengths match
-nrow(FULLSCAN_results) == nrow(spectrolyser_samples)
+  ungroup() %>% 
+  mutate(site = factor(site),
+         sample_type = factor(sample_type),
+         dt_sampled = lubridate::as_datetime(dt_sampled)
+         )
 # check columnnames
 colnames(FULLSCAN_results)
+# levels(FULLSCAN_results$site)  
+
+
+# 4. -------------- fixes:
 
 # for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
 # update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
 FULLSCAN_results <- FULLSCAN_results %>% 
-  mutate(trip = case_when(trip == "20" & 
-                            site =="Cragg-crk" & 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & 
                             (measurement == 19 | measurement == 20 | measurement == 21) 
                           ~ "21", 
                           TRUE ~ trip))
-# check
-unique(FULLSCAN_results$trip)
-# good!
 
-# 4. -------------  triplicates!  ------------- 
-# several analyses measured the same sample in triplicate to assess intrument precision
+
+# ---  triplicates:
+# several analyses measured the same sample in triplicate to assess instrument precision
 # trips c(10, 11, 12, 13, 15, 16)
 # these measurements are counted as unique samples (though they are not)
 # create an average for those measured in triplicate 
@@ -509,6 +525,35 @@ FULLSCAN_results <- FULLSCAN_results %>%
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
   summarise_all(list(~mean(.))) %>% 
   ungroup()
+
+
+# ------ spectral indices -------
+# the absorbance values can be used to determine spectral indices
+# indices are more useful for interpretation than raw ABS values
+
+# first, check that SAC254_Abs/m is ABS/m @254nm
+spectral_results <- dplyr::full_join(FULLSCAN_results, SCAN_results)
+ 
+spectral_results %>%
+  group_by(site, sample_type, sample, SAC254_Abs.m) %>% 
+  summarise(twofiftyfour = mean(c(Abs_252.5, Abs_255)))  # actually abs at 253.75
+# I beleive it.
+
+# how was turbidity?
+view(spectral_results %>%
+  filter(Turbid.FTUeq > 0) %>% 
+  select(trip, site, sample_type, sample, SAC254_Abs.m, Abs_252.5, Abs_255, Turbid.FTUeq))
+
+# how many samples will I lose by filtering out those with turbidity>0?
+turby <- nrow(spectral_results %>%
+  filter(Turbid.FTUeq > 0.000) %>% 
+  select(trip, site, sample_type, sample, SAC254_Abs.m, Turbid.FTUeq)
+  )
+loss <- 100*(turby/nrow(spectral_results))
+
+# -------------------------------------------------------------------------------------------
+# you are here -- calculate slopes and slope ratios
+
 
 ```
 
@@ -613,7 +658,7 @@ sampleresults  <-  sampleresults %>%
 ```{r CRD metals data}
 
 # I collected metals samples from trip 3 to 10
-# CRD provded results files (PDF report) for trips 3 to 8
+# CRD provided results files (PDF report) for trips 3 to 8
 # data was manually sorted from PDF (there must be a better way)
 # load data
 metals <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Metals_CRD-forWaterMSc_HMc/CRD-metals-data_collated-trips3-8_nocharacternulls.csv", 
@@ -803,7 +848,9 @@ tail(odyssey_data)
 # sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
 # 3 data blocks exist for each site, date formats are irregular in most
 
-# correct all water level values with offset calculated based on observed and recorded stage 
+
+
+# these are weird, not sure...
 offset_L.Head   <- 60.84
 offset_WksOut   <- 29 # 9.5
 offset_ChrisCrk <- 30 # 7.27
@@ -811,6 +858,39 @@ offset_CraggCrk <- 9.25
 offset_W.Leech  <- 4.85
 offset_Tunnel   <- 3.17
 # ---
+
+# determine what stage was during summertime baseflow (day I added TidbiTs to racks)
+# correct all water level values with offset calculated based on observed and recorded stage 
+bf_offsets <- 
+  odyssey_data %>% 
+  filter(as.character(Date) == "2019-08-09") %>% 
+  group_by(source) %>% 
+  summarise(bf = mean(stage_cm))
+
+
+# corrected_stage
+corr_stage <- odyssey_data %>% 
+  group_by(source) %>% 
+  mutate(corr_stage_cm = case_when(
+    source == "LeechHead" ~ (stage_cm - bf_offsets[[1,2]]),
+    source == "ChrisCrk" ~ (stage_cm - bf_offsets[[2,2]]),  
+    source == "CraggCrk" ~ (stage_cm - bf_offsets[[3,2]]),  
+    source == "Tunnel" ~ (stage_cm - bf_offsets[[4,2]]),    
+    source == "Weeks" ~ (stage_cm - bf_offsets[[5,2]]),     
+    source == "WestLeech" ~ (stage_cm - bf_offsets[[6,2]])
+  )) %>% 
+  ungroup()
+
+# plot it - lines over time
+corr_stage %>% 
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line(aes(colour = source))
+
+# plot it - density ridges -- could be cool -- fix order and aesthetics (move to results)
+corr_stage %>% 
+  ggplot(aes(x = corr_stage_cm, y = source))+
+  ggridges::geom_density_ridges()
+
 ```
 
 # File Outputs

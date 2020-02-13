@@ -1,0 +1,9 @@
+bookdown::word_document2:
+  reference_docx: word-styles-document_thesis.docx
+  pandoc_args: --top-level-division=chapter
+  toc: true
+  toc_depth: 3
+  toc_unnumbered: no
+  toc_appendix: yes
+  keep_tex: true
+bookdown::epub_book: default

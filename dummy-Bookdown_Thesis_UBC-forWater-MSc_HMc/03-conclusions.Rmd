@@ -1,0 +1,8 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+# Conclusions
+
+I did several things and will now discuss why they are good.

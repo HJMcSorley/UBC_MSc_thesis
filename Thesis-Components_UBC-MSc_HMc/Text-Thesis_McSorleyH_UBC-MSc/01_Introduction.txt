@@ -1,7 +1,7 @@
 "Not only is it vital to all biological functions on earth, water links abiotic and biotic, connects the earth to the atmosphere, and creates a dynamic fluid continuum between ecosystems." ~ Hannah McSorley
 
 #1	Introduction
-##1.1 	forested source water, treatment, DBPS
+##1.1 		Forested source water supplies and drinking water treatment 
 	
 Surface water is the primary source of drinking water for over 85% of the Canadian population and in the province of British Columbia, approximately 80% of drinking water originates from forested headwaters [@Pike2010]. Forests offer a variety of ecosystem services (e.g. biodiversity) and also slow and filter runoff, resulting in high quality source water supply [@Dudley2003]. However, forests also contribute considerable amounts of terrestrial organic matter, bacteria and viruses to surface water [@REFS !@!@!]. There are natural variations in surface water quality over time and space due to climate, weather, and physical characteristics of the watershed (such as topography, land cover and geology) with terrestrial sediments, nutrients, and organic material (e.g. leaf litter) entering surface water through erosion and precipitation events [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015]. 
 
@@ -9,37 +9,47 @@ Surface water is the primary source of drinking water for over 85% of the Canadi
  
  When natural source water is chlorinated, chemical reactions with natural organic matter (NOM) can form a variety of chlorinated organic compounds which are broadly classified as disinfection by-products (DBPs). [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet2000]. A number of DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their potential or known health affects (i.e. genotoxicity and carcinogenicity) [@Richardson2007; @BC2019].   
  
- The molecular composition and physical structure of NOM influence its reactivity, therefore different types of NOM have different DBP formation potentials (DBP-FP) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. NOM is a diverse family of molecules, which contain nitrogen, silica, oxygen and hydrogen but are composed primarily of organic carbon, therefore organic carbon is often measured as a proxy for NOM concentration [@HealthCanada2019]. Total organic carbon (TOC) is composed of particulate and dissolved fractions (POC and DOC, respectively). DOC typically comprises a larger component of TOC relative to POC and in general, the concentration of DOC in raw water is proportional to DBPs in treated water [@Chow2008; @ REFS]. Because NOM is a precursor for DBPs, and TOC is a surrogate measure of NOM, source water quality guidelines in British Columbia specify that TOC should remain below 4mg/L in source water [@BC2019]. As DOC is likely to generate DBPs during chlorination, it is an important source water quality parameter to monitor. 
- 
- In addition to acting as a pre-cursor for DBPs, NOM has the ability to bind and transport contaminants in solution (e.g. metals, organic pollutants, nutrients), and because it is a nutrient substrate for aquatic biota, can contribute to biofouling water supply infrastructure and lead to service disruption in treatment plants [@REFSREFSREFS].
+	##1.2 		DOC & NOM variability (stormflow, seasons, spatial)
 
- 
-	##1.2 	watershed processes and water quality variability
-Water quality, including a range of physiochemical and biological components, changes with time and changes across an area. 
-For example, DOC is higher on the rising limb of a hydrograph, and tends to decrease as streamflow recedes [@REFS].   
----
-Flow-paths at the catchment scale are controlled largely by preferential flow paths and macro-pores...
-
-Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@REFS]. The origins, transport and fate of biogeochemicals in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and character) governs treatment requirements and largely dictates the quality of treated water, particularly with respect to disinfection byproducts. 
-
-Land use - for example, forest management - can influence biogeochemical processes and alter preferential flow-paths which can effect mobilization, transport and dilution processes of biogeochemcial components, which ultimately effects water treatability metrics. 
-
-Aqueous biogeochemicals represent an important link between physical hydrological processes, ecosystem processes and water resources. Hydochemistry is a dynamic fluid continuum with endless opportunity for study, which our water resources rely on.   
- 
-		###1.2.1 	DOC & NOM variability (stormflow, seasons, spatial)
 Natural organic matter (NOM) comprises a dynamic collection of molecules from a variety of sources. NOM can be introduced to a water body from terrestrial sources (allochthonous NOM), or generated through in-stream processes (autochthonous NOM). Terrestrial organic matter includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff processes [@HealthCanada2019].  
-Aqueous NOM composes complex and diverse combinations of particulate, colloidal and dissolved fractions.  
+Aqueous NOM composes complex and diverse combinations of particulate, colloidal and dissolved fractions. 
+
 The dissolved portion of NOM (DOM) travels in solution and may therefore be transported further than particulate NOM which tends to settle out [@REFSREFSREFS].
 
-			####1.2.1.1 	NOM character & implications for treatment	
+Within a watershed, characteristics and concentrations of DOM and dissolved organic carbon (DOC, a major fraction of DOM) naturally fluctuate over space and through time [@Li2014, @Yang2015]. The treatability of source water varies with NOM concentration and character, which depend on source material, hydrology, and biogeochemical factors the factors that influence DOM [@Aiken2011].	
+ 
+ The molecular composition and physical structure of NOM influence its reactivity, therefore different types of NOM have different DBP formation potentials (DBP-FP) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. NOM is a diverse family of molecules, which contain nitrogen, silica, oxygen and hydrogen but are composed primarily of organic carbon, therefore organic carbon is often measured as a proxy for NOM concentration [@HealthCanada2019]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively). The separation of these two fractions is (fairly arbitrarily) based on separation through a 0.45-micron filter [@StdMet2000; @Aiken2011]. DOC is typically the predominant component of TOC and in general, the concentration of DOC in raw water is proportional to DBPs in treated water [@Weishaar2003; @Chow2008]. Because NOM is a precursor for DBPs, and TOC is a surrogate measure of NOM, source water quality guidelines in British Columbia specify that TOC should remain below 4mg/L in source water [@BC2019]. As DOC is likely to generate DBPs during chlorination, it is an important source water quality parameter to monitor. 
+ 
+ In addition to acting as a precursor for DBPs, NOM has the ability to bind and transport contaminants in solution (e.g. metals, organic pollutants, nutrients) and influence stream pH, light and temperature regimes [@Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012].
+ 
+ !and, because it is an energy source for aquatic heterotrophic microbes, NOM !can contribute to biofouling water supply infrastructure and lead to service !disruption in treatment plants [@Stanley2012]
 
-Within a watershed, characteristics and concentrations of DOM and dissolved organic carbon (DOC, a major fraction of DOM) naturally fluctuate over space and through time [@Li2014, @Yang2015]. This means that the treatability of source water is variable.			
+	##1.3 		Watershed processes and water quality
+	
+Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships and as a result, aqueous biogeochemicals represent an important link between ecosystem processes, hydrology, and water resources. Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019]. The origins, transport and fate of biogeochemicals in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and character) governs treatment requirements and largely dictates the quality of treated water -- particularly with respect to disinfection byproducts. 
 
-			####1.2.1.2 	NOM role in transport of contaminants
+Characteristics of discharge and precipitation are the primary controls on stream DOC concentrations [@Vidon2008]. Hydrologic pulses can cause temporal variability in subcatchment water quality, depending on the synchrony (i.e. mean covariance among subcatchments) of the pulse generation [@Abbott2018]. The character of DOM has been shown to vary during storms, indicating a change in NOM source over the course of the event [@Vidon2008]. 
 
-	##1.3 	forWater & CRD GVWSA
+		###1.3.1 	Natural variation
+In pristine watersheds, water quality parameters exhibit natural variability across a river network due to dynamic biotic and abiotic interactions. For example, the river continuum concept (RCC) predicts a spatial reduction in DOM molecular diversity from headwaters, where a majority of solutes enter aquatic ecosystems, to river mouth (i.e., decreasing DOM diversity from low to high order streams) [@Vannote1980; @Mosher2015; @Abbott2018]. Longitudinal attenuation of DOM diversity can be explained by a combination of hydrological processes, geomorphic variables and physical impoundments, organic matter inputs and sources, sediment transport, solar inputs, and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012]. The RCC also predicts a temporal shift in DOM character, including a seasonal shift between heterotrophic processing of detritus to autotrophic generation of NOM (i.e. allochthonous to autochthonous DOM character) [@Vannote1980; @Meyer1983].
 
-		###1.3.1 		forWater 
+Robust analyses by Abbott _et al_ [-@Abbott2018] showed greater biogeochemical diversity in headwaters relative to downstream variance, but did not support the RCC theory of greater temporal variance in headwaters. Solutes were found to vary synchronously among upstream and downstream sites, leading to temporal stability in biogeochemical signatures despite longitudinal variability [@Abbott2018]. The synchrony of hydrochemical variance lead to relatively stable spatial patterns over seasonal and decadal time scales [@Abbott2018].     
+
+		###1.3.2 	Catchment disturbances
+
+Land use (e.g., forest management) and landscape disturbances can ultimately effect water treatability by altering material inputs, biogeochemical processes and stream ecology, as well as changing preferential flow-paths and the mobilization, transport and dilution of biogeochemcial components [@Meyer1983]. 
+It has been shown that, two to three years post-harvest, baseflow DOC concentrations were higher in forested catchments than in clear-cut catchments; however, these studies also showed variable stormflow DOC responses in harvested and forested catchments [@Meyer1983; @Mistick2019]. In the absence of long-term baseline data (i.e., pre and post-disturbance data sets), natural variability in fluvial processes complicates land-use studies. Anthropogenic climate change can further confound our interpretation of catchment studies.  
+
+Overall, DOC trends related to land-use seem highly dependent on catchment attributes.  
+
+High intensity and/or long duration precipitation events can deplete both terrestrial and aquatic NOM storage sources (e.g. high flows can disturb benthic NOM storage) [@Meyer1983].
+
+-- DOC is higher on the rising limb of a hydrograph, and tends to decrease as streamflow recedes [@REFS].   
+
+
+	##1.4 	forWater & CRD GVWSA
+
+		###1.4.1 		forWater 
 
 The NSERC Strategic Network, forWater, is a transdisciplinary cross-Canada applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, but the connection between upstream forest management and downstream treatment remains poorly understood. forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatement demands.
 
