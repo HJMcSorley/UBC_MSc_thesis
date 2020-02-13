@@ -540,9 +540,9 @@ spectral_results %>%
 # I beleive it.
 
 # how was turbidity?
-view(spectral_results %>%
+spectral_results %>%
   filter(Turbid.FTUeq > 0) %>% 
-  select(trip, site, sample_type, sample, SAC254_Abs.m, Abs_252.5, Abs_255, Turbid.FTUeq))
+  select(trip, site, sample_type, sample, SAC254_Abs.m, Abs_252.5, Abs_255, Turbid.FTUeq)
 
 # how many samples will I lose by filtering out those with turbidity>0?
 turby <- nrow(spectral_results %>%
@@ -551,10 +551,33 @@ turby <- nrow(spectral_results %>%
   )
 loss <- 100*(turby/nrow(spectral_results))
 
+
 # -------------------------------------------------------------------------------------------
 # you are here -- calculate slopes and slope ratios
 
+# Spectral slopes -- from linear regression of log~e~-transformed spectra
+# 275-295 nm (S~275-295~) == S1
+# 350-400 nm (S~350-400~) == S2
 
+# remove turbid samples
+S1 <- spectral_results %>%
+  filter(Turbid.FTUeq == 0) %>% 
+  pivot_longer(cols = Abs_275:Abs_295,            # longer is better (select only what you need)
+               names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
+  select(c(trip, site, sample_type, sample, dt_sampled, fillStage_cm, 
+           Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, 
+           SAC254_Abs.m, SAC436_Abs.m, wavelength_nm, SAC_per.m)
+           ) %>% 
+  mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm))) %>%  # numeric wavelength
+  mutate(lnSAC = log(SAC_per.m)) 
+ 
+S1 <- S1 %>% 
+   group_by(trip, site, sample_type, sample) %>% 
+   mutate(sample_slope = coef(lm(data = S1, formula = lnSAC ~ wavelength_nm))[[2]])
+
+S1 %>% ggplot(aes(x = wavelength_nm, y = lnSAC)) +
+  geom_jitter() +
+  geom_smooth(method = "lm")
 ```
 
 ## Data collation
