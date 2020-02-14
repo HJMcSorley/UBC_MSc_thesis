@@ -520,6 +520,11 @@ sixfilter %>%
 
 ```
 
+## Spectral Indices
+
+```{r}
+
+```
 
 
 ```{r seasonal plots, include=FALSE}
