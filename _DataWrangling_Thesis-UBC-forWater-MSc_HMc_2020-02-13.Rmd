@@ -647,6 +647,7 @@ spectral_summary <- spectral_results %>%
 # --- WIDE SUMMARY DF --- # 
 sampleresults <- full_join(TOCV_results, SCAN_results, 
                            by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -654,8 +655,7 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
          analysis = factor(analysis),   # drop residual NA from removing "TOC"
          site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
          site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
-  select(-c(vial)) %>%   # drop unneccesary variables
-  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm"))
+  select(-c(vial))   # drop unneccesary variables
 # check it out
 #str(sampleresults)
 
@@ -1025,143 +1025,6 @@ write_csv(precip_data, path = "R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_
 .
 ## odyssey loggers
 
-Make hydrographs with stage (desire is to obtain Q)
-
-```{r hydrographs_1}
-
-# run a loop to plot stage for each site
-# save each stage plot in a list to call later
-stagePlots_list <- vector("list", 6)
-
-# vector to call text format for plots
-plottextformat <- element_text(size = 14, colour = forWater_colours[4])
-
-# save a theme vector to add to each plot
-stageplottheme <- theme_bw() + 
-  theme(legend.title = plottextformat,
-        legend.text = plottextformat,
-        axis.title = plottextformat,
-        axis.text = plottextformat,
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        text = element_text(colour = forWater_colours[4]))
-
-# chose the colour you want
-forWater_col <- forWater_colours[3]
-
-# loop for sites 1-5
-for (i in seq_along(site_names[1:5])) {
-  s <- ggplot(filter(stage.event_dfSS5, site == site_names[i]), aes(x = DateTime, y = Stage_cm)) + 
-    geom_point(col = forWater_col) + 
-    stageplottheme +
-    labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-  
-  stagePlots_list[[i]] <- s  # save plot to list for calls later (in order of 'site_names')
-  ggsave(filename = paste("Stage_Plot_",i,"_",site_names[i],".png"), s)
-}
-
-# plot the tunnel separately becasue it has a truncated stage df
-s <- ggplot(filter(stage.event_dfSS5, site == site_names[6]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[6])
-stagePlots_list[[6]] <- s  # save plot to list for calls later (in order of 'site_names')
-ggsave(filename = paste("Stage_Plot_",6,"_",site_names[6],".png"), s)
-
-# rename the stage plot list elements
-names(stagePlots_list) <- paste(site_names,"stage")
-
-```
-
-it didn't work to save my graphs in a vector so here they are again, less janky but not totally elegant
-
-```{r hydrographs_2}
-
-# set up fresh hydrographs (currently in Janky Shit)
-# note: "ggplot_gtable" sets up the plot to be used in grid layout for rapidrunoff plots
-
-# vector to call text format for plots
-plottextformat <- element_text(size = 14, colour = forWater_colours[4])
-
-# save a theme vector to add to each plot
-stageplottheme <- theme_bw() + 
-  theme(legend.title = plottextformat,
-        legend.text = plottextformat,
-        axis.title = plottextformat,
-        axis.text = plottextformat,
-        #axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        text = element_text(colour = forWater_colours[4]))
-
-# chose the colour you want
-forWater_col <- forWater_colours[3]
-
-# ::: Weeks Outlet 
-plot_wks_stg <- 
-  ggplot(filter(stage.event_dfSS5, site == site_names[1]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",1,"_",site_names[1],".png"))
-
-gtb_wks_stg <- ggplot_gtable(ggplot_build(plot_wks_stg))  
-
-
-# :: Leech River Head 
-plot_L.head_stg <- 
-  ggplot(filter(stage.event_dfSS5, site == site_names[2]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",2,"_",site_names[2],".png"))
-
-gtb_L.head_stg <- ggplot_gtable(ggplot_build(plot_L.head_stg))
-
-
-# :: Chris Creek 
-plot_chris_stg <- 
-  ggplot(filter(stage.event_dfSS5, site == site_names[3]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",3,"_",site_names[3],".png"))
-
-gtb_chris_stg <- ggplot_gtable(ggplot_build(plot_chris_stg))
-
-
-# :: Cragg Creek 
-plot_cragg_stg <- 
-  ggplot(filter(stage.event_dfSS5, site == site_names[4]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",4,"_",site_names[4],".png"))
-
-gtb_cragg_stg <- ggplot_gtable(ggplot_build(plot_cragg_stg))
-
-
-# :: West Leech River 
-plot_west_stg <- 
-  ggplot(filter(stage.event_dfSS5, site == site_names[5]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",5,"_",site_names[5],".png"))
-
-gtb_west_stg <- ggplot_gtable(ggplot_build(plot_west_stg))
-
-
-# :: Tunnel
-plot_tunnel_stg <-
-  ggplot(filter(stage.event_dfSS6, site == site_names[6]), aes(x = DateTime, y = Stage_cm)) + 
-  geom_point(col = forWater_col) + 
-  stageplottheme +
-  labs(x = "", y = "Stage (cm)", caption = site_captions[i])
-ggsave(filename = paste("Stage_Plot_",6,"_",site_names[6],".png"))
-
-gtb_tunnel_stg <- ggplot_gtable(ggplot_build(plot_tunnel_stg))
-```
-
 
 ##Goal:match bottle height to logged stage
 
@@ -1182,6 +1045,55 @@ I think you can do thins in a loop with i as the seq_along(site_names[i]) and j 
 call vector of events for trip_df
 
 ```{r OC+stage_wks}
+# try new:
+
+# first, rename sites in sample df so they match odyssey data
+subbasins <- sampleresults %>% 
+  filter(site == "Weeks-out"|
+           site == "Chris-crk"|
+           site == "Leech-head"|
+           site == "Cragg-crk"|
+           site == "West-Leech"|
+           site == "Tunnel") %>% 
+  mutate(site = forcats::fct_recode(sampleresults$site, 
+                                           LeechHead = "12040",
+                                           ChrisCrk = "CHRIS",
+                                           CraggCrk = "CRAGG",
+                                           Tunnel = "LEECH",
+                                           Weeks = "WEEKS",
+                                           WestLeech = "WEST")
+
+# ---- trying to modify old code
+# ... old
+# Inputs:
+stg_df <- filter(stage.event_df, site == site_names[1] & event == "1") %>% 
+  select(event, site, DateTime, Stage_cm)
+
+samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "1") %>% 
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
+
+# OUTPUTS 
+# defined based on your INPUT values (no need to alter)
+
+# this is the stage date you're targeting (by site)
+stg <- odyssey_data$stage_cm
+# this is the time series you're targeting
+t.series <- odyssey_data$DateTime  
+# this is the stage you need a date-time for
+fill <- sampleresults$fillStage_cm  
+
+# assign empty vectors to hold the outputs from the loop
+occur_fill <- vector(length = length(fill))
+stg_fill   <- vector(length = length(fill))
+time_fill  <- vector(length = length(fill))
+
+for (i in seq_along(fill)) {
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
+} 
+# -----
+
+
 # --- wks 1
 # --- INPUTS --- #
 # create subset working dataframes 

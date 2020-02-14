@@ -44,7 +44,7 @@ Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectro
 
 For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, reactivity [@Weishaar2003; @Chow2008]. Additionally, the spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. For example, the ratio of absorbance slopes between 275-295 nm and 350-400 nm, is an indicator of DOM molecular weight [@Helms2008]. 
 
-				####2.2.2.1.1 	Quality control
+				####2.2.2.1.1 	Quality control note
 The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, spectral indices were not calculated for several unfiltered water samples that had detectable turbidity (greater than 0.000 FTU); this reduced the spectral dataset by 9.5%, from 347 to 314 spectral samples.   
  
 			####2.2.2.2 	SUVA~254~
@@ -54,18 +54,17 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 
 SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
 
- 	
-		
-			####2.2.2.3 	spectral indices of NOM character
+ 
+ ####2.2.2.3 	spectral indices of NOM character
 			
-Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined.
-				
-*Spectral slopes --- it has been shown that UV spectral slopes are useful semi quantitative indicators for assessing NOM molecular weights [@Helms2008]: 
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. 
 
-Slope ratio (S~R~) is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm.
-Spectral slopes over the wavelength range of 275-295 nm (S~275-295~) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. 
+Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators used for assessing DOM molecular weights [@Helms2008]. In the abence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a useful tool for getting at molecule character. 
 
-*Slope Ratio --- The ratio of spectral slopes 1 and 2, correlates well with CDOM molecular weight [@Helms2008]			
+A quotient called E~2~:E~3~ is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ represents the ratio of absorbance at wavelengths 250nm and 365nm [@Peuravuori1997]. 
+
+Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by PAHs with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. 
+Slope ratio (S~R~) was calculated to help elucidate DOM molecular weight. S~R~ is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].			
 			
 		###2.2.3 	CRD data
 			####2.2.3.1 	metals analyses results
