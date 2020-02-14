@@ -1045,7 +1045,7 @@ I think you can do thins in a loop with i as the seq_along(site_names[i]) and j 
 call vector of events for trip_df
 
 ```{r OC+stage_wks}
-# try new:
+# try new: ---- YOU ARE HERE
 
 # first, rename sites in sample df so they match odyssey data
 subbasins <- sampleresults %>% 
