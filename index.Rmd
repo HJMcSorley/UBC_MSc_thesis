@@ -1,5 +1,5 @@
 --- 
-title: "Quantifying synchrony and variability in source water quality across a relatively undisturbed nested catchment: contibutions to characterizing a protected water supply area to better understand how forest management strategies influence drinking water treatability and outcomes"
+title: "Quantifying synchrony and variability in source water quality across a relatively undisturbed nested catchment: contributions to characterizing a protected water supply area to better understand how forest management strategies influence drinking water treatability and outcomes"
 author: "Hannah J. McSorley"
 date: "April 2020"
 site: bookdown::bookdown_site

@@ -1,25 +1,17 @@
 ---
-title: "Reproducible data analysis: thesis data analysis and visualization"
-subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
-author: "Hannah J McSorley"
-date: "2020-02-03"
 output:
-  word_document:
-    tof: false
-    toc: false
-    reference_docx: word-styles-document_thesis.docx
-    fig_caption: yes
-bibliography: library.bib  
+  word_document: default
 ---
+# Data & Results (visualization & summaries)
 
-```{r setup, include=FALSE}
+```{r results setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # this isn't working?
 
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
-```{r packages}
+```{r results packages, include=FALSE}
 
 # load packages
 suppressPackageStartupMessages(library(tidyverse))  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
@@ -225,7 +217,7 @@ n_totalSamples
 ```
 
 
-# Data Visualization & Summaries
+
 
 ## Leech DOC concentrations overview
 
@@ -314,7 +306,7 @@ metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
 
 DOC concentration had a strong positive relationship with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC999999999999REF].  
 
-```{r metals and CDOM -- don't include}
+```{r metals and CDOM dont include}
 
 # limited metals with DOC_eq
 # filter out the parameters with insufficient data
@@ -937,7 +929,3 @@ odyssey_data %>%
 
 
 ```
-
-
-
-# References

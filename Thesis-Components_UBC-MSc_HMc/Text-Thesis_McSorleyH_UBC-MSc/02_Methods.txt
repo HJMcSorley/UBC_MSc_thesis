@@ -1,8 +1,7 @@
 #02 	Methods
-	##2.1 	Study Site
-		###2.1.1 	Leech River Watershed
+	##2.1 	Study Site: Leech River Watershed
 		
-			####2.1.1.1 	Climate, Weather, Forests
+			####2.1.1 	Climate, Weather, Forests
 The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir, western hemlock and western red cedar; subspecies include white pine, amabalis fir, alder, broad-leaf maple and arbutus. The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%). 
 While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons: approximately 90% of precipitation falls from September to April (primarily Oct-Feb), and May through August is regularly in drought (~215 - 330mm rain). 
 The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake). 
