@@ -1044,24 +1044,28 @@ Weeks Outlet (Drainage from Jordan Meadows)
 I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
 call vector of events for trip_df
 
-```{r OC+stage_wks}
-# try new: ---- YOU ARE HERE
+```{r match OC and stage}
 
 # first, rename sites in sample df so they match odyssey data
+# filter for sub-basin sites
 subbasins <- sampleresults %>% 
-  filter(site == "Weeks-out"|
-           site == "Chris-crk"|
-           site == "Leech-head"|
-           site == "Cragg-crk"|
-           site == "West-Leech"|
+  mutate(site = as.character(site)) %>% 
+  filter(site == "Weeks-out" |
+           site == "Chris-crk" |
+           site == "Leech-head" |
+           site == "Cragg-crk" |
+           site == "West-Leech" |
            site == "Tunnel") %>% 
-  mutate(site = forcats::fct_recode(sampleresults$site, 
-                                           LeechHead = "12040",
-                                           ChrisCrk = "CHRIS",
-                                           CraggCrk = "CRAGG",
-                                           Tunnel = "LEECH",
-                                           Weeks = "WEEKS",
-                                           WestLeech = "WEST")
+  mutate(site = factor(site, levels = 
+                         c("Weeks-out","Chris-crk","Leech-head","Cragg-crk","West-Leech","Tunnel")),
+         site = forcats::fct_recode(site, 
+                                    Weeks = "Weeks-out",
+                                    ChrisCrk = "Chris-crk",
+                                    LeechHead = "Leech-head",
+                                    CraggCrk = "Cragg-crk", 
+                                    WestLeech = "West-Leech",
+                                    Tunnel = "Tunnel"))
+# try new: ---- YOU ARE HERE
 
 # ---- trying to modify old code
 # ... old
