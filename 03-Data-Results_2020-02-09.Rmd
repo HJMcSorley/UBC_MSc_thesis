@@ -57,29 +57,37 @@ TZ <- "Etc/GMT+8"
 
 # sampleresults df
 # compiled sample analyses results (wide)
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_Lab-analyses_sample-results_wide.csv",
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-results-compiled.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(1:22)),
-         site = factor(site), 
          sample_type = factor(sample_type),
          sample = factor(sample),
          analysis = factor(analysis),
          three_seasons = factor(three_seasons),
-         two_seasons = factor(two_seasons))
+         two_seasons = factor(two_seasons)) %>% 
+  mutate(site = factor(site, levels = 
+                         c("Weeks-out","Chris-crk","Leech-head","Cragg-crk","West-Leech","Tunnel")),
+         site = forcats::fct_recode(site, 
+                                    Weeks = "Weeks-out",
+                                    ChrisCrk = "Chris-crk",
+                                    LeechHead = "Leech-head",
+                                    CraggCrk = "Cragg-crk", 
+                                    WestLeech = "West-Leech",
+                                    Tunnel = "Tunnel"))
 
 
 # odyssey_data df
 # stage data compiled with interval/trip
-odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_Odyssey-stage_compiled.csv",
+odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-stage.csv",
                          col_names = TRUE) %>% 
-   mutate(source = factor(source),
+   mutate(source = factor(source,
+                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          interval = factor(interval),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
-  
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_compiled.csv", 
+precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
                         col_names = TRUE,
                         col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
   mutate(StationName = factor(StationName),
@@ -88,7 +96,7 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_compil
 
 # metalslab df
 # metals sample analyses results with OC (long)
-metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/01_metals-OC_sample-results_long.csv",
+metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_long.csv",
                       col_names = TRUE) %>% 
   mutate(Trip = factor(Trip),
          site = factor(site), 
@@ -913,6 +921,16 @@ cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
 
 
 ```{r stage plots, include=FALSE}
+
+# plot stage, lines over time
+corr_stage %>% 
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line(aes(colour = source)) 
+
+# plot stage, density ridges -- could be cool -- fix aesthetics 
+corr_stage %>% 
+  ggplot(aes(x = corr_stage_cm, y = source))+
+  ggridges::geom_density_ridges()
 
 # --- facet wrap scatter plots of river stage over time (hydrograph) ---
 odyssey_data %>% 

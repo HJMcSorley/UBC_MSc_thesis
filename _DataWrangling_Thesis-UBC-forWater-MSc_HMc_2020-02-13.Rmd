@@ -11,31 +11,25 @@ bibliography: library.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, package.startup.message = FALSE)
 ```
 
-If needed, install required packages:
+
 ```
+# If needed, install required packages:
 install.packages("tidyverse")
-install.packages("knitr")      
- 
+install.packages("knitr")
+library(lubridate)
+library(broom) 
 ```
-Note that the tidyverse includes a suite of useful packages, such as:
 
-*readr: for read_csv()
-*dplyr: for MANY functions, including mutate() and piping,
-*tidyr: for unnest()
-*purrr: for map(), reduce()
-
-```{r packages, include = FALSE}
+```{r wrangling packages, include = FALSE}
 
 # load packages
-suppressPackageStartupMessages(library(tidyverse))  
-# tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
-suppressPackageStartupMessages(library(knitr))      # tidy tables, knitting docs
-suppressPackageStartupMessages(library(lubridate))  # dates, times, ranges
-suppressPackageStartupMessages(library(broom))      # tidy stats
-
+library(tidyverse)  # tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
+library(knitr)      # tidy tables, knitting docs
+library(lubridate)  # dates, times, ranges
+library(broom)      # tidy stats
 
 ```
 
@@ -105,12 +99,6 @@ Water samples were collected and transported via coolers (on ice) to UBC's EcoHy
 For quantification of DOC, samples were filtered with 0.45-micron PES filters; acidified to bring pH below 2; and analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V [@StdMet2000].
 
 Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
-
-Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. 
-- SUVA254 --- Specific UV absorbance at 254nm is the ratio of UV absorption (sspectral absorbance coeffeicient, SAC, m^-1^) at 254nm normalized to DOC concentration (mgL^-1^). SUVA254 correlates strongly with DOM aromaticity [@Helms2008].
-It was been shown that UV spectral slopes are useful semiquantitative indicators for assessing NOM molecular weights [@Helms2008]. 
-- Spectral slopes 1 & 2 --- the slope of spectral intensity over the shorter wavelength range of 275-295nm (1) and longer wavelength range of 350-400nm (2). 
-- Slope Ratio --- The ratio of spectral slopes 1 and 2, correlates well with CDOM molecular weight [@Helms2008]
 
 
 ## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
@@ -616,14 +604,14 @@ spectral_summary <- spectral_results %>%
   mutate(pseudo254 = (Abs_252.5+Abs_255)/2) %>% 
   select(trip:fillStage_cm,
          pseudo254,
-         Abs_250, Abs_365) %>% 
+         Abs_250, Abs_365
+         ) %>% 
   full_join(S1) %>% 
   full_join(S2) %>% 
   mutate(SlopeRatio = sample_slope1/sample_slope2,
          E2E3 = Abs_250/Abs_365,
-         trip = factor(trip, levels = 0:22))
-         
-
+         trip = factor(trip, levels = 0:22)) %>% 
+  select(-c(sample_slope1, sample_slope2))
 
 ```
 
@@ -655,7 +643,7 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
          analysis = factor(analysis),   # drop residual NA from removing "TOC"
          site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
          site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
-  select(-c(vial))   # drop unneccesary variables
+  select(-c(vial))   # drop unnecessary variables
 # check it out
 #str(sampleresults)
 
@@ -851,7 +839,7 @@ odyssey_data <- list.files(path = odyssey_path, pattern = "*.CSV") %>%
          DateTime = lubridate::ymd_hms(paste(Date, Time), tz = TZ))
 
 # check structure
-str(odyssey_data)
+# str(odyssey_data)
 
 # check levels
 levels(odyssey_data$source)
@@ -899,11 +887,11 @@ odyssey_data <- odyssey_data %>%
 # note that interval (odyssey_data) is the same as (trip_df) trip number of analysis/collection 
 
 # check out the head tail and middle
-head(odyssey_data)
-tail(odyssey_data, - 0.2*length(odyssey_data$Date))
-tail(odyssey_data, - 0.5*length(odyssey_data$Date))
-tail(odyssey_data, - 0.7*length(odyssey_data$Date))
-tail(odyssey_data)
+# head(odyssey_data)
+# tail(odyssey_data, - 0.2*length(odyssey_data$Date))
+# tail(odyssey_data, - 0.5*length(odyssey_data$Date))
+# tail(odyssey_data, - 0.7*length(odyssey_data$Date))
+# tail(odyssey_data)
 
 # NOTE --- These logger data need to be adjusted with the observed stage offset
 
@@ -915,8 +903,6 @@ tail(odyssey_data)
 # Odyssey Capacitance Water level Loggers installed at 6 sites 
 # sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
 # 3 data blocks exist for each site, date formats are irregular in most
-
-
 
 # these are weird, not sure...
 offset_L.Head   <- 60.84
@@ -931,9 +917,12 @@ offset_Tunnel   <- 3.17
 # correct all water level values with offset calculated based on observed and recorded stage 
 bf_offsets <- 
   odyssey_data %>% 
-  filter(as.character(Date) == "2019-08-09") %>% 
-  group_by(source) %>% 
-  summarise(bf = mean(stage_cm))
+  filter(as.character(Date) == "2019-08-09 08:00:00" |
+           as.character(Date) == "2019-08-12 08:00:00"|
+           as.character(Date) == "2019-08-16 08:00:00") %>% 
+  group_by(forcats::fct_explicit_na(source)) %>% 
+  summarise(bf = mean(stage_cm, na.rm = TRUE)) %>% 
+  ungroup()
 
 
 # corrected_stage
@@ -947,17 +936,9 @@ corr_stage <- odyssey_data %>%
     source == "Weeks" ~ (stage_cm - bf_offsets[[5,2]]),     
     source == "WestLeech" ~ (stage_cm - bf_offsets[[6,2]])
   )) %>% 
-  ungroup()
-
-# plot it - lines over time
-corr_stage %>% 
-  ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line(aes(colour = source))
-
-# plot it - density ridges -- could be cool -- fix order and aesthetics (move to results)
-corr_stage %>% 
-  ggplot(aes(x = corr_stage_cm, y = source))+
-  ggridges::geom_density_ridges()
+  ungroup() %>% 
+  mutate(source = factor(source, 
+                         levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 
 ```
 
@@ -974,42 +955,44 @@ Keep this as a code-note so to prevent over-writing files accidentally
 
 # TOCV_results df
 # Shimadzu sample analyses results
-write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_TOCV_results.csv", na = "NA")   
+write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")   
 
 # SCAN_results df
 # Spectrolyser sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_SCAN-par_results.csv", na = "NA")               
-
+write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-par_results.csv", na = "NA")               
 # FULLSCAN_results df
 # Spectrolyser fullscan (.fp) analyses results
-write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/01_SCAN-fp_results.csv", na = "NA")               
-
+write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-fp_results.csv", na = "NA")               
 # sampleresults df
 # compiled sample analyses results (wide)
-write_csv(sampleresults, path = "R-outputs_UBC-forWater-MSc_HMc/01_Lab-analyses_sample-results_wide.csv", na = "NA")  
+write_csv(sampleresults, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-results-compiled.csv", na = "NA")  
 
 # metalslab df
 # metals sample analyses results with OC (long)
-write_csv(metalslab, path = "R-outputs_UBC-forWater-MSc_HMc/01_metals-OC_sample-results_long.csv", na = "NA")  
+write_csv(metalslab, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_long.csv", na = "NA")  
 
 # odyssey_data df
 # stage data compiled with interval/trip
-write_csv(odyssey_data, path = "R-outputs_UBC-forWater-MSc_HMc/01_Odyssey-stage_compiled.csv", na = "NA")
+write_csv(odyssey_data, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/Odyssey-stage_compiled.csv", na = "NA")
+
+# corr_stage df
+# baseflow and rack corrected Odyssey data
+write_csv(corr_stage, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-stage.csv", na = "NA")
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-write_csv(precip_data, path = "R-outputs_UBC-forWater-MSc_HMc/01_FWx-PrecipTemp_compiled.csv", na = "NA")
+write_csv(precip_data, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", na = "NA")
+
+
 
 ```
 
-.
-.
-.
-.
-.
-.
-.
-.
+
 
 # the following code chunks and text are old (to be updated/removed):
 .
@@ -1066,6 +1049,14 @@ subbasins <- sampleresults %>%
                                     WestLeech = "West-Leech",
                                     Tunnel = "Tunnel"))
 # try new: ---- YOU ARE HERE
+# previously (janky) I subset the stage df for each site
+# try group_by instead
+# use the df with corrected stage -- note that these offsets are likely not right
+corr_stage # input with DateTimes
+# use corr_stage_cm
+subbasins # input that is missing Rack DateTimes
+
+
 
 # ---- trying to modify old code
 # ... old
