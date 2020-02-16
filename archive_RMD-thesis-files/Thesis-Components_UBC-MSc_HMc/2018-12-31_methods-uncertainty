@@ -1,0 +1,9 @@
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice) 
+assumptions: 
+	- the water column is well mixed (no vertical stratification)
+	- because the water column is well mixed the sample is representative of the stream content at the time associated with that level (match to Odyssey)
+	
+	
+Errors of calibration on Odyssey Level Loggers:
++/- 1cm for sharpie mark widths	
++/- 1cm for paralax in reading the meniscus at sensor mark

@@ -1,0 +1,51 @@
+# Preface {-}
+
+In this book, we will introduce an interesting
+method.
+
+# Abstract
+
+This research contributes to understanding the "natural" variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are minimal in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). Like most forested areas on Vancouver Island, the Leech watershed is second-growth softwood forest with a history of extensive harvest (nearly 96% cleared).
+
+The purpose of this master's research project was to establish a baseline understanding of hydrologic responses and water quality variability in rivers across the LWSA. The approach includes advanced synoptic sampling within stormflow, supplemented with standard grab samples between storm events and during summer baseflow. Discrete samples of river water were collected passively during the rising limb of stormflow (falling limb prototype in progress) using low-powered, low-cost, custom-built vertical rack samplers including water level loggers (Odyssey) and observational reference staff gauges. By collecting samples during stormflow, a more robust understanding of water quality dynamics was achieved than basic grab sampling alone. Using low-powered passive sampling techniques allowed for multiple (six) sites to be equipped with monitoring/sampling racks, providing fairly good spatial resolution of hydrochemical variability across the watershed. 
+
+# Acknowledgments
+
+This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). In particular, we would like to acknowledge the help, support and assistance provided by the following people, as well as the entire Field Operations Staff  
+
+* Tobi Gardner  | Senior Hydrologist
+* Joel Ussery | Manager, Resource Planning
+* Annette Constabel | Senior Manager
+* Christoph Moch  | Manager, Water Quality Operations
+* Kathy Haesevoats  | Watershed Technologist
+* Ryan Biggs  | Watershed Technician 2, Resource Planning(?)
+* Burn Hemus  | ?
+* Jessica Dupuis  | ?? Water Quality Operations 
+* Nigel Burrows | Manager Watershed Fire, Security and Emergency Response
+* Patrick McCoubrey | Security Chargehand
+* Devon Barnes | Watershed Protection Senior Supervisor  
+
+
+  
+This research also would not have been possible without the support and encouragement from academic supervisors and partners from the NSERC forWater Network for Forested Drinking Water Source Protection Technologies:  
+
+* Bill Floyd  | Academic co-supervisor | Adjunct Professor, Geography, Vancouver Island University & Research Hydrologist, BC-FLNRO
+* Mark Johnson  | Academic co-supervisor | Professor and Canada Research Chair, University of British Columbia
+* Mike Stone  | Professor, Faculty of Environment, Dept. of Geography and Environmental Management, University of Waterloo
+* Dana Harriman | Network Manager, University of Waterloo
+* Monica Emelko | Principle Investigator, Scientific Director, University of Waterloo
+* Uldis Silins  | Co-Principle Investigator, Co-Scientific Director, University of Alberta
+* Danielle Lindamood |(former) Knowledge Mobilization Manager
+* Allie Dusome | Communications Officer, the Water Institute, University of Waterloo
+* Axel Anderson	| Professor, Faculty of Agricultural, Life and Environmental Science, Renewable Resources Dept., University of Alberta  
+
+  
+For help with field installations and streamflow gauging, a big thanks to my former field partner, Stewart Butler, of Bill Floyd's Coastal Hydrology Research Lab; thanks Stew. Thanks also to Alison Bishop for field assistance during the winter of 2019/2020.    
+
+For the love of data science, I am grateful for Jenny Byran's online resources, StackOverflow (http://stackoverflow.com) for the solution to so many coding challenges. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducibls. Cheers to Hadley Wickham for the tidyverse, Yihui Xie for the bookdown package (in which I wrote this thesis), and Jake Lever (https://github.com/jakelever) for making the R bookdown skeleton code for a UBC thesis available on GitHub.
+
+Last but certainly not least, thanks to my friends and family for encouraging and supporting me in my scientific and academic pursuits. I really appreciate all the love. 
+
+# Dedication
+
+To Stack Overflow, forWater, Tigh Club Athletics, Kananaskis Hydrology friends, everyone who has ever nerded out on water science and each person who reads this thesis in it's entirety. 

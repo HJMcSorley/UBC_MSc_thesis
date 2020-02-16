@@ -1,0 +1,7 @@
+geochemical signatures of freshwater are important for treatment in terms of chemical reactions and disinfection byproduct creation or mitigation and treatment effectiveness. Geochemical signatures are also as excellent way to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, origins and transport.
+
+The fate of biogeochemicals in in stream water is very important from the perspective of water treatment, because the chemistry of source water governs treatment requirements and dictates the water quality post-treatment;particularly with respect to disinfection byproducts. 
+
+Biogeochemicsals area also important for understanding the hydrology of a catchment, with respect to chemical origin, transport pathways and catchment response. Flow-paths at the catchment scale are controlled largely by preferential flow paths and macro-pores...
+
+Effects of forest management on preferential flow-paths will effect mobilization and dilution processes of biogeochemcial components and will therefore effect treatability outcomes. 

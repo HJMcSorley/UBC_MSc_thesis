@@ -1,0 +1,134 @@
+#02 	Methods
+	##2.1 	Study Site: Leech River Watershed
+		
+			####2.1.1 	Climate, Weather, Forests
+The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir, western hemlock and western red cedar; subspecies include white pine, amabalis fir, alder, broad-leaf maple and arbutus. The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%). 
+While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons: approximately 90% of precipitation falls from September to April (primarily Oct-Feb), and May through August is regularly in drought (~215 - 330mm rain). 
+The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake). 
+			
+		###2.1.2 		sub-basin monitoring sites (6)
+the six sites I selected were accessible and important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the future point of diversion (the Leech River Tunnel).	
+	
+			####2.1.2.1 	sub-basin characteristics 	
+			
+		###2.1.3		synoptic sampling sites (15)
+		
+		###2.1.4	 	forWater coordinated treatability analyses sampling sites (4)
+Four sites were selected to collect source water treatability data in collaboration with researchers in the forWater Network. The sites were: 
+
+1. the Leech River at the future point of diversion, 	
+2. Deception Reservoir
+3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
+4. Judge Creek (largest tributary to Sooke Reservoir)
+
+These sites were selected to represent the future supplemental source water, the terminus or future balancing reservoir between Leech and Sooke water supply areas, and the current tributary source waters in the Sooke WSA.
+
+Replicate samples were collected November 12, 2019 and * January 18, 2020 * and were shippied to the Universities of Alberta and Waterloo for treatability analyses.
+At the University of Waterloo, samples were analyzed for maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). 
+At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer and excitation emission matrices spectra, as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
+	
+	##2.2 	Analytical techniques & data
+
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentrations below detectable limits (0.1 mg/L).   
+
+All data were analyzed with R (3.6.2) using RStudio IDE (Version 1.3.820). 
+	
+		###2.2.1 	Quantifying dissolved organic carbon (DOC, as NPOC)
+
+For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
+
+		###2.2.2 	Qualifying organic matter through spectrophotometry
+ 			####2.2.2.1 	Proxy DOC
+Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC quantified by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have an aromatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character.
+
+For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, reactivity [@Weishaar2003; @Chow2008]. Additionally, the spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. For example, the ratio of absorbance slopes between 275-295 nm and 350-400 nm, is an indicator of DOM molecular weight [@Helms2008]. 
+
+				####2.2.2.1.1 	Quality control note
+The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, spectral indices were not calculated for several unfiltered water samples that had detectable turbidity (greater than 0.000 FTU); this reduced the spectral dataset by 9.5%, from 347 to 314 spectral samples.   
+ 
+			####2.2.2.2 	SUVA~254~
+Specific ultraviolet absorbance at 254nm (SUVA~254~) is the ratio of UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254nm wavelength, normalized to DOC concentration (mgL^-1^) (i.e., SAC~254~ divided by mgL^-1^-DOC) [@Weishaar2003]. SUVA~254~ correlates strongly with DOM aromaticity, and loosely with reactivity [@Weishaar2003; @Helms2008; @Chow2008]. A higher SUVA value indicates greater aromaticity, and a lower SUVA value indicates more alliphatic DOM. Because humic substances are more aromatic, SUVA~254~ is a good indicator of DOM from humic sources (i.e., allochthonous NOM) [@Weishaar2003; @Vidon2008; @Abbott2018]. 
+
+With respect to SUVA~254~ and drinking water treatability, it's important to consider the diversity of DOM and DBP species and the heterogeneous character contained in a water sample. While SUVA~254~ may indicate reactivity, it is not necessarily a strong indicator of DBP-FPs [@Weishaar2003; @Chow2008]. This is because some DBP precursor NOM components (e.g., alliphatics), which have negligible absorptivities in the UV-Vis range, may contribute to DBPs but not SUVA~254~; additionally, not all NOM with measurable SUVA~254~ will create DBPs [@Weishaar2003]. 
+
+SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
+
+ 
+ ####2.2.2.3 	spectral indices of NOM character
+			
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. 
+
+Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators used for assessing DOM molecular weights [@Helms2008]. In the abence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a useful tool for getting at molecule character. 
+
+A quotient called E~2~:E~3~ is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ represents the ratio of absorbance at wavelengths 250nm and 365nm [@Peuravuori1997]. 
+
+Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by PAHs with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. 
+Slope ratio (S~R~) was calculated to help elucidate DOM molecular weight. S~R~ is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].			
+			
+		###2.2.3 	CRD data
+			####2.2.3.1 	metals analyses results
+			####2.2.3.2 	weather data from 3 stations 
+				#####2.2.3.2.1 	storm delineation
+				#####2.2.3.2.2 	IDF
+	
+	##2.3 	synoptic sampling campaign
+		###2.3.1 	15 sites
+			####2.3.1.1 	analysis of DOC and NOM
+	
+	##2.4 	sub-basin monitoring 
+		###2.4.1 	6 sites
+		###2.4.2 	vertical rack installations
+six sites were selected across the Leech River watershed system; three of these sites were located at the headwaters of Leech river, two were assiciated with the mainstem rivers that feed the Leech from the West and East, and one was at the Leech River Tunnel (the future point of diversion).
+
+At each of these six sites, a vertical rack was installed.  
+
+At each of the six research sites, a vertical sampling rack was installed. These racks collect discrete water samples as the river rises and record continuous stage measurements (at ten minute intervals). Vertical sampling racks supplement a synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access.  Each rack included a central stilling well (1.5" PCV pipe with 1/2" holes along the length) with a measuring tape affixed to the front; inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with siphon lids. By combining the stage observed on the stilling-well tape with logged river stage and the height at which each siphon bottle filled, the date and time for each rising-stage sample collection was determined. 
+
+It is widely understood that DOC is higher during stormflow than during baseflow and these vertical racks collect whole water samples that can be analyzed to determine just how much stormflow increases the concentration of solutes relative to low-flow samples collected between storm peaks.   
+
+The benefits of these vertical racks as a method of sampling include: low cost (about $500 CND per installation, all in), low power (two 1/2-AA batteries in each logger), self-contained logger (no external data logger required), customizable design, passive sampling (no pumps). 
+		
+			####2.4.2.1 	river level logging
+				#####2.4.2.1.1 	hydrologic response and spatiotemporal synchrony (CRD provided weather station data)
+			####2.4.2.2 	passive stormflow sampling on rising limb
+The principle application of passive rising limb sampler was  to collect discrete water samples during the rising limb of stormflow without employing costly pump-samplers, external (e.g 12V) batteries, or data loggers. The deployment of vertical racks for passive rising limb sample collection was completed for six selected locations, which profoundly increased sampling frequency and allowed for simultaneous collection of stormflow samples across the Leech watershed. The passive sampling bottles utilize the principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. 
+
+The primary drawback of the vertical sampling racks was that they did not collect water samples on the falling limb of the hydrograph (as water level drops to pre-storm levels or baseflow).  (see section 			
+			
+				#####2.4.2.2.1 	supplementing synoptic sampling with rising-limb stormflow samples
+*Increase sampling frequency
+				#####2.4.2.2.2 	siphon sampler design
+					######2.4.2.2.2.1 	uncertainty
+						Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice) 
+						assumptions: 
+							- the water column is well mixed (no vertical stratification)
+							- because the water column is well mixed the sample is representative of the stream content at the time associated with that level (match to Odyssey)
+						Errors of calibration on Odyssey Level Loggers:
+						+/- 1cm for sharpie mark widths	
+						+/- 1cm for paralax in reading the meniscus at sensor mark
+						######2.4.2.2.2.2 	assumption validation
+						Assumption: The siphon lids collect a discrete sample at the stage they are set at, no additional infiltration or mixing occurs after the sample is collected
+
+						Validation:	using food colouring and a flow-through bucket system (tube on faucet into bucket to maintain flow / prevent stagnation), collect a tap water sample, add food colouring to flow system after the sample has been collected (*also time and record fastest filling time), remove sample bottle from dye chamber while dye is still visible in the water. Check sample colour (no dye should be present). If dye infiltrates, you can quantify level of infiltration using a UV-Vis absorbance spectrophotometer. 
+				#####2.4.2.2.3 	combining observation and data to obtain date-time of sample collection
+					######2.4.2.2.3.1 	methods for profiling stormflow DOC dynamics	
+				#####2.4.2.2.4 	prototype for falling limb passive sampling
+In keeping with goals of low-cost, low-powered passive sampling, a falling-limb sampler was designed based on principles of the rising limb siphon sampler. The rising limb sampler collects a discrete water sample when river stage exceeds the crown of the inlet tube, so long as the vent is unobstructed; obstruction of the siphon sampler vent was the key component of the falling limb sampler prototype design. There were a half-dozen iterations in design prior to the model which was field-deployed in the Leech WSA (winter 2019). Each design iteration included a valve on the siphon vent which remained closed as the river rose, and opened when stream stage dropped below a certain point (allowing air to exit the sample bottle and a water sample to be collected). A number of valve options were explored, including: an external tube plug, in internal tube plug, and a self-sealing silicone bite-valve (i.e. Camelback Big Bite (TM) for hydration packs). The final design iteration used a tube pinch valve (SP Science) to close and open the air vent. The mechanism that triggers the vent valve to open is a simple fixed pulley, where the valve is connected to a weighted-cup by a wire that passes through two loops which alter the direction of force.  The river rises and fills the cup with stream water, the cup remains full when the river recedes, and when the stream drops low enough that the full cup is no longer buoyant, the weight of water in the cup exerts a force on the lever of the pinch-valve, causing it to release the vent tube and triggering sample collection. The vent valve and trigger mechanism are contained in a 4" sewer pipe (a "filling well"), which was attached to supplemental support bars on each of the four vertical racks on mainstem rivers (Research sites 3-6). 
+					######2.4.2.2.4.1 	design/operation/application
+			####2.4.2.3 	QA/QC 
+				#####2.4.2.3.1 	hold-time experiments 
+				######2.4.2.3.1 	precision in DOC & NOM
+				######2.4.2.3.2 	temperature (the river as a refrigerator) 	
+				
+		###2.4.3 	samples on behalf of CRD for metals analysis
+			####2.4.3.1 	metals concentrations
+			####2.4.3.2 	DOC and metals
+		###2.4.4 	streamflow measurements for relative contributions
+	##2.5*	Random forests (RF) supervised machine learning
+		*...... don't know about this yet.......
+	##2.6* 	forWater Network coordinated sample analyses
+		###2.6.1 	treatability tributaries
+			####2.6.1.1 	DBP, charge (UW treatability metrics)
+			####2.6.1.2 	NOM characterization (in-depth)
+		###2.6.2 	Leech lakes sampling for algae and cyanobacteria analyses
+	

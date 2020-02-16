@@ -1,0 +1,60 @@
+CRD meeting May 29, 2019
+
+Overview:
+It's been just under a year since we first met to tour the watersheds and talk about possible collaboration. 
+I'm really grateful to have the opportunity to be working with you all, staying at the Caretaker's and doing research in the Leech.
+For this meeting, I'd like to provide you with a summary of what I've done, share interim results, and discuss summer sampling. I'd also like to suggest another meeting with forWater PI's (later this summer).
+
+My research objectives are essentially to identify temporal and spatial differences in DOC concentration between sites within the Leech, and variation within a study site. 
+	*natural variability in water quality (protected watershed)
+	*spatial and temporal variability in source water quality, improve understanding of the hydrologic mechanisms by which forest management practices and hydroclimatic conditions intersect to influence hydrologic flowpath activation of source waters
+	*differing treatability profiles (same watershed, different sites)
+	
+	RESEARCH QUESTIONS (based on scale of temporal and spatial changes):
+		A. Spatial Scale: Is there a dominant signature from one of the 3 mainstems at Leech Tunnel, does it change over time, and what are the implications for treatment?
+		B. Temporal Scale Research Questions: Through a stormflow event, how does DOC concentration and character change?
+	HYPOTHESES:	
+		A1. Wetland character will be diluted along the length of Leech River
+		A2. If there is a signature from one mainstem, is may shift seasonally
+		B1.+B2. [DOC] is dominant in the rising limb and will have a stronger landscape signature in the fall than the spring
+		B3. Stormflow following antecedant dry conditions will result in greater proportions of pre-event water
+
+The first task was site identification. I chose six sites across the Leech Watershed.
+	1 - Weeks Outlet -- NW headwaters draining fen/wetland + Weeks Lake
+	2 - Chris Creek -- NE headwaters
+	3 - Leech Head -- head of mainstem below two different headwaters (is wetland character preserved?)
+	4 - Cragg Creek -- Character of east mainstem
+	5 - West Leech -- Character of west mainstem
+	6 - Leech near Tunnel -- Any noteable character of mainstems? wetland character remaining?
+		+ DBP-FP in source water --> Waterloo
+		+ BDP-FP for different mixed ratios (Matching Mazumder's ratios) of Deception Gulch water with Leech Source  
+
+Methods
+Vertical Rack Samplers: Passively collect a series of water samples that represent the changes in water quality through stormflow.    
+	Each of the six site was equipped with a vertical rack sampler. Each vertical rack includes a central stilling well containing an Odyssey water level logger, and angle bar on which to attach siphon sampling bottles. Each siphon bottle collects a discrete sample when the river rises to a certain level. The stage at which the sample is collected is referenced to a measuring tape on the central stilling well, which is referenced to the date-time stamp and stage recorded by the water level logger. These racks are inexpensive (~$400 each), self-contained (no external data logger) and low-power (two 1/2 AA batteries).  
+
+	** what is the longest period of time a sample sits between collection and analysis? 2 weeks? **
+
+	I set bottles on the racks and return to collect samples, which I analyze at UBC. I've consistently measured dissolved organic carbon (DOC), and occassionally measured nitrate and turbidity. The forWater Network is now in a position to accept samples for collaborative analysis, which will generate interesting additional results to enhance the outcomes of this project. One of the goals for this meeting is to come up with an idea of which sites are most interesting to you for these collaborative analyses.
+	I'll share my interim results next, and I invite you all to evaluate them with these collaborative analysis options:
+		algae and cyanobacteria, DBP-FP and surface charge/treatability metrics
+
+Results
+	share hydrographs with points for DOC and nitrate when available
+	show plots of DOC and metals, if interesting
+	show differences between grabs and racks... or wait until hold time experiment is complete? or say something about it??? unsure.  
+	
+Future direction
+		-obtain some of Tobi's data for overlapping research sites
+		-collect summer low flow samples + samples for algae (Kirsten Muller)
+		-Extending completion to Apr 30, 2019? Field work to complete February or March 2020 - how does that sound?
+		Suggestions:
+			vertical rack at Boneyard (for comparison to Tunnel site) 
+			collection of vertical stormflow samples for metals analysis
+			mixing study of leech with sooke (+ treatability)
+			summer comparison of weeks lake and sooke lake
+				assess difference in water treatability using Sooke as reference 
+			weeks lake versus sooke lake (esp. for cyano/alga)
+			adding racks at rithet and judge creek to compare source water rivers within neighboring watersheds at the same time 
+		*If possible* Characterize the source of stormflow DOM + How much stormflow (what portion of the hydrograph) is pre-event water? AND how does that change over a year?	
+		
