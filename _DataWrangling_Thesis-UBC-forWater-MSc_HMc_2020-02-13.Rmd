@@ -710,7 +710,7 @@ sampleresults  <-  sampleresults %>%
 
 ```
 
-
+## Metals data
 ```{r CRD metals data}
 
 # I collected metals samples from trip 3 to 10
@@ -781,6 +781,7 @@ The Leech river watershed hydroclimatic regime is pluvial, therefore precipitati
 * Survey Mtn WxStn at the highest peak, in the Leech
 * Martin's Gulch WxStn near the Leech River Tunnel (future point of diversion)
 
+## Weather
 ```{r Wx-precip}
 
 # bring in WxStn data 
@@ -917,9 +918,8 @@ offset_Tunnel   <- 3.17
 # correct all water level values with offset calculated based on observed and recorded stage 
 bf_offsets <- 
   odyssey_data %>% 
-  filter(as.character(Date) == "2019-08-09 08:00:00" |
-           as.character(Date) == "2019-08-12 08:00:00"|
-           as.character(Date) == "2019-08-16 08:00:00") %>% 
+  filter(Date == as.POSIXct("2019-08-12", tz = TZ) |
+          Date == as.POSIXct("2019-08-16", tz = TZ) ) %>% 
   group_by(forcats::fct_explicit_na(source)) %>% 
   summarise(bf = mean(stage_cm, na.rm = TRUE)) %>% 
   ungroup()
@@ -1006,88 +1006,72 @@ write_csv(precip_data,
 .
 .
 .
-## odyssey loggers
+# Level loggers for rack sampling time-stamps
 
 
 ##Goal:match bottle height to logged stage
 
-1. read in data files with NPOC concentrations, dates bottles were set and collected, and fill stage (or grab sample dates)
+1. read in sampleresults df with analyses results, were set and collected, and fill stage (or grab sample dates)
 2. read in stage data from Odyssey Capacitance water level loggers
-3. fix dates, add identifying/grouping columns for SITE & EVENT
+3. fix dates, add identifying/grouping columns for source (site) & interval (event)
 4. filter by site & event & analysis (DOC)
 5. match samples to logged stage and extract matching date-time 
 6. add DateTime stamps to sample results dataframes
 
-Note: in the future it might be tidier to keep grab samples and rack samples results in one file & one dataframe. They can be easily grouped. For now, we'll keep them separate (gotta make a poster).
-
-Plot the DOC results on each hydrograph
-
-Weeks Outlet (Drainage from Jordan Meadows)
 
 I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
 call vector of events for trip_df
 
 ```{r match OC and stage}
+# -------------------------------------------------------------- YOU ARE HERE
 
 # first, rename sites in sample df so they match odyssey data
 # filter for sub-basin sites
 subbasins <- sampleresults %>% 
-  mutate(site = as.character(site)) %>% 
-  filter(site == "Weeks-out" |
-           site == "Chris-crk" |
-           site == "Leech-head" |
-           site == "Cragg-crk" |
-           site == "West-Leech" |
+  filter(site == "Weeks" |
+           site == "ChrisCrk" |
+           site == "LeechHead" |
+           site == "CraggCrk" |
+           site == "WestLeech" |
            site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
-                         c("Weeks-out","Chris-crk","Leech-head","Cragg-crk","West-Leech","Tunnel")),
-         site = forcats::fct_recode(site, 
-                                    Weeks = "Weeks-out",
-                                    ChrisCrk = "Chris-crk",
-                                    LeechHead = "Leech-head",
-                                    CraggCrk = "Cragg-crk", 
-                                    WestLeech = "West-Leech",
-                                    Tunnel = "Tunnel"))
-# try new: ---- YOU ARE HERE
+                         c("Weeks","ChrisCrk","LeechHead","CraggCrk","WestLeech","Tunnel")))
+
 # previously (janky) I subset the stage df for each site
 # try group_by instead
-# use the df with corrected stage -- note that these offsets are likely not right
-corr_stage # input with DateTimes
-# use corr_stage_cm
-subbasins # input that is missing Rack DateTimes
+# use the df with corrected stage
+stg_df <- corr_stage %>% # input with DateTimes
+  group_by(source, forcats::fct_explicit_na(interval))
+  
+samp_df <- subbasins %>% # input that is missing Rack DateTimes
+  filter(sample_type == "Rack", analysis == "DOC") %>% 
+  group_by(site, trip)
 
-
-
-# ---- trying to modify old code
-# ... old
-# Inputs:
-stg_df <- filter(stage.event_df, site == site_names[1] & event == "1") %>% 
-  select(event, site, DateTime, Stage_cm)
-
-samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "1") %>% 
-  select(event, site, sample, Fill.Stage_cm, analysis, Result)
-
-# OUTPUTS 
-# defined based on your INPUT values (no need to alter)
 
 # this is the stage date you're targeting (by site)
-stg <- odyssey_data$stage_cm
+stg <- stg_df$corr_stage_cm
 # this is the time series you're targeting
-t.series <- odyssey_data$DateTime  
+t.series <- stg_df$DateTime  
 # this is the stage you need a date-time for
-fill <- sampleresults$fillStage_cm  
+level <- samp_df$fillStage_cm  
 
 # assign empty vectors to hold the outputs from the loop
-occur_fill <- vector(length = length(fill))
-stg_fill   <- vector(length = length(fill))
-time_fill  <- vector(length = length(fill))
+occur_fill <- vector(length = length(samp_df$sample))
+stg_fill   <- vector(length = length(samp_df$sample))
+time_fill  <- vector(length = length(samp_df$sample))
 
-for (i in seq_along(fill)) {
-  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-  stg_fill[i] <- stg[occur_fill[i]]
-} 
-# -----
+ifelse(stg_df$interval == samp_df$trip,
+    (for (i in seq_along(samp_df$sample)) {
+      occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+      stg_fill[i] <- stg[occur_fill[i]]  }) ,
+    "NAN")
 
+
+matcheddf <- samp_df %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+
+# ------------------------------------------------------------------------------
+# you should be able to get the above to work
 
 # --- wks 1
 # --- INPUTS --- #

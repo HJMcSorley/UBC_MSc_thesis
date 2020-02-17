@@ -11,17 +11,15 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, fig.path="R-outp
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
-```{r results packages, include=FALSE}
+```{r results packages, package.startup.message = FALSE, include=FALSE}
 
 # load packages
-suppressPackageStartupMessages(library(tidyverse))  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
-suppressPackageStartupMessages(library(knitr))      # tidy tables
-#suppressPackageStartupMessages(library(gridExtra))  # rapid runoff hydrograph/precip plots
-#suppressPackageStartupMessages(library(grid))       # for rapid runoff plots
-suppressPackageStartupMessages(library(viridis))    # nice colours for plots gradient fills
-suppressPackageStartupMessages(library(ggpmisc))    # linear regression line values
-suppressPackageStartupMessages(library(cowplot))    # add-on to ggplot
-suppressPackageStartupMessages(library(gghighlight))# plot highlighting
+library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
+library(knitr)      # tidy tables
+library(viridis)    # nice colours for plots gradient fills
+library(ggpmisc)    # linear regression line values
+library(cowplot)    # add-on to ggplot
+library(gghighlight)# plot highlighting
 
 ```
 
@@ -43,11 +41,9 @@ cbPalette <- c(grey = "#999999",
                darkblue = "#0072B2", 
                red = "#D55E00", 
                pink = "#CC79A7")
-
-
 ```
 
-```{r input 01_files}
+```{r input files}
 # assign timezone
 TZ <- "Etc/GMT+8"
 
@@ -65,16 +61,14 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-re
          analysis = factor(analysis),
          three_seasons = factor(three_seasons),
          two_seasons = factor(two_seasons)) %>% 
-  mutate(site = factor(site, levels = 
-                         c("Weeks-out","Chris-crk","Leech-head","Cragg-crk","West-Leech","Tunnel")),
+  mutate(site = factor(site),
          site = forcats::fct_recode(site, 
                                     Weeks = "Weeks-out",
                                     ChrisCrk = "Chris-crk",
                                     LeechHead = "Leech-head",
                                     CraggCrk = "Cragg-crk", 
-                                    WestLeech = "West-Leech",
-                                    Tunnel = "Tunnel"))
-
+                                    WestLeech = "West-Leech")) 
+# remove dashes from subbasin names (same as Odyssey)
 
 # odyssey_data df
 # stage data compiled with interval/trip
@@ -109,8 +103,8 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_l
   
 ```
 
-```{r samples counts}
-# Data Summarization
+## Sample Counts and data table summaries
+```{r subsetting samples by campaign and sample counts}
 
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -130,14 +124,14 @@ n_SynopticGrabs <- sampleresults %>%
   pull(total)
 
 # synoptically sampled sites
-# synsites <- c("West-Leech","Tunnel","Cragg-crk","Leech-head","Weeks-out","Chris-crk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
+# synsites <- c("WestLeech","Tunnel","CraggCrk","LeechHead","Weeks","ChrisCrk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
 
 # create a subset dataframe for the synoptically sampled sites for tidier calling
-synopticfilter <- sampleresults %>% filter(site == "Weeks-out"|
-                                             site == "Chris-crk"|
-                                             site == "Leech-head"|
-                                             site == "Cragg-crk"|
-                                             site == "West-Leech"|
+synopticfilter <- sampleresults %>% filter(site == "Weeks"|
+                                             site == "ChrisCrk"|
+                                             site == "LeechHead"|
+                                             site == "CraggCrk"|
+                                             site == "WestLeech"|
                                              site == "Tunnel"|
                                              
                                              site == "Jarvis"|
@@ -151,42 +145,44 @@ synopticfilter <- sampleresults %>% filter(site == "Weeks-out"|
                                              site == "Deception-crk"
                                              ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
-                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
 
 # create a subset dataframe for the six install sites for tidier calling
-sixfilter <- sampleresults %>% filter(site == "Weeks-out" |
-                                        site == "Leech-head" |
-                                        site == "Chris-crk" |
-                                        site == "Cragg-crk" |
-                                        site == "West-Leech"| 
+sixfilter <- sampleresults %>% filter(site == "Weeks" |
+                                        site == "LeechHead" |
+                                        site == "ChrisCrk" |
+                                        site == "CraggCrk" |
+                                        site == "WestLeech"| 
                                         site == "Tunnel") %>% 
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel")))
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
 
 
 # how many of each sample_type are there at the 6 main sites?
-sixsites_samplecount_df <- sixfilter %>% 
+n_subbbasinSamples <- sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab") %>%
   group_by(site, sample_type) %>%   
   summarise(number_of_samples = n()) %>% 
   ungroup()
-# write_csv(sixsites_samplecount_df, path = "R-outputs_UBC-forWater-MSc_HMc/summ_sample-DOCcount.csv", na = "NA") 
+# save to outputs
+write_csv(n_subbbasinSamples, 
+          path = "R-outputs_UBC-forWater-MSc_HMc/summary_subbasin-SampleCount.csv", na = "NA") 
 
 # how many of each type total?
 # save values as objects to implant in text
 
 # Grab samples
-n_installGrabSamples <- sixsites_samplecount_df %>% 
+n_installGrabSamples <- n_subbbasinSamples %>% 
   filter(sample_type == "Grab") %>%  
   summarize(total = sum(number_of_samples)) %>% 
   pull(total)
 
 # Rack samples
-n_installRackSamples <- sixsites_samplecount_df %>% 
+n_installRackSamples <- n_subbbasinSamples %>% 
   filter(sample_type == "Rack") %>%  
   summarize(total = sum(number_of_samples)) %>% 
   pull(total) 
-
 
 # How many samples were collected overall
 # 400 total
@@ -207,7 +203,6 @@ sampleresults %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
   filter(grab_sample_count > 1) %>% 
-  mutate(what = "synoptic grab count") %>% 
   ungroup() 
 ## 215 synoptic grab samples (44 outside of the six sites)
 n_SynopticGrabs
@@ -224,13 +219,16 @@ n_totalSamples
 
 ```
 
+```{r}
+
+```
 
 
-
-## Leech DOC concentrations overview
+## Leech DOC concentrations
 
 Table 1 and Figure 1 show DOC concentrations were highest at Weeks Creek, the headwaters monitoring point for a sub-basin which included Weeks Lake and surrounding wetlands. On average, Chris Creek DOC concentration was 51% lower than Weeks creek. Below the confluence of Weeks and Chris Creek, the head of Leech River had a mean DOC concentration slightly less than the average of the two headwater tributaries. West Leech River had higher DOC than Cragg Creek by about 20%. Below the confluences of West Leech and Cragg Creek, the Leech Tunnel site had DOC concentrations that were 54% lower than the average at the Leech head, and closer to those of Cragg Creek.
 
+# Plot DOC concs across the watershed
 ```{r DOCspace, fig.width=7, fig.height=5}
 
 # Boxplot with jitter scatter 
@@ -259,7 +257,7 @@ sixfilter %>%
             DOC_sd = sd(NPOC_ppm),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
-  knitr::kable(digits = 1, 
+  knitr::kable(digits = c(NA, 1, 1, 0), 
                col.names = c("site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
                caption = "Table 1: summary of DOC concentrations at the six main sites")
 
@@ -449,7 +447,7 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
-       caption = "Fig.5 Density distribution of DOC concentration by season (dry: n = 45, wet: n = 240)") +
+       caption = "Density distribution of DOC concentration by season (dry: n = 45, wet: n = 240)") +
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig5_DOC_ridgeplot-seasonal.png") 
 ```
@@ -466,8 +464,7 @@ sixfilter %>%
             DOC_sd = sd(NPOC_ppm),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
-  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
-               label = "Table 2: DOC concentrations by season at the six main sites")
+  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "Table 2: DOC concentrations by season at the six main sites")
 
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
@@ -483,7 +480,7 @@ sixfilter %>%
   facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
   labs(caption = "Fig.8 DOC concentration by season (dry: n = 46, wet: n = 278)", 
        x = "", y = "DOC (mg/L)")
-# ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig8_DOC_boxplot-seasonal.png") 
+
 ```
 
 To remove the variance of stormflow DOC concentrations, Table 2-B and Figure 9 shows seasonal concentrations based only on Grab samples (excludes 166 stormflow samples collected by Racks).
@@ -522,26 +519,48 @@ sixfilter %>%
 
 ## Spectral Indices
 
-```{r}
+```{r spectral plots}
+# SUVA vs NPOC by season
+sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = NPOC_ppm, y = SUVA)) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  facet_wrap(~two_seasons, ncol = 2, nrow = 1) 
 
+# E2:E3
+sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack",
+                E2E3 < 15) %>% 
+  ggplot(aes(x = NPOC_ppm, y = E2E3 )) +
+  geom_jitter(aes(fill = two_seasons), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none") 
+#+
+ #facet_wrap(~two_seasons, ncol = 2) 
 ```
 
 
 ```{r seasonal plots, include=FALSE}
 # Boxplot with jitter scatter 
 sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
+  dplyr::filter(site == "Weeks" |
+                  site == "LeechHead" |
+                  site == "ChrisCrk" |
+                  site == "CraggCrk" |
+                  site == "WestLeech"| 
                   site == "Tunnel" |
                   site == "Rithet" |
                   site == "Judge-crk", 
                 analysis == "DOC", 
                 sample_type == "Grab" & sample == "Grab") %>% 
   mutate(site = factor(site, 
-                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -552,7 +571,6 @@ sampleresults %>%
   facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
   labs(caption = "DOC concentrations in the Leech and two main tribs to the Sooke Reservoir", 
        x = "", y = "DOC (mg/L)")
-# ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonalwithSooketribs.png") 
 
 
 # --- DOC facet wrap scatter plots ---
@@ -607,7 +625,6 @@ synopticfilter %>%
   theme(legend.position = "top") +
   labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis) ", fill = "sampling season:",
        caption = "Fig.6 DOC concentration from direct measure versus CDOM from UV-Vis absorbance") 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig6_DOCvsCDOM_scatterplot.png") 
 ```
 
 Figure 7 shows the same DOC-CDOM comparison from Figure 6, isolated to the six sub-basin monitoring sites. The seasonal relationship appears similar for the six sites.
@@ -767,15 +784,9 @@ sampleresults %>%
 
 # --- facet wrap scatter plots of conc --- ## W.I.P. ###
 # DOC over time (by trip) -- try mutating in a month-year for clarity
-sampleresults %>% 
-  dplyr::filter(sample_type == "Rack",
-                site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
-                  site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
+sixfilter %>%
+  filter(sample_type == "Rack" | sample_type == "Grab", 
+         analysis == "DOC") %>% 
   mutate(trip = factor(trip, levels = (1:22))) %>% 
   ggplot(aes(x = trip, y = NPOC_ppm, fill = sample)) +
   geom_jitter(shape = 21, size = 2) +
@@ -923,26 +934,25 @@ cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
 ```{r stage plots, include=FALSE}
 
 # plot stage, lines over time
-corr_stage %>% 
+odyssey_data %>% 
   ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line(aes(colour = source)) 
+  geom_line(aes(colour = source)) +
+  viridis::scale_colour_viridis(discrete = TRUE) +
+  theme_bw() +
+  theme(legend.position = "top") +
+  labs(y = "stage (cm)", x = "") 
+
 
 # plot stage, density ridges -- could be cool -- fix aesthetics 
-corr_stage %>% 
-  ggplot(aes(x = corr_stage_cm, y = source))+
-  ggridges::geom_density_ridges()
-
-# --- facet wrap scatter plots of river stage over time (hydrograph) ---
 odyssey_data %>% 
-  mutate(source = factor(source, 
-                         levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech",  "Tunnel"))) %>%
-  #mutate(interval = factor(interval, levels = (1:22))) %>% 
-  ggplot(aes(x = DateTime, y = stage_cm)) + 
-  geom_line(aes(colour = source)) +
+  ggplot(aes(x = corr_stage_cm, y = fct_rev(source)))+
+  ggridges::geom_density_ridges(aes(fill = source), alpha = 0.6) +
+  scale_fill_brewer(palette="Accent") +
   theme_bw() +
-  labs(y = "stage (cm)", x = "") #+
-  #facet_wrap(~source, ncol = 1) +
-  #theme(legend.position = "none")  
+  scale_y_discrete() +
+  theme(legend.position = "none")+
+  labs(x = "stage (cm)", y = "",
+       caption = "Density distribution of stage at six subbasins")
 
 
 
