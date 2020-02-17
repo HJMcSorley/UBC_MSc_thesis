@@ -165,6 +165,7 @@ The methods of passive sampling by vertical racks involve a couple of potential 
 
 ![__Figure 2:__ _Masters thesis task flowchart_](R-inputs_UBC-forWater-MSc_HMc/images/MSc_tasksflowchart.jpg){width=40%, style="float:right; padding:10px"} 
 
+
 The forWater Network is a transdisciplinary cross-Canada applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, but the connection between upstream forest management and downstream treatment remains poorly understood. Across Canada, forWater researchers are studying water quality in watersheds under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatement demands as they relate to forest management strategies.
 
 ![forWater NSERC Network for Forested Drinking Water Source Protection Technologies](R-inputs_UBC-forWater-MSc_HMc/images/SourceWater-forWater_smartart.jpg){width=25%}

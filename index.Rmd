@@ -5,17 +5,18 @@ date: "April 2020"
 site: bookdown::bookdown_site
 output:
   bookdown::word_document2:
+    lof: true
+    lot: true
     toc: true
+    fig_caption: yes
     reference_docx: word-styles-document_thesis.docx
-    includes:
-      in_header: preamble.tex
-      before_body: abstract.tex
 bibliography: library.bib 
 link-citations: yes
 ---
 
 ```{r index setup, warning = FALSE, message = FALSE, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.align = "center")
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
 ```
 
 # Abstract  (max 350 words) - roman numeral TOC

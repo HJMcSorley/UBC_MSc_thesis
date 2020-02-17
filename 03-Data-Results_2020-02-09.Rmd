@@ -204,6 +204,8 @@ synopticfilter %>%
 
 ```
 
+In total 400 samples were collected (\@ref(tab:sample summary table))
+
 ```{r sample summary table, echo = FALSE}
 knitr::kable(tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
@@ -821,6 +823,18 @@ rn_annual <- precip_data %>%
   dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
   ungroup()
 
+# mean annual and seasonal rainfalls
+rn_seasonalAnnual <- precip_data %>% 
+  mutate(year = lubridate::year(DateTime),
+         month = lubridate::month(DateTime),
+         season = case_when(
+           between(month, 6, 9) ~ "dry",
+           TRUE ~ "wet")) %>%
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE),
+                   rn = sum(rain_monthly, na.rm = TRUE)) %>% 
+  ungroup()
+
 # water-year rainfalls (Oct 1 - Sept 30)
 rn_wateryr <- precip_data %>%
   group_by(StationName) %>% 
@@ -921,6 +935,19 @@ malahat_temp <- malahat_data %>%
 
 # try a cowplot
 cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
+
+# how much rain?
+malahat_data %>% 
+  mutate(year = lubridate::year(Datetime),
+         month = lubridate::month(Datetime),
+         season = case_when(
+           between(month, 7, 9) ~ "dry",
+           TRUE ~ "wet")) %>%
+  group_by(season, year) %>% 
+  dplyr::summarise(av_rn = sum(Value, na.rm = TRUE)) %>% 
+  ungroup()
+
+
 
 ```
 
