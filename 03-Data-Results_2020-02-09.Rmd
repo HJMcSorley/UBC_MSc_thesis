@@ -5,9 +5,8 @@ output:
 # Data & Results (visualization & summaries)
 
 ```{r results setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
-# this isn't working?
 
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
@@ -105,7 +104,6 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_l
 
 ## Sample Counts and data table summaries
 ```{r subsetting samples by campaign and sample counts}
-
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
 
@@ -134,18 +132,18 @@ synopticfilter <- sampleresults %>% filter(site == "Weeks"|
                                              site == "WestLeech"|
                                              site == "Tunnel"|
                                              
+                                             site == "Rithet"|
+                                             site == "Lazar"|
                                              site == "Jarvis"|
                                              site == "Judge-crk"|
-                                             site == "Lazar"|
-                                             site == "Rithet"|
-                                             site == "Boneyard"|
-                                             site == "West-Jordan"|
-                                             site == "Deception-res"|
                                              site == "Leech-downstreamconf"|
-                                             site == "Deception-crk"
+                                             site == "Boneyard"|
+                                             site == "Deception-crk"|
+                                             site == "West-Jordan"|
+                                             site == "Deception-res"
                                              ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan")))
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan","Deception-res")))
 
 # create a subset dataframe for the six install sites for tidier calling
 sixfilter <- sampleresults %>% filter(site == "Weeks" |
@@ -193,33 +191,29 @@ n_totalSamples <- sampleresults %>%
   summarise(sample_count = n()) %>% 
   ungroup() %>% 
   pull(sample_count)
-  
-# mini-summary
+
+
 # ------
 # 15 synoptic sites (including the install sites)
-sampleresults %>% 
+synopticfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab") %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
-  filter(grab_sample_count > 1) %>% 
   ungroup() 
-## 215 synoptic grab samples (44 outside of the six sites)
-n_SynopticGrabs
-# 6 installation sites
-## 324 samples were collected/analyzed at the 6 installation sites:
-n_installGrabSamples + n_installRackSamples
-### 153 Grab (39 replicates/treatability) 
-### 171 Rack
-# an additional 14 grab samples were collected as one-offs
-n_totalSamples - (n_SynopticGrabs + n_installRackSamples)
-# in total 400 samples were collected and analyzed
-n_totalSamples
-# ------
 
 ```
 
-```{r}
+```{r sample summary table, echo = FALSE}
+knitr::kable(tibble::tibble(
+  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
+  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
+  "sub-basin synoptic grab samples" = n_installGrabSamples,
+  "sub-basin rack samples" = n_installRackSamples,
+  "total" = n_totalSamples) %>% 
+    pivot_longer(everything(),
+                 names_to = "sample category", values_to = "count"), 
+  caption = "Sampling Summary")
 
 ```
 
