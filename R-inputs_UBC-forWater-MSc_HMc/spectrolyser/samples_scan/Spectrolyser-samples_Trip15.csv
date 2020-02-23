@@ -12,15 +12,15 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 7,Weeks-out,Grab,Grab,2019-09-20 11:10,,15
 8,Weeks-out,Grab,Grab,2019-09-20 11:10,,15
 9,Weeks-out,Grab,Grab,2019-09-20 11:10,,15
-10,Weeks-out,Rack,L1,,,15
-11,Weeks-out,Rack,L1,,,15
-12,Weeks-out,Rack,L1,,,15
+10,Weeks-out,Rack,L1,,28,15
+11,Weeks-out,Rack,L1,,28,15
+12,Weeks-out,Rack,L1,,28,15
 13,West-Leech,Grab,Grab,2019-09-20 13:30,,15
 14,West-Leech,Grab,Grab,2019-09-20 13:30,,15
 15,West-Leech,Grab,Grab,2019-09-20 13:30,,15
-16,West-Leech,Rack,L1,,,15
-17,West-Leech,Rack,L1,,,15
-18,West-Leech,Rack,L1,,,15
+16,West-Leech,Rack,L1,,26,15
+17,West-Leech,Rack,L1,,26,15
+18,West-Leech,Rack,L1,,26,15
 19,Tunnel,Grab,Grab,2019-09-20 14:30,,15
 20,Tunnel,Grab,Grab,2019-09-20 14:30,,15
 21,Tunnel,Grab,Grab,2019-09-20 14:30,,15

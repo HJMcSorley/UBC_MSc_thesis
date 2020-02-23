@@ -1,9 +1,0 @@
-materials and methods
-
-study site description
-	watershed area
-	sub-catchments
-		forest age
-		management prescriptions
-implementation of monitoring equipment
-	equipment used

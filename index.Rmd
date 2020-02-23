@@ -1,5 +1,5 @@
 --- 
-title: "Quantifying synchrony and variability in source water quality across a relatively undisturbed nested catchment: contributions to characterizing a protected water supply area to better understand how forest management strategies influence drinking water treatability and outcomes"
+title: "Quantifying synchrony and variability in source water quality across nested catchments of a protected second growth forested water supply area "
 author: "Hannah J. McSorley"
 date: "April 2020"
 site: bookdown::bookdown_site
@@ -14,9 +14,15 @@ bibliography: library.bib
 link-citations: yes
 ---
 
-```{r index setup, warning = FALSE, message = FALSE, include = FALSE}
+```{r index setup, warning = FALSE, include = FALSE, package.startup.message = FALSE}
 
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+knitr::opts_chunk$set(include = FALSE, warning = FALSE, fig.align = "center")
+
+# load required packages
+library(tidyverse)
+library(readr)    # read in delimited files
+library(knitr)    # for tidy tables
+
 ```
 
 # Abstract  (max 350 words) - roman numeral TOC
@@ -35,12 +41,7 @@ see: https://www.grad.ubc.ca/sites/default/files/doc/page/thesis_sample_prefaces
 
 *TOC follows, then LOT, LOF, List of Illustrations, list of abbreviations
 
-```{r Abbreviations}
-
-# load required packages
-library(tidyverse)
-library(readr)    # read in delimited files
-library(knitr)    # for tidy tables
+```{r Abbreviations, echo = FALSE}
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %>% 
   knitr::kable()
@@ -49,7 +50,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %
 
 # Acknowledgments
 
-This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). In particular, I would like to acknowledge the help, support and assistance provided by the following CRD people: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Ryan Biggs, Patrick McCoubrey, Burn Hemus, Christoph Moch, Jessica Dupuis, and Devon Barnes.  
+This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD people: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Ryan Biggs, Patrick McCoubrey, Burn Hemus, Christoph Moch, Jessica Dupuis, and Devon Barnes.  
 
 I'm grateful to have been supported by the entire CRD Field Operations Staff, thanks for making me feel welcome and included on site.  
   
@@ -57,10 +58,10 @@ This research also would not have been possible without the support and encourag
 
 For help with field installations and streamflow gauging, a big thanks to my former field partner, Stewart Butler, of Bill Floyd's Coastal Hydrology Research Lab; thanks Stew. Thanks also to Alison Bishop for field assistance during the winter of 2019/2020.    
 
-For the love of data science, I am grateful for Jenny Byran's online resources, StackOverflow (http://stackoverflow.com) for the solution to so many coding challenges. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).
-
 Last but certainly not least, thanks to my wonderful friends and family for supporting me in my scientific and academic pursuits. I really appreciate all the love and support, bike rides and beers, proof-reading and encouragement. 
 
 # Dedication
 
-To Stack Overflow, forWater, Tight Club Athletics, and to each person who reads this thesis in its entirety.
+To each person who reads this thesis in its entirety.
+
+For the love of data science, I am grateful for Jenny Byran's online resources, StackOverflow (http://stackoverflow.com) for the solution to so many coding challenges. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).

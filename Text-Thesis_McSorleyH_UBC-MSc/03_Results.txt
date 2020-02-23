@@ -1,0 +1,24 @@
+## DOC concentrations 
+
+### 	Synoptic sample overview
+
+* space
+* time
+* mean +/- sd DOC
+
+### Subbasin DOC concentrations 
+
+* RCC theories supported or no?
+* synchronized increased in DOC?
+* all rising limb increase or some different? -- source limited OC or hydro?
+
+####	QA/QC 	hold-time experiments 
+####	QA?QC 	temperature (the river as a refrigerator) 
+
+## Hydrologic response and spatiotemporal synchrony (CRD provided weather station data)
+
+### 	storm delineation
+###	 	IDF
+
+Tobi:
+	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained

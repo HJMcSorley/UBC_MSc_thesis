@@ -22,12 +22,12 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 17,Cragg-crk,Rack,L2,,43,17
 18,Cragg-crk,Rack,L3,,65,17
 19,Cragg-crk,Grab,Grab,2019-10-24 9:30,43,17
-20,Tunnel,Rack,SG1,,0,17
-21,Tunnel,Rack,SG2,,6,17
-22,Tunnel,Rack,L1,,19,17
-23,Tunnel,Rack,L2,,39,17
-24,Tunnel,Rack,L3,,56,17
-25,Tunnel,Rack,L4,,71,17
+20,Tunnel,Rack,L1,,0,17
+21,Tunnel,Rack,L2,,6,17
+22,Tunnel,Rack,L3,,19,17
+23,Tunnel,Rack,L4,,39,17
+24,Tunnel,Rack,L5,,56,17
+25,Tunnel,Rack,L6,,71,17
 26,Tunnel,Grab,Grab,2019-10-24 11:11,34,17
 27,Lab,QA-QC,Cal-ver3_,,,17
 28,Lazar,Grab,Grab,2019-10-23 9:00,,17

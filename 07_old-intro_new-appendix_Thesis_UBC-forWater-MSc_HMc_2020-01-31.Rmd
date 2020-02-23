@@ -40,26 +40,10 @@ The Leech River system is composed of three mainstem rivers, numerous tributarie
 
 Overall, the hydrology of the LWSA is poorly understood, as are water quality dynamics. In the mid-1980's, some water was transfered from the Leech River into Deception Gulch and Reservoir (adjacent to but physically separated from Sooke Reservoir). The mixing resulted in biological water quality problems that included odour and raised concerns about the operational usage of the existing tunnel. The Leech River Tunnel and anticipated inter-basin transfer will provide interesting research opportunities which are beyond the scope of this thesis research. Before work is done on inter-basin transfers, the hydrology and water quality of the Leech River system need to be better understood. Understanding source water quality, as well as the timing and magnitude of flows, is an essential component to multiple barrier approach to ensuring clean drinking water.       
 
-**this image to be replaced with a better version**
-![__Figure 1:__ _Greater Victoria Water Supply Area_](R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_samplesites.jpg)
 
 ### A-2.1 Sub-basin Sites
 
 Six sites were selected across the Leech Water Supply Area. The six research sites represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. 
-
-| Site Number | Site Name | Characteristic | Drainage Area (km^2^) | Elevation (m a.s.l) |    
-|:------------|:----------|:---------------|----------------------:|--------------------:|
-| 1 | Weeks Outlet  | Wetland-draining headwaters | 16.1 | XX |
-| 2 | Chris Creek | Headwaters | 9.6 | XX |
-| 3 | Leech Head  | Mainstem river head | 26.2 | XX|
-| 4 | Cragg Creek | Mainstem river | 37.1 |  XX |
-| 5 | West Leech | Mainstem river | 35.2 | XX |
-| 6 | Leech Tunnel| Future diversion point | 98.7 | XX |
-_*Sites 1 and 2 monitor subcatchments of the site 3 drainage area._
-
-![__Figure 3:__ _Leech River watershed and Water Supply Area boundary showing research site installations and basin delineations_](R-inputs_UBC-forWater-MSc_HMc/images/watershed_overview.jpg)
-
-Note that Strahler order was used to define stream orders, such that a headwater creek is assigned first order, and the confluence of two headwater streams creates a second order stream, two second order streams join to become a third order, and so on (i.e headwaters are lowest number, mouth is highest).
 
 #### A-2.1.1 Weeks Outlet
 
@@ -115,13 +99,6 @@ In riverine systems, peak flows are critical times for mass transport of dissolv
 Siphon sampler background -- separate from vertical rack? Mark's suggestion
 
 ### A-3.1     Vertical racks: passive water sampling on the rising limb of hydrograph 
-
-At each of the six reserach sites (Figure 3), a vertical sampling rack was installed to monitor river stage and passively collect discrete water samples during stormflow. 
-
-#### A-3.1.1    Theory
-
-
-#### A-3.1.2    Design
 
 Each vertical rack included a central stilling well (1.5" PCV pipe (conduit) with 1/2" holes drilled along the length) that had a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50). To either side of the central stilling well, slotted offset angle bars were fixed and siphon sampler bottles were attached to the slotted angle bars with hose clamps.
 

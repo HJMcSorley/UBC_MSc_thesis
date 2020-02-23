@@ -14,7 +14,7 @@ bibliography: library.bib
 knitr::opts_chunk$set(echo = TRUE, package.startup.message = FALSE)
 ```
 
-
+# setup
 ```
 # If needed, install required packages:
 install.packages("tidyverse")
@@ -906,12 +906,12 @@ odyssey_data <- odyssey_data %>%
 # 3 data blocks exist for each site, date formats are irregular in most
 
 # these are weird, not sure...
-offset_L.Head   <- 60.84
-offset_WksOut   <- 29 # 9.5
-offset_ChrisCrk <- 30 # 7.27
-offset_CraggCrk <- 9.25
-offset_W.Leech  <- 4.85
-offset_Tunnel   <- 3.17
+offset_L.Head   <- 60.84 # 
+offset_WksOut   <- 5.17 # add to logger (was 29, 9.5)
+offset_ChrisCrk <- 5.75 # add to logger (was 30, 7.27)
+offset_CraggCrk <- 1.43 # add to logger 19-09-20 (was 9.25)
+offset_W.Leech  <- 2.87 # add to logger (was 4.85) 
+offset_Tunnel   <- -3.32 # add to logger (negative offset, weird, was -3.17)
 # ---
 
 # determine what stage was during summertime baseflow (day I added TidbiTs to racks)
@@ -959,10 +959,12 @@ write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv"
 
 # SCAN_results df
 # Spectrolyser sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-par_results.csv", na = "NA")               
+write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-par_results.csv", na = "NA")  
+
 # FULLSCAN_results df
 # Spectrolyser fullscan (.fp) analyses results
 write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-fp_results.csv", na = "NA")               
+
 # sampleresults df
 # compiled sample analyses results (wide)
 write_csv(sampleresults, 

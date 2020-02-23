@@ -3,11 +3,9 @@ output:
   word_document: default
 ---
 
-# 2   Methods
-
 ```{r methods setup, include=FALSE}
 
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(echo=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
@@ -23,6 +21,9 @@ library(gghighlight)# plot highlighting
 ```
 
 ```{r Wx}
+# assign timezone
+TZ <- "Etc/GMT+8"
+
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
 precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
@@ -111,106 +112,113 @@ Wx_plot_malahat <- cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align 
 
 ##	2.1 	Study Site: Leech River Watershed
 
-The Leech River watershed is a sub-catchment of the Sooke River watershed (~25% by area), located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased 9,628 hectares (about 92%) of the Leech River watershed in 2007 (84%) and 2010 (additional 8%), and designated the Leech Water Supply Area (LWSA) for future supplemental water supply. While monitoring programs began in 2017, the hydrology and water quality in the LWSA are poorly understood.
-
-![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_map-3.png)
-		
-####	2.1.1 	Climate, Weather, Forests
-
-The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. 
-While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons: approximately 90% of precipitation falls from October to April, and May through September is relatively dry. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake). 
-There were two weather stations operating during the study period, Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point.
-
-Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(LeechWxPlot). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow).   
+The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure ### shows the Leech and Sooke Water Supply areas with elevation.  
 
 <br>
-```{r LeechWxPlot, fig.cap="Precipitation and air temperature at two weather stations in the Leech WSA}
+![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_map-3.png)
+<br>
+
+While monitoring programs began in 2017, the hydrology and water quality in the LWSA are poorly understood. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several small headwater lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake and Lazar meadows north of Jarvis Lake). Runoff peaks in the winter under saturated conditions when rivers respond rapidly to precipitation events, rising and falling dramatically. Across the watershed, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. 
+
+###	2.1.1 	Climate, Weather, Forests
+
+The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons where approximately 90% of precipitation falls from October to April, and May through September are relatively dry. 
+
+There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(LeechWxPlot). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow).   
+
+ These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
+
+<br>
+```{r LeechWxPlot, echo = FALSE}
 Wx_plot_LWSA
-<br>```
+```
+<br>
 
 There is a weather station on the Malahat mountain pass, east of the study site (ID 62091, BC Ministry of Transportation and Infrastructure and Pacific Climate Impacts) that had precipitation and air temperature data available from 2014 to 2020. Figure \@ref(MalahatWxPlot) shows weather data from the Malahat weather station and highlights the period in which this research occurred in which there were no obvious deviations from previous years.
  
  <br>
-```{r MalahatWxPlot, fig.cap="Weather patterns recorded on the Malahat, east of the study site. The highlighted section indicates the period of this study"}
+```{r MalahatWxPlot, echo = FALSE, fig.cap="Weather patterns recorded on the Malahat, east of the study site. Highlighted sections indicate the period of this study."}
 Wx_plot_malahat
 ```
 <br>
 
-###	2.1.2		Synoptic Sampling Sites 
-		
-Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure *** shows the locations of the sites as well as two weather stations.
+###	2.1.2		Synoptic sampling sites 
+
+Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure ### shows the locations of the synoptically sampled sites as well as the two weather stations.
+<br>
 ![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/Sample-Sites_Wx_map.png)
+<br>
 
 Synoptic sampling involved collecting grab samples in triple-rinsed acid-washed 250 mL amber HDPE bottles. Samples were capped with minimal headspace and transported on ice. Synoptic samples were collected bi-weekly to monthly. Results from synoptic sampling help to inform spatiotemporal patterns in water quality.   			
-			
-###	2.1.3 		Subbasin Monitoring Sites 
 
-Six sites were selected across the Leech Water Supply Area for more in-depth monitoring. These six research sites represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. The subbasin sites represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel).	
+###	2.1.3 		Subbasin monitoring sites 
+
+Six sites were selected across the Leech Water Supply Area which represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. These subbasin research sites represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel).	
 
 ![__Figure__Subbasin monitoring sites in the Leech Water Supply Area_](R-inputs_UBC-forWater-MSc_HMc/images/sub-basins.jpg)
 	
-*** characteristics table with slope, forest cover, % wetland ***	
-			
-#### 	2.1.3.1 	Installations and subbasin sampling
+<br>
+```{r subbasin_table, echo = FALSE, tab.cap="Subbasin characteristics"}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+<br>
 
-At each of the six subbasin research sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow (without employing costly pump-samplers and external 12V batteries), while recording continuous stage measurements (at ten minute intervals).  
+#### 	2.1.3.1 	Subbasin sampling and installations
 
-Vertical sampling racks supplement a synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access. Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018].     
+At each of the six subbasin research sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow without employing costly pump-samplers, while recording continuous stage measurements (at ten minute intervals).  Vertical sampling racks supplemented the synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access. Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018].     
 
-The passive sampling bottles employ the principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. 
+The passive sampling bottles employ principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE widemouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end. 
 
-By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
+<br>
+![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/siphonsampler_RL_HMc.png)
+<br>
 
-These vertical racks collected samples on the rising limb of the hydrograph, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. These vertical racks collect whole water samples that can be analyzed to determine how water quality changes in response to precipitation relative to low flows between storm pulses, which can also provide information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
+Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
+
+These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
 	
-###### 	2.1.3.1.1	Vertical rack sampling QA/QC
+###### 	2.1.3.1.1	Vertical rack sampling QA/QC: Siphon sampler assumptions
 
-####### 	2.1.3.1.1.1 	Siphon sampler assumptions
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the subbasins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system {tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
 
-Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the subbasins, the assumption of un-stratified waters seems very reasonable. The assumption of sample discretion was vallidated in lab using food colouring and a flow-through bucket system {tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
-
-####### 	2.1.3.1.1.2	Sample hold-times and temperatures
+###### 	2.1.3.1.2	Vertical rack sampling QA/QC:	Sample hold-times and temperatures
 
 Every effort was made to retrieve rack samples as quickly as possible from the racks, none the less they sometimes remained on the racks for several days (up to a week). Hobo TidbiT temperature sensors were deployed at each subbasin vertical rack to monitor air and water temperature in order to assess sample stability between sample collection and retrieval. 
 
 To assess sample stability hold-time experiments were performed. The hold-time experiments included replicate (n = 10) sample collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Four hold-time experiments were completed such that the rack samples were left in the field for one, two, three, and four weeks before being retrieved and analyzed for comparison to their counterpart replicates.      
 
-#####	2.1.3.1.2	Prototype for falling limb passive sampling
+######	2.1.3.1.3	Prototype for falling limb passive sampling
 
 In keeping with goals of low-cost, low-powered passive sampling, a falling-limb sampler was designed based on principles of the rising limb siphon sampler. The rising limb sampler collects a discrete water sample when river stage exceeds the crown of the inlet tube, so long as the vent is unobstructed; obstruction of the siphon sampler vent was the key component of the falling limb sampler prototype design. There were a half-dozen iterations in design prior to the model which was field-deployed in the Leech WSA (winter 2019). Each design iteration included a valve on the siphon vent which remained closed as the river rose, and opened when stream stage dropped below a certain point (allowing air to exit the sample bottle and a water sample to be collected). A number of valve options were explored, including: an external tube plug, in internal tube plug, and a self-sealing silicone bite-valve (i.e. Camelback Big Bite^TM^ for hydration packs). The final design iteration used a tube pinch valve (SP Science) to close and open the air vent. The mechanism that triggers the vent valve to open is a simple fixed pulley, where the valve is connected to a weighted-cup by a wire that passes through two loops which alter the direction of force.  The river rises and fills the cup with stream water, the cup remains full when the river recedes, and when the stream drops low enough that the full cup is no longer buoyant, the weight of water in the cup exerts a force on the lever of the pinch-valve, causing it to release the vent tube and triggering sample collection. The vent valve and trigger mechanism are contained in a 4" sewer pipe (a "filling well"), which was attached to supplemental support bars on the vertical rack. One prototype was field deployed at Cragg Creek (subbasin site 4) as a proof of concept and work will continue to improve the design and operation. 
-	
 
 ###	2.1.4	 	forWater Coordinated Treatability Analyses Sites
 
 Four of the synoptic sampling sites were selected to collect source water treatability data in collaboration with researchers in the forWater Network. The sites were: 
 
-	-1. the Leech River at the future point of diversion, 	
-	-2. Deception Reservoir
-	-3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
-	-4. Judge Creek (largest tributary to Sooke Reservoir)
+	1. the Leech River at the future point of diversion, 	
+	2. Deception Reservoir
+	3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
+	4. Judge Creek (largest tributary to Sooke Reservoir)
 
-These sites were selected to represent the future supplemental source water, the terminus or future balancing reservoir between Leech and Sooke water supply areas, and the current tributary source waters in the Sooke WSA.
+These sites were selected to represent the future supplemental source water, the terminus or future balancing reservoir between Leech and Sooke water supply areas, and the current tributary source waters in the Sooke WSA (respectively).
 
-Replicate samples were collected November 12, 2019 and * January 18, 2020 * and were shipped to the Universities of Alberta and Waterloo for treatability analyses.
-At the University of Waterloo, samples were analyzed for maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). 
-At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer and excitation emission matrices spectra, as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
+Replicate samples were collected November 12, 2019 and January 18, 2020 and were shipped to the Universities of Alberta and Waterloo for treatability analyses.
+At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
 	
 ##	2.2 	Analytical techniques & data
 
-Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentrations below detectable limits (0.1 mg/L).   
-
-All data were analyzed with R (3.6.2) using RStudio IDE (Version 1.3.820). 
+Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentrations below detectable limits (0.1 mg/L). All data were analyzed with R (3.6.2) using RStudio IDE (Version 1.3.820). 
 	
 ###	2.2.1 	Quantifying dissolved organic carbon (DOC, as NPOC)
 
-For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
+For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured by non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
 
 ###	2.2.2 	Qualifying organic matter through spectrophotometry
 
- ####	2.2.2.1 		Proxy DOC
-Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC quantified by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have an aromatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character.
-
-For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, reactivity [@Weishaar2003; @Chow2008]. Additionally, the spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. For example, the ratio of absorbance slopes between 275-295 nm and 350-400 nm, is an indicator of DOM molecular weight [@Helms2008]. 
+####	2.2.2.1 		Proxy DOC
+ 
+Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectrophotometer (s::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC quantified by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have an aromatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character. For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, its reactivity [@Weishaar2003; @Chow2008]. The spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. 
 
 ####	2.2.2.1.1 	Quality control note
 The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, spectral indices were not calculated for several unfiltered water samples that had detectable turbidity (greater than 0.000 FTU); this reduced the spectral dataset by 9.5%, from 347 to 314 spectral samples.   
@@ -222,25 +230,12 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 
 SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
 
- 
- ####	2.2.2.3		spectral indices of NOM character
-			
-Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. 
+####	2.2.2.3		spectral indices of NOM character
+	
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. In the absence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a simple tool for getting at molecule character. Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators for assessing DOM molecular weights [@Helms2008]. Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by poly-aromatic hydrocarbons with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. Slope ratio (S~R~) is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].	
+The ratio of absorbances at wavelengths 250 nm and 365 nm provides a quotient called E~2~:E~3~ which is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated, along with S~R~ , to try to elucidate molecular character of DOM in samples. 		
 
-Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators used for assessing DOM molecular weights [@Helms2008]. In the abence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a useful tool for getting at molecule character. 
-
-A quotient called E~2~:E~3~ is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ represents the ratio of absorbance at wavelengths 250nm and 365nm [@Peuravuori1997]. 
-
-Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by PAHs with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. 
-Slope ratio (S~R~) was calculated to help elucidate DOM molecular weight. S~R~ is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].			
-
-###	2.2.3 	CRD data
-
-####	2.2.3.1 	Sampling for Metals & Analytical Results
+###	2.2.3 	Sampling for Metals & CRD Analytical Results
 
 Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (BL Labs, formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). Reports from BL Labs were provided by the CRD for the samples collected in association with this research. Reports were pdf format which was exported to Excel and converted to .csv for analysis in R.  
-
-####	2.2.3.2 	weather data from 2 stations 
-
-The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
 	

@@ -1,0 +1,18 @@
+Assumption Validation for research methods
+
+Assumption 1. 
+	The siphon lids collect a discrete sample at the stage they are set at, no additional infiltration or mixing occurs after the sample is collected
+
+Validation 1.
+	using food colouring and a flow-through bucket system (tube on faucet into bucket to maintain flow / prevent stagnation), collect a tap water sample, add food colouring to flow system after the sample has been collected (*also time and record fastest filling time), remove sample bottle from dye chamber while dye is still visible in the water. Check sample colour (no dye should be present). If dye infiltrates, you can quantify level of infiltration using a UV-Vis absorbance spectrophotometer. 
+
+	
+Assumption 2.
+	the vertical rack method assumes that each sample is representative of the entire water column when the stream is at the sampling stage. Essentially, the assumption is that the water column is well mixed: there is no vertical stratification and water near the bank is representative of the water across the width of the stream channel.
+
+Validation 2.
+	mimic the vertical rack on a portable wading rod and attach a single vent to all of the siphon lid vent tubes. block the vent to prevent sample collection, place the unit in the stream near the installation, allow enough time to pass for stream to return to regular flow (undisturbed bed sediments, regular flow direction), release the vent and capture a vertical profile at a single time. Analyze the samples and perform stats (p-tests?) to see if results are significantly different at each height.
+	Perform the same operation in the centre of the channel (or near to) and compare each height for vertical mixing, and compare the centre-channel sample results to those obtained near the bank. If it's not possible to access the centre of the channel (safety), collect a vertical profile at a location nearby that is not at the installation.
+
+	* prior to performing these tests, make sure the unified vent works as anticipated (lab and field tests). You may need to seal each connection*
+
