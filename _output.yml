@@ -9,3 +9,4 @@ bookdown::word_document2:
   toc_unnumbered: no
   toc_appendix: yes
   keep_tex: true
+bookdown::epub_book: default

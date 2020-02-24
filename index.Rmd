@@ -19,6 +19,7 @@ link-citations: yes
 knitr::opts_chunk$set(include = FALSE, warning = FALSE, fig.align = "center")
 
 # load required packages
+library(bookdown)
 library(tidyverse)
 library(readr)    # read in delimited files
 library(knitr)    # for tidy tables
