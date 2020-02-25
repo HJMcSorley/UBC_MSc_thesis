@@ -60,7 +60,8 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-re
          sample = factor(sample),
          analysis = factor(analysis),
          three_seasons = factor(three_seasons),
-         two_seasons = factor(two_seasons)) %>% 
+         two_seasons = factor(two_seasons),
+         pseudoSUVA = pseudo254/NPOC_ppm) %>% 
   mutate(site = factor(site),
          site = forcats::fct_recode(site, 
                                     Weeks = "Weeks-out",
@@ -69,6 +70,8 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-re
                                     CraggCrk = "Cragg-crk", 
                                     WestLeech = "West-Leech")) 
 # remove dashes from subbasin names (same as Odyssey)
+replace_na(data = sampleresults$SUVA, replace = sampleresults$pseudoSUVA)
+
 
 # odyssey_data df
 # stage data compiled with interval/trip
@@ -353,6 +356,30 @@ metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
 
 
 At the six sub-basin monitoring sites, vertical racks were installed to collect samples as the rivers rose in response to precipitation events.
+
+
+```{r DOC summarytable, echo = FALSE}
+# site DOC
+# groupled mean DOC
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab") %>% 
+  group_by(site) %>% 
+  summarise(meanDOC = mean(NPOC_ppm),
+            stdevDOC = sd(NPOC_ppm))
+
+# ungrouped mean
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Rack" | sample_type == "Grab") %>% 
+  summarise(meanDOC = mean(NPOC_ppm),
+            stdevDOC = sd(NPOC_ppm))
+
+# try SUVA plot
+
+
+``` 
+ 
  
 These vertical racks collected samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. As the vertical racks require a hydrologic response to collect samples, they are only applicable during the wet season. Comparing wet season Grab samples to those collected on Racks confirms that the rack samplers were able to capture more samples, and many during periods with higher DOC concentrations (Fig.2).  
 
@@ -374,6 +401,7 @@ sixfilter %>%
   facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
   labs(caption = "Fig.2 West season DOC concentration by sample type:\n Grab samples (n = 112) and rising limb Rack samples (n = 166)", x = "", y = "DOC (mg/L)")
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig2_DOC_boxplot-Grab-vs-Rack.png") 
+
 ```
 
 ```{r sample_type ridge plots, include=FALSE, echo = FALSE}
@@ -619,7 +647,7 @@ DOC was quantified as non-purgeable organic carbon (NPOC) on the Shimadzu TOC au
 
 Figure 6 shows results from all samples comparing DOC concentrations (as NPOC, direct measure) to CDOM concentrations (UV-Vis, proxy measure of DOC). There was a strong seasonal separation of the relationship between these two measurements. These results indicate a seasonally-driven physiochemical difference in the aquatic NOM in this drinking water supply area.
 
-```{r DOC vs CDOM, fig.width=7, fig.height=5, echo = FALSE}
+```{r DOC vs CDOM, echo = FALSE}
 
 # all sites: DOC vs CDOM
 synopticfilter %>% 
@@ -641,7 +669,7 @@ synopticfilter %>%
 
 Figure 7 shows the same DOC-CDOM comparison from Figure 6, isolated to the six sub-basin monitoring sites. The seasonal relationship appears similar for the six sites.
 
-```{r DOC vs CDOM at 6 sites, fig.width=8, fig.height=6, echo = FALSE}
+```{r DOC vs CDOM at 6 sites, echo = FALSE}
 # six primary sites: DOC vs CDOM
 sixfilter %>% filter(analysis == "DOC",
          sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
@@ -671,12 +699,13 @@ sampleresults %>%
   mutate(site = factor(site, exclude = "Lab"),
          site = factor(site),
          trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = SUVA, fill = two_seasons)) +  
+  ggplot(aes(x = trip_end, y = pseudo_SUVA, fill = two_seasons)) +  
   geom_jitter(shape = 21, size = 3, alpha = 0.6) +
   scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
   theme_bw() +
-  theme(legend.position = "bottom") +
-  labs(x = "DOC (mg/L as NPOC)", y = "SUVA", fill = "sampling season:",
+  theme(legend.position = "bottom",
+       axis.text.x = element_text(angle = 90)) +
+  labs(x = "", y = expression("SUVA"[254]), fill = "sampling season:",
        caption = "Grab sample spectral concentrations (via spectrophotometry)...")
 
 

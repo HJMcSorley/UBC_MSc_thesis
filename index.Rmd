@@ -16,7 +16,7 @@ link-citations: yes
 
 ```{r index setup, warning = FALSE, include = FALSE, package.startup.message = FALSE}
 
-knitr::opts_chunk$set(include = FALSE, warning = FALSE, fig.align = "center")
+knitr::opts_chunk$set(warning = FALSE, fig.align = "center")
 
 # load required packages
 library(bookdown)
