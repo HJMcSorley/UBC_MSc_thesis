@@ -5,7 +5,7 @@ output:
 
 ```{r methods setup, include=FALSE}
 
-knitr::opts_chunk$set(echo=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(include=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
@@ -69,8 +69,7 @@ tempplot <- precip_data %>%
         strip.text.x = element_blank()) +
   facet_wrap(~StationName, nrow = 1) 
 
-# stack precip and temp with cowplot
-Wx_plot_LWSA <- cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
+
 
 # plot malahat rain and highlight my study period
 malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
@@ -103,9 +102,6 @@ malahat_temp <- malahat_data %>%
   gghighlight::gghighlight(Datetime > "2018-10-22",
                            unhighlighted_params = list(colour = "#3B3838"))
   
-# stack with cowplot
-Wx_plot_malahat <- cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
-
 ```
 
 #	2	Methods
@@ -124,21 +120,28 @@ While monitoring programs began in 2017, the hydrology and water quality in the 
 
 The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2500 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons where approximately 90% of precipitation falls from October to April, and May through September are relatively dry. 
 
-There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(LeechWxPlot). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow).   
+There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure (ref:LeechWxPlot). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow).   
 
  These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
 
 <br>
-```{r LeechWxPlot, echo = FALSE}
-Wx_plot_LWSA
+```{r LeechWxPlot, echo = FALSE, fig.cap='(ref:LeechWxPlot)'}
+# stack precip and temp with cowplot
+cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
 ```
 <br>
 
-There is a weather station on the Malahat mountain pass, east of the study site (ID 62091, BC Ministry of Transportation and Infrastructure and Pacific Climate Impacts) that had precipitation and air temperature data available from 2014 to 2020. Figure \@ref(MalahatWxPlot) shows weather data from the Malahat weather station and highlights the period in which this research occurred in which there were no obvious deviations from previous years.
+There is a weather station on the Malahat mountain pass, east of the study site (ID 62091, BC Ministry of Transportation and Infrastructure and Pacific Climate Impacts) that had precipitation and air temperature data available from 2014 to 2020. 
+
+
+(ref:MalahatWxPlot) shows weather data from the Malahat weather station and highlights the period in which this research occurred in which there were no obvious deviations from previous years.
+
  
  <br>
-```{r MalahatWxPlot, echo = FALSE, fig.cap="Weather patterns recorded on the Malahat, east of the study site. Highlighted sections indicate the period of this study."}
-Wx_plot_malahat
+```{r MalahatWxPlot, fig.cap='(ref:MalahatWxPlot)', echo = FALSE, fig.cap="Weather patterns recorded on the Malahat, east of the study site. Highlighted sections indicate the period of this study."}
+
+# stack with cowplot
+cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
 ```
 <br>
 
