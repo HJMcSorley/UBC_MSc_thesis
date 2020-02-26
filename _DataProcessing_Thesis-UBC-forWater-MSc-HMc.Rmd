@@ -72,7 +72,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-re
                                     CraggCrk = "Cragg-crk", 
                                     WestLeech = "West-Leech")) 
 # remove dashes from subbasin names (same as Odyssey)
-replace_na(data = sampleresults$SUVA, replace = sampleresults$pseudoSUVA)
+# replace_na(data = sampleresults$SUVA, replace = sampleresults$pseudoSUVA)
 
 
 # odyssey_data df
@@ -210,9 +210,19 @@ synopticfilter %>%
 
 ```
 
-In total 400 samples were collected (\@ref(tab:sample summary table))
+In total 400 samples were collected (\@ref(tab:sample-summary-table))
 
 ```{r, sample-summary-table, echo = FALSE}
+tibble::tibble(
+  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
+  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
+  "sub-basin synoptic grab samples" = n_installGrabSamples,
+  "sub-basin rack samples" = n_installRackSamples,
+  "total" = n_totalSamples) %>% 
+  pivot_longer(everything(),
+               names_to = "sample category", values_to = "count") %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/sample-summary-table.csv")
+
 knitr::kable(tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
   "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
