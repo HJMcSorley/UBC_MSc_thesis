@@ -1,12 +1,11 @@
 ---
-output:
-  word_document: default
+output: bookdown::word_document2
 ---
 # Data & Results (visualization & summaries)
 
 ```{r results setup, include=FALSE}
 
-knitr::opts_chunk$set(include=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
@@ -23,7 +22,7 @@ library(gghighlight)# plot highlighting
 
 ```
 
-```{r vectorize colours}
+```{r vectorize colours, include=FALSE}
 # use forWater defined colours (hexadecimal codes) for plots
 # all colours defined by forWater admin, except 'MyOrange' which I made
 forWater_colours <- c(MainBlue = "#09A4D2", 
@@ -43,7 +42,7 @@ cbPalette <- c(grey = "#999999",
                pink = "#CC79A7")
 ```
 
-```{r input files}
+```{r input files, include=FALSE}
 # assign timezone
 TZ <- "Etc/GMT+8"
 
@@ -101,5 +100,61 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_l
          two_seasons = factor(two_seasons),
          metal_parameters = factor(Parameters))
   
+
+# working dataframes
+# create a subset dataframe for the synoptically sampled sites for tidier calling
+
+synopticfilter <- sampleresults %>% filter(site == "Weeks"|
+                                             site == "ChrisCrk"|
+                                             site == "LeechHead"|
+                                             site == "CraggCrk"|
+                                             site == "WestLeech"|
+                                             site == "Tunnel"|
+                                             
+                                             site == "Rithet"|
+                                             site == "Lazar"|
+                                             site == "Jarvis"|
+                                             site == "Judge-crk"|
+                                             site == "Leech-downstreamconf"|
+                                             site == "Boneyard"|
+                                             site == "Deception-crk"|
+                                             site == "West-Jordan"|
+                                             site == "Deception-res"
+                                             ) %>% 
+  mutate(site = factor(site, # order as you want to see them in plots
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan","Deception-res")))
+
+# create a subset dataframe for the six install sites for tidier calling
+sixfilter <- sampleresults %>% filter(site == "Weeks" |
+                                        site == "LeechHead" |
+                                        site == "ChrisCrk" |
+                                        site == "CraggCrk" |
+                                        site == "WestLeech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+
 ```
 
+
+
+
+```{r DOC vs CDOM, echo = FALSE}
+
+# all sites: DOC vs CDOM
+synopticfilter %>% 
+  filter(analysis == "DOC",
+         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  mutate(site = factor(site, exclude = "Lab"),
+         site = factor(site)) %>% 
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +  
+  geom_jitter(shape = 21, size = 3, alpha = 0.6) +
+  xlim(0, 20) +
+  ylim(0, 20) +
+  geom_abline(slope = 1, intercept = 0, lty = "dotted",) +  
+  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) + 
+  theme_bw() +
+  theme(legend.position = "top") +
+  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis) ", fill = "sampling season:",
+       caption = "Fig.6 DOC concentration from direct measure versus CDOM from UV-Vis absorbance") 
+```

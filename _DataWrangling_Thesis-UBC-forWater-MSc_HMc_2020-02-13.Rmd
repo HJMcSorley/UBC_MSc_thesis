@@ -2,12 +2,6 @@
 title: "Reproducible data analysis: thesis data wrangling"
 subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
 author: "Hannah J McSorley"
-date: "2020-02-03"
-output:
-  word_document:
-    toc: true
-    reference_docx: word-styles-document_thesis.docx
-bibliography: library.bib  
 ---
 
 ```{r setup, include=FALSE}
@@ -15,12 +9,11 @@ knitr::opts_chunk$set(echo = TRUE, package.startup.message = FALSE)
 ```
 
 # setup
+
+note that rainmaker package is only available on GitHub (under development)
 ```
-# If needed, install required packages:
-install.packages("tidyverse")
-install.packages("knitr")
-library(lubridate)
-library(broom) 
+install.packages("devtools")
+devtools::install_github("USGS-R/Rainmaker")
 ```
 
 ```{r wrangling packages, include = FALSE}
@@ -30,23 +23,17 @@ library(tidyverse)  # tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
 library(knitr)      # tidy tables, knitting docs
 library(lubridate)  # dates, times, ranges
 library(broom)      # tidy stats
+library(Rainmaker)  # USGS tool -- https://github.com/USGS-R/Rainmaker
 
 ```
 
 
-# Naming
+# reference
 
-Create vectors to easily call installation site names from, rather than typing words (efficient and consistent for updating and calling).
+assign time zone and create functions
 
-```{r tidy-names}
-
-# vector for site names (used in data sets variable "site")
-(site_names <- c("Weeks-out", "Leech-head", "Chris-crk", "Cragg-crk", "West-Leech", "Tunnel"))
-
+```{r, function}
 # time-zone note: all loggers record in standard time (no daylight savings shift)
-# tz+/- number where the number is hours the timezone is *behind* UTC...
-# So UTC-8 means a timezone abbreviated "UTC" that is ???8 hours behind the real UTC, or UTC + 8 hours
-
 TZ <- "Etc/GMT+8"
 
 # create a function:
@@ -64,7 +51,7 @@ Multiple trips were taken to the field (Leech River watershed) and the trip numb
 
 This code brings in data that documents installation locations field trip tracking.
 
-```{r tracking}
+```{r, tracking}
 
 # read in file used to track trips
 trip_df <- read.csv(file = "R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv", 
@@ -83,30 +70,23 @@ str(trip_df)
 
 # site installation locations
 install_df <- read.csv(file = "R-inputs_UBC-forWater-MSc_HMc/Leech-installation-locations_forWater-MSc_HMc.csv",
-                       header = TRUE)
-str(install_df)
-
-install_df <- install_df %>%
+                       header = TRUE) %>%
   mutate(Site_Number = as_factor(Site_Number))
-
-str(install_df)
 ```
 
 # Water sample data and analytic results
 
 Water samples were collected and transported via coolers (on ice) to UBC's EcoHydrology Lab for analysis of dissolved organic carbon (DOC) concentrations and indicators of NOM character. 
 
-For quantification of DOC, samples were filtered with 0.45-micron PES filters; acidified to bring pH below 2; and analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V [@StdMet2000].
+For quantification of DOC, samples were filtered with 0.45-micron PES filters; acidified to bring pH below 2; and analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion Method (5310-B) on a Shimadzu TOC-V.
 
-Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). Samples were also measured for phosphate concentration using a field portable colouremetric test kit (HACH); each sample had phosphate concentrations below detectable limits (XXXXXX mg/L).   
-
+Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). 
 
 ## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
 
-Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed [@StdMet2000].
+Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed.
 
-```{r TOC-V samples and analytical results}
-
+```{r, TOC-V}
 ## Shimadzu TOC-V samples and results
 # sample IDs and results from analysis of DOC (as NPOC)
 # three part data munge
@@ -142,14 +122,14 @@ shimadzu_samples <- shimadzu_samples %>%
                    fillStage_cm = as.numeric(`fill-stage`),
                    analysis = as_factor(analysis),
                    trip = as_factor(trip))
-str(shimadzu_samples)
-head(shimadzu_samples)
+# str(shimadzu_samples)
+# head(shimadzu_samples)
 
 #check that there are 22 trips (see 'trip_df')
-levels(shimadzu_samples$trip)
+# levels(shimadzu_samples$trip)
 
 # check which sites are included
-levels(shimadzu_samples$site)
+# levels(shimadzu_samples$site)
 
 # fix naming errors for sites
 shimadzu_samples$site <- shimadzu_samples$site %>% 
@@ -164,9 +144,9 @@ shimadzu_samples$site <- shimadzu_samples$site %>%
     "Judge" = "Judge-crk"
   ))
 # check sites again
-levels(shimadzu_samples$site)
+# levels(shimadzu_samples$site)
 
-length(levels(shimadzu_samples$site))
+# length(levels(shimadzu_samples$site))
 #---- samples were collected from a total of 30 sites, 6 were permanent installations ---- #
 
 
@@ -272,7 +252,7 @@ The Spectrolyser is a full scan UV-VIS spectrophotometer. It uses a stable globa
 
 The .par files generated by the spectrolyser contain results of equivalent concentrations based on spectral analysis and the internal global calibration file. A caveat to interpretting these results is that in order for NOM to be detected by UV-Vis absorption the molecules must absorb UV or Visible light (not all molecules do). UV-Vis absorption occurs only if the applied energy (light) can be absorbed by the molecule; in general, this required the presence of aromatic bonds (conjugated pi-bond systems in the molecule, a chromophore). Therefore, UV-Vis absorption is proportional to the molecule's degree of aromaticity.    
 
-```{r Spectrolyser samples and .par results}
+```{r, Spectrolyser-par}
 
 ## Spectrolyser samples and results
 # sample IDs and results from analysis of optical properties
@@ -425,7 +405,7 @@ SCAN_results <- SCAN_results %>%
 
 The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight.
 
-```{r Spectrolyser samples and .fp results}
+```{r Spectrolyser-fp}
 
 ## Spectrolyser samples and fingerprints (fp)
 # sample IDs and fullscans 
@@ -621,7 +601,7 @@ spectral_summary <- spectral_results %>%
 * Bringing together the results from both the Shimadzu and Spectrolyser. 
 * Join data frames and create additional variables to help classify the data for plotting. 
 
-```{r compile results of lab analyses}
+```{r, compile-analyses-results}
 
 # join the results files from the Shimadzu TOC-V and Spectrolyser
 #str(TOCV_results)   # shimadzu NPOC results (direct measure of DOC)
@@ -711,7 +691,7 @@ sampleresults  <-  sampleresults %>%
 ```
 
 ## Metals data
-```{r CRD metals data}
+```{r, CRD-metals}
 
 # I collected metals samples from trip 3 to 10
 # CRD provided results files (PDF report) for trips 3 to 8
@@ -778,11 +758,11 @@ The six pirmary research location in the Leech River watershed were equipped wit
 The Leech river watershed hydroclimatic regime is pluvial, therefore precipitation data is very important. There were (at the time of my research) three weather stations in proximity to the Leech:
 
 * Chris Crk WxStn at the headwaters
-* Survey Mtn WxStn at the highest peak, in the Leech
+* Survey Mtn WxStn at the highest peak, in the Leech (installed in 2019, short record)
 * Martin's Gulch WxStn near the Leech River Tunnel (future point of diversion)
 
 ## Weather
-```{r Wx-precip}
+```{r, Wx-precip}
 
 # bring in WxStn data 
 # Note: Chris Crk date-time was messing with the parse.
@@ -805,14 +785,124 @@ precip_data <- rbind(
            col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 
   mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
 
-```
 
+# Rn15 is 15-minute rainfall (mm) 
+# Prec_1 is hourly accummulated precipitation (mm)
+# Temp is 15 minute intervals (degrees C)
+rainplot <- precip_data %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(StationName, date) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "rain (mm/day)") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~StationName, nrow = 1)
+
+# plot LWSA temperature
+tempplot <- precip_data %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(StationName, date) %>% 
+  dplyr::summarise(daily_Tmean = mean(Temp, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  ggplot(aes(x = date, y = daily_Tmean)) +
+  geom_line(colour = "#3B3838") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  scale_x_discrete(labels = NULL) +
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  facet_wrap(~StationName, nrow = 1) 
+
+# LWSA Wx -- stack precip and temp with cowplot
+cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
+
+# precip_data summary
+precip_data %>%
+  mutate(Year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", 
+         Year != 2020) %>% 
+  group_by(Year, StationName) %>%
+  summarise(total_precip = sum(Rn15, na.rm = TRUE),
+            annual_mean_temp = mean(Temp, na.rm = TRUE),
+            temp_sd = sd(Temp, na.rm = TRUE)) %>% 
+  dplyr::rename("year" = Year, 
+                "station name" = StationName, 
+                "annual precip. (mm)" = total_precip, 
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "sd air temp. (± °C)" = temp_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/LWSA_wx-summary.csv")
+
+# ---- nearby weather
+# malahat weather
+malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
+                         skip = 16,
+                        col_names = TRUE,
+                        col_types = list("f", "c", "d", "d")) %>% 
+  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
+         Date = lubridate::as_date(Datetime),
+         Year = lubridate::year(Datetime))
+
+# plot malahat rain and highlight my study period
+malahat_rn <- malahat_data %>% 
+  filter(Analysis == "Precipitation Amount (mm)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "rain (mm/day)") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  gghighlight::gghighlight(Datetime > "2018-10-22",
+                           unhighlighted_params = list(colour = "#3B3838"))
+
+# plot malahat temperature and highlight my study period
+malahat_temp <- malahat_data %>% 
+  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  gghighlight::gghighlight(Datetime > "2018-10-22",
+                           unhighlighted_params = list(colour = "#3B3838"))
+  
+# stack with cowplot
+cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
+
+# malahat_data precip summary
+malahat_data %>% 
+  filter(Analysis == "Precipitation Amount (mm)", 
+         between(Year, 2014, 2019)) %>% 
+  group_by(Year) %>%
+  summarise(total_precip = sum(Value, na.rm = TRUE)) %>% 
+  knitr::kable()
+
+# malahat_data temp summary
+malahat_data %>% 
+  dplyr::filter(Analysis == "Temperature (Mean) (celsius)", 
+                between(Year, 2014, 2019)) %>% 
+  group_by(Analysis, Year) %>%
+  summarise(annual_mean_temp = mean(Value, na.rm = TRUE),
+            sd = sd(Value)) %>% 
+  knitr::kable(digits = 1)
+
+```
 ## River stage data 
 
 At the six installation sites, water level loggers were installed (Odyssey capacitance water level loggers). The level loggers recorded stage at 10 minute intervals. Each logger was in a stilling well with a secured external stage measuring tape; the stage data must be adjusted with an offset value to match with the observed stage in order to match sample collection to logger datetimes.
 
 
-```{r stage}
+```{r, stage}
 
 # bring in logger data and add a id column from the site file name
 # note, each of the 6 sites has files named except 'Leech-Head' is named by the logger serial number (12040) 
@@ -900,7 +990,7 @@ odyssey_data <- odyssey_data %>%
 # ----- ----------- OLD -------------- ------- #
 # not sure if these offsets are correct #
 
-## stream level data (second try - bring them in, add a column with site ID combnine them into one then adjust date-times)
+## stream level data (second try - bring them in, add a column with site ID combine them into one then adjust date-times)
 # Odyssey Capacitance Water level Loggers installed at 6 sites 
 # sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
 # 3 data blocks exist for each site, date formats are irregular in most
@@ -941,6 +1031,25 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 
 ```
+
+## define hydrologic events based on precip using Rainmaker::RMevents
+```{r}
+# use precipitation to define events
+# precip_data
+# odyssey_data
+
+Wx_CC_storms <- precip_data %>% 
+  filter(StationName == "FWx Chris Creek",
+         DateTime >= "2018-10-23") %>% 
+  as.data.frame() %>% 
+  Rainmaker::RMevents(., ieHr = 8, rainthresh = 15, rain = "Rn15", time = "DateTime")
+
+Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
+Wx_CC_storms[["storms"]]   # list of all events
+
+
+```
+
 
 # File Outputs
 
@@ -1024,7 +1133,8 @@ write_csv(precip_data,
 I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
 call vector of events for trip_df
 
-```{r match OC and stage}
+```
+{r match OC and stage}
 # -------------------------------------------------------------- YOU ARE HERE
 
 # first, rename sites in sample df so they match odyssey data

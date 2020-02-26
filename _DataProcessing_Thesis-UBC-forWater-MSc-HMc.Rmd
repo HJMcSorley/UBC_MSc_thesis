@@ -1,17 +1,18 @@
 ---
-output:
-  word_document: default
+title: "Reproducible data analysis: thesis data visualization and analysis"
+subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
+author: "Hannah J McSorley"
 ---
 # Data & Results (visualization & summaries)
 
-```{r results setup, include=FALSE}
+```{r, processing-setup, include=FALSE}
 
 knitr::opts_chunk$set(include=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
-```{r results packages, package.startup.message = FALSE, include=FALSE}
+```{r, processing-packages, package.startup.message = FALSE, include=FALSE}
 
 # load packages
 library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
@@ -23,7 +24,7 @@ library(gghighlight)# plot highlighting
 
 ```
 
-```{r vectorize colours}
+```{r vectorize-colours}
 # use forWater defined colours (hexadecimal codes) for plots
 # all colours defined by forWater admin, except 'MyOrange' which I made
 forWater_colours <- c(MainBlue = "#09A4D2", 
@@ -43,7 +44,7 @@ cbPalette <- c(grey = "#999999",
                pink = "#CC79A7")
 ```
 
-```{r input files}
+```{r input-files}
 # assign timezone
 TZ <- "Etc/GMT+8"
 
@@ -53,6 +54,7 @@ TZ <- "Etc/GMT+8"
 
 # sampleresults df
 # compiled sample analyses results (wide)
+
 sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-results-compiled.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(1:22)),
@@ -107,7 +109,7 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_l
 ```
 
 ## Sample Counts and data table summaries
-```{r subsetting samples by campaign and sample counts}
+```{r, subsetting-campaign}
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
 
@@ -210,7 +212,7 @@ synopticfilter %>%
 
 In total 400 samples were collected (\@ref(tab:sample summary table))
 
-```{r sample summary table, echo = FALSE}
+```{r, sample-summary-table, echo = FALSE}
 knitr::kable(tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
   "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
@@ -229,7 +231,7 @@ knitr::kable(tibble::tibble(
 Table 1 and Figure 1 show DOC concentrations were highest at Weeks Creek, the headwaters monitoring point for a sub-basin which included Weeks Lake and surrounding wetlands. On average, Chris Creek DOC concentration was 51% lower than Weeks creek. Below the confluence of Weeks and Chris Creek, the head of Leech River had a mean DOC concentration slightly less than the average of the two headwater tributaries. West Leech River had higher DOC than Cragg Creek by about 20%. Below the confluences of West Leech and Cragg Creek, the Leech Tunnel site had DOC concentrations that were 54% lower than the average at the Leech head, and closer to those of Cragg Creek.
 
 ### Plot DOC concs across the watershed
-```{r DOCspace, fig.width=7, fig.height=5, echo = FALSE}
+```{r, DOCspace, fig.width=7, fig.height=5, echo = FALSE}
 
 # Boxplot with jitter scatter 
 # DOC by site 
@@ -264,7 +266,7 @@ sixfilter %>%
 ```
 
 ### Rack DOC (by level)
-```{r rackDOC}
+```{r, rackDOC}
 
 sixfilter %>% 
   filter(sample_type == "Rack") %>% 
@@ -284,7 +286,7 @@ sixfilter %>%
 Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was analyzed for DOC. There was a suite of metals included in the analyses, many of which were below detection limits; Figure XXXXX shows DOC concentrations from samples which had detectable concentrations of eight metal species.   
 
 
-```{r metals and DOC (NPOC), echo = FALSE}
+```{r, metals-NPOC, echo = FALSE}
 # filter out the parameters with insufficient data
 # plot DOC agains metals concentrations 
 metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
@@ -327,7 +329,7 @@ metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
 
 DOC concentration had a strong positive relationship with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC999999999999REF].  
 
-```{r metals and CDOM dont include}
+```{r, metals-CDOM-dontinclude}
 
 # limited metals with DOC_eq
 # filter out the parameters with insufficient data
@@ -358,7 +360,7 @@ metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
 At the six sub-basin monitoring sites, vertical racks were installed to collect samples as the rivers rose in response to precipitation events.
 
 
-```{r DOC summarytable, echo = FALSE}
+```{r, DOC-summarytable, echo = FALSE}
 # site DOC
 # groupled mean DOC
 sixfilter %>% 
@@ -383,7 +385,7 @@ sixfilter %>%
  
 These vertical racks collected samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. As the vertical racks require a hydrologic response to collect samples, they are only applicable during the wet season. Comparing wet season Grab samples to those collected on Racks confirms that the rack samplers were able to capture more samples, and many during periods with higher DOC concentrations (Fig.2).  
 
-```{r DOC space-time boxplot, fig.width=8, fig.height=6, echo = FALSE}
+```{r, DOC-space-time-boxplot, fig.width=8, fig.height=6, echo = FALSE}
 # Boxplot with jitter scatter 
 # site vs DOC
 # facet wrap by sample type
@@ -404,7 +406,7 @@ sixfilter %>%
 
 ```
 
-```{r sample_type ridge plots, include=FALSE, echo = FALSE}
+```{r, sample_type-ridgeplots, include=FALSE, echo = FALSE}
 
 # density ridge 
 # wrap by sample_type
@@ -475,7 +477,7 @@ These seasonal plots show data from both Rack and Grab samples in order to inclu
 
 In the wet season, DOC concentrations generally increased during stormflow (relative to between-storm peaks) _{data not shown yet}_, and progressively dropped over the course of the wet season. During dry season baseflow, DOC concentration was elevated compared to late wet season DOC (Fig.5).
 
-```{r seasonal DOC table and ridge plot, fig.width=8, fig.height=6, echo = FALSE}
+```{r, seasonal-DOC-table-ridgeplot, fig.width=8, fig.height=6, echo = FALSE}
 
 # density ridge plots (facet wrap by season)
 sixfilter %>% 
@@ -494,7 +496,7 @@ sixfilter %>%
 
 At each of the six sub-basin monitoring locations, mean DOC was higher during the dry season than during the wet season (Table 2, Fig.8). There was less variation in dry season DOC concentrations at each site also (Table 2), which could be due to actual reduction in variance in the absence of stormflow pulses and also due to fewer dry season samples (n = 46) compared to wet season samples (n = 278). 
 
-```{r seasonal DOC table 2, echo = FALSE}
+```{r, seasonal-DOC-table2, echo = FALSE}
 # summary table
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
@@ -525,7 +527,7 @@ sixfilter %>%
 
 To remove the variance of stormflow DOC concentrations, Table 2-B and Figure 9 shows seasonal concentrations based only on Grab samples (excludes 166 stormflow samples collected by Racks).
 
-```{r seasonal Grab DOC table 2-B, echo = FALSE}
+```{r, seasonal-Grab-DOC-table2B, echo = FALSE}
 # summary table (grabs only)
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
@@ -559,7 +561,7 @@ sixfilter %>%
 
 ## Spectral Indices
 
-```{r spectral plots, echo = FALSE}
+```{r, spectral-plots, echo = FALSE}
 # SUVA vs NPOC by season
 sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
@@ -586,7 +588,7 @@ sampleresults %>%
 ```
 
 
-```{r seasonal plots, include=FALSE}
+```{r, seasonal-plots, include=FALSE}
 # Boxplot with jitter scatter 
 sampleresults %>% 
   dplyr::filter(site == "Weeks" |
@@ -647,7 +649,7 @@ DOC was quantified as non-purgeable organic carbon (NPOC) on the Shimadzu TOC au
 
 Figure 6 shows results from all samples comparing DOC concentrations (as NPOC, direct measure) to CDOM concentrations (UV-Vis, proxy measure of DOC). There was a strong seasonal separation of the relationship between these two measurements. These results indicate a seasonally-driven physiochemical difference in the aquatic NOM in this drinking water supply area.
 
-```{r DOC vs CDOM, echo = FALSE}
+```{r, DOC-vs-CDOM, echo = FALSE}
 
 # all sites: DOC vs CDOM
 synopticfilter %>% 
@@ -669,7 +671,7 @@ synopticfilter %>%
 
 Figure 7 shows the same DOC-CDOM comparison from Figure 6, isolated to the six sub-basin monitoring sites. The seasonal relationship appears similar for the six sites.
 
-```{r DOC vs CDOM at 6 sites, echo = FALSE}
+```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
 # six primary sites: DOC vs CDOM
 sixfilter %>% filter(analysis == "DOC",
          sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
@@ -690,7 +692,7 @@ sixfilter %>% filter(analysis == "DOC",
 In progress: analysis of spectral fingerprint data for slope ratio indices, which will help to elucidate seasonal DOM character shifts.
 
 
-```{r SUVA plots -- in progress, include=FALSE}
+```{r, SUVA-plots-in-progress}
 
 # SUVA vs time
 sampleresults %>% 
@@ -842,7 +844,7 @@ sixfilter %>%
 ```
 
 
-```{r Wx-Stn, echo = FALSE}
+```{r, Wx-Stn}
 # I want to know precip totals over the study period
 # by month and by season
 # use rain to define storm events
@@ -943,7 +945,7 @@ tempplot <- precip_data %>%
 cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
 ```
 
-```{r malahat wx, echo = FALSE}
+```{r, malahat-wx}
 
 # plot malahat rain and highlight my study period
 malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
@@ -997,7 +999,7 @@ malahat_data %>%
 ```
 
 
-```{r stage plots, echo = FALSE}
+```{r, stage-plots}
 
 # plot stage, lines over time
 odyssey_data %>% 
