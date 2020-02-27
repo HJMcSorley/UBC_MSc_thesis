@@ -1,6 +1,5 @@
 ---
-output:
-  word_document: default
+output: bookdown::word_document2
 ---
 
 "Not only is it vital to all biological functions on earth, water links abiotic and biotic, connects the earth to the atmosphere, and creates a dynamic fluid continuum between ecosystems." ~ Hannah McSorley

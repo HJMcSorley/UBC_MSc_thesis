@@ -1,105 +1,21 @@
 ---
-output:
-  word_document: default
+output: bookdown::word_document2
 ---
-# Data & Results (visualization & summaries)
+# Data & Results 
 
-```{r results setup, include=FALSE}
+Samples were collected, here is a table.
 
-knitr::opts_chunk$set(include=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
-
-# save figures to folder 'figures' in the 'R-outputs...' folder
+<br>
+```{r summary-table, echo = FALSE, tab.cap="sample-summary"}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/sample-summary-table.csv", col_names = TRUE) %>% 
+  knitr::kable()
 ```
-
-```{r results packages, package.startup.message = FALSE, include=FALSE}
-
-# load packages
-library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
-library(knitr)      # tidy tables
-library(viridis)    # nice colours for plots gradient fills
-library(ggpmisc)    # linear regression line values
-library(cowplot)    # add-on to ggplot
-library(gghighlight)# plot highlighting
-
-```
-
-```{r vectorize colours}
-# use forWater defined colours (hexadecimal codes) for plots
-# all colours defined by forWater admin, except 'MyOrange' which I made
-forWater_colours <- c(MainBlue = "#09A4D2", 
-                      MainGreen = "#668536", 
-                      AccentBlue = "#5B99CC", 
-                      DarkGrey = "#3B3838", 
-                      MyOrange = "#f4AB0E")
-
-# colour-blind friendly pallet with grey (no black)
-cbPalette <- c(grey = "#999999", 
-               orange = "#E69F00", 
-               lightblue = "#56B4E9", 
-               green = "#009E73", 
-               yellow = "#F0E442", 
-               darkblue = "#0072B2", 
-               red = "#D55E00", 
-               pink = "#CC79A7")
-```
-
-```{r input files}
-# assign timezone
-TZ <- "Etc/GMT+8"
-
-# File Inputs
-#Results of data wrangling (01) were saved as .csv files for tidy loading. 
-# read all compiled data files & format
-
-# sampleresults df
-# compiled sample analyses results (wide)
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-results-compiled.csv",
-                          col_names = TRUE) %>%   
-  mutate(trip = factor(trip, levels = c(1:22)),
-         sample_type = factor(sample_type),
-         sample = factor(sample),
-         analysis = factor(analysis),
-         three_seasons = factor(three_seasons),
-         two_seasons = factor(two_seasons)) %>% 
-  mutate(site = factor(site),
-         site = forcats::fct_recode(site, 
-                                    Weeks = "Weeks-out",
-                                    ChrisCrk = "Chris-crk",
-                                    LeechHead = "Leech-head",
-                                    CraggCrk = "Cragg-crk", 
-                                    WestLeech = "West-Leech")) 
-# remove dashes from subbasin names (same as Odyssey)
-
-# odyssey_data df
-# stage data compiled with interval/trip
-odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-stage.csv",
-                         col_names = TRUE) %>% 
-   mutate(source = factor(source,
-                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
-         interval = factor(interval),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
-
-# precip_data df
-# 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
-                        col_names = TRUE,
-                        col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
-  mutate(StationName = factor(StationName),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))             
+<br>
 
 
-# metalslab df
-# metals sample analyses results with OC (long)
-metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_long.csv",
-                      col_names = TRUE) %>% 
-  mutate(Trip = factor(Trip),
-         site = factor(site), 
-         sample_type = factor(sample_type),
-         sample = factor(sample),
-         analysis = factor(analysis),
-         three_seasons = factor(three_seasons),
-         two_seasons = factor(two_seasons),
-         metal_parameters = factor(Parameters))
-  
-```
+Look at this picture:
+
+<br>
+![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/siphonsampler_RL_HMc.png)
+<br>
 

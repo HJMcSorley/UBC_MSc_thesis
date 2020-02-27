@@ -1,15 +1,14 @@
 ---
-output:
-  word_document: default
+output: bookdown::word_document2
 ---
 
-```{r methods setup, include=FALSE}
+```{r methods-setup, include=FALSE}
 
-knitr::opts_chunk$set(include=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(include=FALSE, warning = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
-```{r methods packages, package.startup.message = FALSE, include=FALSE}
+```{r methods-packages, package.startup.message=FALSE}
 
 # load packages
 library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
@@ -20,89 +19,7 @@ library(gghighlight)# plot highlighting
 
 ```
 
-```{r Wx}
-# assign timezone
-TZ <- "Etc/GMT+8"
 
-# precip_data df
-# 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
-                        col_names = TRUE,
-                        col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
-  mutate(StationName = factor(StationName),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))  
-
-# Rn15 is 15-minute rainfall (mm) 
-# Prec_1 is hourly accummulated precipitation (mm)
-# Temp is 15 minute intervals (degrees C)
-rainplot <- precip_data %>% 
-  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  group_by(StationName, date) %>% 
-  dplyr::summarise(daily_rn = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(colour = "#09A4D2") +
-  scale_y_reverse() +
-  labs(x = "", y = "rain (mm/day)") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~StationName, nrow = 1)
-
-# plot temperature
-tempplot <- precip_data %>% 
-  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  group_by(StationName, date) %>% 
-  dplyr::summarise(daily_Tmean = mean(Temp, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  ggplot(aes(x = date, y = daily_Tmean)) +
-  geom_line(colour = "#3B3838") +
-  geom_hline(yintercept = 0,
-             linetype = "dotted") +
-  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
-  theme_bw() +
-  scale_x_discrete(labels = NULL) +
-  theme(legend.position = "none",
-        strip.background = element_blank(),
-        strip.text.x = element_blank()) +
-  facet_wrap(~StationName, nrow = 1) 
-
-
-
-# plot malahat rain and highlight my study period
-malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
-                         skip = 16,
-                        col_names = TRUE,
-                        col_types = list("f", "c", "d", "d")) %>% 
-  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
-         Date = lubridate::as_date(Datetime))
-
-malahat_rn <- malahat_data %>% 
-  filter(Analysis == "Precipitation Amount (mm)") %>% 
-  ggplot(aes(x = Datetime, y = Value)) +
-  geom_col(colour = "#09A4D2") +
-  scale_y_reverse() +
-  labs(x = "", y = "rain (mm/day)") +
-  theme_bw() +
-  theme(legend.position = "none") +
-  gghighlight::gghighlight(Datetime > "2018-10-22",
-                           unhighlighted_params = list(colour = "#3B3838"))
-
-# plot malahat temperature and highlight my study period
-malahat_temp <- malahat_data %>% 
-  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
-  ggplot(aes(x = Datetime, y = Value)) +
-  geom_line(colour = "#f4AB0E") +
-  geom_hline(yintercept = 0,
-             linetype = "dotted") +
-  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
-  theme_bw() +
-  gghighlight::gghighlight(Datetime > "2018-10-22",
-                           unhighlighted_params = list(colour = "#3B3838"))
-  
-```
 
 #	2	Methods
 
@@ -125,10 +42,7 @@ There are two weather stations which operated during the study period: Chris Cre
  These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
 
 <br>
-```{r LeechWxPlot, echo = FALSE, fig.cap='(ref:LeechWxPlot)'}
-# stack precip and temp with cowplot
-cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
-```
+![__Figure__Plots of weather from the two fire weather stations in the Leech Water Supply Area_](R-outputs_UBC-forWater-MSc_HMc/figures/LeechWxPlot-1.png)
 <br>
 
 There is a weather station on the Malahat mountain pass, east of the study site (ID 62091, BC Ministry of Transportation and Infrastructure and Pacific Climate Impacts) that had precipitation and air temperature data available from 2014 to 2020. 
@@ -136,18 +50,15 @@ There is a weather station on the Malahat mountain pass, east of the study site 
 
 (ref:MalahatWxPlot) shows weather data from the Malahat weather station and highlights the period in which this research occurred in which there were no obvious deviations from previous years.
 
- 
- <br>
-```{r MalahatWxPlot, fig.cap='(ref:MalahatWxPlot)', echo = FALSE, fig.cap="Weather patterns recorded on the Malahat, east of the study site. Highlighted sections indicate the period of this study."}
-
-# stack with cowplot
-cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
-```
 <br>
+![__Figure__Plot of weather from the nearby Malahat Wx station with the period of study highlighted_](R-outputs_UBC-forWater-MSc_HMc/figures/MalahatWxPlot-1.png)
+<br>
+
 
 ###	2.1.2		Synoptic sampling sites 
 
 Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure ### shows the locations of the synoptically sampled sites as well as the two weather stations.
+
 <br>
 ![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/Sample-Sites_Wx_map.png)
 <br>
@@ -169,7 +80,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics.csv", col_names
 
 #### 	2.1.3.1 	Subbasin sampling and installations
 
-At each of the six subbasin research sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow without employing costly pump-samplers, while recording continuous stage measurements (at ten minute intervals).  Vertical sampling racks supplemented the synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access. Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018].     
+At each of the six subbasin research sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow without employing costly pump-samplers, while recording continuous stage measurements (at ten minute intervals).  Vertical sampling racks supplemented the synoptic sampling program by providing synchronized spatial resolution that would otherwise be difficult to achieve (i.e., multiple sites across the watershed), while collecting samples during flows that would otherwise be difficult or unsafe to access. Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018].    
 
 The passive sampling bottles employ principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE widemouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end. 
 
@@ -178,6 +89,10 @@ The passive sampling bottles employ principles of a siphon design to collect riv
 <br>
 
 Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
+
+<br>
+![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/RACK_chriscrk_20190821_133027.jpg)
+<br>
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
 	
@@ -232,6 +147,7 @@ Specific ultraviolet absorbance at 254nm (SUVA~254~) is the ratio of UV absorpti
 With respect to SUVA~254~ and drinking water treatability, it's important to consider the diversity of DOM and DBP species and the heterogeneous character contained in a water sample. While SUVA~254~ may indicate reactivity, it is not necessarily a strong indicator of DBP-FPs [@Weishaar2003; @Chow2008]. This is because some DBP precursor NOM components (e.g., alliphatics), which have negligible absorptivities in the UV-Vis range, may contribute to DBPs but not SUVA~254~; additionally, not all NOM with measurable SUVA~254~ will create DBPs [@Weishaar2003]. 
 
 SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
+
 
 ####	2.2.2.3		spectral indices of NOM character
 	
