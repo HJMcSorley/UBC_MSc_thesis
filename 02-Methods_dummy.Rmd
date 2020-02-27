@@ -148,6 +148,7 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 
 SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254 nm by the DOC concentration (from NPOC on the Shimadzu TOC-V). 
 
+
 ####	2.2.2.3		spectral indices of NOM character
 	
 Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. In the absence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a simple tool for getting at molecule character. Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators for assessing DOM molecular weights [@Helms2008]. Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by poly-aromatic hydrocarbons with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. Slope ratio (S~R~) is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].	
