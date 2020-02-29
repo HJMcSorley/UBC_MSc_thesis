@@ -416,6 +416,14 @@ sixfilter %>%
 
 ```
 
+```{r, sixfilter-lm-risinglimb}
+sixfilter %>% 
+  filter(sample_type == "Rack") %>% 
+  group_by(site)
+  
+```
+
+
 ```{r, sample_type-ridgeplots, include=FALSE, echo = FALSE}
 
 # density ridge 
@@ -1003,8 +1011,6 @@ malahat_data %>%
   group_by(season, year) %>% 
   dplyr::summarise(av_rn = sum(Value, na.rm = TRUE)) %>% 
   ungroup()
-
-
 
 ```
 

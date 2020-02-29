@@ -39,7 +39,7 @@ The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone 
 
 There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure (ref:LeechWxPlot). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow).   
 
- These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
+These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
 
 <br>
 ![__Figure__Plots of weather from the two fire weather stations in the Leech Water Supply Area_](R-outputs_UBC-forWater-MSc_HMc/figures/LeechWxPlot-1.png)
@@ -84,14 +84,10 @@ At each of the six subbasin research sites, a vertical sampling rack was install
 
 The passive sampling bottles employ principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE widemouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end. 
 
-<br>
-![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/siphonsampler_RL_HMc.png)
-<br>
-
 Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
 
 <br>
-![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/RACK_chriscrk_20190821_133027.jpg)
+![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/Rack_bottle-insert.png)
 <br>
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
