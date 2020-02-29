@@ -27,9 +27,6 @@ library(Rainmaker)  # USGS tool -- https://github.com/USGS-R/Rainmaker
 
 ```
 
-
-# reference
-
 assign time zone and create functions
 
 ```{r, function}
