@@ -22,3 +22,14 @@
 
 Tobi:
 	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained
+	
+-----------------------------------------------------
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of hydrologic response and dissolved organic matter (DOM) dynamics across a second growth forested watershed.
+
+Four hundred and fifty-eight water samples were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
+
+This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected samples of stormflow on the rising limb of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. 
+
+Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting whole water samples during hydrologic surges in response to rainfall. DOC concentration trends in stromflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.     
+
+ 

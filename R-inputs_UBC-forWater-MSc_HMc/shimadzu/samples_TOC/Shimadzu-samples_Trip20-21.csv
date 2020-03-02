@@ -32,7 +32,6 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 27,Leech-head,Rack,L2,,139,DOC,20
 28,Leech-head,Grab,Grab,2019-12-17 12:00,,DOC,20
 29,Weeks-out,Grab,Grab,2019-12-16 13:20,79,DOC,20
-30,Weeks-out,Rack,L1,,72,DOC,20
 31,Weeks-out,Rack,L2,,79,DOC,20
 32,Weeks-out,Rack,L3,,97,DOC,20
 33,Weeks-out,Grab,Grab,2019-12-17 10:00,,DOC,20
