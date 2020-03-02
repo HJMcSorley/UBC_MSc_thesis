@@ -125,6 +125,7 @@ n_SynopticGrabs <- sampleresults %>%
   summarise(total = sum(grab_sample_count)) %>% 
   pull(total)
 
+# -------------------
 # synoptically sampled sites
 # synsites <- c("WestLeech","Tunnel","CraggCrk","LeechHead","Weeks","ChrisCrk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
 
@@ -158,7 +159,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
                                         site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
-
+# -------------------
 
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
@@ -210,7 +211,7 @@ synopticfilter %>%
 
 In total 400 samples were collected (\@ref(tab:sample-summary-table))
 
-```{r, sample-summary-table, echo = FALSE}
+```{r, write_sample-count-table, echo = FALSE}
 tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
   "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
@@ -219,17 +220,7 @@ tibble::tibble(
   "total" = n_totalSamples) %>% 
   pivot_longer(everything(),
                names_to = "sample category", values_to = "count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/sample-summary-table.csv")
-
-knitr::kable(tibble::tibble(
-  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
-  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
-  "sub-basin synoptic grab samples" = n_installGrabSamples,
-  "sub-basin rack samples" = n_installRackSamples,
-  "total" = n_totalSamples) %>% 
-    pivot_longer(everything(),
-                 names_to = "sample category", values_to = "count"), 
-  caption = "Sampling Summary")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv")
 
 ```
 

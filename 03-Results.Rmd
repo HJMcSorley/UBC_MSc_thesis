@@ -6,9 +6,9 @@ output: bookdown::word_document2
 Samples were collected, here is a table.
 
 <br>
-```{r summary-table, echo = FALSE, tab.cap="sample-summary"}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/sample-summary-table.csv", col_names = TRUE) %>% 
-  knitr::kable()
+```{r read_sample-count-table, echo = FALSE, tab.cap="sample-summary"}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv") %>% 
+  knitr::kable(caption = "Sampling Summary")
 ```
 <br>
 
