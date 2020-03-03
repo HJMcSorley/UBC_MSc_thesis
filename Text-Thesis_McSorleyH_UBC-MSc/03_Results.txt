@@ -19,20 +19,57 @@
 
 ### 	storm delineation
 ###	 	IDF
-
-Tobi:
-	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained
 	
 -----------------------------------------------------
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of hydrologic response and dissolved organic matter (DOM) dynamics across a second growth forested watershed.
 
-From November 2018 to February 2020, four hundred and fifty-seven water samples were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
+# Data and Results
 
-This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected samples of stormflow on the rising limb of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. 
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of hydrologic response and dissolved organic matter (DOM) dynamics across a second growth forested watershed. From November 2018 to February 2020, four hundred and fifty-seven water samples (Table YYY ) were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
 
-Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting whole water samples during hydrologic surges in response to rainfall. DOC concentration trends in stromflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.   
+```{r read-sample-count-table}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "Table YYY")
+```
 
+This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples of stormflow on the rising limb of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during hydrologic surges in response to rainfall, samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.   
 
+## Hydrologic Response
+### flow ranking
+* flow ranking based on one synoptic streamflow gauging campaign (likely to match stream-order?)
+### stage not Q
+* using stage data rather than flow indicates a general response but doesn't provide the same level of detail that discharge values could.
+### storm delineation by rainfall
+* how storms were defined
+* how many did I capture
+* time-to-peak at each subbasin
+### synchrony of nested sub-catchments
+* synchrony based on mean variance of stage among the subbasin sites
+
+## DOC concentrations
+### Spatiotemporal patterns
+* synoptic sampling overview (full study period)
+* higher concentrations in lower order streams
+* decreasing concentrations over the wet season
+* what was the variability within low-order streams versus higher-order streams? was there greater variability within each site than between them?
+### Rising limb trends (supply/hydro controls)
+* was the trend for conc on RL consistent at each site across the study period or did it change from early in the wet season to later?
+* did each of the six subbasin sites have similar RL trends?  
+### DOC and metals concentrations
+
+## DOM character (& seasonality)
+### SUVA (aromaticity)
+**** note that the correlation between DOC and metals becomes even tighter when SUVA is used instead of NPOC... greater aromaticity indicates greater potential for complexation (aromatic ~ ligand)
+### E2:E3 (molecular weight)
+ * I'm not sure how to interpret these.... seem to be pretty similar, with maybe a bit more variance later in the season????
+
+## Treatability study
+* how did the 2 future sites (Tunnel and Deception) compare to the 2 current sites (Rithet and Judge)? 
+* Reservoir effects create more stable source water conditions, despite sometimes dramatic changes in source tributary water quality. Understanding the hydrochemical residence time, water balance, and mixing dynamics of the Sooke Reservoir is key to understanding how variable source tributary water quality could effect treatability.  
+
+  *possibly for appendix*
+## hold-time experiments
+## subbasin rack temperatures
+##  
   
 
  

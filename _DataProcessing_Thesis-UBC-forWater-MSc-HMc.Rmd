@@ -2,13 +2,12 @@
 title: "Reproducible data analysis: thesis data visualization and analysis"
 subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
 author: "Hannah J McSorley"
+
 ---
-# Data & Results (visualization & summaries)
+# Data & Results
 
 ```{r, processing-setup, include=FALSE}
-
-knitr::opts_chunk$set(include=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
-
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
@@ -19,7 +18,7 @@ library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
 library(knitr)      # tidy tables
 library(viridis)    # nice colours for plots gradient fills
 library(ggpmisc)    # linear regression line values
-library(cowplot)    # add-on to ggplot
+library(cowplot)    # add-on to ggplot for layout
 library(gghighlight)# plot highlighting
 
 ```
