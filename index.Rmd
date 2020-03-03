@@ -14,9 +14,9 @@ bibliography: library.bib
 link-citations: yes
 ---
 
-```{r index setup, warning = FALSE, include = FALSE, package.startup.message = FALSE}
+```{r index-setup, warning = FALSE, message=FALSE, include = FALSE, package.startup.message = FALSE}
 
-knitr::opts_chunk$set(warning = FALSE, include = FALSE)
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
 # load required packages
 library(bookdown)
@@ -42,6 +42,7 @@ see: https://www.grad.ubc.ca/sites/default/files/doc/page/thesis_sample_prefaces
 
 *TOC follows, then LOT, LOF, List of Illustrations, list of abbreviations
 
+__List of Abbreviations__
 ```{r Abbreviations, echo = FALSE}
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %>% 
@@ -51,9 +52,9 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %
 
 # Acknowledgments
 
-This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD people: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Ryan Biggs, Patrick McCoubrey, Burn Hemus, Christoph Moch, Jessica Dupuis, and Devon Barnes.  
+This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor.  
 
-I'm grateful to have been supported by the entire CRD Field Operations Staff, thanks for making me feel welcome and included on site.  
+I'm grateful to have been supported by the entire CRD Field Operations Staff, thanks for making me feel welcome on site and including me daily field operations.  
   
 This research also would not have been possible without the support and encouragement from academic supervisors and partners from the NSERC forWater Network for Forested Drinking Water Source Protection Technologies: Bill Floyd, Mark Johnson, Suzanne Tank, Mike Stone, Dana Harriman, Monica Emelko, Uldis Silins, Axel Anderson.  
 
@@ -65,4 +66,4 @@ Last but certainly not least, thanks to my wonderful friends and family for supp
 
 To each person who reads this thesis in its entirety.
 
-For the love of data science, I am grateful for Jenny Byran's online resources, StackOverflow (http://stackoverflow.com) for the solution to so many coding challenges. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).
+For the love of data science, I am grateful for Jenny Byran's online resources, StackOverflow (http://stackoverflow.com) for the solution to so many coding challenges. To RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).

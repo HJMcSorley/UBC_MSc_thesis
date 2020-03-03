@@ -3,12 +3,21 @@ output: bookdown::word_document2
 ---
 # Data & Results 
 
+```{r results-setup, include = FALSE, package.startup.message = FALSE}
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
+library(tidyverse)
+library(readr)    # read in delimited files
+library(knitr)    # for tidy tables
+```
+
 Samples were collected, here is a table.
 
-<br>
-```{r read_sample-count-table, echo = FALSE, tab.cap="sample-summary"}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv") %>% 
-  knitr::kable(caption = "Sampling Summary")
+```{r read-sample-count-table}
+
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv", col_names = TRUE) %>% 
+  knitr::kable()
 ```
 <br>
 

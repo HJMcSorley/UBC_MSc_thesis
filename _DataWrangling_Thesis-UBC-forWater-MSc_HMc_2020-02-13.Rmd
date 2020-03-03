@@ -681,7 +681,7 @@ sampleresults <- sampleresults %>%
 # SUVA ------ 
 # add a variable for SUVA = [DOC]/SAC254
 sampleresults  <-  sampleresults %>% 
-  mutate(SUVA = NPOC_ppm/SAC254_Abs.m)
+  mutate(SUVA = SAC254_Abs.m/NPOC_ppm)
 
 # good!
 

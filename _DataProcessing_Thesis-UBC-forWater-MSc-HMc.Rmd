@@ -211,7 +211,7 @@ synopticfilter %>%
 
 In total 400 samples were collected (\@ref(tab:sample-summary-table))
 
-```{r, write_sample-count-table, echo = FALSE}
+```{r, write-sample-count-table}
 tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
   "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),

@@ -43,7 +43,7 @@ Six sites were selected across the Leech Water Supply Area which represent five 
 ![__Figure__Subbasin monitoring sites in the Leech Water Supply Area_](R-inputs_UBC-forWater-MSc_HMc/images/sub-basins.jpg)
 	
 <br>
-```{r subbasin_table, echo = FALSE, tab.cap="Subbasin characteristics"}
+```{r subbasin-table}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics.csv", col_names = TRUE) %>% 
   knitr::kable()
 ```
@@ -63,17 +63,17 @@ Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm 
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
 	
-###### 	2.1.3.1.1	Vertical rack sampling QA/QC: Siphon sampler assumptions
+##### 	2.1.3.1.1	Vertical rack sampling QA/QC: Siphon sampler assumptions
 
 Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the subbasins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system {tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
 
-###### 	2.1.3.1.2	Vertical rack sampling QA/QC:	Sample hold-times and temperatures
+##### 	2.1.3.1.2	Vertical rack sampling QA/QC:	Sample hold-times and temperatures
 
 Every effort was made to retrieve rack samples as quickly as possible from the racks, none the less they sometimes remained on the racks for several days (up to a week). Hobo TidbiT temperature sensors were deployed at each subbasin vertical rack to monitor air and water temperature in order to assess sample stability between sample collection and retrieval. 
 
 To assess sample stability hold-time experiments were performed. The hold-time experiments included replicate (n = 10) sample collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Four hold-time experiments were completed such that the rack samples were left in the field for one, two, three, and four weeks before being retrieved and analyzed for comparison to their counterpart replicates.      
 
-######	2.1.3.1.3	Prototype for falling limb passive sampling
+#####	2.1.3.1.3	Prototype for falling limb passive sampling
 
 In keeping with goals of low-cost, low-powered passive sampling, a falling-limb sampler was designed based on principles of the rising limb siphon sampler. The rising limb sampler collects a discrete water sample when river stage exceeds the crown of the inlet tube, so long as the vent is unobstructed; obstruction of the siphon sampler vent was the key component of the falling limb sampler prototype design. There were a half-dozen iterations in design prior to the model which was field-deployed in the Leech WSA (winter 2019). Each design iteration included a valve on the siphon vent which remained closed as the river rose, and opened when stream stage dropped below a certain point (allowing air to exit the sample bottle and a water sample to be collected). A number of valve options were explored, including: an external tube plug, in internal tube plug, and a self-sealing silicone bite-valve (i.e. Camelback Big Bite^TM^ for hydration packs). The final design iteration used a tube pinch valve (SP Science) to close and open the air vent. The mechanism that triggers the vent valve to open is a simple fixed pulley, where the valve is connected to a weighted-cup by a wire that passes through two loops which alter the direction of force.  The river rises and fills the cup with stream water, the cup remains full when the river recedes, and when the stream drops low enough that the full cup is no longer buoyant, the weight of water in the cup exerts a force on the lever of the pinch-valve, causing it to release the vent tube and triggering sample collection. The vent valve and trigger mechanism are contained in a 4" sewer pipe (a "filling well"), which was attached to supplemental support bars on the vertical rack. One prototype was field deployed at Cragg Creek (subbasin site 4) as a proof of concept and work will continue to improve the design and operation. 
 
