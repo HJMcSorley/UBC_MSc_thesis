@@ -134,7 +134,9 @@ shimadzu_samples$site <- shimadzu_samples$site %>%
   plyr::revalue(c(
     "Chris" = "Chris-crk",
     "Lower-Leech-blw-confl" = "Leech-downstreamconf",
+    "Leech-dwnstrm-confl" = "Leech-downstreamconf",
     "Leech-main-confl" = "Leech-downstreamconf",
+    "Weeks-Lk-NE" = "Weeks-Lake",
     "J-Trib" = "West-Jordan",
     "West-jordan" = "West-Jordan",
     "W.Jarvis" = "Jarvis",
@@ -229,7 +231,8 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
 TOCV_results <- TOCV_results %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
-                          TRUE ~ trip))
+                          TRUE ~ trip),
+         trip = factor(trip, levels = 0:23))
 TOCV_results$NPOC_ppm = as.numeric(TOCV_results$NPOC_ppm)
 # check to make sure it's updated:
 TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
@@ -334,7 +337,8 @@ spectrolyser_results <-
 # add measurement numbers to each trip group (analysis order)
 # drop null variables for tidiness
 spectrolyser_results <- spectrolyser_results %>% 
-  mutate(trip = as_factor(NumberXtract(source))) %>% 
+  mutate(trip = NumberXtract(source),
+         trip = as_factor(trip)) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
@@ -373,9 +377,10 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 ## the samples were analyzed in different files 
 ## it seemed easier to mis-label them rather than manually altering the data files
 SCAN_results <- SCAN_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21", 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
                           trip == "24" ~ "23",
-                          TRUE ~ trip))
+                          TRUE ~ trip),
+         trip = factor(trip, levels = 0:23))
 
 # check to make sure it's updated:
 SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
@@ -403,7 +408,7 @@ SCAN_results <- SCAN_results %>%
 
 The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight.
 
-```{r Spectrolyser-fp}
+```{r Spectrolyser-fp, message=FALSE}
 
 ## Spectrolyser samples and fingerprints (fp)
 # sample IDs and fullscans 
@@ -438,7 +443,8 @@ spectrolyser_fullscan <-
 # add measurement numbers to each trip group (analysis order)
 # drop null variables for tidiness
 spectrolyser_fullscan <- spectrolyser_fullscan %>% 
-  mutate(trip = as_factor(NumberXtract(source))) %>% 
+  mutate(trip = NumberXtract(source),
+         trip = as.factor(trip)) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
@@ -489,18 +495,24 @@ FULLSCAN_results <- FULLSCAN_results %>%
 # split / apply / combine
 FULLSCAN_results <- FULLSCAN_results %>% 
   select(-c("source", "Date", "Time", "Status")) %>% 
+  mutate(trip = factor(trip, levels = 0:23)) %>% 
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
   summarise_all(list(~mean(.))) %>% 
   ungroup()
+```
 
+### Spectral indices
+```{r, spectral-indices}
 
 # ------ spectral indices -------
 # the absorbance values can be used to determine spectral indices
 # indices are more useful for interpretation than raw ABS values
 
 # first, check that SAC254_Abs/m is ABS/m @254nm
-spectral_results <- dplyr::full_join(FULLSCAN_results, SCAN_results)
- 
+spectral_results <- dplyr::full_join(FULLSCAN_results, SCAN_results,
+                                     by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm"))
+
+# explore 
 spectral_results %>%
   group_by(site, sample_type, sample, SAC254_Abs.m) %>% 
   summarise(twofiftyfour = mean(c(Abs_252.5, Abs_255)))  # actually abs at 253.75
@@ -517,7 +529,6 @@ turby <- nrow(spectral_results %>%
   select(trip, site, sample_type, sample, SAC254_Abs.m, Turbid.FTUeq)
   )
 loss <- 100*(turby/nrow(spectral_results))
-
 
 # -------------------------------------------------------------------------------------------
 # Spectral slopes -- from linear regression of log~e~-transformed spectra
@@ -578,7 +589,8 @@ spectral_results %>%
 
 # Summary df with slope ratios and spectral indicies
 spectral_summary <- spectral_results %>%
-  mutate(pseudo254 = (Abs_252.5+Abs_255)/2) %>% 
+  mutate(pseudo254 = (Abs_252.5+Abs_255)/2,
+         trip = factor(trip, levels = 0:23)) %>% 
   select(trip:fillStage_cm,
          pseudo254,
          Abs_250, Abs_365
@@ -586,8 +598,7 @@ spectral_summary <- spectral_results %>%
   full_join(S1) %>% 
   full_join(S2) %>% 
   mutate(SlopeRatio = sample_slope1/sample_slope2,
-         E2E3 = Abs_250/Abs_365,
-         trip = factor(trip, levels = 0:22)) %>% 
+         E2E3 = Abs_250/Abs_365) %>% 
   select(-c(sample_slope1, sample_slope2))
 
 ```
@@ -603,7 +614,7 @@ spectral_summary <- spectral_results %>%
 # join the results files from the Shimadzu TOC-V and Spectrolyser
 #str(TOCV_results)   # shimadzu NPOC results (direct measure of DOC)
 #str(SCAN_results)   # spectrolyser indirect results of DOC (UV-Vis)
-#str(FULLSCAN_results)  # spectrolyser full scan 250-700nm
+#str(spectral_summary)  # spectrolyser full scan 250-700nm
 
 # both have c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")
 # the variables measured are: NPOC_ppm, Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, SAC436_Abs.m
@@ -613,7 +624,8 @@ spectral_summary <- spectral_results %>%
 sampleresults <- full_join(TOCV_results, SCAN_results, 
                            by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  mutate(site = as_factor(site),
+  mutate(trip = factor(trip, levels = 0:24),
+         site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
          analysis = factor(analysis, exclude = "TOC"),  # drop "TOC"
@@ -672,12 +684,12 @@ sampleresults <- sampleresults %>%
            trip %in% 5:9 ~ "late wet [Jan-May]",           # Jan-May 2019 
            trip %in% 10:16 ~ "summer [June-Oct]",  # June-Oct (first half) 2019
            trip %in% 17:21 ~ "early wet [Oct-Dec]", # Oct-Dec 2019
-           trip == 22 ~ "late wet [Jan-May]"), # Jan-Feb 2020
+           trip %in% 22:23 ~ "late wet [Jan-May]"), # Jan-Feb 2020
          two_seasons = case_when(
            trip == 0 ~ "SCAN QA-QC", 
            trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
            trip %in% 10:16 ~ "dry",  # June to mid-Oct 2019
-           trip %in% 17:22 ~ "wet")) # mid-Oct 2019 to Jan 2020
+           trip %in% 17:23 ~ "wet")) # mid-Oct 2019 to Jan 2020
 
 # SUVA ------ 
 # add a variable for SUVA = [DOC]/SAC254
@@ -1034,7 +1046,7 @@ corr_stage <- odyssey_data %>%
 ```
 
 ## define hydrologic events based on precip using Rainmaker::RMevents
-```{r}
+```{r, warnings = FASLE, messages = FALSE}
 # use precipitation to define events
 # precip_data
 # odyssey_data
@@ -1073,7 +1085,11 @@ write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-par_results.
 
 # FULLSCAN_results df
 # Spectrolyser fullscan (.fp) analyses results
-write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-fp_results.csv", na = "NA")               
+write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-fp_results.csv", na = "NA")
+
+# spectral_results df
+# Spectrolyser fullscan (.fp) analyses results
+write_csv(spectral_results, path = "R-outputs_UBC-forWater-MSc_HMc/spectral_results.csv", na = "NA")
 
 # sampleresults df
 # compiled sample analyses results (wide)

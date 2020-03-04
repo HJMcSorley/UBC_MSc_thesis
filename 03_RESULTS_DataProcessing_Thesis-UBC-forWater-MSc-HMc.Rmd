@@ -54,7 +54,7 @@ TZ <- "Etc/GMT+8"
 # sampleresults df
 # compiled sample analyses results (wide)
 
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-results-compiled.csv",
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/samples-lab-analyses_results.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(1:22)),
          sample_type = factor(sample_type),
@@ -64,7 +64,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Lab-analyses_sample-re
          two_seasons = factor(two_seasons),
          pseudoSUVA = pseudo254/NPOC_ppm) %>% 
   mutate(site = factor(site),
-         # remove dashes from subbasin names (same as Odyssey)
+         # remove dashes from sub-basin names (match Odyssey names)
          site = forcats::fct_recode(site, 
                                     Weeks = "Weeks-out",
                                     ChrisCrk = "Chris-crk",
@@ -92,7 +92,7 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.
 
 # metalslab df
 # metals sample analyses results with OC (long)
-metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-OC_sample-results_long.csv",
+metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_results-long.csv",
                       col_names = TRUE) %>% 
   mutate(Trip = factor(Trip),
          site = factor(site), 
@@ -169,7 +169,7 @@ n_subbbasinSamples <- sixfilter %>%
   ungroup()
 # save to outputs
 write_csv(n_subbbasinSamples, 
-          path = "R-outputs_UBC-forWater-MSc_HMc/summary_subbasin-SampleCount.csv", na = "NA") 
+          path = "R-outputs_UBC-forWater-MSc_HMc/sampleCount_subbasins.csv", na = "NA") 
 
 # how many of each type total?
 # save values as objects to implant in text
@@ -208,8 +208,7 @@ synopticfilter %>%
 
 ```
 
-In total 400 samples were collected (\@ref(tab:sample-summary-table))
-
+### sample counts table
 ```{r, write-sample-count-table}
 tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
@@ -219,17 +218,16 @@ tibble::tibble(
   "total" = n_totalSamples) %>% 
   pivot_longer(everything(),
                names_to = "sample category", values_to = "count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/sampleCount_allSamples.csv")
 
 ```
-
 
 ## Leech DOC concentrations
 
 Table 1 and Figure 1 show DOC concentrations were highest at Weeks Creek, the headwaters monitoring point for a sub-basin which included Weeks Lake and surrounding wetlands. On average, Chris Creek DOC concentration was 51% lower than Weeks creek. Below the confluence of Weeks and Chris Creek, the head of Leech River had a mean DOC concentration slightly less than the average of the two headwater tributaries. West Leech River had higher DOC than Cragg Creek by about 20%. Below the confluences of West Leech and Cragg Creek, the Leech Tunnel site had DOC concentrations that were 54% lower than the average at the Leech head, and closer to those of Cragg Creek.
 
 ### Plot DOC concs across the watershed
-```{r, DOCspace, fig.width=7, fig.height=5, echo = FALSE}
+```{r, DOCspace}
 
 # Boxplot with jitter scatter 
 # DOC by site 
@@ -243,10 +241,10 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(caption = "Fig.1 DOC concentration across six sites over 15 months (324 samples)", 
+  labs(caption = "Fig.1 DOC concentration across six sites over 16 months (372 samples)", 
        x = "", y = "DOC (mg/L)")
 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig1_DOC_boxplot-alltogether.png")
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig1_DOC_boxplot-alltogether.png")
 
 # summary table
 sixfilter %>% 
@@ -276,6 +274,22 @@ sixfilter %>%
   geom_jitter(aes(colour = site)) +
   facet_wrap(~trip)
   
+```
+
+###
+```{r, conc-table}
+ %>% 
+  filter(analysis == "DOC") %>% 
+  group_by(site) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm), 
+            DOCsd = sd(NPOC_ppm), 
+            DOCmedian = median(NPOC_ppm), 
+            DOCmin = min(NPOC_ppm), 
+            DOCmax = max(NPOC_ppm))
+
+
+write.csv(DOC_stats, file = "2019-05-26_DOC-SummaryStats.csv")
 ```
 
 
