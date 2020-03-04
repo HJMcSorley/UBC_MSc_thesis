@@ -13,12 +13,12 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 8,Cragg-crk,Grab,Grab,2020-01-30 13:30,,DOC,23
 9,Cragg-crk,Grab,Grab,2020-01-10 12:03,,DOC,23
 10,Cragg-crk,Grab,Grab,2020-01-09 9:58,,DOC,23
-11,Cragg-crk,FL_Rack,FL2,,,DOC,23
-12,Cragg-crk,FL_Rack,FL1,,,DOC,23
-13,Cragg-crk,Rack,L3,,,DOC,23
-14,Cragg-crk,Rack,L2,,,DOC,23
-15,Cragg-crk,Rack,L1,,,DOC,23
+11,Cragg-crk,FL_Rack,FL2,,83,DOC,23
+12,Cragg-crk,FL_Rack,FL1,,106,DOC,23
+13,Cragg-crk,Rack,L3,,124,DOC,23
+14,Cragg-crk,Rack,L2,,91,DOC,23
+15,Cragg-crk,Rack,L1,,75,DOC,23
 16,Cragg-crk,Grab,Grab,2020-02-19 14:00,,DOC,23
 17,Cragg-crk,Grab,Grab,2020-02-06 15:30,,DOC,23
 18,Chris-crk,Grab,Grab,2020-01-09 11:20,,DOC,23
-19,Chris-crk,Rack,L6,,,DOC,23
+19,Chris-crk,Rack,L6,,115,DOC,23
