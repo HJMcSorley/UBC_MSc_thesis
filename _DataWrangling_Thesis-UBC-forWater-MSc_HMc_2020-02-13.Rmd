@@ -372,8 +372,12 @@ head(SCAN_results)
 SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
 
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
+# also change trip 24 to 23 
+## the samples were analyzed in different files 
+## it seemed easier to mis-label them rather than manually altering the data files
 SCAN_results <- SCAN_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21", 
+                          trip == "24" ~ "23",
                           TRUE ~ trip))
 
 # check to make sure it's updated:
@@ -475,9 +479,8 @@ colnames(FULLSCAN_results)
 # for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
 # update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
 FULLSCAN_results <- FULLSCAN_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & 
-                            (measurement == 19 | measurement == 20 | measurement == 21) 
-                          ~ "21", 
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+                          trip == "24" ~ "23",
                           TRUE ~ trip))
 
 
@@ -992,36 +995,36 @@ odyssey_data <- odyssey_data %>%
 # sites: Weeks Outlet, Leech Rv. Head, Chris Creek, Cragg Creek, West Leech, Leech Tunnel (late install, one data block)
 # 3 data blocks exist for each site, date formats are irregular in most
 
-# these are weird, not sure...
-offset_L.Head   <- 60.84 # 
-offset_WksOut   <- 5.17 # add to logger (was 29, 9.5)
-offset_ChrisCrk <- 5.75 # add to logger (was 30, 7.27)
-offset_CraggCrk <- 1.43 # add to logger 19-09-20 (was 9.25)
-offset_W.Leech  <- 2.87 # add to logger (was 4.85) 
-offset_Tunnel   <- -3.32 # add to logger (negative offset, weird, was -3.17)
+# -------
+# offsets based on data download from fall 2019
+# each offset should be added to logged data to match rack stages
+offset_L.Head   <- 95-38.907   # 2020-10-11: obs 95cm, recorded = 38.907 cm
+offset_WksOut   <- 26.0-20.87  # 2020-09-20: obs = 26.0 cm, recorded = 20.87
+offset_ChrisCrk <- 19-13.196   # 2020-09-20: obs = 19cm, recorded = 13.196 cm
+offset_CraggCrk <- 8.0 - 6.57  # 2020-09-20: obs = 8.0 cm, recorded = 6.57 cm
+offset_W.Leech  <- 15.5- 12.19 # 2020-09-20: obs = 15.5 cm, recorded = 12.188 cm
+offset_Tunnel   <- 0.0 - 3.35  # 2020-09-20: obs = 0 cm (HFSG = 27cm), recorded = 3.35
 # ---
 
-# determine what stage was during summertime baseflow (day I added TidbiTs to racks)
-# correct all water level values with offset calculated based on observed and recorded stage 
-bf_offsets <- 
-  odyssey_data %>% 
-  filter(Date == as.POSIXct("2019-08-12", tz = TZ) |
-          Date == as.POSIXct("2019-08-16", tz = TZ) ) %>% 
-  group_by(forcats::fct_explicit_na(source)) %>% 
-  summarise(bf = mean(stage_cm, na.rm = TRUE)) %>% 
-  ungroup()
-
+# these are old...in good agreement - that's encouraging
+# offset_L.Head   <- 60.84 # 
+# offset_WksOut   <- 5.17 # add to logger (was 29, 9.5)
+# offset_ChrisCrk <- 5.75 # add to logger (was 30, 7.27)
+# offset_CraggCrk <- 1.43 # add to logger 19-09-20 (was 9.25)
+# offset_W.Leech  <- 2.87 # add to logger (was 4.85) 
+# offset_Tunnel   <- -3.32 # add to logger (negative offset, weird, was -3.17)
+# ---
 
 # corrected_stage
 corr_stage <- odyssey_data %>% 
   group_by(source) %>% 
   mutate(corr_stage_cm = case_when(
-    source == "LeechHead" ~ (stage_cm - bf_offsets[[1,2]]),
-    source == "ChrisCrk" ~ (stage_cm - bf_offsets[[2,2]]),  
-    source == "CraggCrk" ~ (stage_cm - bf_offsets[[3,2]]),  
-    source == "Tunnel" ~ (stage_cm - bf_offsets[[4,2]]),    
-    source == "Weeks" ~ (stage_cm - bf_offsets[[5,2]]),     
-    source == "WestLeech" ~ (stage_cm - bf_offsets[[6,2]])
+    source == "LeechHead" ~ (stage_cm - offset_L.Head),
+    source == "ChrisCrk" ~ (stage_cm - offset_ChrisCrk),  
+    source == "CraggCrk" ~ (stage_cm - offset_CraggCrk),  
+    source == "Tunnel" ~ (stage_cm - offset_Tunnel),    
+    source == "Weeks" ~ (stage_cm - offset_WksOut),     
+    source == "WestLeech" ~ (stage_cm - offset_W.Leech)
   )) %>% 
   ungroup() %>% 
   mutate(source = factor(source, 
@@ -1039,7 +1042,7 @@ Wx_CC_storms <- precip_data %>%
   filter(StationName == "FWx Chris Creek",
          DateTime >= "2018-10-23") %>% 
   as.data.frame() %>% 
-  Rainmaker::RMevents(., ieHr = 8, rainthresh = 15, rain = "Rn15", time = "DateTime")
+  Rainmaker::RMevents(., ieHr = 10, rainthresh = 15, rain = "Rn15", time = "DateTime")
 
 Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
 Wx_CC_storms[["storms"]]   # list of all events
@@ -1117,7 +1120,7 @@ write_csv(precip_data,
 # Level loggers for rack sampling time-stamps
 
 
-##Goal:match bottle height to logged stage
+##OLD Goal:match bottle height to logged stage
 
 1. read in sampleresults df with analyses results, were set and collected, and fill stage (or grab sample dates)
 2. read in stage data from Odyssey Capacitance water level loggers

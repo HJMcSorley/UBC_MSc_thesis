@@ -1,0 +1,44 @@
+# 2020-02-25,,,,,,
+# Leech samples collected Feb 17-20 (trip23),,,,,,
+# these are from trip 23 but named trip 24 to match to a secondary scan results file (adjusted in R 'DataWrangling…Rmd',,,,,,
+,,,,,,
+measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
+1,Leech-head,Grab,Grab,2020-02-20 10:00,,24
+2,Leech-head,Rack,L1,,129,24
+3,Leech-head,Rack,L2,,137,24
+4,Leech-head,Rack,L3,,155,24
+5,Leech-head,Rack,L4,,165,24
+6,Leech-head,Rack,L6,,195,24
+7,Weeks-out,Grab,Grab,2020-02-20,,24
+8,Weeks-out,Rack,L1,,89,24
+9,Weeks-out,Rack,L2,,98,24
+10,Weeks-out,Rack,L3,,115,24
+11,Weeks-out,Rack,L4,,127,24
+12,Weeks-out,Grab,Grab,2020-01-09 11:35,,24
+13,Tunnel,Grab,Grab,2020-02-18 11:00,,24
+14,Tunnel,Grab,Grab,2020-02-19 11:00,,24
+15,Tunnel,Rack,L1,,41,24
+16,Tunnel,Rack,L2,,57,24
+17,Tunnel,Rack,L3,,70,24
+18,Tunnel,Rack,L4,,87,24
+19,Tunnel,Rack,L5,,103,24
+20,Tunnel,Rack,L6,,117,24
+21,Tunnel,Grab,Grab,2020-01-30 12:30,,24
+22,West-Leech,Grab,Grab,2020-02-19 10:00,,24
+23,West-Leech,Rack,L1,,37,24
+24,West-Leech,Rack,L2,,51,24
+25,West-Leech,Rack,L3,,67,24
+26,West-Leech,Rack,L4,,83,24
+27,West-Leech,Rack,L5,,101,24
+28,West-Leech,Rack,L6,,119,24
+29,West-Leech,Rack,L7,,136,24
+30,West-Leech,Grab,Grab,2020-01-30 9:30,,24
+31,West-Leech,Grab,Grab,2020-01-08 12:45,,24
+32,West-Leech,Grab,Grab,2020-02-08,,24
+33,Leech-dwnstrm-confl,Grab,Grab,2020-02-08 11:10,,24
+34,Chris-crk,Grab,Grab,2020-02-20 13:00,,24
+35,Chris-crk,Rack,L1,,37,24
+36,Chris-crk,Rack,L2,,48,24
+37,Chris-crk,Rack,L3,,66,24
+38,Chris-crk,Rack,L4,,81,24
+39,Chris-crk,Rack,L5,,97,24
