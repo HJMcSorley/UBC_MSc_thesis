@@ -380,6 +380,7 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 SCAN_results <- SCAN_results %>% 
   mutate(trip = as.character(trip)) %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+                          trip == "24" ~ "23",
                           TRUE ~ trip),
          trip = factor(trip, levels = c(0:23)))
 
@@ -401,12 +402,7 @@ SCAN_results <- SCAN_results %>%
             DOCeq_ppm = mean(DOCeq_ppm),
             SAC254_Abs.m = mean(SAC254_Abs.m),
             SAC436_Abs.m = mean(SAC436_Abs.m)) %>% 
-  ungroup() %>% 
-  mutate(trip = as.character(trip),
-         trip = case_when(trip == "24" ~ "23",
-                          TRUE ~ trip),
-         trip = factor(trip, levels = c(0:23)))
-  
+  ungroup()
 
 ```
 
@@ -490,6 +486,7 @@ colnames(FULLSCAN_results)
 FULLSCAN_results <- FULLSCAN_results %>% 
   mutate(trip = as.character(trip)) %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+                          trip == "24" ~ "23",
                           TRUE ~ trip))
 
 
@@ -503,13 +500,8 @@ FULLSCAN_results <- FULLSCAN_results %>%
   select(-c("source", "Date", "Time", "Status")) %>% 
   mutate(trip = factor(trip, levels = 0:23)) %>% 
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
-  summarise_all(list(~mean(.))) %>%
-  ungroup() %>% 
-  mutate(trip = as.character(trip),
-         trip = case_when(trip == "24" ~ "23",
-                          TRUE ~ trip),
-         trip = factor(trip, levels = c(0:23)))
-  
+  summarise_all(list(~mean(.))) %>% 
+  ungroup()
 ```
 
 ### Spectral indices
