@@ -287,7 +287,7 @@ spectrolyser_samples <- spectrolyser_samples %>%
                                                         frac = TRUE, tz = TZ, 
                                                         truncated = 3), -1),
                    fillStage_cm = as.numeric(`fill-stage`),
-                   trip = as_factor(trip))
+                   trip = factor(trip, levels = c(0:24)))
 # check it
 # str(spectrolyser_samples)
 # head(spectrolyser_samples)
@@ -304,6 +304,7 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
     "Chris" = "Chris-crk",
     "Lower-Leech-blw-confl" = "Leech-downstreamconf",
     "Leech-main-confl" = "Leech-downstreamconf",
+    "Leech-downstreamconf" = "Leech-downstreamconf",
     "J-Trib" = "West-Jordan",
     "West-jordan" = "West-Jordan",
     "W.Jarvis" = "Jarvis",
@@ -338,7 +339,7 @@ spectrolyser_results <-
 # drop null variables for tidiness
 spectrolyser_results <- spectrolyser_results %>% 
   mutate(trip = NumberXtract(source),
-         trip = as_factor(trip)) %>% 
+         trip = factor(trip, levels = c(0:24))) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
@@ -358,7 +359,7 @@ nrow(spectrolyser_results) == nrow(spectrolyser_samples)
 # combine 'spectrolyser_samples' with 'spectrolyser_results'
 SCAN_results <- spectrolyser_results %>% 
   select(-c(Date, Time, Status, NULLTurbid, NULLNO3.Neq, NULLTOCeq, NULLDOCeq, SAC254_0, SAC436_0, X254.436_Abs.m, X254.436_0, analogIN_, analogIN_0)) %>% 
-  right_join(spectrolyser_samples, by = c("trip" = "trip", "measurement" = "measurement")) %>% 
+  right_join(spectrolyser_samples, by = c("trip", "measurement")) %>% 
   ungroup()
 
 # check lengths match
@@ -377,10 +378,10 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 ## the samples were analyzed in different files 
 ## it seemed easier to mis-label them rather than manually altering the data files
 SCAN_results <- SCAN_results %>% 
+  mutate(trip = as.character(trip)) %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
-                          trip == "24" ~ "23",
                           TRUE ~ trip),
-         trip = factor(trip, levels = 0:23))
+         trip = factor(trip, levels = c(0:23)))
 
 # check to make sure it's updated:
 SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
@@ -400,7 +401,12 @@ SCAN_results <- SCAN_results %>%
             DOCeq_ppm = mean(DOCeq_ppm),
             SAC254_Abs.m = mean(SAC254_Abs.m),
             SAC436_Abs.m = mean(SAC436_Abs.m)) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(trip = as.character(trip),
+         trip = case_when(trip == "24" ~ "23",
+                          TRUE ~ trip),
+         trip = factor(trip, levels = c(0:23)))
+  
 
 ```
 
@@ -444,7 +450,7 @@ spectrolyser_fullscan <-
 # drop null variables for tidiness
 spectrolyser_fullscan <- spectrolyser_fullscan %>% 
   mutate(trip = NumberXtract(source),
-         trip = as.factor(trip)) %>% 
+         trip = factor(trip, levels = c(0:24))) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
@@ -482,8 +488,8 @@ colnames(FULLSCAN_results)
 # for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
 # update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
 FULLSCAN_results <- FULLSCAN_results %>% 
+  mutate(trip = as.character(trip)) %>% 
   mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
-                          trip == "24" ~ "23",
                           TRUE ~ trip))
 
 
@@ -497,8 +503,13 @@ FULLSCAN_results <- FULLSCAN_results %>%
   select(-c("source", "Date", "Time", "Status")) %>% 
   mutate(trip = factor(trip, levels = 0:23)) %>% 
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
-  summarise_all(list(~mean(.))) %>% 
-  ungroup()
+  summarise_all(list(~mean(.))) %>%
+  ungroup() %>% 
+  mutate(trip = as.character(trip),
+         trip = case_when(trip == "24" ~ "23",
+                          TRUE ~ trip),
+         trip = factor(trip, levels = c(0:23)))
+  
 ```
 
 ### Spectral indices
@@ -622,9 +633,9 @@ spectral_summary <- spectral_results %>%
 
 # --- WIDE SUMMARY DF --- # 
 sampleresults <- full_join(TOCV_results, SCAN_results, 
-                           by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  mutate(trip = factor(trip, levels = 0:24),
+                           by = c("trip", "site", "sample_type", "sample")) %>% 
+  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample")) %>% 
+  mutate(trip = factor(trip, levels = 0:23),
          site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -661,16 +672,16 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
     trip == "11" ~ trip_df$trip.end[11],
     trip == "12" ~ trip_df$trip.end[12],
     trip == "13" ~ trip_df$trip.end[13],
-    trip == "14" ~ trip_df$trip.end[14],
-    trip == "15" ~ trip_df$trip.end[15],
-    trip == "16" ~ trip_df$trip.end[16],
-    trip == "17" ~ trip_df$trip.end[17],
-    trip == "18" ~ trip_df$trip.end[18],
-    trip == "19" ~ trip_df$trip.end[19],
-    trip == "20" ~ trip_df$trip.end[20],
-    trip == "21" ~ trip_df$trip.end[21],
-    trip == "22" ~ trip_df$trip.end[22],
-    trip == "23" ~ trip_df$trip.end[23])) %>% 
+    trip == "14" ~ trip_df$trip.end[15],
+    trip == "15" ~ trip_df$trip.end[16],
+    trip == "16" ~ trip_df$trip.end[17],
+    trip == "17" ~ trip_df$trip.end[18],
+    trip == "18" ~ trip_df$trip.end[19],
+    trip == "19" ~ trip_df$trip.end[20],
+    trip == "20" ~ trip_df$trip.end[21],
+    trip == "21" ~ trip_df$trip.end[22],
+    trip == "22" ~ trip_df$trip.end[23],
+    trip == "23" ~ trip_df$trip.end[24])) %>% 
   mutate(trip_end = lubridate::ymd(trip_end))
 
 # add a variable to identify season 
