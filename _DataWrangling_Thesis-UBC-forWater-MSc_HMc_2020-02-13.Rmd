@@ -338,8 +338,7 @@ spectrolyser_results <-
 # add measurement numbers to each trip group (analysis order)
 # drop null variables for tidiness
 spectrolyser_results <- spectrolyser_results %>% 
-  mutate(trip = NumberXtract(source),
-         trip = factor(trip, levels = c(0:24))) %>% 
+  mutate(trip = NumberXtract(source)) %>% 
   group_by(trip) %>% 
   mutate(measurement = row_number()) %>% 
   ungroup()
@@ -359,7 +358,7 @@ nrow(spectrolyser_results) == nrow(spectrolyser_samples)
 # combine 'spectrolyser_samples' with 'spectrolyser_results'
 SCAN_results <- spectrolyser_results %>% 
   select(-c(Date, Time, Status, NULLTurbid, NULLNO3.Neq, NULLTOCeq, NULLDOCeq, SAC254_0, SAC436_0, X254.436_Abs.m, X254.436_0, analogIN_, analogIN_0)) %>% 
-  right_join(spectrolyser_samples, by = c("trip", "measurement")) %>% 
+  full_join(spectrolyser_samples, by = c("trip", "measurement")) %>% 
   ungroup()
 
 # check lengths match
@@ -445,16 +444,17 @@ spectrolyser_fullscan <-
 # add measurement numbers to each trip group (analysis order)
 # drop null variables for tidiness
 spectrolyser_fullscan <- spectrolyser_fullscan %>% 
-  mutate(trip = NumberXtract(source),
-         trip = factor(trip, levels = c(0:24))) %>% 
-  group_by(trip) %>% 
+  mutate(trip = NumberXtract(source)) %>% 
+  group_by(trip) %>%
   mutate(measurement = row_number()) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(trip = factor(trip, levels = c(0:24))) 
+ 
 # note that trip "0" was an external calibration
 
 # check it out
 # str(spectrolyser_fullscan)
-unique(spectrolyser_fullscan$trip)
+levels(spectrolyser_fullscan$trip)
 
 colnames(spectrolyser_fullscan)
 
@@ -467,9 +467,8 @@ nrow(spectrolyser_fullscan) == nrow(spectrolyser_samples)
 
 # 3. ------------ SPECTROLYSER FULLSCAN RESULTS ------------ # 
 # combine 'spectrolyser_samples' with 'spectrolyser_fullscan'
-FULLSCAN_results <- right_join(spectrolyser_fullscan, spectrolyser_samples, 
-                               by = c("trip" = "trip", "measurement" = "measurement")) %>% 
-  ungroup() %>% 
+FULLSCAN_results <- full_join(spectrolyser_fullscan, spectrolyser_samples, 
+                               by = c("trip", "measurement")) %>% 
   mutate(site = factor(site),
          sample_type = factor(sample_type),
          dt_sampled = lubridate::as_datetime(dt_sampled)
@@ -484,10 +483,12 @@ colnames(FULLSCAN_results)
 # for Cragg Creek, trip 21 was actually in trip 20 (Cragg on 2019-12-19)
 # update measurements c(19:21) to be "trip 21", for later matching with Odyssey stage data
 FULLSCAN_results <- FULLSCAN_results %>% 
-  mutate(trip = as.character(trip)) %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
+  mutate(trip = as.character(trip),
+         trip = case_when(trip == "20" & site =="Cragg-crk" & 
+                            (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
                           trip == "24" ~ "23",
-                          TRUE ~ trip))
+                          TRUE ~ trip),
+         trip = factor(trip, levels = c(0:23)))
 
 
 # ---  triplicates:
@@ -498,7 +499,6 @@ FULLSCAN_results <- FULLSCAN_results %>%
 # split / apply / combine
 FULLSCAN_results <- FULLSCAN_results %>% 
   select(-c("source", "Date", "Time", "Status")) %>% 
-  mutate(trip = factor(trip, levels = 0:23)) %>% 
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
   summarise_all(list(~mean(.))) %>% 
   ungroup()
