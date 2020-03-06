@@ -796,6 +796,20 @@ precip_data <- rbind(
   mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
 
 
+# create a summary datafame with mean weather data between Chris creek and Martin's Gulch
+wx_mean <- precip_data %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  group_by(DateTime) %>% 
+  select(-StationName) %>% 
+  summarise_all(list(mean = mean))
+
+
+
+```
+
+### Plots Wx - move
+```{r, rain-plots}
+
 # Rn15 is 15-minute rainfall (mm) 
 # Prec_1 is hourly accummulated precipitation (mm)
 # Temp is 15 minute intervals (degrees C)
