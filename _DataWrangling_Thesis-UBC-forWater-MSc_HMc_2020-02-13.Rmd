@@ -120,6 +120,7 @@ shimadzu_samples <- shimadzu_samples %>%
                    fillStage_cm = as.numeric(`fill-stage`),
                    analysis = as_factor(analysis),
                    trip = as_factor(trip))
+
 # str(shimadzu_samples)
 # head(shimadzu_samples)
 
@@ -200,7 +201,8 @@ shimadzu_results <- bind_rows(shimadzu_1, shimadzu_2)
 shimadzu_results <- shimadzu_results %>% 
   mutate(trip = as_factor(NumberXtract(source)),
          NPOC_mgL = as.numeric(NumberXtract(Result)),
-         vial = as.numeric(NumberXtract(Sample.Name)))
+         vial = as.numeric(NumberXtract(Sample.Name))) 
+
 # check it out
 # str(shimadzu_results)
 
@@ -213,7 +215,7 @@ TOCV_results <- shimadzu_results %>%
   select(trip, vial, NPOC_mgL) %>% 
   group_by(trip, vial) %>% 
   summarize(NPOC_ppm = mean(NPOC_mgL)) %>% 
-  right_join(shimadzu_samples, by = c("trip" = "trip", "vial" = "vial")) %>% 
+  right_join(shimadzu_samples, by = c("trip", "vial")) %>% 
   ungroup() 
 
 
@@ -230,9 +232,10 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
 TOCV_results <- TOCV_results %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
+  mutate(#trip = as.character(trip),
+         trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
                           TRUE ~ trip),
-         trip = factor(trip, levels = 0:23))
+         trip = as_factor(trip))
 TOCV_results$NPOC_ppm = as.numeric(TOCV_results$NPOC_ppm)
 # check to make sure it's updated:
 TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
@@ -287,7 +290,7 @@ spectrolyser_samples <- spectrolyser_samples %>%
                                                         frac = TRUE, tz = TZ, 
                                                         truncated = 3), -1),
                    fillStage_cm = as.numeric(`fill-stage`),
-                   trip = factor(trip, levels = c(0:24)))
+                   trip = as_factor(trip))
 # check it
 # str(spectrolyser_samples)
 # head(spectrolyser_samples)
@@ -377,11 +380,8 @@ SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 ## the samples were analyzed in different files 
 ## it seemed easier to mis-label them rather than manually altering the data files
 SCAN_results <- SCAN_results %>% 
-  mutate(trip = as.character(trip)) %>% 
-  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
-                          trip == "24" ~ "23",
-                          TRUE ~ trip),
-         trip = factor(trip, levels = c(0:23)))
+  mutate(trip = case_when(trip == "20" & site =="Cragg-crk" & (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",TRUE ~ trip),
+         trip = as_factor(trip))
 
 # check to make sure it's updated:
 SCAN_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk") 
@@ -447,8 +447,7 @@ spectrolyser_fullscan <- spectrolyser_fullscan %>%
   mutate(trip = NumberXtract(source)) %>% 
   group_by(trip) %>%
   mutate(measurement = row_number()) %>% 
-  ungroup() %>% 
-  mutate(trip = factor(trip, levels = c(0:24))) 
+  ungroup() 
  
 # note that trip "0" was an external calibration
 
@@ -486,9 +485,7 @@ FULLSCAN_results <- FULLSCAN_results %>%
   mutate(trip = as.character(trip),
          trip = case_when(trip == "20" & site =="Cragg-crk" & 
                             (measurement == 19 | measurement == 20 | measurement == 21) ~ "21",
-                          trip == "24" ~ "23",
-                          TRUE ~ trip),
-         trip = factor(trip, levels = c(0:23)))
+                          TRUE ~ trip))
 
 
 # ---  triplicates:
@@ -592,8 +589,7 @@ spectral_results %>%
 
 # Summary df with slope ratios and spectral indicies
 spectral_summary <- spectral_results %>%
-  mutate(pseudo254 = (Abs_252.5+Abs_255)/2,
-         trip = factor(trip, levels = 0:23)) %>% 
+  mutate(pseudo254 = (Abs_252.5+Abs_255)/2) %>% 
   select(trip:fillStage_cm,
          pseudo254,
          Abs_250, Abs_365
@@ -601,7 +597,8 @@ spectral_summary <- spectral_results %>%
   full_join(S1) %>% 
   full_join(S2) %>% 
   mutate(SlopeRatio = sample_slope1/sample_slope2,
-         E2E3 = Abs_250/Abs_365) %>% 
+         E2E3 = Abs_250/Abs_365,
+         trip = as_factor(trip)) %>% 
   select(-c(sample_slope1, sample_slope2))
 
 ```
@@ -627,7 +624,7 @@ spectral_summary <- spectral_results %>%
 sampleresults <- full_join(TOCV_results, SCAN_results, 
                            by = c("trip", "site", "sample_type", "sample")) %>% 
   full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample")) %>% 
-  mutate(trip = factor(trip, levels = 0:23),
+  mutate(trip = as_factor(trip),
          site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
@@ -680,7 +677,7 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
 # three seasons (early/late wet and dry) 
 # and two seasons (wet/dry))    
 sampleresults <- sampleresults %>% 
-  mutate(trip = factor(trip, levels = 0:22),
+  mutate(trip = factor(trip, levels = 0:23),
          three_seasons = case_when(
            trip == 0 ~ "SCAN QA-QC", 
            trip %in% 1:4 ~ "early wet [Oct-Dec]",   # (second half) Oct-Dec 2018
@@ -1047,6 +1044,21 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 
 ```
+
+### plot stage (move)
+
+```{r, stage-plots}
+
+corr_stage %>% 
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line()+
+  theme_bw()+
+  facet_wrap(~source, ncol = 1, scales = "free_y")+
+  labs(y = "river stage (cm)", x = "")+
+  scale_x_datetime(date_breaks = "2 months", date_labels = "%m-%Y")
+
+```
+
 
 ## define hydrologic events based on precip using Rainmaker::RMevents
 ```{r, warnings = FASLE, messages = FALSE}

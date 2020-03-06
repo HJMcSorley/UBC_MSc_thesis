@@ -1,12 +1,12 @@
-﻿Site Name ,WEST LEECH
-Site Number ,5
-Logger ,Capacitive Water Level
-Logger Serial Number ,12038
-
-
+﻿Site Name ,WEST LEECH,,,
+Site Number ,5,,,
+Logger ,Capacitive Water Level,,,
+Logger Serial Number ,12038,,,
+,,,,
+,,,,
 Scan No ,Date and Time,       Capacitive Water Level,        ,
         ,        ,RAW VALUE ,CALIBRATED VALUE,
-
+,,,,
 1,20/09/2019 , 12:47:00,2173,12.74
 2,20/09/2019 , 12:57:00,2158,11.96
 3,20/09/2019 , 13:07:00,2152,11.65
@@ -21893,5 +21893,3 @@ Scan No ,Date and Time,       Capacitive Water Level,        ,
 21884,19/02/2020 , 11:57:00,2634,36.65
 21885,19/02/2020 , 12:07:00,2635,36.7
 21886,19/02/2020 , 12:17:00,2634,36.65
-21887,19/02/2020 , 12:27:00,2158,11.96
-21888,19/02/2020 , 12:37:00,2185,13.36

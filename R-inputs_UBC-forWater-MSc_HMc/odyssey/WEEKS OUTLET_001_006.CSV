@@ -1,12 +1,12 @@
-﻿Site Name ,WEEKS OUTLET
-Site Number ,1
-Logger ,Capacitive Water Level
-Logger Serial Number ,11719
-
-
+﻿Site Name ,WEEKS OUTLET,,,
+Site Number ,1,,,
+Logger ,Capacitive Water Level,,,
+Logger Serial Number ,11719,,,
+,,,,
+,,,,
 Scan No ,Date and Time,       Capacitive Water Level,        ,
         ,        ,RAW VALUE ,CALIBRATED VALUE,
-
+,,,,
 1,20/09/2019 , 10:23:00,1828,20.37
 2,20/09/2019 , 10:33:00,1830,20.47
 3,20/09/2019 , 10:43:00,1827,20.31
@@ -22048,4 +22048,3 @@ Scan No ,Date and Time,       Capacitive Water Level,        ,
 22039,20/02/2020 , 11:23:00,2192,39.35
 22040,20/02/2020 , 11:33:00,2192,39.35
 22041,20/02/2020 , 11:43:00,2192,39.35
-22042,20/02/2020 , 11:53:00,1506,3.57

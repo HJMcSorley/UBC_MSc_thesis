@@ -1,12 +1,12 @@
-﻿Site Name ,CHRIS CREEK
-Site Number ,3
-Logger ,Capacitive Water Level
-Logger Serial Number ,11967
-
-
+﻿Site Name ,CHRIS CREEK,,,
+Site Number ,3,,,
+Logger ,Capacitive Water Level,,,
+Logger Serial Number ,11967,,,
+,,,,
+,,,,
 Scan No ,Date and Time,       Capacitive Water Level,        ,
         ,        ,RAW VALUE ,CALIBRATED VALUE,
-
+,,,,
 1,20/09/2019 , 09:35:00,1666,12.96
 2,20/09/2019 , 09:45:00,1664,12.84
 3,20/09/2019 , 09:55:00,1664,12.84
@@ -22060,5 +22060,3 @@ Scan No ,Date and Time,       Capacitive Water Level,        ,
 22051,20/02/2020 , 12:35:00,1902,26.69
 22052,20/02/2020 , 12:45:00,1877,25.24
 22053,20/02/2020 , 12:55:00,1888,25.88
-22054,20/02/2020 , 13:05:00,1821,21.98
-22055,20/02/2020 , 13:15:00,1504,3.53
