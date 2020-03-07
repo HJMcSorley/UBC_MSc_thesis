@@ -794,10 +794,6 @@ wx_mean <- precip_data %>%
   select(-StationName) %>% 
   summarise_all(list(mean = mean))
 
-wx_mean %>% 
-  mutate(Date = as_date(DateTime)) %>% 
-  filter(interval(Date, ymd("2018-10-01"), ymd("2020-02-20"))) %>% 
-
 ```
 
 ### Plots Wx - move
@@ -850,6 +846,50 @@ cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
 
+
+# ----
+# mean weather
+mean_rainplot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(date) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "LWSA mean rain (mm/day)") +
+  theme_bw() +
+  theme(legend.position = "none")+
+  gghighlight::gghighlight(date >= "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838")) 
+
+# plot LWSA temperature
+mean_tempplot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(date) %>% 
+  dplyr::summarise(daily_Tmean = mean(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  ggplot(aes(x = date, y = daily_Tmean)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  scale_x_discrete(labels = NULL) +
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  gghighlight::gghighlight(date >= "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838")) 
+
+# LWSA Wx -- stack precip and temp with cowplot
+cowplot::plot_grid(mean_rainplot, mean_tempplot, ncol = 1, align = "v")
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-means_LWSA.png")
+
+
+# ----- data summary
+
 # precip_data summary
 precip_data %>%
   mutate(Year = lubridate::year(DateTime)) %>% 
@@ -885,7 +925,7 @@ malahat_rn <- malahat_data %>%
   labs(x = "", y = "rain (mm/day)") +
   theme_bw() +
   theme(legend.position = "none") +
-  gghighlight::gghighlight(Datetime > "2018-10-22",
+  gghighlight::gghighlight(Datetime > "2018-10-23",
                            unhighlighted_params = list(colour = "#3B3838"))
 
 # plot malahat temperature and highlight my study period
@@ -897,7 +937,7 @@ malahat_temp <- malahat_data %>%
              linetype = "dotted") +
   labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
   theme_bw() +
-  gghighlight::gghighlight(Datetime > "2018-10-22",
+  gghighlight::gghighlight(Datetime > "2018-10-23",
                            unhighlighted_params = list(colour = "#3B3838"))
   
 # stack with cowplot
@@ -996,8 +1036,7 @@ odyssey_data <- odyssey_data %>%
     Date %within% interval(trip_df$trip.end[10], trip_df$trip.end[11]) ~ trip_df$trip[11],
     Date %within% interval(trip_df$trip.end[11], trip_df$trip.end[12]) ~ trip_df$trip[12],
     Date %within% interval(trip_df$trip.end[12], trip_df$trip.end[13]) ~ trip_df$trip[13],
-    Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[14]) ~ trip_df$trip[14],
-    Date %within% interval(trip_df$trip.end[14], trip_df$trip.end[15]) ~ trip_df$trip[15],
+    Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[15]) ~ trip_df$trip[15],
     Date %within% interval(trip_df$trip.end[15], trip_df$trip.end[16]) ~ trip_df$trip[16],
     Date %within% interval(trip_df$trip.end[16], trip_df$trip.end[17]) ~ trip_df$trip[17],
     Date %within% interval(trip_df$trip.end[17], trip_df$trip.end[18]) ~ trip_df$trip[18],
@@ -1005,7 +1044,8 @@ odyssey_data <- odyssey_data %>%
     Date %within% interval(trip_df$trip.end[19], trip_df$trip.end[20]) ~ trip_df$trip[20],
     Date %within% interval(trip_df$trip.end[20], trip_df$trip.end[21]) ~ trip_df$trip[21],
     Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
-    Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23] ) )
+    Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23],
+    Date %within% interval(trip_df$trip.end[23], trip_df$trip.end[24]) ~ trip_df$trip[24]) )
 # note that interval (odyssey_data) is the same as (trip_df) trip number of analysis/collection 
 
 # check out the head tail and middle
@@ -1055,14 +1095,71 @@ corr_stage <- odyssey_data %>%
 ### plot stage (move)
 
 ```{r, stage-plots}
-
-corr_stage %>% 
+# plot 
+# stage at each of the subbasins
+stage_plot <- corr_stage %>% 
   ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line()+
+  geom_line(colour = "#0072B2")+
   theme_bw()+
-  facet_wrap(~source, ncol = 1, scales = "free_y")+
+  facet_wrap(~source, ncol = 1, 
+             scales = "free_y",
+             strip.position = "right")+
   labs(y = "river stage (cm)", x = "")+
-  scale_x_datetime(date_breaks = "2 months", date_labels = "%m-%Y")
+  scale_x_datetime(date_breaks = "1.5 months", date_labels = "%Y-%m",
+                   limits = ymd_hms(c("2018-10-24 00:00:00", "2020-01-31 00:00:00")))+
+  theme(axis.text.x = element_text(angle = 90))
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Stage-plot_subbasins.png")
+                     
+# plot 
+# LWSA temp for the same time span
+subasin_meantemp_plot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  group_by(date) %>% 
+  dplyr::summarise(daily_Tmean = mean(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24") %>% 
+  ggplot(aes(x = date, y = daily_Tmean)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        strip.text.x = element_blank(),
+        axis.text.x = element_text(angle = 90))
+
+# plot
+# mean LWSA rain for study period
+subbasin_meanrain_plot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Rain = factor("Rain")) %>% 
+  group_by(date, Rain) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24") %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(aes(colour = Rain), colour = "#56B4E9") +
+  scale_y_reverse() +
+  labs(x = "", y = "mm/day") +
+  theme_bw() +
+  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
+  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Rain, ncol = 1, 
+             strip.position = "right") +
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90))
+
+# LWSA Wx -- stack precip and stage with cowplot
+cowplot::plot_grid(subbasin_meanrain_plot, stage_plot, ncol = 1, 
+                   axis = "l", 
+                   align = "v",
+                   rel_heights = c(1,4))
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/subbasin_rain-stage_plots.png")
 
 ```
 
@@ -1137,6 +1234,11 @@ write_csv(corr_stage,
 # 2018-2020 weather station data compiled and formatted
 write_csv(precip_data, 
   path = "R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", na = "NA")
+  
+# wx_mean df
+# 2018-2020 weather station data averages from FWx stations Chris Creek and Martins Gulch
+write_csv(wx_mean, 
+  path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 
 ```
 
