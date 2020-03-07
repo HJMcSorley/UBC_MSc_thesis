@@ -775,25 +775,16 @@ The Leech river watershed hydroclimatic regime is pluvial, therefore precipitati
 ```{r, Wx-precip}
 
 # bring in WxStn data 
-# Note: Chris Crk date-time was messing with the parse.
-# treat crhis crk separately, then join
+# Note: each file has a different DateTime format (be sure to lubridate)
 
-# object of directory and files
-Wx_files <- paste0("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", 
-                  list.files(path = "R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", pattern = "*.CSV"))
-# alphabetical: 1 = chris, 2 = martinsgulch, 3 = surveymnt
-
-# read the date, fix chris crk datetimes and join
-precip_data <- rbind(
-  read_csv(Wx_files[1], col_names = TRUE,
-           col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>%
-  mutate(StationName = forcats::as_factor(StationName),
-         DateTime = lubridate::parse_date_time(DateTime, "%d/%m/%Y %H:%M", exact = TRUE)),
-  read_csv(Wx_files[2], col_names = TRUE,
-           col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")),
-  read_csv(Wx_files[3], col_names = TRUE,
-           col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 
-  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
+# read it in
+precip_data <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", pattern = "*.CSV") %>% 
+  #set_names(str_extract(., "([A-ZA-Z]{4,}+)")) %>%
+  purrr::map_dfr(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", .), 
+                            col_names = TRUE,
+                            col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 
+  mutate(DateTime = lubridate::parse_date_time(DateTime, c("dmY HM", "Ymd HM", "Ymd HMS", "Ymd HMS Op!*")))
 
 
 # create a summary datafame with mean weather data between Chris creek and Martin's Gulch
@@ -803,7 +794,9 @@ wx_mean <- precip_data %>%
   select(-StationName) %>% 
   summarise_all(list(mean = mean))
 
-
+wx_mean %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  filter(interval(Date, ymd("2018-10-01"), ymd("2020-02-20"))) %>% 
 
 ```
 
