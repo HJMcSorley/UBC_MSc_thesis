@@ -1308,54 +1308,75 @@ path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
 call vector of events for trip_df
 
-```
-{r match OC and stage}
+```{r match OC and stage}
 # -------------------------------------------------------------- YOU ARE HERE
+# first, filter and rename subbasin sites  to match odyssey data
+subbasins <- sampleresults %>% filter(site == "Weeks-out" |
+                                        site == "Leech-head" |
+                                        site == "Chris-crk" |
+                                        site == "Cragg-crk" |
+                                        site == "West-Leech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site),
+         # remove dashes from sub-basin names (match Odyssey names)
+         site = forcats::fct_recode(site, 
+                                    Weeks = "Weeks-out",
+                                    ChrisCrk = "Chris-crk",
+                                    LeechHead = "Leech-head",
+                                    CraggCrk = "Cragg-crk", 
+                                    WestLeech = "West-Leech"),
+         site = factor(site, levels = # order from head to mouth
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
 
-# first, rename sites in sample df so they match odyssey data
-# filter for sub-basin sites
-subbasins <- sampleresults %>% 
-filter(site == "Weeks" |
-site == "ChrisCrk" |
-site == "LeechHead" |
-site == "CraggCrk" |
-site == "WestLeech" |
-site == "Tunnel") %>% 
-mutate(site = factor(site, levels = 
-c("Weeks","ChrisCrk","LeechHead","CraggCrk","WestLeech","Tunnel")))
 
 # previously (janky) I subset the stage df for each site
 # try group_by instead
 # use the df with corrected stage
 stg_df <- corr_stage %>% # input with DateTimes
-group_by(source, forcats::fct_explicit_na(interval))
+  group_by(source, forcats::fct_explicit_na(interval))
 
 samp_df <- subbasins %>% # input that is missing Rack DateTimes
-filter(sample_type == "Rack", analysis == "DOC") %>% 
-group_by(site, trip)
+  filter(sample_type == "Rack", analysis == "DOC",
+         (as.integer(trip) != 0)) %>% 
+  mutate(trip = factor(trip, levels = 1:23)) %>% 
+  group_by(site, trip)
+# note that interval (stg_df) is the same as trip (samp_df)
 
-
-# this is the stage date you're targeting (by site)
+#set up inputs for loop
+## this is the stage date you're targeting (by site)
 stg <- stg_df$corr_stage_cm
-# this is the time series you're targeting
+## this is the time series you're targeting
 t.series <- stg_df$DateTime  
-# this is the stage you need a date-time for
+## this is the stage you need a date-time for
 level <- samp_df$fillStage_cm  
 
 # assign empty vectors to hold the outputs from the loop
-occur_fill <- vector(length = length(samp_df$sample))
+occur_fill <- vector(length = nrow(samp_df))
 stg_fill   <- vector(length = length(samp_df$sample))
 time_fill  <- vector(length = length(samp_df$sample))
 
-ifelse(stg_df$interval == samp_df$trip,
-(for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]  }) ,
-"NAN")
+# ---
+for (i in seq_along(samp_df$sample)) {
+  occur_fill[i] <- purrr::detect_index(stg, ~ .x >= level[i], .dir = "forward")
+  stg_fill[i] <- stg[occur_fill[i]]
+} 
 
+# ---
+
+# --- attempting to base this on when interval matches and site is the same
+ifelse(stg_df$interval == samp_df$trip,
+       (for (i in seq_along(samp_df$sample)) {
+         occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+         stg_fill[i] <- stg[occur_fill[i]]  }) ,
+       "NAN")
+# --- 
+
+# ---  try it with case_when()
+
+# ---
 
 matcheddf <- samp_df %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 
 # ------------------------------------------------------------------------------
 # you should be able to get the above to work
@@ -1364,10 +1385,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "1") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "1") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1386,13 +1407,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev1_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 
 
@@ -1400,10 +1421,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "2") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "2") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1422,13 +1443,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev2_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 
 
@@ -1436,10 +1457,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "3") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "3") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1458,13 +1479,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev3_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 
 
@@ -1472,10 +1493,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "4") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "4") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1494,13 +1515,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev4_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 
 
@@ -1509,10 +1530,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "5") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "5") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1531,13 +1552,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev5_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 ## Event five - freezing event. L1 was recorded as being set at 91 cm but the stage was not recorded as getting that high...
 
@@ -1546,10 +1567,10 @@ mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur
 # --- INPUTS --- #
 # create subset working dataframes 
 stg_df <- filter(stage.event_df, site == site_names[1] & event == "6") %>% 
-select(event, site, DateTime, Stage_cm)
+  select(event, site, DateTime, Stage_cm)
 
 samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "6") %>% 
-select(event, site, sample, Fill.Stage_cm, analysis, Result)
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
 
 # --- OUTPUTS --- #
 # defined based on your INPUT values (no need to alter)
@@ -1567,13 +1588,13 @@ stg_fill   <- vector(length = l)
 time_fill  <- vector(length = l)
 
 for (i in seq_along(samp_df$sample)) {
-occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
-stg_fill[i] <- stg[occur_fill[i]]
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
 } 
 
 wks_ev6_df <- samp_df %>% 
-select(event, site, Fill.Stage_cm, analysis, Result) %>% 
-mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 # --- #
 
 ## -- This could be improved - possibly with a case_when() or a loop or apply?? --- #
@@ -1589,9 +1610,9 @@ wks_matched <- rbind(wks_ev1_df,wks_ev2_df, wks_ev3_df, wks_ev4_df, wks_ev5_df, 
 # find the start of each visit
 # use these to add vertical lines to stage plots (for your guidance)
 visits <- stage.event_df %>%
-group_by(event) %>% 
-summarise(date = first(DateTime)) %>% 
-ungroup()
+  group_by(event) %>% 
+  summarise(date = first(DateTime)) %>% 
+  ungroup()
 visits <- visits[,2]
 visits <- visits[[1]]
 last_visit <- (last(stage.event_df$DateTime)) 
@@ -1612,25 +1633,25 @@ stg_DOCplot <- plot_wks_stg
 
 # grab data (site name)
 grabDOC <- grabs_df %>% 
-filter(analysis == "DOC" & Site == site_names[1]) %>% 
-select(Site, sample, filling.stage.cm, Grab_DateTime, Result)
+  filter(analysis == "DOC" & Site == site_names[1]) %>% 
+  select(Site, sample, filling.stage.cm, Grab_DateTime, Result)
 # --- --- --- --- #
 
 # --- get fancy --- #
 
 site.visit.plot <- 
-stg_DOCplot +
-#geom_vline(xintercept = visits[1:6], linetype = "solid", colour = visit_col, size = 0.7) + 
-#geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
-geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
-geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
+  stg_DOCplot +
+  #geom_vline(xintercept = visits[1:6], linetype = "solid", colour = visit_col, size = 0.7) + 
+  #geom_vline(xintercept = last_visit, linetype = "solid", colour = visit_col, size = 0.7) +
+  geom_point(data = grabDOC, aes(x = Grab_DateTime, y = filling.stage.cm, size = 4), colour = grab_col, show.legend = FALSE) +
+  geom_point(data = rackDOC, aes(x = sample_time, y = sample_stage, size = 4), colour = point_col, show.legend = FALSE) 
 site.visit.plot 
 
 
 # save as a picture
 ggsave(paste("sample-hydrgr_", Site.Name, ".png"), plot = site.visit.plot, 
-path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
-width = 7.29, height = 4.5, units = "in")
+       path = "C:/Users/Hannah/Documents/UBC_MSc/Analyses+Laboratory+Tracking_forWater-MSc_HMc/Data_WORKUP_forWater-MSc_HMc/R-outputs/",
+       width = 7.29, height = 4.5, units = "in")
 
 # --- fancy --- #
 
