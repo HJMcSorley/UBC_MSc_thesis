@@ -1308,6 +1308,77 @@ path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
 call vector of events for trip_df
 
+```{r new stage match}
+# first, create subset dataframes for each subbsain
+stg_1 <- corr_stage %>% filter(source == "Weeks") 
+samp_1 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "Weeks")
+
+stg_2 <- corr_stage %>% filter(source == "ChrisCrk") 
+samp_2 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "ChrisCrk")
+
+stg_3 <- corr_stage %>% filter(source == "LeechHead") 
+samp_3 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "LeechHead")
+
+stg_4 <- corr_stage %>% filter(source == "CraggCrk") 
+samp_4 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "CraggCrk")
+
+stg_5 <- corr_stage %>% filter(source == "WestLeech") 
+samp_5 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "WestLeech")
+
+stg_6 <- corr_stage %>% filter(source == "Tunnel") 
+samp_6 <- sampleresults %>% filter(sample_type == "Rack", analysis == "DOC", site == "Tunnel")
+
+# try
+stg_df %>% mutate(
+  occur_fill = case_when(
+    (stg_df$source == samp_df$site & stg_df$interval == samp_df$trip) ~ detect_index(stg, ~.x >= level, .dir = "forward")),
+  stg_fill = stg[occur_fill]
+)
+
+# try
+for (i in seq_along(1:23)) { # trip or interval number
+  for (s in seq_along(unique(samp_1$sample))) { #rack samples
+    occur_fill[s] <- case_when(stg_1$) 
+      detect_index(stg, ~ .x >= level[[s]], .right = FALSE)
+  }
+}
+
+for (t in seq_along(1:23)) { # trip or interval number
+for (i in seq_along(samp_df$sample)) {
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
+} 
+
+
+# --- old
+# --- OUTPUTS --- #
+# defined based on your INPUT values (no need to alter)
+
+# this is the stage date you're targeting (by site)
+stg <- stg_df$Stage_cm
+# this is the time series you're targeting
+t.series <- stg_df$DateTime  
+# this is the stage you need a date-time for
+level <- samp_df$Fill.Stage_cm 
+
+# assign empty vectors to hold the outputs from the loop
+l <- length(samp_df$sample)
+occur_fill <- vector(length = l)
+stg_fill   <- vector(length = l)
+time_fill  <- vector(length = l)
+
+for (i in seq_along(samp_df$sample)) {
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
+} 
+
+tunnel_ev4_df <- samp_df %>% 
+  select(event, site, Fill.Stage_cm, analysis, Result) %>% 
+  mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
+# --- #
+```
+
+
 ```{r match OC and stage}
 # -------------------------------------------------------------- YOU ARE HERE
 # first, filter and rename subbasin sites  to match odyssey data
@@ -1356,6 +1427,13 @@ stg_fill   <- vector(length = length(samp_df$sample))
 time_fill  <- vector(length = length(samp_df$sample))
 
 # ---
+# try it with dplyr no loop
+stg_df <- corr_stage %>% # input with DateTimes
+  group_by(source, forcats::fct_explicit_na(interval)) %>% 
+  purrr::detect_index(stg, ~ .x >= level[i], .dir = "forward")
+
+# ---
+
 for (i in seq_along(samp_df$sample)) {
   occur_fill[i] <- purrr::detect_index(stg, ~ .x >= level[i], .dir = "forward")
   stg_fill[i] <- stg[occur_fill[i]]
@@ -1378,8 +1456,51 @@ ifelse(stg_df$interval == samp_df$trip,
 matcheddf <- samp_df %>% 
   mutate(index = occur_fill, sample_stage = stg_fill, sample_time = t.series[occur_fill])
 
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------ you're here
+
+
+samp_df %>% mutate(interval = for (s in seq_along(unique(stg_df$source))) {
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  
+}
+                     case_when())
+
+
+for(i in seq_along(1:23))
+stg_df <- filter(stage.event_df, site == site_names[1] & event == "1") %>% 
+  select(event, site, DateTime, Stage_cm)
+
+samp_df <- filter(racks_df, analysis == "DOC" & site == site_names[1] & event == "1") %>% 
+  select(event, site, sample, Fill.Stage_cm, analysis, Result)
+
+
+
 # you should be able to get the above to work
+# --- wks 1
+# --- INPUTS --- #
+# create subset working dataframes 
+# --- OUTPUTS --- #
+# defined based on your INPUT values (no need to alter)
+
+# this is the stage date you're targeting (by site)
+stg <- stg_df$Stage_cm
+# this is the time series you're targeting
+t.series <- stg_df$DateTime  
+# this is the stage you need a date-time for
+level <- samp_df$Fill.Stage_cm 
+
+# assign empty vectors to hold the outputs from the loop
+l <- length(samp_df$sample)
+occur_fill <- vector(length = l)
+stg_fill   <- vector(length = l)
+time_fill  <- vector(length = l)
+
+for (i in seq_along(samp_df$sample)) {
+  occur_fill[i] <- detect_index(stg, ~ .x >= level[i], .right = FALSE)
+  stg_fill[i] <- stg[occur_fill[i]]
+} 
+# --- 
+
 
 # --- wks 1
 # --- INPUTS --- #
