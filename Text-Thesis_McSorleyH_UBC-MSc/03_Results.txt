@@ -35,6 +35,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv",
 
 
 ## Hydrologic Response
+
+![__Figure__Weather and river rise at the six sub-basin sites_](R-outputs_UBC-forWater-MSc_HMc/figures/DOC-Metals_subbasin_scatterplots.png)
+<br>
+
 ### flow ranking
 * flow ranking based on one synoptic streamflow gauging campaign (likely to match stream-order?)
 ### stage not Q
@@ -61,6 +65,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_summary-table.csv",
                caption = "Summary of DOC concentrations at the sub-basin sites")
 ```
 
+##### Grab vs. Rack
+![__Figure__Concentrations of DOC and total metals_](R-outputs_UBC-forWater-MSc_HMc/figures/DOC-Metals_subbasin_scatterplots.png)
+<br>
+
 ```{r subbasin_GvsR_DOC-table}
 # read and format table of Grab vs Rack samples from subbasin sites
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_RvsG_summary-table.csv", col_names = TRUE) %>% 
@@ -69,7 +77,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_RvsG_summary-table.
                caption = "Summary of DOC concentrations by sample type at the sub-basin sites")
 ```
 
-```{r subbasin_GvsR_DOC-table}
+```{r synoptic-grabs_DOC-table}
 # read and format table of DOC concs from synoptic sampling -- 15 sites
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_conc-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(NA,  0, 1, 1, 1, 1,  1), 
@@ -83,7 +91,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_conc-summary.cs
 ### Rising limb trends (supply/hydro controls)
 * was the trend for conc on RL consistent at each site across the study period or did it change from early in the wet season to later?
 * did each of the six subbasin sites have similar RL trends?  
+
 ### DOC and metals concentrations
+
+![__Figure__Concentrations of DOC and total metals_](R-outputs_UBC-forWater-MSc_HMc/figures/DOC-Metals_subbasin_scatterplots.png)
+<br>
+
+DOC concentrationshad strong positive relationships with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC999999999999REF].
 
 ## DOM character (& seasonality)
 ### SUVA (aromaticity)
