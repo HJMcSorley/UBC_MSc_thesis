@@ -345,112 +345,15 @@ synopticfilter %>%
 
 ```
 
-
-## DOC and metals in solution
-
-Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was analyzed for DOC. There was a suite of metals included in the analyses, many of which were below detection limits; Figure XXXXX shows DOC concentrations from samples which had detectable concentrations of eight metal species.   
-
-
-```{r, metals-NPOC, echo = FALSE}
-# filter out the parameters with insufficient data
-# plot DOC agains metals concentrations 
-metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
-                       metal_parameters == "Total Barium (Ba)"|
-                       metal_parameters == "Total Copper (Cu)"|
-                       metal_parameters == "Total Iron (Fe)"|
-                       metal_parameters == "Total Mercury (Hg)"|
-                       metal_parameters == "Total Manganese (Mn)"
-                       #metal_parameters == "Total Magnesium (Mg)"|
-                       #metal_parameters == "Total Silicon (Si)"
-                       ) %>%
-   mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
-                       levels = c("Total Mercury (Hg)",
-                                  "Total Aluminum (Al)",
-                                  "Total Iron (Fe)",
-                                  "Total Copper (Cu)",
-                                  "Total Barium (Ba)",
-                                  "Total Manganese (Mn)"
-                                  #"Total Silicon (Si)",
-                                  #"Total Magnesium (Mg)"
-                                  ))) %>% 
-  ggplot(aes(x = NPOC_ppm, 
-             y = metals_values)) +
-  geom_jitter(aes(shape = site)) +
-  facet_wrap(~metal_parameters,
-             scales = "free",
-             ncol = 2) +
-  theme_bw() +
-  theme(legend.position ="right") +
-  labs(y = "ug/L", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x) 
-## to get equations include these lines:
-# +
-#  stat_poly_eq(formula = y ~ x, 
-#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-#                parse = TRUE, rr.digits = 4)
-## to check  
-# + geom_hline(aes(yintercept = MAC), na.rm = TRUE)
-```
-
-DOC concentration had a strong positive relationship with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC999999999999REF].  
-
-```{r, metals-CDOM-dontinclude}
-
-# limited metals with DOC_eq
-# filter out the parameters with insufficient data
-# plot DOC agains metals concentrations
-metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
-                       metal_parameters == "Total Barium (Ba)"|
-                       metal_parameters == "Total Copper (Cu)"|
-                       metal_parameters == "Total Iron (Fe)"|
-                       #metal_parameters == "Total Mercury (Hg)"| # insufficient
-                       metal_parameters == "Total Magnesium (Mg)"|
-                       metal_parameters == "Total Manganese (Mn)"
-                       #metal_parameters == "Total Silicon (Si)"
-                       ) %>% 
-  ggplot(aes(x = DOCeq_ppm, 
-             y = metals_values)) +
-  geom_jitter(aes(shape = site)) +
-  facet_wrap(~metal_parameters,
-             scales = "free",
-             ncol = 2) +
-  stat_smooth(method=lm) +
-  theme_bw() +
-  theme(legend.position ="right") +
-  labs(y = "ug/L", x = "CDOM (mg/L eq.)")
-
-```
-
+## Subbasins 
 
 At the six sub-basin monitoring sites, vertical racks were installed to collect samples as the rivers rose in response to precipitation events.
 
-
-```{r, DOC-summarytable, echo = FALSE}
-# site DOC
-# groupled mean DOC
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>% 
-  group_by(site) %>% 
-  summarise(meanDOC = mean(NPOC_ppm),
-            stdevDOC = sd(NPOC_ppm))
-
-# ungrouped mean
-sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>% 
-  summarise(meanDOC = mean(NPOC_ppm),
-            stdevDOC = sd(NPOC_ppm))
-
-# try SUVA plot
-
-
-``` 
- 
- 
 These vertical racks collected samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. As the vertical racks require a hydrologic response to collect samples, they are only applicable during the wet season. Comparing wet season Grab samples to those collected on Racks confirms that the rack samplers were able to capture more samples, and many during periods with higher DOC concentrations (Fig.2).  
 
-```{r, DOC-space-time-boxplot, fig.width=8, fig.height=6, echo = FALSE}
+##### DOC boxplot (G/R)
+
+```{r, DOC-space-time-boxplot}
 # Boxplot with jitter scatter 
 # site vs DOC
 # facet wrap by sample type
@@ -466,24 +369,20 @@ sixfilter %>%
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
   facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
-  labs(caption = "Fig.2 West season DOC concentration by sample type:\n Grab samples (n = 112) and rising limb Rack samples (n = 166)", x = "", y = "DOC (mg/L)")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig2_DOC_boxplot-Grab-vs-Rack.png") 
+  labs(caption = (glue::glue("DOC concentration by sample type and site during wet season \n
+       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")), 
+       x = "", y = "DOC (mg/L)")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-subbasin_GvsR_boxplot.png") 
+
 
 ```
 
-```{r, sixfilter-lm-risinglimb}
-sixfilter %>% 
-  filter(sample_type == "Rack") %>% 
-  group_by(site)
-  
-```
-
+##### DOC ridgeplot (G/R)
 
 ```{r, sample_type-ridgeplots, include=FALSE, echo = FALSE}
 
 # density ridge 
 # wrap by sample_type
-
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
@@ -493,9 +392,11 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
-       caption = "Density distribution plots of DOC concentration at six sites based on sampling method (Grab: n = 153, Rack: n = 171)") +
+       caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n
+       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")) +
   theme(legend.position = "none") 
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_ridgeplot_GvsR.png")
+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 
 ```
@@ -538,6 +439,93 @@ sixfilter %>%
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig4_DOC_facet-scatter-sampletype.png") 
 
 ```
+
+
+### DOC and metals in solution
+
+Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was analyzed for DOC. There was a suite of metals included in the analyses, many of which were below detection limits; Figure XXXXX shows DOC concentrations from samples which had detectable concentrations of eight metal species.   
+
+
+```{r, metals-NPOC, echo = FALSE}
+# filter out the parameters with insufficient data
+# plot DOC against metals concentrations 
+metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
+                       metal_parameters == "Total Barium (Ba)"|
+                       metal_parameters == "Total Copper (Cu)"|
+                       metal_parameters == "Total Iron (Fe)"|
+                       metal_parameters == "Total Mercury (Hg)"|
+                       metal_parameters == "Total Manganese (Mn)"
+                       #metal_parameters == "Total Magnesium (Mg)"|
+                       #metal_parameters == "Total Silicon (Si)"
+                       ) %>%
+   mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
+                       levels = c("Total Mercury (Hg)",
+                                  "Total Aluminum (Al)",
+                                  "Total Iron (Fe)",
+                                  "Total Copper (Cu)",
+                                  "Total Barium (Ba)",
+                                  "Total Manganese (Mn)"
+                                  #"Total Silicon (Si)",
+                                  #"Total Magnesium (Mg)"
+                                  ))) %>% 
+  ggplot(aes(x = NPOC_ppm, 
+             y = metals_values)) +
+  geom_jitter(aes(shape = site)) +
+  facet_wrap(~metal_parameters,
+             scales = "free",
+             ncol = 2) +
+  theme_bw() +
+  theme(legend.position ="right") +
+  labs(y = "ug/L", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x) +
+## to get equations include these lines:
+  stat_poly_eq(formula = y ~ x, 
+                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+                parse = TRUE, rr.digits = 4) #+
+## to check  
+ #geom_hline(aes(yintercept = MAC), na.rm = TRUE)
+
+# save
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/figures/", filename = "DOC-Metals_subbasin_scatterplots.png")
+
+# make a summary table of Metals regression
+tibble::tibble(Metal = c("Total Mercury (Hg)", "Total Aluminum (Al)", "Total Iron (Fe)", "Total Copper (Cu)", "Total Barium (Ba)", "Total Manganese (Mn)"),
+               Eqn = c("0.000437x -0.000123", "20.1x -1.21", "30.9x -74.5",
+                       "0.0558x +0.403", "0.225x +2.28", "4.38x -21.4"),
+               n = c("3", "37", "40", "34", 
+                     "35", "15"),
+               R2 = c("0.999", "0.397", "0.693", "0.176", "0.225", "0.594"))
+```
+
+DOC concentration had a strong positive relationship with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC999999999999REF].  
+
+```{r, metals-CDOM-dontinclude}
+
+# limited metals with DOC_eq
+# filter out the parameters with insufficient data
+# plot DOC agains metals concentrations
+metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
+                       metal_parameters == "Total Barium (Ba)"|
+                       metal_parameters == "Total Copper (Cu)"|
+                       metal_parameters == "Total Iron (Fe)"|
+                       #metal_parameters == "Total Mercury (Hg)"| # insufficient
+                       metal_parameters == "Total Magnesium (Mg)"|
+                       metal_parameters == "Total Manganese (Mn)"
+                       #metal_parameters == "Total Silicon (Si)"
+                       ) %>% 
+  ggplot(aes(x = DOCeq_ppm, 
+             y = metals_values)) +
+  geom_jitter(aes(shape = site)) +
+  facet_wrap(~metal_parameters,
+             scales = "free",
+             ncol = 2) +
+  stat_smooth(method=lm) +
+  theme_bw() +
+  theme(legend.position ="right") +
+  labs(y = "ug/L", x = "CDOM (mg/L eq.)")
+
+```
+
 
 
 ## Seasonal examination of DOC & DOM dynamics 

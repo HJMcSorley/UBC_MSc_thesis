@@ -1094,7 +1094,7 @@ corr_stage <- odyssey_data %>%
 
 ### plot stage (move)
 
-```{r, stage-plots}
+```{r, Wx-stage-plots}
 # plot 
 # stage at each of the subbasins
 stage_plot <- corr_stage %>% 
@@ -1107,9 +1107,10 @@ stage_plot <- corr_stage %>%
   labs(y = "River Stage (cm)", x = "")+
   scale_x_datetime(date_breaks = "1.5 months", date_labels = "%Y-%m",
                    limits = ymd_hms(c("2018-10-24 00:00:00", "2020-01-31 00:00:00")))+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Stage-plot_subbasins.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Stage-plot_subbasins.png")
 
 # plot
 # mean LWSA rain for study period
@@ -1131,7 +1132,10 @@ subbasin_meanrain_plot <- wx_mean %>%
              strip.position = "right") +
   theme(legend.position = "none",
         strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90))
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_rain-plot_subbasins.png")
 
 # plot 
 # LWSA temp for the same time span
@@ -1154,16 +1158,46 @@ subasin_meantemp_plot <- wx_mean %>%
              strip.position = "right") +
   theme(legend.position = "none",
         strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90))
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_temp-plot_subbasins.png")
+
+# plot 
+# LWSA snow for the same time span
+subasin_snow_plot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Snow = factor("Snow")) %>% 
+  group_by(date, Snow) %>% 
+  dplyr::summarise(daily_meansnow = mean(SnowDep_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24") %>% 
+  ggplot(aes(x = date, y = daily_meansnow)) +
+  geom_col(aes(colour = Snow), colour = "grey40") +
+  labs(x = "", y = "m /day") +
+  theme_bw() +
+  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
+  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Snow, ncol = 1, 
+             strip.position = "right") +
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_snow-plot_subbasins.png")
 
 # LWSA Wx -- stack precip and stage with cowplot
-cowplot::plot_grid(subasin_meantemp_plot, subbasin_meanrain_plot, stage_plot, 
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_plot, 
                    ncol = 1, 
                    axis = "l", 
                    align = "v",
-                   rel_heights = c(1,1,5))
+                   rel_heights = c(2,2,2,10))
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/subbasin_rain-stage_plots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
+       width = 8.5,
+       height = 11,
+       units = "in")
 
 ```
 
