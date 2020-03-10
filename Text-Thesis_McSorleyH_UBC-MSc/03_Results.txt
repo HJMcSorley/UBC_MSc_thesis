@@ -24,14 +24,15 @@
 
 # Data and Results
 
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of hydrologic response and dissolved organic matter (DOM) dynamics across a second growth forested watershed. From November 2018 to February 2020, four hundred and fifty-seven water samples (Table YYY ) were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, four hundred and fifty-seven water samples (Table YYY ) were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
+
+This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during hydrologic surges in response to rainfall, samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.   
 
 ```{r read-sample-count-table}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv", col_names = TRUE) %>% 
   knitr::kable(caption = "Table YYY")
 ```
 
-This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples of stormflow on the rising limb of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during hydrologic surges in response to rainfall, samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.   
 
 ## Hydrologic Response
 ### flow ranking
@@ -51,6 +52,34 @@ This research was tackled in two key ways: (1) six sub-basin sites were equipped
 * higher concentrations in lower order streams
 * decreasing concentrations over the wet season
 * what was the variability within low-order streams versus higher-order streams? was there greater variability within each site than between them?
+
+```{r subbasin-DOC-table}
+# read and format table of DOC conc summary of subbain sites (looks good with boxplot)
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_summary-table.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(NA, 1, 1, 0), 
+               col.names = c("site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
+               caption = "Summary of DOC concentrations at the sub-basin sites")
+```
+
+```{r subbasin_GvsR_DOC-table}
+# read and format table of Grab vs Rack samples from subbasin sites
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_RvsG_summary-table.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(NA, NA, 1, 1, 0), 
+               col.names = c("site", "sample type", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
+               caption = "Summary of DOC concentrations by sample type at the sub-basin sites")
+```
+
+```{r subbasin_GvsR_DOC-table}
+# read and format table of DOC concs from synoptic sampling -- 15 sites
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_conc-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(NA,  0, 1, 1, 1, 1,  1), 
+               col.names = c("site", "sample count", "mean DOC (mg/L)", "std.dev. (± mg/L)", 
+			   "min DOC (mg/L)",
+			   "median DOC (mg/L)",
+			   "max DOC (mg/L)"),
+               caption = "Summary of synoptic grab sample DOC concentrations")
+```
+
 ### Rising limb trends (supply/hydro controls)
 * was the trend for conc on RL consistent at each site across the study period or did it change from early in the wet season to later?
 * did each of the six subbasin sites have similar RL trends?  

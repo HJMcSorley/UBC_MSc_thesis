@@ -405,7 +405,7 @@ SCAN_results <- SCAN_results %>%
 
 ```
 
-### Full scan spectrophotometry (spectral fingerprints)
+### Full scan spectrophotometry (SCAN_results, spectral fingerprints)
 
 The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight.
 
@@ -622,8 +622,8 @@ spectral_summary <- spectral_results %>%
 
 # --- WIDE SUMMARY DF --- # 
 sampleresults <- full_join(TOCV_results, SCAN_results, 
-                           by = c("trip", "site", "sample_type", "sample")) %>% 
-  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample")) %>% 
+                           by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
   mutate(trip = as_factor(trip),
          site = as_factor(site),
          sample_type = as_factor(sample_type),

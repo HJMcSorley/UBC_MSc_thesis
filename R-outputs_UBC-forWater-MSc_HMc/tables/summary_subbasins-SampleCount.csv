@@ -1,0 +1,13 @@
+site,sample_type,number_of_samples
+Weeks,Grab,26
+Weeks,Rack,32
+ChrisCrk,Grab,22
+ChrisCrk,Rack,27
+LeechHead,Grab,22
+LeechHead,Rack,30
+CraggCrk,Grab,35
+CraggCrk,Rack,35
+WestLeech,Grab,24
+WestLeech,Rack,43
+Tunnel,Grab,42
+Tunnel,Rack,34

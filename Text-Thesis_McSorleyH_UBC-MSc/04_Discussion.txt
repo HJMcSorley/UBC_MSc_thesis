@@ -15,4 +15,6 @@ if Weeks and Chris were out of synch, was the head in synch with Cragg and Tunne
 
 ## look up other spectral indicies
 
-## 
+Tobi:
+	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained 
+

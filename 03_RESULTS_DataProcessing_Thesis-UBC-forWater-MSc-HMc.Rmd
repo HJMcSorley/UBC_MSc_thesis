@@ -4,7 +4,10 @@ subtitle: "Pacific Maritime forWater Masters Project (NSERC forWater)"
 author: "Hannah J McSorley"
 output: bookdown::word_document2
 ---
-# Data & Results
+
+# Data Visualization and Summaries
+
+## Set-up
 
 ```{r, processing-setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
@@ -43,7 +46,8 @@ cbPalette <- c(grey = "#999999",
                pink = "#CC79A7")
 ```
 
-```{r input-files}
+## load datasets
+```{r, input-files, message=FALSE}
 # assign timezone
 TZ <- "Etc/GMT+8"
 
@@ -87,7 +91,14 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.
                         col_names = TRUE,
                         col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
   mutate(StationName = factor(StationName),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))             
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
+
+# LWSA mean precip data (FWx-mean-LWSA df)
+# 2018-2020 weather station data compiled and formatted
+LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", 
+                        col_names = TRUE,
+                        col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
+  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
 
 
 # metalslab df
@@ -105,7 +116,7 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_resu
   
 ```
 
-## Sample Counts and data table summaries
+## Subset, sample counts
 ```{r, subsetting-campaign}
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -159,7 +170,10 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
 # -------------------
+```
 
+#### Table: sample summary
+```{r, summary table}
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
@@ -169,7 +183,7 @@ n_subbbasinSamples <- sixfilter %>%
   ungroup()
 # save to outputs
 write_csv(n_subbbasinSamples, 
-          path = "R-outputs_UBC-forWater-MSc_HMc/sampleCount_subbasins.csv", na = "NA") 
+          path = "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
 
 # how many of each type total?
 # save values as objects to implant in text
@@ -197,7 +211,7 @@ n_totalSamples <- sampleresults %>%
   pull(sample_count)
 
 
-# ------
+
 # 15 synoptic sites (including the install sites)
 synopticfilter %>% 
   dplyr::filter(analysis == "DOC", 
@@ -206,10 +220,9 @@ synopticfilter %>%
   summarise(grab_sample_count = n()) %>% 
   ungroup() 
 
-```
 
-### sample counts table
-```{r, write-sample-count-table}
+# ----------------------------------
+# make a summary table:
 tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
   "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
@@ -218,7 +231,7 @@ tibble::tibble(
   "total" = n_totalSamples) %>% 
   pivot_longer(everything(),
                names_to = "sample category", values_to = "count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/sampleCount_allSamples.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
 
 ```
 
@@ -241,27 +254,37 @@ sixfilter %>%
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none") +
-  labs(caption = "Fig.1 DOC concentration across six sites over 16 months (372 samples)", 
+  labs(caption = 
+         glue::glue("DOC concentrations across six sub-basin sites over 16 months (", {n_installGrabSamples+n_installRackSamples}, " samples)"), 
        x = "", y = "DOC (mg/L)")
+# save
+ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/figures/", filename = "DOC_subbasin_boxplots.png")
 
-ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig1_DOC_boxplot-alltogether.png")
-
-# summary table
+# DOC summary table, Grabs and Racks combined
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm),
-            DOC_sd = sd(NPOC_ppm),
+  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
-  knitr::kable(digits = c(NA, 1, 1, 0), 
-               col.names = c("site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
-               caption = "Table 1: summary of DOC concentrations at the six main sites")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_summary-table.csv", col_names = TRUE)
 
+# DOC summary table -- Grab vs Rack
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, sample_type) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100) %>% 
+  ungroup() %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_RvsG_summary-table.csv", col_names = TRUE)
+  
 ```
 
-### Rack DOC (by level)
+### WIP- Rack DOC (by level)
 ```{r, rackDOC}
 
 sixfilter %>% 
@@ -276,20 +299,50 @@ sixfilter %>%
   
 ```
 
-###
-```{r, conc-table}
- %>% 
-  filter(analysis == "DOC") %>% 
+### DOC conc table (synoptic)
+```{r, Grab-synoptic-table}
+
+# synoptic grab samples DOC concs
+# by site
+synopticfilter %>%
+  mutate(site = forcats::fct_recode(site, 
+                                    LeechBeach = "Leech-downstreamconf",
+                                    DeceptionGulch = "Deception-crk",
+                                    JudgeCrk = "Judge-crk",
+                                    WestJordan = "West-Jordan",
+                                    DeceptionReservoir = "Deception-res")) %>% # new name = "old name"
+  filter(sample_type == "Grab") %>% 
   group_by(site) %>% 
   summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm), 
-            DOCsd = sd(NPOC_ppm), 
-            DOCmedian = median(NPOC_ppm), 
-            DOCmin = min(NPOC_ppm), 
-            DOCmax = max(NPOC_ppm))
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_site-conc-summary.csv", col_names = T)
 
+# all together
+synopticfilter %>%
+  filter(sample_type == "Grab") %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_all-conc-summary.csv", col_names = T)
 
-write.csv(DOC_stats, file = "2019-05-26_DOC-SummaryStats.csv")
+# all together including rack samples
+synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-conc-summary.csv", col_names = T)
+
 ```
 
 
@@ -709,8 +762,8 @@ sixfilter %>% filter(analysis == "DOC",
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig7_DOCvsCDOM_6sites_scatterplot.png") 
 ```
 
+#### SUVA
 In progress: analysis of spectral fingerprint data for slope ratio indices, which will help to elucidate seasonal DOM character shifts.
-
 
 ```{r, SUVA-plots-in-progress}
 
@@ -864,6 +917,7 @@ sixfilter %>%
   
 ```
 
+## FWx
 
 ```{r, Wx-Stn}
 # I want to know precip totals over the study period
@@ -966,6 +1020,8 @@ tempplot <- precip_data %>%
 cowplot::plot_grid(rainplot, tempplot, ncol = 1, align = "v")
 ```
 
+### Malahat Wx
+
 ```{r, malahat-wx}
 
 # plot malahat rain and highlight my study period
@@ -1017,7 +1073,7 @@ malahat_data %>%
 
 ```
 
-
+## River Stage
 ```{r, stage-plots}
 
 # plot stage, lines over time
@@ -1040,7 +1096,5 @@ odyssey_data %>%
   theme(legend.position = "none")+
   labs(x = "stage (cm)", y = "",
        caption = "Density distribution of stage at six subbasins")
-
-
 
 ```
