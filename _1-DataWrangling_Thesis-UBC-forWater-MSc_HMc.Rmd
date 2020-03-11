@@ -9,7 +9,7 @@ output: bookdown::word_document2
 knitr::opts_chunk$set(echo = FALSE, package.startup.message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 ```
 
-# setup
+# Setup
 
 note that rainmaker package is only available on GitHub (under development)
 ```
@@ -244,7 +244,9 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 ```
 
-## Spectrolyser proxy analysis results (CDOM equivalent DOC & TOC, NO~3~^-^, SAC~254~, SAC~436~)
+## Spectrolyser 
+
+-- proxy analysis results (CDOM equivalent DOC & TOC, NO~3~^-^, SAC~254~, SAC~436~)
 
 The Spectrolyser is a full scan UV-VIS spectrophotometer. It uses a stable global calibration file to calculate equivalent concentrations of DOC, TOC, nitrate-nitrogen, and turbidity.
 
@@ -409,7 +411,7 @@ SCAN_results <- SCAN_results %>%
 
 The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight.
 
-```{r Spectrolyser-fp, message=FALSE}
+```{r Spectrolyser-fp, message=FALSE, warning=FALSE}
 
 ## Spectrolyser samples and fingerprints (fp)
 # sample IDs and fullscans 
@@ -473,7 +475,7 @@ FULLSCAN_results <- full_join(spectrolyser_fullscan, spectrolyser_samples,
          dt_sampled = lubridate::as_datetime(dt_sampled)
   )
 # check columnnames
-colnames(FULLSCAN_results)
+# colnames(FULLSCAN_results)
 # levels(FULLSCAN_results$site)  
 
 
@@ -923,7 +925,7 @@ corr_stage <- odyssey_data %>%
 
 
 
-## define hydrologic events based on precip using Rainmaker::RMevents
+# WIP Events defined based on precip using Rainmaker::RMevents
 ```{r, warnings = FASLE, messages = FALSE}
 # use precipitation to define events
 # precip_data
@@ -977,7 +979,7 @@ cowplot::plot_grid(rn_strm_plot, rv_strm_plot,
 # File Outputs
 
 save the compiled and formatted dataframes as .csv files.
-Keep this as a code-note so to prevent over-writing files accidentally
+Keep this as a code-note so to prevent over-writing files unintentionally
 
 ``` 
 # {r output sample analysis files}
@@ -1035,7 +1037,6 @@ path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 
 
 
-# the following code chunks and text are old (to be updated/removed):
 .
 .
 .
@@ -1047,21 +1048,17 @@ path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 .
 .
 .
-# Level loggers for rack sampling time-stamps
 
+# WIP Match bottle height to logged stage
 
-##OLD Goal:match bottle height to logged stage
+GOAL: for each Rack sample in each event find the first DateTime occurance at which logged stage was equal to or greater than the fill_stage for each bottle
 
 1. read in sampleresults df with analyses results, were set and collected, and fill stage (or grab sample dates)
 2. read in stage data from Odyssey Capacitance water level loggers
-3. fix dates, add identifying/grouping columns for source (site) & interval (event)
-4. filter by site & event & analysis (DOC)
+3. filter by site/source & sample_type (== "Rack") & event/interval & analysis (DOC)
 5. match samples to logged stage and extract matching date-time 
 6. add DateTime stamps to sample results dataframes
 
-
-I think you can do thins in a loop with i as the seq_along(site_names[i]) and j as the seq_along(event[j]) 
-call vector of events for trip_df
 
 ```{r new stage match}
 # first, create subset dataframes for each subbsain

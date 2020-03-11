@@ -29,10 +29,16 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv",
 
 The Capital Regional District provided data from their fire-weather stations within the LWSA. Figure *CCC* shows snow, air temperature and rain during the study period, as well as river stage and sampling points at each of the six subbasins. 
 
-![__Figure CCC__Weather and river rise at the six sub-basin sites_](R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png)
+![__Figure CCC__Weather in the watershed with river rise and samples at the six sub-basin sites_](R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png)
 <br>
 
-The weather date plotted in Figure *CCC* are arithmeitc means from two fire-weather stations in the LWSA: Chris Creek (in the headwaters) and Martin's Gulch (near the future point of diversion). Table *JJJ* summarizes data from each station, for comparison   
+The weather date plotted in Figure *CCC* are arithmeitc means from two fire-weather stations in the LWSA: Chris Creek (in the headwaters) and Martin's Gulch (near the future point of diversion). Table *JJJ* summarizes data from each of these two stations by calender year.   
+
+``{r read-LWSA-wx-table}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "Table JJJ")
+```
+
 
 Precipitation and air temperature from each of the two weather stations in the LWSA is summarized in 
 
