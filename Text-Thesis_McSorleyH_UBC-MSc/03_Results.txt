@@ -1,44 +1,43 @@
 ## DOC concentrations 
-
 ### 	Synoptic sample overview
-
 * space
 * time
 * mean +/- sd DOC
-
 ### Subbasin DOC concentrations 
-
 * RCC theories supported or no?
 * synchronized increased in DOC?
 * all rising limb increase or some different? -- source limited OC or hydro?
-
 ####	QA/QC 	hold-time experiments 
 ####	QA?QC 	temperature (the river as a refrigerator) 
-
 ## Hydrologic response and spatiotemporal synchrony (CRD provided weather station data)
-
 ### 	storm delineation
 ###	 	IDF
-	
 -----------------------------------------------------
 
 # Data and Results
 
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, four hundred and fifty-seven water samples (Table YYY ) were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals. 
+The primary objectives of this project was to characterize the range of hydrochemical dynamics and synchrony during rainfall response among sub-basins ranging in size from 9.6 to 37 km^2^.  To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during rainfall-induced hydrologic surges -- samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.  
 
-This research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph; (2) fifteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on stream stage and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during hydrologic surges in response to rainfall, samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.   
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, four hundred and fifty-five water samples (Table YYY ) were collected and analyzed for DOC concentration and DOM character by high temperature combustion and UV-Vis spectroscopy (respectively), while an additional 42 samples were analyzed at an external laboratory for a suite of total metals.  
 
 ```{r read-sample-count-table}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary-sample-count-table.csv", col_names = TRUE) %>% 
   knitr::kable(caption = "Table YYY")
 ```
 
+# Hydroclimatic Regime and Sampling
 
-## Hydrologic Response
+The Capital Regional District provided data from their fire-weather stations within the LWSA. Figure *CCC* shows snow, air temperature and rain during the study period, as well as river stage and sampling points at each of the six subbasins. 
 
-![__Figure__Weather and river rise at the six sub-basin sites_](R-outputs_UBC-forWater-MSc_HMc/figures/DOC-Metals_subbasin_scatterplots.png)
+![__Figure CCC__Weather and river rise at the six sub-basin sites_](R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png)
 <br>
 
+The weather date plotted in Figure *CCC* are arithmeitc means from two fire-weather stations in the LWSA: Chris Creek (in the headwaters) and Martin's Gulch (near the future point of diversion). Table *JJJ* summarizes data from each station, for comparison   
+
+Precipitation and air temperature from each of the two weather stations in the LWSA is summarized in 
+
+
+## Hydrologic Response
 ### flow ranking
 * flow ranking based on one synoptic streamflow gauging campaign (likely to match stream-order?)
 ### stage not Q
