@@ -915,33 +915,10 @@ sixfilter %>%
 
 ## FWx
 
-### 2 FWx data summaries
-```{r, FWx-summaries}
+### Plot FWx (CC+MG) 
 
-# precip_data summary
-precip_data %>%
-  mutate(Year = lubridate::year(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", 
-         Year != 2017, Year != 2020) %>% 
-  group_by(Year, StationName) %>%
-  summarise(total_precip_mm = sum(Rn15, na.rm = TRUE),
-            max_snow_m = max(SnowDep, na.rm = TRUE), # not sure how to report
-            annual_mean_temp = mean(Temp, na.rm = TRUE),
-            temp_sd = sd(Temp, na.rm = TRUE)) %>% 
-  dplyr::rename("year" = Year, 
-                "station name" = StationName, 
-                "annual precip. (mm)" = total_precip_mm,
-                "max snow (m)" = max_snow_m,
-                "mean air temp. (°C)" = annual_mean_temp, 
-                "stdev air temp. (± °C)" = temp_sd) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
-
-
-
-```
-
-### Wx Plots for Chris and Martin's Gulch 
-```{r, rain-plots}
+plot rain, snow and temp at the two FWx Stns:
+```{r, FWx-plots}
 
 # Rn15 is 15-minute rainfall (mm) 
 # Prec_1 is hourly accummulated precipitation (mm)
@@ -1018,9 +995,38 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png",
        width = 5, height = 6, units = "in")
 ```
 
-#### summaries
 
-```{r, Wx-Stn}
+### FWx Summary
+
+Make a table for annual precip, max snow and mean temp at the two FWx stns.
+```{r, FWx-table}
+# precip_data summary
+precip_data %>%
+  mutate(Year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", 
+         Year != 2017, Year != 2020) %>% 
+  group_by(Year, StationName) %>%
+  summarise(total_precip_mm = sum(Rn15, na.rm = TRUE),
+            max_snow_m = max(SnowDep, na.rm = TRUE), # not sure how to report
+            annual_mean_temp = mean(Temp, na.rm = TRUE),
+            temp_sd = sd(Temp, na.rm = TRUE),
+            annual_min_temp = min(TMin, na.rm = TRUE),
+            annual_max_temp = max(TMax, na.rm = TRUE)) %>% 
+  dplyr::rename("year" = Year, 
+                "station name" = StationName, 
+                "annual precip. (mm)" = total_precip_mm,
+                "max snow (m)" = max_snow_m,
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "stdev air temp. (± °C)" = temp_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
+```
+
+
+#### extra summaries
+
+look at water year
+(not sure how useful the other objects are)
+```{r, Wx-Stn_summaries}
 # I want to know precip totals over the study period
 # by month and by season
 # use rain to define storm events
@@ -1058,7 +1064,7 @@ rn_seasonalAnnual <- precip_data %>%
                    rn = sum(rain_monthly, na.rm = TRUE)) %>% 
   ungroup()
 
-# water-year rainfalls (Oct 1 - Sept 30)
+# water-year rainfalls (Oct 1 - Sept 30) --- this one's farked
 rn_wateryr <- precip_data %>%
   group_by(StationName) %>% 
   filter(StationName != "Survey Mtn Wx") %>% 
@@ -1074,7 +1080,9 @@ rn_wateryr <- precip_data %>%
   filter(water_year != "2018") %>% 
   group_by(StationName, water_year) %>% 
   dplyr::summarise(rain = sum(Rn_1, na.rm = TRUE),
-                   max_snow = max(SnowDep, na.rm = TRUE)) %>% 
+                   max_snow = max(SnowDep, na.rm = TRUE),
+                   annual_mean_temp = mean(Temp, na.rm = TRUE),
+                   temp_sd = sd(Temp, na.rm = TRUE)) %>% 
   ungroup() %>% 
   dplyr::rename("year" = Year, 
                  "station name" = StationName, 
@@ -1088,9 +1096,10 @@ rn_wateryr <- precip_data %>%
 
 ### Mean Wx LWSA plots
 
-Based on arithmetic means from ChrisCrk and MartinsGulch
+Arithmetic means from ChrisCrk and MartinsGulch.
 
-```{r, mean-weather}
+*Too few stations to do Theissen polygons (2 point polygon = straight line) or isohyetal lines.*
+```{r, mean-Wx_plot}
 # mean precip plot
 mean_rainplot <- LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
@@ -1100,10 +1109,11 @@ mean_rainplot <- LWSA_meanWx %>%
   ggplot(aes(x = date, y = daily_rn)) +
   geom_col(colour = "#09A4D2") +
   scale_y_reverse() +
-  scale_x_discrete(labels = NULL) +
   labs(x = "", y = "LWSA mean rain (mm/day)") +
   theme_bw() +
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        plot.margin = unit(c(0.5,0.5,0,0), "cm"))+
   gghighlight::gghighlight(date >= "2018-10-23",
                            unhighlighted_params = list(colour = "#3B3838")) 
 
@@ -1117,8 +1127,9 @@ mean_snowplot <- LWSA_meanWx %>%
   geom_col(colour = "grey60") +
   labs(x = "", y = expression('snow depth (m /day)')) +
   theme_bw() +
-  scale_x_discrete(labels = NULL) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        plot.margin = unit(c(0,0.5,0,0), "cm")) +
   gghighlight::gghighlight(date >= "2018-10-23",
                            unhighlighted_params = list(colour = "#3B3838")) 
 
@@ -1134,18 +1145,60 @@ mean_tempplot <- LWSA_meanWx %>%
              linetype = "dotted") +
   labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
   theme_bw() +
-  #scale_x_discrete(labels = NULL) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.margin = unit(c(0,0.5,0,0), "cm")) +
   gghighlight::gghighlight(date >= "2018-10-23",
                            unhighlighted_params = list(colour = "#3B3838")) 
 
 # LWSA Wx -- stack precip and temp with cowplot
-cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, ncol = 1, align = "v")
+cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, 
+                   ncol = 1, align = "v",
+                   rel_heights = c(1,1,1))
 
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-means_LWSA.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-means_LWSA.png", 
+       width = 4, 
+       height = 6, 
+       units = "in")
 ```
 
+```{r, table_mean-FWx_summary}
+# mean weather summary
+precip_data %>%
+  mutate(Year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", 
+         Year != 2017, Year != 2020) %>%
+  group_by(Year, StationName) %>%
+  summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
+            max_snow_m = max(SnowDep, na.rm = TRUE),
+            annual_temp = mean(Temp, na.rm = TRUE),
+            temp_sd = sd(Temp, na.rm = TRUE),
+            annual_min_temp = min(TMin, na.rm = TRUE),
+            annual_max_temp = max(TMax, na.rm = TRUE)) %>%
+  ungroup() %>% 
+  group_by(Year) %>%
+  summarise(mean_rain_mm = mean(total_rain_mm, na.rm = TRUE),
+            sd_rain_mm = sd(total_rain_mm, na.rm = TRUE),
+            mean_max_snow_m = mean(max_snow_m, na.rm = TRUE),
+            annual_mean_temp = mean(annual_temp, na.rm = TRUE),
+            temp_sd = sd(annual_temp, na.rm = TRUE),
+            annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
+            TMin_sd = sd(annual_min_temp, na.rm = TRUE),
+            annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE),
+            TMax_sd = sd(annual_max_temp, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename("year" = Year, 
+                "mean annual rain (mm)" = mean_rain_mm,
+                "stdev rain. (± mm)" = sd_rain_mm,
+                "mean max snow (m)" = mean_max_snow_m,
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "stdev air temp. (± °C)" = temp_sd,
+                "mean max air temp. (°C)" = annual_min_temp2,
+                "stdev TMin. (± °C)" = TMin_sd,
+                "mean min air temp. (± °C)" = annual_max_temp2,
+                "stdev TMax. (± °C)" = TMax_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
+```
 
 ## Malahat Wx
 
@@ -1341,9 +1394,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 
 ```
 
+
 ### normalized stage plots
 
-The stage was normalized (min-max norm) to comapre relative rises
+The stage was normalized (min-max norm) to compare relative rises
 ```{r, stage-plots}
 
 # plot stage, lines over time
@@ -1373,3 +1427,4 @@ odyssey_data %>%
        caption = "Density distribution of min-max normalized stage at six subbasins")
 
 ```
+
