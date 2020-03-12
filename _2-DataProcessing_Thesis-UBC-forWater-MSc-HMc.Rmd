@@ -988,15 +988,17 @@ tempplot <- precip_data %>%
 
 # LWSA Wx -- stack precip and temp with cowplot
 cowplot::plot_grid(rainplot, snowplot, tempplot, ncol = 1, align = "v",
-                   rel_heights = c(1.5,1,1.5))
+                   rel_heights = c(1.25,1,1.5))
 
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png",
-       width = 5, height = 6, units = "in")
+       width = 4, 
+       height = 3, 
+       units = "in")
 ```
 
 
-### FWx Summary
+### FWx Summary table
 
 Make a table for annual precip, max snow and mean temp at the two FWx stns.
 ```{r, FWx-table}
@@ -1017,7 +1019,9 @@ precip_data %>%
                 "annual precip. (mm)" = total_precip_mm,
                 "max snow (m)" = max_snow_m,
                 "mean air temp. (°C)" = annual_mean_temp, 
-                "stdev air temp. (± °C)" = temp_sd) %>% 
+                "stdev air temp. (± °C)" = temp_sd,
+                "mean max. temp. (°C)" = annual_min_temp,
+                "mean min. temp. (°C)" = annual_max_temp) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
 ```
 
@@ -1158,10 +1162,11 @@ cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot,
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-means_LWSA.png", 
        width = 4, 
-       height = 6, 
+       height = 3, 
        units = "in")
 ```
 
+### Mean FWx tables
 ```{r, table_mean-FWx_summary}
 # mean weather summary
 precip_data %>%
@@ -1189,15 +1194,15 @@ precip_data %>%
   ungroup() %>% 
   dplyr::rename("year" = Year, 
                 "mean annual rain (mm)" = mean_rain_mm,
-                "stdev rain. (± mm)" = sd_rain_mm,
+                "stdev rain. (±mm)" = sd_rain_mm,
                 "mean max snow (m)" = mean_max_snow_m,
-                "mean air temp. (°C)" = annual_mean_temp, 
-                "stdev air temp. (± °C)" = temp_sd,
-                "mean max air temp. (°C)" = annual_min_temp2,
-                "stdev TMin. (± °C)" = TMin_sd,
-                "mean min air temp. (± °C)" = annual_max_temp2,
-                "stdev TMax. (± °C)" = TMax_sd) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
+                "mean temp. (°C)" = annual_mean_temp, 
+                "sd temp. (±°C)" = temp_sd,
+                "mean max. temp. (°C)" = annual_min_temp2,
+                "sd TMin. (±°C)" = TMin_sd,
+                "mean min. temp. (±°C)" = annual_max_temp2,
+                "sd TMax. (±°C)" = TMax_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
 ## Malahat Wx
