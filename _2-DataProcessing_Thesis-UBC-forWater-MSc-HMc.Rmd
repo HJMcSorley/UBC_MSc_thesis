@@ -62,9 +62,9 @@ TZ <- "Etc/GMT+8"
 #Results of data wrangling (01) were saved as .csv files for tidy loading. 
 # read all compiled data files & format
 
-# sampleresults df
+# results df
 # compiled sample analyses results (wide)
-
+# including DateTime of Rack sample collection
 sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/samples-lab-analyses_results.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(1:22)),

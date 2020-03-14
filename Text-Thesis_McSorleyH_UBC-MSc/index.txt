@@ -23,14 +23,13 @@ library(bookdown)
 library(tidyverse)
 library(readr)    # read in delimited files
 library(knitr)    # for tidy tables
-
 ```
 
-# Abstract  (max 350 words) - roman numeral TOC
+# Abstract  
 
-This research contributes to understanding the "natural" variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are minimal in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). Like most forested areas on Vancouver Island, the Leech watershed is second-growth softwood forest with a history of extensive harvest (nearly 96% cleared).
+* (max 350 words) - roman numeral TOC
 
-\   
+This research contributes to understanding the "natural" variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are minimal in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). 
 
 The purpose of this master's research project was to establish a baseline understanding of hydrologic responses and water quality variability in rivers across the LWSA. The approach includes advanced synoptic sampling within stormflow, supplemented with standard grab samples between storm events and during summer baseflow. Discrete samples of river water were collected passively during the rising limb of stormflow (falling limb prototype in progress) using low-powered, low-cost, custom-built vertical rack samplers including water level loggers (Odyssey) and observational reference staff gauges. By collecting samples during stormflow, a more robust understanding of water quality dynamics was achieved than basic grab sampling alone. Using low-powered passive sampling techniques allowed for multiple (six) sites to be equipped with monitoring/sampling racks, providing fairly good spatial resolution of hydrochemical variability across the watershed. 
 
@@ -44,9 +43,15 @@ Most drinking water in Canada originates in forested headwaters, therefore fores
 # Preface
 * roman numeral TOC
 
+This thesis is original, unpublished, independent intellectual product of the author,  Hannah J. McSorley.
+
+The rising-stage sampler design described in Chapter 2  was done primarily by S. Yen and myself, except for the system in Section 3.5, which was designed by C. A. Miller. The construction and tests in Chapter 4 and Chapter 5 were performed by S. Yen and I, with assistance from many other collaborators for large-scale assembly work. The data analysis in Chapter 5 and elemental composition analysis in Chapter 6 are my original work.The two-dimensional Hough and Radon transform reconstruction algorithms in Part III are of my own design and implementation, as are the reconstruction performance metrics of Chapter 9. The 3D matching algorithm described in Section 9.3 and used in conjunction with my 2D pattern recognition was written by T. Lindner and K. Ieki.The event selection in Chapter 10 is a refinement and extension of a method developed by F. Sanchez and M. Ravonel, while I developed the subtraction method used to extract the cross-section ratio. Several of the systematic errors in Chapter 11 were estimated by other collaborators; these contributions are citedwhere appropriate. I adapted all of these systematics to my modified selection and analysis method, and developed the reduced FGD analysis of Section 11.6.1. The entire analysis was done within the context of the T2K ND280 μ group, with additional incidental contributions from many of that group’s members.
+
 see: https://www.grad.ubc.ca/sites/default/files/doc/page/thesis_sample_prefaces.pdf
 
 * TOC follows, then LOT, LOF, List of Illustrations, list of abbreviations
+
+\  
 
 __List of Abbreviations__
 ```{r Abbreviations, echo = FALSE}

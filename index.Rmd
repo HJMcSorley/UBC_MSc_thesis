@@ -26,7 +26,9 @@ library(knitr)    # for tidy tables
 
 ```
 
-# Abstract  (max 350 words) - roman numeral TOC
+# Abstract  
+
+_(max 350 words) - roman numeral TOC_
 
 This research contributes to understanding the "natural" variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are minimal in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). Like most forested areas on Vancouver Island, the Leech watershed is second-growth softwood forest with a history of extensive harvest (nearly 96% cleared).
 
