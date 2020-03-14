@@ -65,7 +65,7 @@ TZ <- "Etc/GMT+8"
 # results df
 # compiled sample analyses results (wide)
 # including DateTime of Rack sample collection
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/samples-lab-analyses_results.csv",
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(1:22)),
          sample_type = factor(sample_type),
