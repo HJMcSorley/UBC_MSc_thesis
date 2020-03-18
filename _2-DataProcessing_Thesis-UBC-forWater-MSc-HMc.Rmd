@@ -6,11 +6,13 @@ output: bookdown::word_document2
 ---
 
 # Data Visualization and Summaries
+This RMD file generates summary tables and figures but is not included in the final bookdown product (tables and figures will be 
+added to applicable sections).
 
 ## Set-up
 
 ```{r, processing-setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
 
@@ -52,6 +54,16 @@ cbPalette <- c(grey = "#999999",
                red = "#D55E00", 
                pink = "#CC79A7")
 ```
+ Define function for number extraction from alphanumerics.
+```{r NumberXtract}
+# create a function:
+# ---- Alpha-numeric extraction function ---- #
+# from http://stla.github.io/stlapblog/posts/Numextract.html
+NumberXtract <- function(alphnum){
+  unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
+}
+```
+
 
 ## load datasets
 ```{r, input-files, message=FALSE}
@@ -71,17 +83,9 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv",
          sample_type = factor(sample_type),
          sample = factor(sample),
          analysis = factor(analysis),
-         three_seasons = factor(three_seasons),
          two_seasons = factor(two_seasons),
-         pseudoSUVA = pseudo254/NPOC_ppm) %>% 
-  mutate(site = factor(site),
-         # remove dashes from sub-basin names (match Odyssey names)
-         site = forcats::fct_recode(site, 
-                                    Weeks = "Weeks-out",
-                                    ChrisCrk = "Chris-crk",
-                                    LeechHead = "Leech-head",
-                                    CraggCrk = "Cragg-crk", 
-                                    WestLeech = "West-Leech")) 
+         pseudoSUVA = pseudo254/NPOC_ppm,
+         site = factor(site))
 
 # odyssey_data df
 # stage data compiled with interval/trip
@@ -166,7 +170,7 @@ synopticfilter <- sampleresults %>% filter(site == "Weeks"|
                                              ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
                        levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel","Leech-downstreamconf", "Boneyard", "Deception-crk", "Judge-crk", "Rithet", "Lazar", "Jarvis", "West-Jordan","Deception-res")))
-
+# ---
 # create a subset dataframe for the six install sites for tidier calling
 sixfilter <- sampleresults %>% filter(site == "Weeks" |
                                         site == "LeechHead" |
@@ -290,20 +294,6 @@ sixfilter %>%
   
 ```
 
-### WIP- Rack DOC (by level)
-```{r, rackDOC}
-
-sixfilter %>% 
-  filter(sample_type == "Rack") %>% 
-  mutate(trip = factor(trip, levels = c(1:23))) %>% 
-  group_by(site, trip) %>% 
-  mutate(RisingLimb = NumberXtract(sample),
-         RisingLimb = factor(RisingLimb, levels = c(1:15))) %>% 
-  ggplot(aes(x = NPOC_ppm, y = RisingLimb)) +
-  geom_jitter(aes(colour = site)) +
-  facet_wrap(~trip)
-  
-```
 
 ### DOC conc table (synoptic)
 ```{r, Grab-synoptic-table}
@@ -407,6 +397,64 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
 
+### WIP- Rack DOC (by level)
+```{r, rackDOC}
+# rising limb
+sixfilter %>% 
+  filter(sample_type == "Rack") %>% 
+  #mutate(trip = factor(trip, levels = c(1:23))) %>% 
+  #group_by(site, trip) %>% 
+  mutate(RisingLimb = NumberXtract(sample),
+         RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
+  ggplot(aes(x = DateTime_sampled, y = rackstage_cm)) +
+  geom_jitter(aes(colour = NPOC_ppm)) +
+  scale_colour_viridis(direction = -1) +
+  facet_wrap(~site, nrow = 6,
+             strip.position = "right")
+  
+# grab and rack
+sixfilter %>% 
+  filter(sample_type == "Rack" | sample_type == "Grab") %>% 
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  geom_jitter(aes(colour = sample_type)) +
+  facet_wrap(~site)
+  
+```
+
+### WIP- Stage + Rack DOC
+```{r, rackDOC}
+
+ggplot()+
+  geom_line(data = odyssey_data, 
+            aes(x = DateTime, y = corr_stage_cm))+
+  facet_wrap(~source, ncol = 1, strip.position = "right")+
+  geom_point(data = sixfilter, 
+             aes(x = DateTime_sampled, y = rackstage_cm))+
+  scale_colour_viridis(direction = -1)+
+  facet_wrap(~site, ncol = 1, strip.position = "right")
+
+# from above --------------
+# rising limb
+sixfilter %>% 
+  filter(sample_type == "Rack") %>% 
+  #mutate(trip = factor(trip, levels = c(1:23))) %>% 
+  #group_by(site, trip) %>% 
+  mutate(RisingLimb = NumberXtract(sample),
+         RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
+  ggplot(aes(x = DateTime_sampled, y = rackstage_cm)) +
+  geom_jitter(aes(colour = NPOC_ppm)) +
+  scale_colour_viridis(direction = -1) +
+  facet_wrap(~site, nrow = 6,
+             strip.position = "right")
+  
+# grab and rack
+sixfilter %>% 
+  filter(sample_type == "Rack" | sample_type == "Grab") %>% 
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  geom_jitter(aes(colour = sample_type)) +
+  facet_wrap(~site)
+  
+```
 ##  Sampling campaign
 Four hundred water sample were collected and analyzed for DOC over a 16 month study period (October 2018 to February 2020). The synoptic grab-sampling program was enhanced by the collection of stormflow on the six vertical sampling racks. In total, 171 samples were collected on vertical Racks, 215 Grab samples were collected at 15 synoptically sampled sites (which included the six installation sites), and an additional 14 Grab samples were collected opportunistically at one-off sites across the water supply area. Figure 3 shows DOC concentrations across the 15 synoptically sampled sites over the study period (n=386). 
 
@@ -416,14 +464,12 @@ Four hundred water sample were collected and analyzed for DOC over a 16 month st
 synopticfilter %>% 
   dplyr::filter(analysis == "DOC",
                 sample_type == "Grab" | sample_type == "Rack") %>%
-  mutate(trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = NPOC_ppm)) + 
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) + 
   geom_jitter(aes(fill = sample_type), size = 3, shape = 22, alpha = 0.75) +
   scale_fill_manual(values = c("#D55E00", "#999999")) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type",
-       caption = "Fig.3 DOC over fifteen months (Oct 2018 to Jan 2020) in 386 samples \n(synoptic Grab samples (n = 215) and vertical Rack collection (n = 171)") +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "top")
+  labs(y = "DOC (mg/L)", x = "", fill = "sample type")
+  theme(legend.position = "top")
 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/buckshot_DOC-total-sampletype.png") 
 ```
@@ -651,9 +697,8 @@ sampleresults %>%
   geom_jitter(aes(fill = two_seasons), alpha = 0.8, shape = 21) +
   scale_fill_brewer(palette="Accent") +
   theme_bw() +
-  theme(legend.position = "none") 
-#+
- #facet_wrap(~two_seasons, ncol = 2) 
+  theme(legend.position = "none") +
+  facet_wrap(~sample_type, ncol = 2) 
 ```
 
 
@@ -688,11 +733,11 @@ sampleresults %>%
 # I don't think these are good graphics
 # Scatter main sites including sooke tribs
 sampleresults %>% 
-  dplyr::filter(site == "Weeks-out" |
-                  site == "Leech-head" |
-                  site == "Chris-crk" |
-                  site == "Cragg-crk" |
-                  site == "West-Leech"| 
+  dplyr::filter(site == "Weeks" |
+                  site == "LeechHead" |
+                  site == "ChrisCrk" |
+                  site == "CraggCrk" |
+                  site == "WestLeech"| 
                   site == "Tunnel" |
                   site == "Rithet" |
                   site == "Judge-crk", 
@@ -700,7 +745,7 @@ sampleresults %>%
                 sample_type == "Grab" & sample == "Grab") %>% 
   mutate(site = factor(site, 
                        levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
-  ggplot(aes(x = dt_sampled, y = NPOC_ppm, fill = sample_type)) +
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm, fill = sample_type)) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21, size = 3) +
   theme_bw() +
   viridis::scale_fill_viridis(discrete = TRUE) +
@@ -768,9 +813,8 @@ sampleresults %>%
   filter(sample_type == "Rack" | sample_type == "Grab", 
          analysis == "DOC") %>%
   mutate(site = factor(site, exclude = "Lab"),
-         site = factor(site),
-         trip_end = factor(trip_end)) %>% 
-  ggplot(aes(x = trip_end, y = pseudoSUVA, fill = two_seasons)) +  
+         site = factor(site)) %>% 
+  ggplot(aes(x = DateTime_sampled, y = pseudoSUVA, fill = two_seasons)) +  
   geom_jitter(shape = 21, size = 3, alpha = 0.6) +
   scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
   theme_bw() +
@@ -1086,15 +1130,9 @@ rn_wateryr <- precip_data %>%
   dplyr::summarise(rain = sum(Rn_1, na.rm = TRUE),
                    max_snow = max(SnowDep, na.rm = TRUE),
                    annual_mean_temp = mean(Temp, na.rm = TRUE),
-                   temp_sd = sd(Temp, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  dplyr::rename("year" = Year, 
-                 "station name" = StationName, 
-                 "annual precip. (mm)" = total_precip_mm,
-                 "max snow (m)" = max_snow_m,
-                 "mean air temp. (°C)" = annual_mean_temp, 
-                 "stdev air temp. (± °C)" = temp_sd) %>% 
-   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv")
+                   temp_sd = sd(Temp, na.rm = TRUE)) %>%  
+   write_csv(., "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv",
+             col_names = c("year", "station name", "annual precip. (mm)", "max snow (m)", "mean air temp. (°C)", "stdev air temp. (±°C)"))
 
 ```
 
@@ -1432,4 +1470,42 @@ odyssey_data %>%
        caption = "Density distribution of min-max normalized stage at six subbasins")
 
 ```
+
+
+
+
+# fin
+
+For some reason, RStudio truncates the session viewable... so here's some text to hold the place.
+```{r}
+# and an empty code chunk
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

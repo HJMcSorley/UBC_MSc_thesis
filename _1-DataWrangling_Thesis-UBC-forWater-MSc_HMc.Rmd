@@ -6,7 +6,7 @@ output: bookdown::word_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, package.startup.message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(echo = FALSE, package.startup.message = FALSE, message = FALSE, warning = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 ```
 
 # Setup
@@ -935,7 +935,7 @@ Wx_CC_storms[["storms"]]   # list of all events
 
 
 # rain plot with storm lines
-rn_strm_plot <- subbasin_meanrain_plot <- wx_mean %>% 
+rn_strm_plot <- wx_mean %>% 
   mutate(date = lubridate::as_date(DateTime),
          Rain = factor("Rain")) %>% 
   group_by(date, Rain) %>% 
@@ -957,7 +957,9 @@ rn_strm_plot <- subbasin_meanrain_plot <- wx_mean %>%
         axis.text.x = element_text(angle = 90))
 
 # river stage with storm lines
-rv_strm_plot <- stage_plot+
+rv_strm_plot <- corr_stage %>% 
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line()+
   geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
 
 # stack the two storm delineated plots
