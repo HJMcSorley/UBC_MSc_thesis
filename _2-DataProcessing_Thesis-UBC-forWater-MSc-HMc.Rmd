@@ -406,7 +406,7 @@ sixfilter %>%
   #group_by(site, trip) %>% 
   mutate(RisingLimb = NumberXtract(sample),
          RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
-  ggplot(aes(x = DateTime_sampled, y = rackstage_cm)) +
+  ggplot(aes(x = DateTime_sampled, y = sampleStage_cm)) +
   geom_jitter(aes(colour = NPOC_ppm)) +
   scale_colour_viridis(direction = -1) +
   facet_wrap(~site, nrow = 6,
@@ -424,12 +424,15 @@ sixfilter %>%
 ### WIP- Stage + Rack DOC
 ```{r, rackDOC}
 
-ggplot()+
-  geom_line(data = odyssey_data, 
-            aes(x = DateTime, y = corr_stage_cm))+
-  facet_wrap(~source, ncol = 1, strip.position = "right")+
-  geom_point(data = sixfilter, 
-             aes(x = DateTime_sampled, y = rackstage_cm))+
+# join odyssey and result 
+stg_sample <- left_join(odyssey_data, sixfilter, 
+                        by = c("DateTime" = "DateTime_sampled", "source" = "site")) %>% 
+  dplyr::rename(site = source) # new_name = old_name
+
+# try to do a combo
+ggplot(data = stg_sample)+
+  geom_line(aes(x = DateTime, y = corr_stage_cm))+
+  geom_point(aes(x = DateTime_sampled, y = sampleStage_cm, colour = NPOC_ppm))+
   scale_colour_viridis(direction = -1)+
   facet_wrap(~site, ncol = 1, strip.position = "right")
 

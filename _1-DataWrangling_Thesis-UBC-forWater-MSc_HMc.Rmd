@@ -959,13 +959,13 @@ rn_strm_plot <- wx_mean %>%
 # river stage with storm lines
 rv_strm_plot <- corr_stage %>% 
   ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line()+
-  geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
+  geom_line()#+
+  #geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
 
 # stack the two storm delineated plots
-cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
-                   ncol = 1, axis = "l", align = "v",
-                   rel_heights = c(1,5))
+#cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
+#                   ncol = 1, axis = "l", align = "v",
+#                   rel_heights = c(1,5))
 
 
 
@@ -990,11 +990,11 @@ sampleresults <- sampleresults %>%
                                     CraggCrk = "Cragg-crk", 
                                     WestLeech = "West-Leech"))
 
-# isolate subbasins and rename 
-sample_df <- sampleresults %>% 
-  select(c(site, trip, sample, fillStage_cm, sample_type, analysis, NPOC_ppm)) %>% 
-  rename(rackstage_cm = fillStage_cm) %>% 
-  mutate(rackstage_cm = round(rackstage_cm)) %>% 
+# isolate subbasin rack samples 
+rack_sample_df <- sampleresults %>% 
+  select(c(site, trip, sample_type, sample, dt_sampled, fillStage_cm, analysis, NPOC_ppm)) %>% 
+  rename(sampleStage_cm = fillStage_cm) %>% 
+  mutate(sampleStage_cm = round(sampleStage_cm)) %>% 
   filter(site == "Weeks" |
          site == "ChrisCrk" | 
          site == "LeechHead" | 
@@ -1005,53 +1005,121 @@ sample_df <- sampleresults %>%
          analysis == "DOC",
          trip != 0) %>% 
   droplevels() %>% 
-  group_by(site, trip)
+  group_by(site, trip)  # group by key joining variables
 
-# this is corrected stage used for mapping samples to DateTime
-stage_df <- corr_stage %>% 
+# this is corrected stage used for mapping RACK samples to rack stage
+# isolate unique stages to match to rack levels
+stage_racks <- corr_stage %>% 
   group_by(source, interval) %>% 
   select(-c(Date, stage_cm)) %>% 
-  rename(rackstage_cm = corr_stage_cm,
+  rename(sampleStage_cm = corr_stage_cm,
          site = source,
          trip = interval) %>% 
-  mutate(rackstage_cm = round(rackstage_cm)) %>% 
-  dplyr::distinct(rackstage_cm, .keep_all = TRUE)
+  mutate(sampleStage_cm = round(sampleStage_cm)) %>% 
+  dplyr::distinct(sampleStage_cm, .keep_all = TRUE)  # first occurrence of rack stage
 
-# Join stage and sample dataframes
+# Join rack-stage and rack-sample dataframes
 # then, drop all the NA values so you just have sampleresults with 
-sampleresults2 <- left_join(stage_df, sample_df, 
-                 by = c("site", "trip", "rackstage_cm")) %>% 
-  dplyr::distinct(NPOC_ppm, sample, .keep_all = TRUE)
-
+sampleresults_rack <- left_join(stage_racks, rack_sample_df, 
+                 by = c("site", "trip", "sampleStage_cm")) %>% 
+  dplyr::distinct(NPOC_ppm, sample, .keep_all = TRUE) 
 # great! now, you have a Rack-sample dataframe with DateTime!!!
-# next, you need to join that with the original sampleresults that have Grab and QA-QC results for a full dataset :)
 
-wut <- left_join(sampleresults, sampleresults2, 
-                 by = c("site", "trip", "sample_type", "sample", "analysis", "NPOC_ppm")) %>% 
+
+# Grab samples have a date-time but not the stage...
+# obtain stage from grab sample DateTime
+# isolate subbasin grab samples  
+grab_sample_df <- sampleresults %>% 
+  select(c(site, trip, sample_type, sample, dt_sampled, fillStage_cm, analysis, NPOC_ppm, DOCeq_ppm)) %>% 
+  dplyr::rename(DateTime = dt_sampled) %>%
+  mutate(DateTime = lubridate::round_date(DateTime, unit = "minutes")) %>%
+  mutate(ID = row_number(NPOC_ppm)) %>% 
+  filter(site == "Weeks" |
+         site == "ChrisCrk" | 
+         site == "LeechHead" | 
+         site == "CraggCrk" | 
+         site == "WestLeech" | 
+         site == "Tunnel",
+         sample_type == "Grab",
+         sample == "Grab",
+         trip != 0) %>% 
+  droplevels() %>% 
+  group_by(site, trip)
+
+# this is corrected stage used for mapping GRAB samples to grab DateTime
+# isolate unique DateTime (top of the hour) to match to sample times  
+stage_grabs <- corr_stage %>% 
+  group_by(source, interval) %>% 
+  select(-c(Date, stage_cm)) %>% 
+  mutate(DateTime = lubridate::round_date(DateTime, unit = "minutes")) %>%
+  rename(site = source,
+         trip = interval) %>% 
+  mutate(corr_stage_cm = round(corr_stage_cm)) %>% 
+  dplyr::distinct(DateTime, corr_stage_cm, .keep_all = TRUE)  # first stage  at the top of the hour
+# first occurrence of rack stage
+
+# Join grab-stage and grab-sample dataframes
+sampleresults_grab <- left_join(grab_sample_df, stage_grabs,  
+                 by = c("site", "trip", "DateTime")) %>% 
+  dplyr::rename(sampleStage_cm = corr_stage_cm) 
+# if there are missing values in stage, fill them with observations
+sampleresults_grab <- sampleresults_grab %>% 
+  within(sampleresults_grab, 
+                 sampleStage_cm <- ifelse(
+                   is.na(sampleStage_cm), fillStage_cm, sampleStage_cm))  
+
+# good!
+
+# Finally, join these matched sample dataframes with the original sampleresults 
+# result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
+# first, join rack and grabs
+results <- full_join(sampleresults_grab, sampleresults_rack, 
+                 by = c("site", "trip", "sample_type", "sample", "DateTime", "sampleStage_cm", "NPOC_ppm", "analysis")) %>% 
+  select(-c(ID, dt_sampled, fillStage_cm))
+
+# join to full results 
+results <- full_join(results, sampleresults, 
+                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "DOCeq_ppm")) %>% 
   dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
-wutwut <- within(wut, 
+# create DateTime_sampled variable
+results <- within(results, 
                  DateTime_sampled <- ifelse(
-                   is.na(dt_sampled), DateTime, dt_sampled)) %>% 
+                   is.na(DateTime), dt_sampled, DateTime)) %>% 
   mutate(DateTime_sampled = lubridate::as_datetime(DateTime_sampled, tz = TZ))
-# also, make a new column for sample_stage
-wutwutwuw <- within(wutwut, 
-                 sample_stage <- ifelse(
-                   is.na(rackstage_cm), fillStage_cm, rackstage_cm))
 # great jorb!
+
 # save as a new dataframe
-results <- wutwut %>% 
-  select(-c("dt_sampled", "trip_end", "three_seasons", "DateTime")) %>% 
-  mutate(trip = factor(trip), #, levels = c(0:23)),
-         site = factor(site), #levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
+results <- results %>% 
+  ungroup() %>% 
+  select(-c("trip_end", "three_seasons", "dt_sampled")) %>% 
+  mutate(trip = factor(trip), 
+         site = factor(site), 
          sample_type = factor(sample_type),
          analysis = factor(analysis),
-         two_seasons = factor(two_seasons))
+         two_seasons = factor(two_seasons)) %>% 
+  dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
 
 ```
 
+```{r, rackDOC}
 
+# join odyssey and result 
+stg_sample <- left_join(odyssey_data, (sixfilter %>% 
+                                         filter(sample_type =="Grab" | sample_type == "Rack")), 
+                        by = c("DateTime" = "DateTime_sampled", 
+                               "source" = "site")) %>% 
+  dplyr::rename(site = source) # new_name = old_name
+
+# try to do a combo
+ggplot(data = stg_sample)+
+  geom_line(aes(x = DateTime, y = corr_stage_cm))+
+  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
+  #geom_point(aes(x = DateTime, y = fillStage_cm  , colour = NPOC_ppm))+
+  #scale_colour_viridis(direction = -1)+
+  facet_wrap(~site, ncol = 1, strip.position = "right")
+```
 # File Outputs
 
 save the compiled and formatted dataframes as .csv files.
