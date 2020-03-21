@@ -425,15 +425,18 @@ sixfilter %>%
 ```{r, rackDOC}
 
 # join odyssey and result 
-stg_sample <- left_join(odyssey_data, sixfilter, 
-                        by = c("DateTime" = "DateTime_sampled", "source" = "site")) %>% 
+stg_sample <- left_join(odyssey_data, (sixfilter %>% 
+                                         filter(sample_type =="Grab" | sample_type == "Rack")), 
+                        by = c("DateTime" = "DateTime_sampled", 
+                               "source" = "site")) %>% 
   dplyr::rename(site = source) # new_name = old_name
 
 # try to do a combo
 ggplot(data = stg_sample)+
   geom_line(aes(x = DateTime, y = corr_stage_cm))+
-  geom_point(aes(x = DateTime_sampled, y = sampleStage_cm, colour = NPOC_ppm))+
-  scale_colour_viridis(direction = -1)+
+  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
+  #geom_point(aes(x = DateTime, y = fillStage_cm  , colour = NPOC_ppm))+
+  #scale_colour_viridis(direction = -1)+
   facet_wrap(~site, ncol = 1, strip.position = "right")
 
 # from above --------------

@@ -1030,9 +1030,7 @@ sampleresults_rack <- left_join(stage_racks, rack_sample_df,
 # obtain stage from grab sample DateTime
 # isolate subbasin grab samples  
 grab_sample_df <- sampleresults %>% 
-  select(c(site, trip, sample_type, sample, dt_sampled, fillStage_cm, analysis, NPOC_ppm, DOCeq_ppm)) %>% 
-  dplyr::rename(DateTime = dt_sampled) %>%
-  mutate(DateTime = lubridate::round_date(DateTime, unit = "minutes")) %>%
+  select(c(site, trip, sample_type, dt_sampled, fillStage_cm, analysis, NPOC_ppm, DOCeq_ppm)) %>% 
   mutate(ID = row_number(NPOC_ppm)) %>% 
   filter(site == "Weeks" |
          site == "ChrisCrk" | 
@@ -1041,32 +1039,39 @@ grab_sample_df <- sampleresults %>%
          site == "WestLeech" | 
          site == "Tunnel",
          sample_type == "Grab",
-         sample == "Grab",
-         trip != 0) %>% 
-  droplevels() %>% 
+         analysis == "DOC",
+         trip != 0) %>%
+  mutate(trip = factor(trip, levels = c(1:23))) %>% 
+  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
   group_by(site, trip)
 
 # this is corrected stage used for mapping GRAB samples to grab DateTime
 # isolate unique DateTime (top of the hour) to match to sample times  
 stage_grabs <- corr_stage %>% 
-  group_by(source, interval) %>% 
   select(-c(Date, stage_cm)) %>% 
-  mutate(DateTime = lubridate::round_date(DateTime, unit = "minutes")) %>%
-  rename(site = source,
-         trip = interval) %>% 
-  mutate(corr_stage_cm = round(corr_stage_cm)) %>% 
-  dplyr::distinct(DateTime, corr_stage_cm, .keep_all = TRUE)  # first stage  at the top of the hour
-# first occurrence of rack stage
-
+  mutate(DateTime = lubridate::floor_date(DateTime, unit = "hour")) %>%
+  rename(site = source, trip = interval) %>% 
+  #mutate(sampleStage_cm = round(corr_stage_cm)) %>% 
+  mutate(trip = factor(trip, levels = c(1:23))) %>% 
+  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  group_by(site, trip) %>% 
+  dplyr::distinct(DateTime, .keep_all = TRUE)    
+  # first stage at the top of the hour
+  
 # Join grab-stage and grab-sample dataframes
-sampleresults_grab <- left_join(grab_sample_df, stage_grabs,  
-                 by = c("site", "trip", "DateTime")) %>% 
-  dplyr::rename(sampleStage_cm = corr_stage_cm) 
-# if there are missing values in stage, fill them with observations
-sampleresults_grab <- sampleresults_grab %>% 
-  within(sampleresults_grab, 
-                 sampleStage_cm <- ifelse(
-                   is.na(sampleStage_cm), fillStage_cm, sampleStage_cm))  
+sampleresults_grabstage <- fuzzyjoin::fuzzy_left_join(grab_sample_df, stage_grabs,  
+                 by = c("site" = "site", 
+                        "trip" = "trip", 
+                        "dt_sampled" = "DateTime"),
+                 match_fun = list(`==`, `==`, `>=`)) #%>% 
+
+sampleresults_grab <- sampleresults_grabstage %>% 
+  dplyr::rename(sampleStage_cm = corr_stage_cm,
+                site = "site.x",
+                trip = "trip.x") %>% 
+  group_by(site, trip) %>% 
+  dplyr::distinct(DateTime, NPOC_ppm, .keep_all = TRUE) %>% 
+  select(-c(fillStage_cm, ID, site.y, trip.y))
 
 # good!
 
