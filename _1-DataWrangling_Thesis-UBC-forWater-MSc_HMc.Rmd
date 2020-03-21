@@ -1073,7 +1073,7 @@ sampleresults_grab <- sampleresults_grabstage %>%
   dplyr::distinct(DateTime, NPOC_ppm, .keep_all = TRUE) %>% 
   select(-c(fillStage_cm, ID, site.y, trip.y))
 
-# good!
+# good! --- you are here :)
 
 # Finally, join these matched sample dataframes with the original sampleresults 
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
