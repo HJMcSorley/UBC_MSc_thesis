@@ -125,6 +125,21 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_resu
          two_seasons = factor(two_seasons),
          metal_parameters = factor(Parameters))
   
+
+# TEMP
+sampleresults %>% 
+  mutate(trip = as.integer(trip),
+         count = "count") %>% 
+  filter(trip > 11,
+         trip <23,  
+         analysis == "DOC", 
+         sample_type == "Grab" |
+           sample_type == "Rack", 
+         sample != "QA-QC") %>%  
+  group_by(count) %>%
+  dplyr::summarize(n = length(count))
+
+
 ```
 
 ## Subset, sample counts

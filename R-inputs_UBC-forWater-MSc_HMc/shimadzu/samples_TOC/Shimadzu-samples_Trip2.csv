@@ -32,15 +32,15 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 27,West-Leech,Rack,L4,,69,DOC,2
 28,West-Leech,Rack,L5,,75,DOC,2
 29,West-Leech,Grab,Grab,2018-11-07 9:00,,DOC,2
-30,Weeks-Lk-NE,Grab,Grab,,,DOC,2
-31,Leech-main-confl,Grab,Grab,,,DOC,2
-32,West-jordan,Grab,Grab,,,DOC,2
-33,Jarvis,Grab,Grab,,,DOC,2
-34,W.trib-to-Weeks,Grab,Grab,,,DOC,2
-35,Boneyard,Grab,Grab,,,DOC,2
-36,Weeks-Gate,Grab,Grab,,,DOC,2
-37,Weeks-Lk-SE,Grab,Grab,,,DOC,2
-38,Lower-Leech-blw-confl,Grab,Grab,,,DOC,2
+30,Weeks-Lk-NE,Grab,Grab,2018-11-06 13:55,,DOC,2
+31,Leech-main-confl,Grab,Grab,2018-11-07 9:00,,DOC,2
+32,West-jordan,Grab,Grab,2018-11-06 13:55,,DOC,2
+33,Jarvis,Grab,Grab,2018-11-06 13:55,,DOC,2
+34,W.trib-to-Weeks,Grab,Grab,2018-11-06 13:55,,DOC,2
+35,Boneyard,Grab,Grab,2018-11-07 9:00,,DOC,2
+36,Weeks-Gate,Grab,Grab,2018-11-06 13:55,,DOC,2
+37,Weeks-Lk-SE,Grab,Grab,2018-11-06 13:55,,DOC,2
+38,Lower-Leech-blw-confl,Grab,Grab,2018-11-07 9:00,,DOC,2
 39,Lab,QA-QC,CAL-VER_5.7ppm,,,DOC,2
 40,Lab,QA-QC,CAL-VER_11.4ppm,,,DOC,2
 41,Lab,QA-QC,RO_pH<2,,,DOC,2

@@ -32,7 +32,7 @@ assign time zone and create functions
 
 ```{r, function}
 # time-zone note: all loggers record in standard time (no daylight savings shift)
-TZ <- "Etc/GMT+8"
+TZ <- "America/Los_Angeles"
 
 # create a function:
 # ---- Alpha-numeric extraction function ---- #
@@ -98,8 +98,6 @@ Water samples were filtered (0.45-micron PES filters) and acidified to bring pH 
 # create a data frame of all sample ID data
 # for all samples analyzed on Shimadzu TOC-V (UBC ESB 3062)
 
-
-# read in all the files
 shimadzu_samples <- 
   list.files(path = "R-inputs_UBC-forWater-MSc_HMc/shimadzu/samples_TOC/", 
              pattern = "*.csv") %>% 
@@ -120,6 +118,8 @@ shimadzu_samples <- shimadzu_samples %>%
                    fillStage_cm = as.numeric(`fill-stage`),
                    analysis = as_factor(analysis),
                    trip = as_factor(trip))
+# read in all the files
+
 
 # str(shimadzu_samples)
 # head(shimadzu_samples)
@@ -828,7 +828,7 @@ odyssey_data <- list.files(path = odyssey_path, pattern = "*.CSV") %>%
   purrr::map_dfr(~ read_csv(file.path(odyssey_path, .), skip = 12, 
                             col_names = c("scan_no.", "Date", "Time", "Capacitance", "stage_cm")), .id = "source") %>% 
   mutate(source = forcats::as_factor(source),
-         Date = lubridate::parse_date_time(Date, c("dmy", "ydm"), tz = TZ),
+         Date = lubridate::parse_date_time(Date, c("dmy", "ydm")),
          DateTime = lubridate::ymd_hms(paste(Date, Time), tz = TZ))
 
 # check structure
@@ -989,21 +989,27 @@ sampleresults <- sampleresults %>%
                                     LeechHead = "Leech-head",
                                     CraggCrk = "Cragg-crk", 
                                     WestLeech = "West-Leech"))
+# isolate subbasins
+sixfilter <- sampleresults %>% filter(site == "Weeks" |
+                                        site == "LeechHead" |
+                                        site == "ChrisCrk" |
+                                        site == "CraggCrk" |
+                                        site == "WestLeech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")),
+         trip = factor(trip, levels = c(1:23)))%>% 
+  filter(analysis == "DOC",
+         trip != 0,
+         sample_type != "QA-QC") %>% 
+  droplevels() %>%
+  rename(sampleStage_cm = fillStage_cm)
 
-# isolate subbasin rack samples 
-rack_sample_df <- sampleresults %>% 
-  select(c(site, trip, sample_type, sample, dt_sampled, fillStage_cm, analysis, NPOC_ppm)) %>% 
-  rename(sampleStage_cm = fillStage_cm) %>% 
+# isolate rack samples 
+rack_sample_df <- sixfilter %>% 
+  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
   mutate(sampleStage_cm = round(sampleStage_cm)) %>% 
-  filter(site == "Weeks" |
-         site == "ChrisCrk" | 
-         site == "LeechHead" | 
-         site == "CraggCrk" | 
-         site == "WestLeech" | 
-         site == "Tunnel",
-         sample_type == "Rack",
-         analysis == "DOC",
-         trip != 0) %>% 
+  filter(sample_type == "Rack") %>% 
   droplevels() %>% 
   group_by(site, trip)  # group by key joining variables
 
@@ -1012,82 +1018,69 @@ rack_sample_df <- sampleresults %>%
 stage_racks <- corr_stage %>% 
   group_by(source, interval) %>% 
   select(-c(Date, stage_cm)) %>% 
-  rename(sampleStage_cm = corr_stage_cm,
-         site = source,
+  rename(site = source,
          trip = interval) %>% 
-  mutate(sampleStage_cm = round(sampleStage_cm)) %>% 
+  mutate(sampleStage_cm = round(corr_stage_cm)) %>% 
   dplyr::distinct(sampleStage_cm, .keep_all = TRUE)  # first occurrence of rack stage
 
 # Join rack-stage and rack-sample dataframes
 # then, drop all the NA values so you just have sampleresults with 
-sampleresults_rack <- left_join(stage_racks, rack_sample_df, 
-                 by = c("site", "trip", "sampleStage_cm")) %>% 
-  dplyr::distinct(NPOC_ppm, sample, .keep_all = TRUE) 
+sampleresults_rack <- left_join(rack_sample_df, stage_racks,  
+                 by = c("site", "trip", "sampleStage_cm"))
+
 # great! now, you have a Rack-sample dataframe with DateTime!!!
 
 
 # Grab samples have a date-time but not the stage...
 # obtain stage from grab sample DateTime
 # isolate subbasin grab samples  
-grab_sample_df <- sampleresults %>% 
-  select(c(site, trip, sample_type, dt_sampled, fillStage_cm, analysis, NPOC_ppm, DOCeq_ppm)) %>% 
-  mutate(ID = row_number(NPOC_ppm)) %>% 
-  filter(site == "Weeks" |
-         site == "ChrisCrk" | 
-         site == "LeechHead" | 
-         site == "CraggCrk" | 
-         site == "WestLeech" | 
-         site == "Tunnel",
-         sample_type == "Grab",
-         analysis == "DOC",
-         trip != 0) %>%
-  mutate(trip = factor(trip, levels = c(1:23))) %>% 
-  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+grab_sample_df <- sixfilter %>% 
+  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
+  mutate(DateTime_R = lubridate::round_date(dt_sampled, unit = "hour")) %>%  #round hour
+  filter(sample_type == "Grab") %>% 
+  droplevels() %>% 
   group_by(site, trip)
 
 # this is corrected stage used for mapping GRAB samples to grab DateTime
-# isolate unique DateTime (top of the hour) to match to sample times  
+# isolate unique DateTime (bottom of the hour) to match to sample times  
 stage_grabs <- corr_stage %>% 
   select(-c(Date, stage_cm)) %>% 
-  mutate(DateTime = lubridate::floor_date(DateTime, unit = "hour")) %>%
-  rename(site = source, trip = interval) %>% 
-  #mutate(sampleStage_cm = round(corr_stage_cm)) %>% 
-  mutate(trip = factor(trip, levels = c(1:23))) %>% 
-  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  mutate(DateTime_R = lubridate::round_date(DateTime, unit = "hour")) %>%  # round hour
+  rename(site = source, trip = interval) %>%  # new = old
+  #mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
+  #droplevels() %>% 
   group_by(site, trip) %>% 
-  dplyr::distinct(DateTime, .keep_all = TRUE)    
-  # first stage at the top of the hour
+  dplyr::distinct(DateTime_R, .keep_all = TRUE)    
+  # first stage each hour
   
-# Join grab-stage and grab-sample dataframes
-sampleresults_grabstage <- fuzzyjoin::fuzzy_left_join(grab_sample_df, stage_grabs,  
-                 by = c("site" = "site", 
-                        "trip" = "trip", 
-                        "dt_sampled" = "DateTime"),
-                 match_fun = list(`==`, `==`, `>=`)) #%>% 
+# Join grab-stage and grab-sample dataframes to get stage from DateTime
+sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
+                 by = c("site", "trip", "DateTime_R"))
 
+# take that join and rename and drop variables
 sampleresults_grab <- sampleresults_grabstage %>% 
-  dplyr::rename(sampleStage_cm = corr_stage_cm,
-                site = "site.x",
-                trip = "trip.x") %>% 
-  group_by(site, trip) %>% 
-  dplyr::distinct(DateTime, NPOC_ppm, .keep_all = TRUE) %>% 
-  select(-c(fillStage_cm, ID, site.y, trip.y))
+  dplyr::rename(sampleStage_cm = "corr_stage_cm") %>% 
+  select(-c(sampleStage_cm.x, sampleStage_cm.y, DateTime_R, dt_sampled))
+# DateTime and sampleStage_cm are the good good
 
-# good! --- you are here :)
+# check it out
+str(sampleresults_grab)
+
+# good!
 
 # Finally, join these matched sample dataframes with the original sampleresults 
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
 # first, join rack and grabs
 results <- full_join(sampleresults_grab, sampleresults_rack, 
-                 by = c("site", "trip", "sample_type", "sample", "DateTime", "sampleStage_cm", "NPOC_ppm", "analysis")) %>% 
-  select(-c(ID, dt_sampled, fillStage_cm))
+                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "NPOC_ppm"))
 
 # join to full results 
 results <- full_join(results, sampleresults, 
-                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "DOCeq_ppm")) %>% 
+                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>% 
   dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
+# might not need what's below here...
 # create DateTime_sampled variable
 results <- within(results, 
                  DateTime_sampled <- ifelse(
@@ -1110,15 +1103,28 @@ results <- results %>%
 
 ```{r, rackDOC}
 
+# create a subset dataframe for the six install sites for tidier calling
+sixfilter <- results %>% filter(site == "Weeks" |
+                                        site == "LeechHead" |
+                                        site == "ChrisCrk" |
+                                        site == "CraggCrk" |
+                                        site == "WestLeech"| 
+                                        site == "Tunnel") %>% 
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+
 # join odyssey and result 
-stg_sample <- left_join(odyssey_data, (sixfilter %>% 
+stg_sample <- left_join(corr_stage, (sixfilter %>% 
                                          filter(sample_type =="Grab" | sample_type == "Rack")), 
                         by = c("DateTime" = "DateTime_sampled", 
-                               "source" = "site")) %>% 
+                               "source" = "site",
+                               "corr_stage_cm")) %>% 
   dplyr::rename(site = source) # new_name = old_name
 
 # try to do a combo
-ggplot(data = stg_sample)+
+stg_sample %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot()+
   geom_line(aes(x = DateTime, y = corr_stage_cm))+
   geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
   #geom_point(aes(x = DateTime, y = fillStage_cm  , colour = NPOC_ppm))+
