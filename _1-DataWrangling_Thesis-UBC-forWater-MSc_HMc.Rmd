@@ -25,7 +25,7 @@ library(knitr)      # tidy tables, knitting docs
 library(lubridate)  # dates, times, ranges
 library(broom)      # tidy stats
 library(Rainmaker)  # USGS tool -- https://github.com/USGS-R/Rainmaker
-
+library(viridis)    # pretty colour-blind-friendly pallete
 ```
 
 assign time zone and create functions
@@ -1092,7 +1092,7 @@ results <- within(results,
 # save as a new dataframe
 results <- results %>% 
   ungroup() %>% 
-  select(-c("trip_end", "three_seasons", "dt_sampled")) %>% 
+  select(-c("trip_end", "three_seasons", "dt_sampled", "corr_stage_cm.x", "corr_stage_cm.y")) %>% 
   mutate(trip = factor(trip), 
          site = factor(site), 
          sample_type = factor(sample_type),
@@ -1102,7 +1102,7 @@ results <- results %>%
 
 ```
 
-```{r, rackDOC}
+```{r, plot-hydro-samples}
 
 # create a subset dataframe for the six install sites for tidier calling
 sixfilter_join <- results %>% 
@@ -1114,11 +1114,9 @@ sixfilter_join <- results %>%
            site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel"))) %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") 
-
-# not sure I need to round
-#%>% 
- # mutate(DateTime_sampled = lubridate::round_date(DateTime_sampled, unit = "hour"))
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  droplevels() %>% 
+  filter(!is.na(sample_type))
 
 # round datetime in stage
 corr_stage_join <- corr_stage %>% 
@@ -1129,18 +1127,28 @@ stg_sample <- left_join(corr_stage, sixfilter_join,
                         by = c("DateTime" = "DateTime_sampled", 
                                "source" = "site")) %>% 
   dplyr::rename(site = source)   # new_name = old_name 
-  #filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  #droplevels()
 
-# try to do a combo
+# make a hydrochemo plot combo
 stg_sample %>% 
   ggplot()+
-  geom_line(aes(x = DateTime, y = corr_stage_cm))+
-  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
-  #geom_point(aes(x = DateTime, y = fillStage_cm  , colour = NPOC_ppm))+
-  #scale_colour_viridis(direction = -1)+
-  facet_wrap(~site, ncol = 1, strip.position = "right")
+  geom_line(aes(x = DateTime, y = corr_stage_cm), na.rm = TRUE)+
+  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type),
+             na.rm = TRUE)+
+  scale_colour_discrete(na.translate=FALSE) +
+  facet_wrap(~site, ncol = 1, 
+             strip.position = "right",
+             scales = "free_y")+
+  labs(y = "River stage (cm)", x = "",
+       colour = "Sample Type")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))
+  
+  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png")
 ```
+
 # File Outputs
 
 save the compiled and formatted dataframes as .csv files.
@@ -1199,9 +1207,14 @@ write_csv(wx_mean,
 path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
 
 # results
-# Complete sample results dataframe with sample DateTimes!
+# Complete sample results dataframe with sample DateTimes
 write_csv(results, 
 path = "R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv", na = "NA")
+
+# stg_sample
+# subbasin sample results with stage and timestamps
+write_csv(stg_sample, 
+path = "R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
 
 ```
 
