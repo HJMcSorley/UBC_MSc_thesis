@@ -887,9 +887,9 @@ odyssey_data <- odyssey_data %>%
 offset_L.Head   <- 95-38.907   # 2020-10-11: obs 95cm, recorded = 38.907 cm
 offset_WksOut   <- 26.0-20.87  # 2020-09-20: obs = 26.0 cm, recorded = 20.87
 offset_ChrisCrk <- 19-13.196   # 2020-09-20: obs = 19cm, recorded = 13.196 cm
-offset_CraggCrk <- 8.0 - 6.57  # 2020-09-20: obs = 8.0 cm, recorded = 6.57 cm
-offset_W.Leech  <- 15.5- 12.19 # 2020-09-20: obs = 15.5 cm, recorded = 12.188 cm
-offset_Tunnel   <- 0.0 - 3.35  # 2020-09-20: obs = 0 cm (HFSG = 27cm), recorded = 3.35
+offset_CraggCrk <- 8.0-6.57  # 2020-09-20: obs = 8.0 cm, recorded = 6.57 cm
+offset_W.Leech  <- 15.5-12.19 # 2020-09-20: obs = 15.5 cm, recorded = 12.188 cm
+offset_Tunnel   <- 0.0-3.35  # 2020-09-20: obs = 0 cm (HFSG = 27cm), recorded = 3.35
 # ---
 # these are old values (2018)...in good agreement 
 # offset_L.Head   <- 60.84 # 
@@ -1005,6 +1005,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
   droplevels() %>%
   rename(sampleStage_cm = fillStage_cm)
 
+# rack samples ---
 # isolate rack samples 
 rack_sample_df <- sixfilter %>% 
   select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
@@ -1030,7 +1031,7 @@ sampleresults_rack <- left_join(rack_sample_df, stage_racks,
 
 # great! now, you have a Rack-sample dataframe with DateTime!!!
 
-
+# grab samples ---
 # Grab samples have a date-time but not the stage...
 # obtain stage from grab sample DateTime
 # isolate subbasin grab samples  
@@ -1047,7 +1048,7 @@ stage_grabs <- corr_stage %>%
   select(-c(Date, stage_cm)) %>% 
   mutate(DateTime_R = lubridate::round_date(DateTime, unit = "hour")) %>%  # round hour
   rename(site = source, trip = interval) %>%  # new = old
-  #mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
+  mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
   #droplevels() %>% 
   group_by(site, trip) %>% 
   dplyr::distinct(DateTime_R, .keep_all = TRUE)    
@@ -1057,31 +1058,31 @@ stage_grabs <- corr_stage %>%
 sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
                  by = c("site", "trip", "DateTime_R"))
 
+# hung up around here
 # take that join and rename and drop variables
 sampleresults_grab <- sampleresults_grabstage %>% 
-  dplyr::rename(sampleStage_cm = "corr_stage_cm") %>% 
-  select(-c(sampleStage_cm.x, sampleStage_cm.y, DateTime_R, dt_sampled))
+  dplyr::mutate(sampleStage_cm = corr_stage_cm) %>% 
+  select(-c(sampleStage_cm.x, sampleStage_cm.y, DateTime_R))
 # DateTime and sampleStage_cm are the good good
 
 # check it out
-str(sampleresults_grab)
+# str(sampleresults_grab)
 
 # good!
 
 # Finally, join these matched sample dataframes with the original sampleresults 
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
 # first, join rack and grabs
-results <- full_join(sampleresults_grab, sampleresults_rack, 
-                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "NPOC_ppm"))
+results1 <- full_join(sampleresults_grab, sampleresults_rack, 
+                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis"))
 
 # join to full results 
-results <- full_join(results, sampleresults, 
+results <- full_join(results1, sampleresults, 
                  by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>% 
   dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
-# might not need what's below here...
-# create DateTime_sampled variable
+# create DateTime_sampled variable by combining DateTime and dt_sampled
 results <- within(results, 
                  DateTime_sampled <- ifelse(
                    is.na(DateTime), dt_sampled, DateTime)) %>% 
@@ -1104,26 +1105,35 @@ results <- results %>%
 ```{r, rackDOC}
 
 # create a subset dataframe for the six install sites for tidier calling
-sixfilter <- results %>% filter(site == "Weeks" |
-                                        site == "LeechHead" |
-                                        site == "ChrisCrk" |
-                                        site == "CraggCrk" |
-                                        site == "WestLeech"| 
-                                        site == "Tunnel") %>% 
+sixfilter_join <- results %>% 
+  filter(site == "Weeks" |
+           site == "LeechHead" |
+           site == "ChrisCrk" |
+           site == "CraggCrk" |
+           site == "WestLeech"| 
+           site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
-                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel"))) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") 
 
+# not sure I need to round
+#%>% 
+ # mutate(DateTime_sampled = lubridate::round_date(DateTime_sampled, unit = "hour"))
+
+# round datetime in stage
+corr_stage_join <- corr_stage %>% 
+  mutate(DateTime = lubridate::round_date(DateTime, unit = "hour")) 
+  
 # join odyssey and result 
-stg_sample <- left_join(corr_stage, (sixfilter %>% 
-                                         filter(sample_type =="Grab" | sample_type == "Rack")), 
+stg_sample <- left_join(corr_stage, sixfilter_join, 
                         by = c("DateTime" = "DateTime_sampled", 
-                               "source" = "site",
-                               "corr_stage_cm")) %>% 
-  dplyr::rename(site = source) # new_name = old_name
+                               "source" = "site")) %>% 
+  dplyr::rename(site = source)   # new_name = old_name 
+  #filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  #droplevels()
 
 # try to do a combo
 stg_sample %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot()+
   geom_line(aes(x = DateTime, y = corr_stage_cm))+
   geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
