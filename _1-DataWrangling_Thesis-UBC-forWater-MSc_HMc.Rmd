@@ -1102,6 +1102,7 @@ results <- results %>%
 
 ```
 
+## simplify and plot
 ```{r, plot-hydro-samples}
 
 # create a subset dataframe for the six install sites for tidier calling
@@ -1132,21 +1133,25 @@ stg_sample <- left_join(corr_stage, sixfilter_join,
 stg_sample %>% 
   ggplot()+
   geom_line(aes(x = DateTime, y = corr_stage_cm), na.rm = TRUE)+
-  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type),
-             na.rm = TRUE)+
-  scale_colour_discrete(na.translate=FALSE) +
+  geom_point(aes(x = DateTime, y = sampleStage_cm, fill = sample_type),
+             na.rm = TRUE, 
+             shape = 21, colour = "black")+
+  scale_fill_manual(values = c("Grab" = "#E69F00", "Rack" = "#009E73"),
+                     na.translate = FALSE)+
   facet_wrap(~site, ncol = 1, 
              strip.position = "right",
              scales = "free_y")+
   labs(y = "River stage (cm)", x = "",
-       colour = "Sample Type")+
+       fill = "Sample Type")+
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust=1))
-  
-  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png")
+  theme(axis.text.x = element_text(angle = 60, hjust=1),
+        text = element_text(size=12))
+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",
+       width = 6, height = 9, units = "in")
 ```
 
 # File Outputs
