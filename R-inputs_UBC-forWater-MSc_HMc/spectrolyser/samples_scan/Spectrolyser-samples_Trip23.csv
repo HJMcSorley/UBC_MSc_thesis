@@ -4,15 +4,15 @@
 ,,,,,,
 measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 1,Deception-res,Grab,Grab,2020-02-18 9:00,,23
-2,Rithet-crk,Grab,Grab,2020-02-20,,23
+2,Rithet-crk,Grab,Grab,2020-02-20 13:50,,23
 3,Judge-crk,Grab,Grab,2020-02-18 14:00,,23
 4,Rithet-crk,Grab,Grab,2020-02-19 16:00,,23
 5,Judge-crk,Grab,Grab,2020-02-19 15:00,,23
 6,Jordan-trib,Grab,Grab,2020-01-09 14:09,,23
 7,Cragg-crk,Grab,Grab,2020-02-18 12:20,,23
 8,Cragg-crk,Grab,Grab,2020-01-30 13:30,,23
-9,Cragg-crk,Grab,Grab,2020-01-10 12:03,,23
-10,Cragg-crk,Grab,Grab,2020-01-09 9:58,,23
+9,Cragg-crk,Grab,Grab,2020-01-10 12:03,110,23
+10,Cragg-crk,Grab,Grab,2020-01-09 9:58,115,23
 11,Cragg-crk,FL_Rack,FL2,,83,23
 12,Cragg-crk,FL_Rack,FL1,,106,23
 13,Cragg-crk,Rack,L3,,124,23
@@ -22,28 +22,28 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 17,Cragg-crk,Grab,Grab,2020-02-06 15:30,,23
 18,Chris-crk,Grab,Grab,2020-01-09 11:20,,23
 19,Chris-crk,Rack,L6,,115,23
-20,Leech-head,Grab,Grab,2020-02-20 10:00,,23
+20,Leech-head,Grab,Grab,2020-02-20 10:00,109,23
 21,Leech-head,Rack,L1,,129,23
 22,Leech-head,Rack,L2,,137,23
 23,Leech-head,Rack,L3,,155,23
 24,Leech-head,Rack,L4,,165,23
 25,Leech-head,Rack,L6,,195,23
-26,Weeks-out,Grab,Grab,2020-02-20,,23
+26,Weeks-out,Grab,Grab,2020-02-20 0:00,51.5,23
 27,Weeks-out,Rack,L1,,89,23
 28,Weeks-out,Rack,L2,,98,23
 29,Weeks-out,Rack,L3,,115,23
 30,Weeks-out,Rack,L4,,127,23
 31,Weeks-out,Grab,Grab,2020-01-09 11:35,,23
-32,Tunnel,Grab,Grab,2020-02-18 11:00,,23
-33,Tunnel,Grab,Grab,2020-02-19 11:00,,23
+32,Tunnel,Grab,Grab,2020-02-18 11:00,20,23
+33,Tunnel,Grab,Grab,2020-02-19 11:00,19,23
 34,Tunnel,Rack,L1,,41,23
 35,Tunnel,Rack,L2,,57,23
 36,Tunnel,Rack,L3,,70,23
 37,Tunnel,Rack,L4,,87,23
 38,Tunnel,Rack,L5,,103,23
 39,Tunnel,Rack,L6,,117,23
-40,Tunnel,Grab,Grab,2020-01-30 12:30,,23
-41,West-Leech,Grab,Grab,2020-02-19 10:00,,23
+40,Tunnel,Grab,Grab,2020-01-30 12:30,110,23
+41,West-Leech,Grab,Grab,2020-02-19 10:00,30,23
 42,West-Leech,Rack,L1,,37,23
 43,West-Leech,Rack,L2,,51,23
 44,West-Leech,Rack,L3,,67,23
@@ -53,7 +53,7 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 48,West-Leech,Rack,L7,,136,23
 49,West-Leech,Grab,Grab,2020-01-30 9:30,,23
 50,West-Leech,Grab,Grab,2020-01-08 12:45,,23
-51,West-Leech,Grab,Grab,2020-02-08,,23
+51,West-Leech,Grab,Grab,2020-02-08 10:00,,23
 52,Leech-dwnstrm-confl,Grab,Grab,2020-02-08 11:10,,23
 53,Chris-crk,Grab,Grab,2020-02-20 13:00,,23
 54,Chris-crk,Rack,L1,,37,23

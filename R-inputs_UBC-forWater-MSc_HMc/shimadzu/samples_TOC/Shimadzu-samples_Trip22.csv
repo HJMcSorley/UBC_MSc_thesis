@@ -7,9 +7,9 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 2,Judge-crk,Grab,Grab,2020-01-07 9:00,,DOC,22
 3,Rithet,Grab,Grab,2020-01-07 9:30,,DOC,22
 4,Jarvis,Grab,Grab,2020-01-07 10:00,,DOC,22
-5,Cragg-crk,Grab,Grab,2020-01-07 10:30,,DOC,22
-6,Tunnel,Grab,R1,2020-01-07 11:30,,DOC,22
-7,Tunnel,Grab,R2,2020-01-07 11:30,,DOC,22
+5,Cragg-crk,Grab,Grab,2020-01-07 10:30,115,DOC,22
+6,Tunnel,Grab,R1,2020-01-07 11:30,110,DOC,22
+7,Tunnel,Grab,R2,2020-01-07 11:30,110,DOC,22
 8,Lab,QA-QC,RO,,,DOC,22
 9,Lab,QA-QC,CalVer-1_5.55ppm,,,DOC,22
 10,Lab,QA-QC,RO,,,DOC,22

@@ -826,10 +826,11 @@ list.files(path = odyssey_path, pattern = "*.CSV") %>%
 odyssey_data <- list.files(path = odyssey_path, pattern = "*.CSV") %>% 
   set_names(str_extract(., "([A-Z0-9]{4,}+)")) %>%
   purrr::map_dfr(~ read_csv(file.path(odyssey_path, .), skip = 12, 
-                            col_names = c("scan_no.", "Date", "Time", "Capacitance", "stage_cm")), .id = "source") %>% 
+                            col_names = c("scan_no.", "Date", "Time", "Capacitance", "stage_cm")), 
+                 .id = "source") %>% 
   mutate(source = forcats::as_factor(source),
          Date = lubridate::parse_date_time(Date, c("dmy", "ydm")),
-         DateTime = lubridate::ymd_hms(paste(Date, Time), tz = TZ))
+         DateTime = lubridate::parse_date_time(paste(Date, Time), c("ymd HMS"), tz = TZ))
 
 # check structure
 # str(odyssey_data)
@@ -914,68 +915,12 @@ corr_stage <- odyssey_data %>%
   ungroup() %>% 
   mutate(source = factor(source, 
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
-
-```
-
-
-
-# WIP Events defined based on precip using Rainmaker::RMevents
-```{r, warnings = FASLE, messages = FALSE}
-# use precipitation to define events
-# precip_data
-# odyssey_data
-
-Wx_CC_storms <- wx_mean %>% 
-  filter(DateTime >= "2018-10-23") %>% 
-  as.data.frame() %>% 
-  Rainmaker::RMevents(., ieHr = 20, rainthresh = 30, rain = "Rn15_mean", time = "DateTime")
-
-Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
-Wx_CC_storms[["storms"]]   # list of all events
-
-
-# rain plot with storm lines
-rn_strm_plot <- wx_mean %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         Rain = factor("Rain")) %>% 
-  group_by(date, Rain) %>% 
-  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  filter(date >= "2018-10-24") %>% 
-  ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(aes(colour = Rain), colour = "#0072B2") +
-  scale_y_reverse() +
-  labs(x = "", y = "mm /day") +
-  theme_bw() +
-  geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate))+
-  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
-  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
-  facet_wrap(~Rain, ncol = 1, 
-             strip.position = "right") +
-  theme(legend.position = "none",
-        strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90))
-
-# river stage with storm lines
-rv_strm_plot <- corr_stage %>% 
-  ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line()#+
-  #geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
-
-# stack the two storm delineated plots
-#cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
-#                   ncol = 1, axis = "l", align = "v",
-#                   rel_heights = c(1,5))
-
-
-
 ```
 
 
 # Match bottle height to logged stage
 
-Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, what if you join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join?
-
+Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join
 ```{r, join-stage-samples}
 
 str(corr_stage)
@@ -997,7 +942,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
                                         site == "WestLeech"| 
                                         site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
-                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")),
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          trip = factor(trip, levels = c(1:23)))%>% 
   filter(analysis == "DOC",
          trip != 0,
@@ -1009,7 +954,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
 # isolate rack samples 
 rack_sample_df <- sixfilter %>% 
   select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
-  mutate(sampleStage_cm = round(sampleStage_cm)) %>% 
+  mutate(sampleStage_cm = floor(sampleStage_cm)) %>% 
   filter(sample_type == "Rack") %>% 
   droplevels() %>% 
   group_by(site, trip)  # group by key joining variables
@@ -1027,7 +972,8 @@ stage_racks <- corr_stage %>%
 # Join rack-stage and rack-sample dataframes
 # then, drop all the NA values so you just have sampleresults with 
 sampleresults_rack <- left_join(rack_sample_df, stage_racks,  
-                 by = c("site", "trip", "sampleStage_cm"))
+                 by = c("site", "trip", "sampleStage_cm")) %>% 
+  ungroup()
 
 # great! now, you have a Rack-sample dataframe with DateTime!!!
 
@@ -1048,35 +994,37 @@ stage_grabs <- corr_stage %>%
   select(-c(Date, stage_cm)) %>% 
   mutate(DateTime_R = lubridate::round_date(DateTime, unit = "hour")) %>%  # round hour
   rename(site = source, trip = interval) %>%  # new = old
-  mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
+  #mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
   #droplevels() %>% 
-  group_by(site, trip) %>% 
-  dplyr::distinct(DateTime_R, .keep_all = TRUE)    
+  group_by(site, trip) #%>% 
+  #dplyr::distinct(DateTime_R, .keep_all = TRUE)    
   # first stage each hour
   
 # Join grab-stage and grab-sample dataframes to get stage from DateTime
 sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
-                 by = c("site", "trip", "DateTime_R"))
+                 by = c("site", "DateTime_R"))
 
-# hung up around here
+# combine DateTime and dt_sampled
+sampleresults_grabstage <- within(sampleresults_grabstage, 
+                 corr_stage_cm <- ifelse(
+                   is.na(corr_stage_cm), sampleStage_cm, corr_stage_cm)) 
+
 # take that join and rename and drop variables
 sampleresults_grab <- sampleresults_grabstage %>% 
-  dplyr::mutate(sampleStage_cm = corr_stage_cm) %>% 
-  select(-c(sampleStage_cm.x, sampleStage_cm.y, DateTime_R))
+  ungroup() %>% 
+  dplyr::mutate(sampleStage_cm = corr_stage_cm,
+                trip = trip.x) %>% 
+  select(-c( trip.x, trip.y, DateTime_R))
 # DateTime and sampleStage_cm are the good good
-
-# check it out
-# str(sampleresults_grab)
 
 # good!
 
-# Finally, join these matched sample dataframes with the original sampleresults 
-# result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
-# first, join rack and grabs
+# Join time-stamped rack and grab dfs
 results1 <- full_join(sampleresults_grab, sampleresults_rack, 
-                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis"))
+                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm"))
 
-# join to full results 
+# join matched sample dataframes with the original sampleresults  
+# result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
 results <- full_join(results1, sampleresults, 
                  by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>% 
   dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
@@ -1092,7 +1040,7 @@ results <- within(results,
 # save as a new dataframe
 results <- results %>% 
   ungroup() %>% 
-  select(-c("trip_end", "three_seasons", "dt_sampled", "corr_stage_cm.x", "corr_stage_cm.y")) %>% 
+  select(-c("trip_end", "three_seasons", "dt_sampled")) %>% 
   mutate(trip = factor(trip), 
          site = factor(site), 
          sample_type = factor(sample_type),
@@ -1126,7 +1074,8 @@ corr_stage_join <- corr_stage %>%
 # join odyssey and result 
 stg_sample <- left_join(corr_stage, sixfilter_join, 
                         by = c("DateTime" = "DateTime_sampled", 
-                               "source" = "site")) %>% 
+                               "source" = "site", 
+                               "corr_stage_cm")) %>% 
   dplyr::rename(site = source)   # new_name = old_name 
 
 # make a hydrochemo plot combo
@@ -1150,8 +1099,7 @@ stg_sample %>%
   theme(axis.text.x = element_text(angle = 60, hjust=1),
         text = element_text(size=12))
 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",
-       width = 6, height = 9, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",width = 6, height = 8, units = "in")
 ```
 
 # File Outputs
@@ -1222,6 +1170,60 @@ write_csv(stg_sample,
 path = "R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
 
 ```
+
+
+
+
+# WIP Events defined based on precip using Rainmaker::RMevents
+```{r, warnings = FASLE, messages = FALSE}
+# use precipitation to define events
+# precip_data
+# odyssey_data
+
+Wx_CC_storms <- wx_mean %>% 
+  filter(DateTime >= "2018-10-23") %>% 
+  as.data.frame() %>% 
+  Rainmaker::RMevents(., ieHr = 20, rainthresh = 30, rain = "Rn15_mean", time = "DateTime")
+
+Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
+Wx_CC_storms[["storms"]]   # list of all events
+
+
+# rain plot with storm lines
+rn_strm_plot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Rain = factor("Rain")) %>% 
+  group_by(date, Rain) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24") %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(aes(colour = Rain), colour = "#0072B2") +
+  scale_y_reverse() +
+  labs(x = "", y = "mm /day") +
+  theme_bw() +
+  geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate))+
+  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
+  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Rain, ncol = 1, 
+             strip.position = "right") +
+  theme(legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90))
+
+# river stage with storm lines
+rv_strm_plot <- corr_stage %>% 
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line()#+
+  #geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
+
+# stack the two storm delineated plots
+#cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
+#                   ncol = 1, axis = "l", align = "v",
+#                   rel_heights = c(1,5))
+
+```
+
 
 
 # fin
