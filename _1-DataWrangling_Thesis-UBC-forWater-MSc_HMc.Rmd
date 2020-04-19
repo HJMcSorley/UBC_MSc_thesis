@@ -1073,7 +1073,7 @@ corr_stage_join <- corr_stage %>%
   
 # join odyssey and result 
 stg_sample <- left_join(corr_stage, sixfilter_join, 
-                        by = c("DateTime" = "DateTime_sampled", 
+                        by = c("DateTime", 
                                "source" = "site", 
                                "corr_stage_cm")) %>% 
   dplyr::rename(site = source)   # new_name = old_name 
@@ -1100,6 +1100,159 @@ stg_sample %>%
         text = element_text(size=12))
 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",width = 6, height = 8, units = "in")
+```
+
+# WIP Events defined based on precip using Rainmaker::RMevents
+```{r, warnings = FASLE, messages = FALSE}
+# use precipitation to define events
+# precip_data
+# odyssey_data
+
+# save plot of stage and samples
+stage_sample_plot <- 
+  stg_sample %>% 
+  ggplot()+
+  geom_line(aes(x = as_date(Date), y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+
+  geom_point(aes(x = as_date(Date), y = sampleStage_cm), fill = "white", colour = "black", na.rm = TRUE, shape = 21)+
+  #scale_fill_manual(values = c("Grab" = "#E69F00", "Rack" = "#009E73"), na.translate = FALSE)+
+  facet_wrap(~site, ncol = 1, 
+             strip.position = "right",
+             scales = "free_y")+
+  labs(y = "River stage (cm)", x = "",
+       fill = "Sample Type")+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months",
+                   limits = as_date(c("2018-10-24", "2020-03-01")))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust=1),
+        text = element_text(size=12),
+        legend.position = "bottom")
+
+
+# use Rainmaker to deliniate storms
+Wx_CC_storms <- wx_mean %>% 
+  filter(DateTime >= "2018-10-23") %>% 
+  as.data.frame() %>% 
+  Rainmaker::RMevents(., ieHr = 14, rainthresh = 50, rain = "Rn15_mean", time = "DateTime")
+
+Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
+Wx_CC_storms[["storms"]]   # list of all events
+
+
+# rain plot with storm lines
+rn_strm_plot <- wx_mean %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Rain = factor("Rain")) %>% 
+  group_by(date, Rain) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24", 
+         date <= "2020-03-01") %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(aes(colour = Rain), colour = "#0072B2") +
+  scale_y_reverse() +
+  labs(x = "", y = "mm /day") +
+  theme_bw() +
+  geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate),
+             colour = "red")+
+  #scale_x_date(date_breaks = "1 months", date_labels = "%Y-%m")+ # use to check alignment 
+  #scale_x_date(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
+  scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL, limits = as_date(c("2018-10-24", "2020-03-01")))+  # remove axis labels when you're confident
+  facet_wrap(~Rain, ncol = 1, 
+             strip.position = "right") +
+  theme(legend.position = "right",
+        #strip.background = element_blank(),
+        axis.text.x = element_text(angle = 60, hjust=1),
+        text = element_text(size=12))
+
+# river stage with storm lines
+rv_strm_plot <- stage_sample_plot+
+  geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate),
+             colour = "red")
+
+# stack the two storm delineated plots
+cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
+                   ncol = 1, axis = "l", align = "v",
+                   rel_heights = c(1,4.5))
+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png",
+       width = 7, height = 9, units = "in")
+
+# save the storms as a new object 'events'
+# add a column identifying the event sequentially
+events <- Wx_CC_storms[["storms2"]] %>% 
+  mutate(ID = row_number(stormnum),
+         StartDate = ymd_hms(StartDate, tz = TZ),
+         EndDate = ymd_hms(EndDate, tz = TZ))
+
+# alter the sample results dataframe to include storm event data
+stg_sample <- stg_sample %>%
+  mutate(event_ID =
+             case_when(
+    lubridate::round_date(DateTime, unit = "minute")  %within% interval(lubridate::round_date(events$StartDate[1], unit = "minute"), lubridate::round_date(events$EndDate[1], unit = "minute")) ~ events$ID[1],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[2], unit = "minute"), round_date(events$EndDate[2], unit = "minute")) ~ events$ID[2],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[3], unit = "minute"), round_date(events$EndDate[3], unit = "minute")) ~ events$ID[3],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[4], unit = "minute"), round_date(events$EndDate[4], unit = "minute")) ~ events$ID[4],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[5], unit = "minute"), round_date(events$EndDate[5], unit = "minute")) ~ events$ID[5],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[6], unit = "minute"), round_date(events$EndDate[6], unit = "minute")) ~ events$ID[6],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[7], unit = "minute"), round_date(events$EndDate[7], unit = "minute")) ~ events$ID[7],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[8], unit = "minute"), round_date(events$EndDate[8], unit = "minute")) ~ events$ID[8],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[9], unit = "minute"), round_date(events$EndDate[9], unit = "minute")) ~ events$ID[9],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[10], unit = "minute"), round_date(events$EndDate[10], unit = "minute")) ~ events$ID[10],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[11], unit = "minute"), round_date(events$EndDate[11], unit = "minute")) ~ events$ID[11],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[12], unit = "minute"), round_date(events$EndDate[12], unit = "minute")) ~ events$ID[12],
+  
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[13], unit = "minute"), round_date(events$EndDate[13], unit = "minute")) ~ events$ID[13],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[14], unit = "minute"), round_date(events$EndDate[14], unit = "minute")) ~ events$ID[14],
+           
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[15], unit = "minute"), round_date(events$EndDate[15], unit = "minute")) ~ events$ID[15],
+    
+    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[16], unit = "minute"), round_date(events$EndDate[16], unit = "minute")) ~ events$ID[16]
+             )
+  )
+ 
+# summarize mean and standard deviation for each trip and event
+# make a table
+wut <- stg_sample %>% 
+  filter(!is.na(event_ID),
+         !is.na(DateTime_sampled),
+         analysis == "DOC") %>% 
+  mutate(pseudo_SUVA = pseudo254/NPOC_ppm) %>% 
+  group_by(site, trip, event_ID) %>% 
+  summarise(DOC = mean(NPOC_ppm),
+            sd_DOC = sd(NPOC_ppm),
+            Nitrate = mean(NO3.Neq_ppm),
+            sd_Nitrate = sd(NO3.Neq_ppm),
+            surrDOC = mean(DOCeq_ppm),
+            sd_surrDOC = sd(DOCeq_ppm),
+            SAC254 = mean(SAC254_Abs.m),
+            sd_SAC254 = sd(SAC254_Abs.m),
+            est254 = mean(pseudo254),
+            sd_est254 = sd(pseudo254),
+            SUVA = mean(SUVA),
+            sd_SUVA = sd(SUVA),
+            pseudo_SUVA = mean(pseudo_SUVA),
+            sd_pseudo_SUVA = sd(pseudo_SUVA)) %>% 
+  ungroup() %>% 
+  mutate(trip = factor(trip, levels = c(1:23))) %>% 
+  group_by(site) %>% 
+  dplyr::arrange(trip, event_ID) %>% 
+  knitr::kable(digits = 2)
+
+wut
 ```
 
 # File Outputs
@@ -1165,66 +1318,11 @@ write_csv(results,
 path = "R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv", na = "NA")
 
 # stg_sample
-# subbasin sample results with stage and timestamps
+# subbasin sample results with stage, timestamps, and precip event ID
 write_csv(stg_sample, 
 path = "R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
 
 ```
-
-
-
-
-# WIP Events defined based on precip using Rainmaker::RMevents
-```{r, warnings = FASLE, messages = FALSE}
-# use precipitation to define events
-# precip_data
-# odyssey_data
-
-Wx_CC_storms <- wx_mean %>% 
-  filter(DateTime >= "2018-10-23") %>% 
-  as.data.frame() %>% 
-  Rainmaker::RMevents(., ieHr = 20, rainthresh = 30, rain = "Rn15_mean", time = "DateTime")
-
-Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
-Wx_CC_storms[["storms"]]   # list of all events
-
-
-# rain plot with storm lines
-rn_strm_plot <- wx_mean %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         Rain = factor("Rain")) %>% 
-  group_by(date, Rain) %>% 
-  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  filter(date >= "2018-10-24") %>% 
-  ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(aes(colour = Rain), colour = "#0072B2") +
-  scale_y_reverse() +
-  labs(x = "", y = "mm /day") +
-  theme_bw() +
-  geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate))+
-  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
-  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
-  facet_wrap(~Rain, ncol = 1, 
-             strip.position = "right") +
-  theme(legend.position = "none",
-        strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90))
-
-# river stage with storm lines
-rv_strm_plot <- corr_stage %>% 
-  ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line()#+
-  #geom_vline(xintercept = Wx_CC_storms[["storms2"]]$StartDate)
-
-# stack the two storm delineated plots
-#cowplot::plot_grid(rn_strm_plot, rv_strm_plot, 
-#                   ncol = 1, axis = "l", align = "v",
-#                   rel_heights = c(1,5))
-
-```
-
-
 
 # fin
 
