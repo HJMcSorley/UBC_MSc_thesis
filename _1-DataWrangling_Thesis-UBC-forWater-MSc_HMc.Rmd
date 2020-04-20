@@ -1046,7 +1046,8 @@ results <- results %>%
          sample_type = factor(sample_type),
          analysis = factor(analysis),
          two_seasons = factor(two_seasons)) %>% 
-  dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
+  dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm)) %>% 
+  dplyr::distinct(site, trip, NPOC_ppm, .keep_all = TRUE)
 
 ```
 
@@ -1070,7 +1071,7 @@ sixfilter_join <- results %>%
 # round datetime in stage
 corr_stage_join <- corr_stage %>% 
   mutate(DateTime = lubridate::round_date(DateTime, unit = "hour")) 
-  
+
 # join odyssey and result 
 stg_sample <- left_join(corr_stage, sixfilter_join, 
                         by = c("DateTime", 
@@ -1188,47 +1189,58 @@ events <- Wx_CC_storms[["storms2"]] %>%
          StartDate = ymd_hms(StartDate, tz = TZ),
          EndDate = ymd_hms(EndDate, tz = TZ))
 
+
+# ugly code below -----
 # alter the sample results dataframe to include storm event data
 stg_sample <- stg_sample %>%
   mutate(event_ID =
              case_when(
-    lubridate::round_date(DateTime, unit = "minute")  %within% interval(lubridate::round_date(events$StartDate[1], unit = "minute"), lubridate::round_date(events$EndDate[1], unit = "minute")) ~ events$ID[1],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[2], unit = "minute"), round_date(events$EndDate[2], unit = "minute")) ~ events$ID[2],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[3], unit = "minute"), round_date(events$EndDate[3], unit = "minute")) ~ events$ID[3],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[4], unit = "minute"), round_date(events$EndDate[4], unit = "minute")) ~ events$ID[4],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[5], unit = "minute"), round_date(events$EndDate[5], unit = "minute")) ~ events$ID[5],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[6], unit = "minute"), round_date(events$EndDate[6], unit = "minute")) ~ events$ID[6],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[7], unit = "minute"), round_date(events$EndDate[7], unit = "minute")) ~ events$ID[7],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[8], unit = "minute"), round_date(events$EndDate[8], unit = "minute")) ~ events$ID[8],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[9], unit = "minute"), round_date(events$EndDate[9], unit = "minute")) ~ events$ID[9],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[10], unit = "minute"), round_date(events$EndDate[10], unit = "minute")) ~ events$ID[10],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[11], unit = "minute"), round_date(events$EndDate[11], unit = "minute")) ~ events$ID[11],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[12], unit = "minute"), round_date(events$EndDate[12], unit = "minute")) ~ events$ID[12],
-  
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[13], unit = "minute"), round_date(events$EndDate[13], unit = "minute")) ~ events$ID[13],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[14], unit = "minute"), round_date(events$EndDate[14], unit = "minute")) ~ events$ID[14],
-           
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[15], unit = "minute"), round_date(events$EndDate[15], unit = "minute")) ~ events$ID[15],
-    
-    round_date(DateTime, unit = "minute")  %within% interval(round_date(events$StartDate[16], unit = "minute"), round_date(events$EndDate[16], unit = "minute")) ~ events$ID[16]
+    DateTime %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
+    DateTime %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
+    DateTime %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
+    DateTime %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
+    DateTime %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
+    DateTime %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
+    DateTime %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
+    DateTime %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
+    DateTime %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
+    DateTime %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
+    DateTime %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
+    DateTime %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
+    DateTime %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
+    DateTime %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
+    DateTime %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
+    DateTime %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
              )
   )
- 
+
+# alter the odyssey corrected stage dataframe to include storm event data
+corr_stage <- corr_stage %>%
+  mutate(event_ID =
+             case_when(
+    DateTime %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
+    DateTime %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
+    DateTime %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
+    DateTime %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
+    DateTime %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
+    DateTime %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
+    DateTime %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
+    DateTime %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
+    DateTime %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
+    DateTime %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
+    DateTime %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
+    DateTime %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
+    DateTime %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
+    DateTime %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
+    DateTime %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
+    DateTime %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
+             )
+  )
+# ---- 
+
 # summarize mean and standard deviation for each trip and event
 # make a table
-wut <- stg_sample %>% 
+stg_sample %>% 
   filter(!is.na(event_ID),
          !is.na(DateTime_sampled),
          analysis == "DOC") %>% 
@@ -1251,10 +1263,8 @@ wut <- stg_sample %>%
   ungroup() %>% 
   mutate(trip = factor(trip, levels = c(1:23))) %>% 
   group_by(site) %>% 
-  dplyr::arrange(trip, event_ID) %>% 
-  knitr::kable(digits = 2)
+  dplyr::arrange(trip, event_ID) %>%     write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-events-hydrochem.csv")
 
-wut
 ```
 
 # File Outputs

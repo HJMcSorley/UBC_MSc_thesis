@@ -125,8 +125,12 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_resu
          two_seasons = factor(two_seasons),
          metal_parameters = factor(Parameters))
   
+# stage_samples
+# subbasin sample results with stage, timestamps, and precip event ID
+stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv")
 
-# TEMP
+# TEMPORARY
+# count number of samples
 sampleresults %>% 
   mutate(trip = as.integer(trip),
          count = "count") %>% 
@@ -161,7 +165,6 @@ n_SynopticGrabs <- sampleresults %>%
   summarise(total = sum(grab_sample_count)) %>% 
   pull(total)
 
-# -------------------
 # synoptically sampled sites
 # synsites <- c("WestLeech","Tunnel","CraggCrk","LeechHead","Weeks","ChrisCrk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
 
@@ -436,46 +439,7 @@ sixfilter %>%
   
 ```
 
-### WIP- Stage + Rack DOC
-```{r, rackDOC}
 
-# join odyssey and result 
-stg_sample <- left_join(odyssey_data, (sixfilter %>% 
-                                         filter(sample_type =="Grab" | sample_type == "Rack")), 
-                        by = c("DateTime" = "DateTime_sampled", 
-                               "source" = "site")) %>% 
-  dplyr::rename(site = source) # new_name = old_name
-
-# try to do a combo
-ggplot(data = stg_sample)+
-  geom_line(aes(x = DateTime, y = corr_stage_cm))+
-  geom_point(aes(x = DateTime, y = sampleStage_cm, colour = sample_type))+
-  #geom_point(aes(x = DateTime, y = fillStage_cm  , colour = NPOC_ppm))+
-  #scale_colour_viridis(direction = -1)+
-  facet_wrap(~site, ncol = 1, strip.position = "right")
-
-# from above --------------
-# rising limb
-sixfilter %>% 
-  filter(sample_type == "Rack") %>% 
-  #mutate(trip = factor(trip, levels = c(1:23))) %>% 
-  #group_by(site, trip) %>% 
-  mutate(RisingLimb = NumberXtract(sample),
-         RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
-  ggplot(aes(x = DateTime_sampled, y = rackstage_cm)) +
-  geom_jitter(aes(colour = NPOC_ppm)) +
-  scale_colour_viridis(direction = -1) +
-  facet_wrap(~site, nrow = 6,
-             strip.position = "right")
-  
-# grab and rack
-sixfilter %>% 
-  filter(sample_type == "Rack" | sample_type == "Grab") %>% 
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_jitter(aes(colour = sample_type)) +
-  facet_wrap(~site)
-  
-```
 ##  Sampling campaign
 Four hundred water sample were collected and analyzed for DOC over a 16 month study period (October 2018 to February 2020). The synoptic grab-sampling program was enhanced by the collection of stormflow on the six vertical sampling racks. In total, 171 samples were collected on vertical Racks, 215 Grab samples were collected at 15 synoptically sampled sites (which included the six installation sites), and an additional 14 Grab samples were collected opportunistically at one-off sites across the water supply area. Figure 3 shows DOC concentrations across the 15 synoptically sampled sites over the study period (n=386). 
 
@@ -629,6 +593,22 @@ sixfilter %>%
   theme(legend.position = "none") 
 #ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig5_DOC_ridgeplot-seasonal.png") 
 ```
+```{r, DOC-vs-surrogate}
+
+# scatterplot of DOC vs absorb-DOC by season
+sixfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
+  geom_point(aes(colour = two_seasons), alpha = 0.4)+
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  theme_bw()+
+  labs(x = "DOC (ppm) as NPOC",
+       y = "DOC surrogate based on UV absorbance (ppm eq.)",
+       colour = "Sampling Season")
+```
+
+
 
 At each of the six sub-basin monitoring locations, mean DOC was higher during the dry season than during the wet season (Table 2, Fig.8). There was less variation in dry season DOC concentrations at each site also (Table 2), which could be due to actual reduction in variance in the absence of stormflow pulses and also due to fewer dry season samples (n = 46) compared to wet season samples (n = 278). 
 
@@ -1133,8 +1113,8 @@ rn_seasonalAnnual <- precip_data %>%
                    rn = sum(rain_monthly, na.rm = TRUE)) %>% 
   ungroup()
 
-# water-year rainfalls (Oct 1 - Sept 30) --- this one's farked
-rn_wateryr <- precip_data %>%
+# water-year rainfalls (Oct 1 - Sept 30) 
+rn_wateryr <-precip_data %>%
   group_by(StationName) %>% 
   filter(StationName != "Survey Mtn Wx") %>% 
   mutate(month = lubridate::month(DateTime),
@@ -1151,9 +1131,11 @@ rn_wateryr <- precip_data %>%
   dplyr::summarise(rain = sum(Rn_1, na.rm = TRUE),
                    max_snow = max(SnowDep, na.rm = TRUE),
                    annual_mean_temp = mean(Temp, na.rm = TRUE),
-                   temp_sd = sd(Temp, na.rm = TRUE)) %>%  
-   write_csv(., "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv",
-             col_names = c("year", "station name", "annual precip. (mm)", "max snow (m)", "mean air temp. (°C)", "stdev air temp. (±°C)"))
+                   temp_sd = sd(Temp, na.rm = TRUE)) %>% 
+  ungroup %>% 
+  rename(annual_precip_mm = rain, 
+         max_snow_m = max_snow) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
 
 ```
 
