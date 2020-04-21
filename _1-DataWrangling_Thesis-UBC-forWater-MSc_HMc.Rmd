@@ -132,7 +132,7 @@ shimadzu_samples <- shimadzu_samples %>%
 
 # fix naming errors for sites
 shimadzu_samples$site <- shimadzu_samples$site %>% 
-  plyr::revalue(c(
+  plyr::revalue(c( # old = new
     "Chris" = "Chris-crk",
     "Lower-Leech-blw-confl" = "Leech-downstreamconf",
     "Leech-dwnstrm-confl" = "Leech-downstreamconf",
@@ -141,8 +141,10 @@ shimadzu_samples$site <- shimadzu_samples$site %>%
     "J-Trib" = "West-Jordan",
     "West-jordan" = "West-Jordan",
     "W.Jarvis" = "Jarvis",
+    "Judge-crk" = "Judge",
     "Rithet-N" = "Rithet",
-    "Judge" = "Judge-crk"
+    "Rithet-S" = "Rithet",
+    "Rithet-crk" = "Rithet"
   ))
 # check sites again
 # levels(shimadzu_samples$site)
@@ -310,10 +312,12 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
     "Lower-Leech-blw-confl" = "Leech-downstreamconf",
     "Leech-main-confl" = "Leech-downstreamconf",
     "Leech-downstreamconf" = "Leech-downstreamconf",
+    "Leech-dwnstrm-confl" = "Leech-downstreamconf",
     "J-Trib" = "West-Jordan",
+    "Judge-crk" = "Judge",
     "West-jordan" = "West-Jordan",
-    "W.Jarvis" = "Jarvis",
-    "Judge" = "Judge-crk"
+    "Rithet-crk" = "Rithet",
+    "W.Jarvis" = "Jarvis"
   ))
 # check sites again
 levels(spectrolyser_samples$site)
@@ -923,8 +927,8 @@ corr_stage <- odyssey_data %>%
 Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join
 ```{r, join-stage-samples}
 
-str(corr_stage)
-str(sampleresults)
+# str(corr_stage)
+# str(sampleresults)
 
 # remove dashes from sub-basin names (match Odyssey names)
 sampleresults <- sampleresults %>% 
@@ -943,7 +947,8 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
                                         site == "Tunnel") %>% 
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
-         trip = factor(trip, levels = c(1:23)))%>% 
+         trip = factor(trip, levels = c(1:23)),
+         ID = row_number(sample))%>% 
   filter(analysis == "DOC",
          trip != 0,
          sample_type != "QA-QC") %>% 
@@ -953,7 +958,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
 # rack samples ---
 # isolate rack samples 
 rack_sample_df <- sixfilter %>% 
-  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
+  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm, ID)) %>%
   mutate(sampleStage_cm = floor(sampleStage_cm)) %>% 
   filter(sample_type == "Rack") %>% 
   droplevels() %>% 
@@ -982,7 +987,7 @@ sampleresults_rack <- left_join(rack_sample_df, stage_racks,
 # obtain stage from grab sample DateTime
 # isolate subbasin grab samples  
 grab_sample_df <- sixfilter %>% 
-  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm)) %>%
+  select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm, ID)) %>%
   mutate(DateTime_R = lubridate::round_date(dt_sampled, unit = "hour")) %>%  #round hour
   filter(sample_type == "Grab") %>% 
   droplevels() %>% 
@@ -994,11 +999,7 @@ stage_grabs <- corr_stage %>%
   select(-c(Date, stage_cm)) %>% 
   mutate(DateTime_R = lubridate::round_date(DateTime, unit = "hour")) %>%  # round hour
   rename(site = source, trip = interval) %>%  # new = old
-  #mutate(sampleStage_cm = round(corr_stage_cm)) %>%   # first occurrence of stage
-  #droplevels() %>% 
-  group_by(site, trip) #%>% 
-  #dplyr::distinct(DateTime_R, .keep_all = TRUE)    
-  # first stage each hour
+  group_by(site, trip) 
   
 # Join grab-stage and grab-sample dataframes to get stage from DateTime
 sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
@@ -1014,31 +1015,32 @@ sampleresults_grab <- sampleresults_grabstage %>%
   ungroup() %>% 
   dplyr::mutate(sampleStage_cm = corr_stage_cm,
                 trip = trip.x) %>% 
-  select(-c( trip.x, trip.y, DateTime_R))
+  select(-c( trip.x, trip.y, DateTime_R)) 
 # DateTime and sampleStage_cm are the good good
 
 # good!
 
 # Join time-stamped rack and grab dfs
 results1 <- full_join(sampleresults_grab, sampleresults_rack, 
-                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm"))
+                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm", "ID")) %>% 
+  dplyr::distinct(site, trip, NPOC_ppm, ID, .keep_all = TRUE)
 
 # join matched sample dataframes with the original sampleresults  
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
-results <- full_join(results1, sampleresults, 
-                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>% 
-  dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm))  
+results2 <- full_join(results1, sampleresults, 
+                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) #%>% 
+  #dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
 # create DateTime_sampled variable by combining DateTime and dt_sampled
-results <- within(results, 
+results3 <- within(results2, 
                  DateTime_sampled <- ifelse(
                    is.na(DateTime), dt_sampled, DateTime)) %>% 
   mutate(DateTime_sampled = lubridate::as_datetime(DateTime_sampled, tz = TZ))
 # great jorb!
 
 # save as a new dataframe
-results <- results %>% 
+results <- results3 %>% 
   ungroup() %>% 
   select(-c("trip_end", "three_seasons", "dt_sampled")) %>% 
   mutate(trip = factor(trip), 
@@ -1046,8 +1048,16 @@ results <- results %>%
          sample_type = factor(sample_type),
          analysis = factor(analysis),
          two_seasons = factor(two_seasons)) %>% 
-  dplyr::filter(!is.na(NPOC_ppm) | !is.na(DOCeq_ppm)) %>% 
-  dplyr::distinct(site, trip, NPOC_ppm, .keep_all = TRUE)
+  dplyr::distinct(site, trip, ID, .keep_all = TRUE)  
+
+# check count
+results %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>%  
+  group_by(site, sample_type) %>%   
+  summarise(number_of_samples = n()) %>%
+  ungroup() %>% 
+  summarize(total = sum(number_of_samples)) %>% 
+  pull(total)
 
 ```
 
@@ -1105,7 +1115,7 @@ stg_sample %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",width = 6, height = 8, units = "in")
 ```
 
-# WIP Events defined based on precip using Rainmaker::RMevents
+# Rain Events defined based on precip using Rainmaker::RMevents
 ```{r, warnings = FASLE, messages = FALSE}
 # use precipitation to define events
 # precip_data
@@ -1141,7 +1151,10 @@ Wx_CC_storms <- wx_mean %>%
 
 Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
 Wx_CC_storms[["storms"]]   # list of all events
+```
 
+## plot 
+```{r, plot-hydro-events}
 
 # rain plot with storm lines
 rn_strm_plot <- wx_mean %>% 
@@ -1159,6 +1172,7 @@ rn_strm_plot <- wx_mean %>%
   theme_bw() +
   geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$StartDate),
              colour = "red")+
+  #geom_vline(xintercept = as_date(Wx_CC_storms[["storms2"]]$EndDate), colour = "blue")+
   #scale_x_date(date_breaks = "1 months", date_labels = "%Y-%m")+ # use to check alignment 
   #scale_x_date(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
   scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL, limits = as_date(c("2018-10-24", "2020-03-01")))+  # remove axis labels when you're confident
@@ -1181,7 +1195,10 @@ cowplot::plot_grid(rn_strm_plot, rv_strm_plot,
 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png",
        width = 7, height = 9, units = "in")
+```
 
+## Rain events objects
+```{r, event-object}
 # save the storms as a new object 'events'
 # add a column identifying the event sequentially
 events <- Wx_CC_storms[["storms2"]] %>% 
@@ -1267,6 +1284,47 @@ stg_sample %>%
 
 ```
 
+# update sample results with rain events
+```{r, update samples}
+results <- results %>% 
+  mutate(Date = as_date(DateTime)) %>%
+  # add event ID (ugly code)
+  mutate(event_ID =
+             case_when(
+    Date %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
+    Date %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
+    Date %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
+    Date %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
+    Date %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
+    Date %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
+    Date %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
+    Date %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
+    Date %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
+    Date %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
+    Date %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
+    Date %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
+    Date %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
+    Date %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
+    Date %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
+    Date %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
+             )  ) %>% 
+  # add seasons
+  mutate(rain_season = case_when(
+           event_ID %in% 1:8 ~ "wet",   
+           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+           event_ID %in% 9:16 ~ "wet")) %>% 
+  mutate(two_seasons = as.character(two_seasons))
+
+# fill in any gaps
+results <- within(results, 
+                 rain_season <- ifelse(
+                   is.na(rain_season), two_seasons, rain_season)) 
+
+```
+
+
 # File Outputs
 
 save the compiled and formatted dataframes as .csv files.
@@ -1332,7 +1390,12 @@ path = "R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv", na = "NA")
 # stg_sample
 # subbasin sample results with stage, timestamps, and precip event ID
 write_csv(stg_sample, 
-path = "R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
+"R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
+
+# events
+# Rain events from Rainmaker
+write_csv(events, 
+"R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", na = "NA")
 
 ```
 
@@ -1342,8 +1405,6 @@ For some reason, RStudio truncates the session viewable... so here's some text t
 ```{r}
 # and an empty code chunk
 ```
-
-
 
 
 
