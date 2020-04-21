@@ -461,19 +461,20 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 ```{r, rackDOC}
 # rising limb
 sixfilter %>% 
-  filter(sample_type == "Rack") %>% 
-  filter(rain_season == "wet") %>% 
+  filter(sample_type == "Rack") %>%
+  filter(event_ID != 8, event_ID != 13, event_ID != 7) %>% 
   group_by(site, forcats::fct_explicit_na(event_ID)) %>% 
   mutate(RisingLimb = NumberXtract(sample),
          RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
-  ggplot(aes(x = sampleStage_cm, y = NPOC_ppm)) +
-  geom_jitter(aes(colour = event_ID),
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  geom_jitter(aes(colour = site),
               size = 3) +
-  #scale_colour_viridis(direction = -1, discrete = TRUE) +
+  scale_colour_viridis(direction = -1, discrete = TRUE) +
   theme_bw()+
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  facet_wrap(~site, # nrow = 6,
-             strip.position = "right")
+  facet_wrap(~event_ID, #nrow = 16,
+             strip.position = "right",
+             scales = "free")
 ```
 
 
