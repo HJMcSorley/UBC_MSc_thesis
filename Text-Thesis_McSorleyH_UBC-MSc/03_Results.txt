@@ -104,13 +104,19 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_site-conc-summa
 * was the trend for conc on RL consistent at each site across the study period or did it change from early in the wet season to later?
 * did each of the six subbasin sites have similar RL trends?  
 
-### DOC and metals concentrations
+### DOC and metals concentrations  -------------------------------------------metals
+
+### DOC and metals in solution
+
+Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was analyzed for DOC. There was a suite of metals included in the analyses, many of which were below detection limits; Figure XXXXX shows DOC concentrations from samples which had detectable concentrations of eight metal species.   
 
 ![__Figure__Concentrations of DOC and total metals_](R-outputs_UBC-forWater-MSc_HMc/figures/DOC-Metals_subbasin_scatterplots.png)
 \  
 
 DOC concentrationshad strong positive relationships with total mercury (R^2^=0.9998, n=3) aluminum (R^2^=0.81, n=36), and iron (R^2^=0.72, n=36). While the relationships were not as strong, DOC was also positively related to concentrations of copper (R^2^=0.47, n=27), barium (R^2^=0.25, n=30), and manganese (R^2^=0.21, n=12). Not included in FIGUREYYYYYY is the weak inverse relationship between DOC and silicon (R^2^=0.061, n=29) and magnesium (R^2^=0.015, n=30). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for source water guidelines [@BC2019].
 
+
+# -----------------------------------------------
 ## DOM character (& seasonality)
 ### SUVA (aromaticity)
 **** note that the correlation between DOC and metals becomes even tighter when SUVA is used instead of NPOC... greater aromaticity indicates greater potential for complexation (aromatic ~ ligand)

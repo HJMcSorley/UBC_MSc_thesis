@@ -29,10 +29,10 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 24,Leech-head,Rack,L4,,165,23
 25,Leech-head,Rack,L6,,195,23
 26,Weeks-out,Grab,Grab,2020-02-20 0:00,51.5,23
-27,Weeks-out,Rack,L1,,89,23
-28,Weeks-out,Rack,L2,,98,23
-29,Weeks-out,Rack,L3,,115,23
-30,Weeks-out,Rack,L4,,127,23
+27,Weeks-out,Rack,L1,,59,23
+28,Weeks-out,Rack,L2,,38,23
+29,Weeks-out,Rack,L3,,85,23
+30,Weeks-out,Rack,L4,,97,23
 31,Weeks-out,Grab,Grab,2020-01-09 11:35,,23
 32,Tunnel,Grab,Grab,2020-02-18 11:00,20,23
 33,Tunnel,Grab,Grab,2020-02-19 11:00,19,23
@@ -44,20 +44,20 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 39,Tunnel,Rack,L6,,117,23
 40,Tunnel,Grab,Grab,2020-01-30 12:30,110,23
 41,West-Leech,Grab,Grab,2020-02-19 10:00,30,23
-42,West-Leech,Rack,L1,,37,23
-43,West-Leech,Rack,L2,,51,23
-44,West-Leech,Rack,L3,,67,23
-45,West-Leech,Rack,L4,,83,23
-46,West-Leech,Rack,L5,,101,23
-47,West-Leech,Rack,L6,,119,23
-48,West-Leech,Rack,L7,,136,23
+42,West-Leech,Rack,L1,,28,23
+43,West-Leech,Rack,L2,,41,23
+44,West-Leech,Rack,L3,,52,23
+45,West-Leech,Rack,L4,,67,23
+46,West-Leech,Rack,L5,,85,23
+47,West-Leech,Rack,L6,,99,23
+48,West-Leech,Rack,L7,,114,23
 49,West-Leech,Grab,Grab,2020-01-30 9:30,,23
 50,West-Leech,Grab,Grab,2020-01-08 12:45,,23
 51,West-Leech,Grab,Grab,2020-02-08 10:00,,23
 52,Leech-dwnstrm-confl,Grab,Grab,2020-02-08 11:10,,23
 53,Chris-crk,Grab,Grab,2020-02-20 13:00,,23
-54,Chris-crk,Rack,L1,,37,23
-55,Chris-crk,Rack,L2,,48,23
-56,Chris-crk,Rack,L3,,66,23
-57,Chris-crk,Rack,L4,,81,23
-58,Chris-crk,Rack,L5,,97,23
+54,Chris-crk,Rack,L1,,25,23
+55,Chris-crk,Rack,L2,,37,23
+56,Chris-crk,Rack,L3,,45,23
+57,Chris-crk,Rack,L4,,55,23
+58,Chris-crk,Rack,L5,,67,23

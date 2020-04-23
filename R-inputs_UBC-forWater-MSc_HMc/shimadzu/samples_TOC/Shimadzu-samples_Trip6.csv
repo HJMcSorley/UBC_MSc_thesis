@@ -3,9 +3,9 @@
 ,,,,,,,
 "# Results file ""2019-02-07_Leech_Jan5-6_DOC_001""",,,,,,,
 vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
-1,Weeks-out,Rack,L1,,92,DOC,6
-2,Weeks-out,Rack,L2,,102,DOC,6
-3,Leech-head,Rack,L1,,147,DOC,6
+1,Weeks-out,Rack,L1,,50,DOC,6
+2,Weeks-out,Rack,L2,,70,DOC,6
+3,Leech-head,Rack,L1,,134,DOC,6
 4,Chris-crk,Rack,L1,,38,DOC,6
 5,Chris-crk,Grab,Grab,2019-02-05 10:30,25,DOC,6
 6,Cragg-crk,Rack,L1,,51,DOC,6
@@ -14,9 +14,9 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 9,West-Leech,Rack,L1,,47,DOC,6
 10,West-Leech,Rack,L2,,71,DOC,6
 11,West-Leech,Grab,Grab,2019-02-06 9:30,28,DOC,6
-12,Tunnel,Rack,L1,,59,DOC,6
-13,Tunnel,Rack,L2,,72,DOC,6
-14,Tunnel,Rack,L4,,99,DOC,6
+12,Tunnel,Rack,L1,,35,DOC,6
+13,Tunnel,Rack,L2,,49,DOC,6
+14,Tunnel,Rack,L4,,75,DOC,6
 15,Tunnel,Grab,Grab,2019-02-06 10:45,17,DOC,6
 16,Lab,QA-QC,RO_pH<2,,,DOC,6
 17,Lab,QA-QC,CAL-VER_5.7ppm,,,DOC,6

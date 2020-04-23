@@ -710,7 +710,6 @@ sampleresults  <-  sampleresults %>%
 ```{r, CRD-metals}
 
 # I collected metals samples from trip 3 to 10
-# CRD provided results files (PDF report) for trips 3 to 8
 # data was manually sorted from PDF (there must be a better way)
 # load data
 metals <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Metals_CRD-forWaterMSc_HMc/CRD-metals-data_collated-trips3-10_nocharacternulls.csv", 
@@ -920,6 +919,17 @@ corr_stage <- odyssey_data %>%
   mutate(source = factor(source, 
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 ```
+
+```
+#r, QA-QC}
+# check stages of missing samples
+corr_stage %>% 
+  filter(interval == 23,
+         source == "ChrisCrk") %>% 
+  summarise(min_stage = min(corr_stage_cm),
+            max_stage = max(corr_stage_cm))
+```
+
 
 
 # Match bottle height to logged stage
@@ -1212,47 +1222,45 @@ events <- Wx_CC_storms[["storms2"]] %>%
 stg_sample <- stg_sample %>%
   mutate(event_ID =
              case_when(
-    DateTime %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
-    DateTime %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
-    DateTime %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
-    DateTime %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
-    DateTime %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
-    DateTime %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
-    DateTime %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
-    DateTime %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
-    DateTime %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
-    DateTime %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
-    DateTime %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
-    DateTime %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
-    DateTime %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
-    DateTime %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
-    DateTime %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
-    DateTime %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
-             )
-  )
+    DateTime %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+    DateTime %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+    DateTime %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+    DateTime %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+    DateTime %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+    DateTime %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+    DateTime %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+    DateTime %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+    DateTime %within% interval(events$StartDate[9], events$StartDate[10]) ~ events$ID[9],
+    DateTime %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+    DateTime %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+    DateTime %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+    DateTime %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+    DateTime %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+    DateTime %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+    DateTime %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
+             )  )
 
 # alter the odyssey corrected stage dataframe to include storm event data
 corr_stage <- corr_stage %>%
   mutate(event_ID =
              case_when(
-    DateTime %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
-    DateTime %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
-    DateTime %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
-    DateTime %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
-    DateTime %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
-    DateTime %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
-    DateTime %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
-    DateTime %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
-    DateTime %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
-    DateTime %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
-    DateTime %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
-    DateTime %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
-    DateTime %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
-    DateTime %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
-    DateTime %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
-    DateTime %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
-             )
-  )
+    DateTime %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+    DateTime %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+    DateTime %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+    DateTime %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+    DateTime %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+    DateTime %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+    DateTime %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+    DateTime %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+    DateTime %within% interval(events$StartDate[9], events$StartDate[10]) ~ events$ID[9],
+    DateTime %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+    DateTime %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+    DateTime %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+    DateTime %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+    DateTime %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+    DateTime %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+    DateTime %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
+             )  )
 # ---- 
 
 # summarize mean and standard deviation for each trip and event
@@ -1291,22 +1299,22 @@ results <- results %>%
   # add event ID (ugly code)
   mutate(event_ID =
              case_when(
-    Date %within% interval(events$StartDate[1], events$EndDate[1]) ~ events$ID[1],
-    Date %within% interval(events$StartDate[2], events$EndDate[2]) ~ events$ID[2],
-    Date %within% interval(events$StartDate[3], events$EndDate[3]) ~ events$ID[3],
-    Date %within% interval(events$StartDate[4], events$EndDate[4]) ~ events$ID[4],
-    Date %within% interval(events$StartDate[5], events$EndDate[5]) ~ events$ID[5],
-    Date %within% interval(events$StartDate[6], events$EndDate[6]) ~ events$ID[6],
-    Date %within% interval(events$StartDate[7], events$EndDate[7]) ~ events$ID[7],
-    Date %within% interval(events$StartDate[8], events$EndDate[8]) ~ events$ID[8],
-    Date %within% interval(events$StartDate[9], events$EndDate[9]) ~ events$ID[9],
-    Date %within% interval(events$StartDate[10], events$EndDate[10]) ~ events$ID[10],
-    Date %within% interval(events$StartDate[11], events$EndDate[11]) ~ events$ID[11],
-    Date %within% interval(events$StartDate[12], events$EndDate[12]) ~ events$ID[12],
-    Date %within% interval(events$StartDate[13], events$EndDate[13]) ~ events$ID[13],
-    Date %within% interval(events$StartDate[14], events$EndDate[14]) ~ events$ID[14],
-    Date %within% interval(events$StartDate[15], events$EndDate[15]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], events$EndDate[16]) ~ events$ID[16]
+    Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+    Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+    Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+    Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+    Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+    Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+    Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+    Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+    Date %within% interval(events$StartDate[9], events$StartDate[10]) ~ events$ID[9],
+    Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+    Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+    Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+    Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+    Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+    Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+    Date %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
              )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(

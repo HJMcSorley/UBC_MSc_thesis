@@ -37,7 +37,7 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 32,West-Leech,Rack,L1,,23,17
 33,West-Leech,Rack,L2,,36,17
 34,West-Leech,Rack,L3,,53,17
-35,West-Leech,Rack,L4,,71,17
+35,West-Leech,Rack,L4,,65,17
 36,West-Leech,Grab,Grab,2019-10-24 10:25,32,17
 37,Tunnel,QA-QC,HoldTime-B1,2019-10-12,,17
 38,Tunnel,QA-QC,HoldTime-B2,2019-10-12,,17

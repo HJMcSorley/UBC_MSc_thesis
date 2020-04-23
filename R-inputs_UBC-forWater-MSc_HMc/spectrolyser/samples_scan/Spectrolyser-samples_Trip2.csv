@@ -8,11 +8,11 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 3,Weeks-out,Rack,L3,,40,2
 4,Weeks-out,Rack,L4,,45,2
 5,Weeks-out,Rack,L5,,50,2
-6,Leech-head,Rack,L1,,80,2
-7,Leech-head,Rack,L2,,90,2
-8,Leech-head,Rack,L3,,100,2
-9,Leech-head,Rack,L4,,110,2
-10,Leech-head,Rack,L5,,120,2
+6,Leech-head,Rack,L1,,90,2
+7,Leech-head,Rack,L2,,100,2
+8,Leech-head,Rack,L3,,110,2
+9,Leech-head,Rack,L4,,120,2
+10,Leech-head,Rack,L5,,135,2
 11,Leech-head,Grab,Grab,2018-11-06 12:20,,2
 12,Chris-crk,Rack,L1,,30,2
 13,Chris-crk,Rack,L2,,35,2
@@ -31,14 +31,14 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 26,West-Leech,Rack,L4,,69,2
 27,West-Leech,Rack,L5,,75,2
 28,West-Leech,Grab,Grab,2018-11-07 9:00,,2
-29,Weeks-Lk-NE,Grab,Grab,,,2
-30,Leech-main-confl,Grab,Grab,,,2
-31,West-jordan,Grab,Grab,,,2
-32,Jarvis,Grab,Grab,,,2
-33,W.trib-to-Weeks,Grab,Grab,,,2
-34,Boneyard,Grab,Grab,,,2
-35,Weeks-Gate,Grab,Grab,,,2
-36,Weeks-Lk-SE,Grab,Grab,,,2
-37,Lower-Leech-blw-confl,Grab,Grab,,,2
+29,Weeks-Lk-NE,Grab,Grab,2018-11-06 12:55,,2
+30,Leech-main-confl,Grab,Grab,2018-11-07 9:00,,2
+31,West-jordan,Grab,Grab,2018-11-06 13:55,,2
+32,Jarvis,Grab,Grab,2018-11-06 13:55,,2
+33,W.trib-to-Weeks,Grab,Grab,2018-11-06 13:55,,2
+34,Boneyard,Grab,Grab,2018-11-07 9:00,,2
+35,Weeks-Gate,Grab,Grab,2018-11-06 13:55,,2
+36,Weeks-Lk-SE,Grab,Grab,2018-11-06 13:55,,2
+37,Lower-Leech-blw-confl,Grab,Grab,2018-11-07 9:00,,2
 38,Weeks-out,Grab,Grab,2018-11-06 13:55,,2
 39,Lab,QA-QC,CAL-VER_5.73ppm,,,2

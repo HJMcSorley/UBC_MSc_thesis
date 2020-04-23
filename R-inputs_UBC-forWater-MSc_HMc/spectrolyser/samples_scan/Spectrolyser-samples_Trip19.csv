@@ -23,11 +23,11 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 18,West-Leech,Grab,Grab,2019-11-22 8:45,28,19
 19,West-Leech,Rack,L1,,27,19
 20,West-Leech,Rack,L2,,47,19
-21,West-Leech,Rack,L3,,67,19
-22,West-Leech,Rack,L4,,84,19
+21,West-Leech,Rack,L3,,65,19
+22,West-Leech,Rack,L4,,76,19
 23,Tunnel,Grab,Grab,2019-11-22 10:00,23,19
 24,Tunnel,Rack,L1,,19,19
 25,Tunnel,Rack,L2,,35,19
 26,Tunnel,Rack,L3,,54,19
-27,Tunnel,Rack,L4,,70,19
-28,Tunnel,Rack,L5,,86,19
+27,Tunnel,Rack,L4,,68,19
+28,Tunnel,Rack,L5,,79,19
