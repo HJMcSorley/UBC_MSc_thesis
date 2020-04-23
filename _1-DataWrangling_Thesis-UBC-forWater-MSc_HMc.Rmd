@@ -642,55 +642,10 @@ sampleresults <- full_join(TOCV_results, SCAN_results,
 # check it out
 #str(sampleresults)
 
-# add a column of "trip_end" to have a date for each trip (plotting)
-## this is a terrible method
-## there must be a way to use a loop/map/apply (don't know how yet)
-
-#sampleresults2 <-  sampleresults %>% 
-#   mutate(
-#    for (i in seq_along(1:22)) {
-#      trip_end[i] = case_when(trip == i ~ trip_df$trip.end[i])
-#        })
-
-sampleresults <- sampleresults %>% 
-  mutate(trip_end = case_when(  
-    trip == "1" ~ trip_df$trip.end[1],
-    trip == "2" ~ trip_df$trip.end[2],
-    trip == "3" ~ trip_df$trip.end[3],
-    trip == "4" ~ trip_df$trip.end[4],
-    trip == "5" ~ trip_df$trip.end[5],
-    trip == "6" ~ trip_df$trip.end[6],
-    trip == "7" ~ trip_df$trip.end[7],
-    trip == "8" ~ trip_df$trip.end[8],
-    trip == "9" ~ trip_df$trip.end[9],
-    trip == "10" ~ trip_df$trip.end[10],
-    trip == "11" ~ trip_df$trip.end[11],
-    trip == "12" ~ trip_df$trip.end[12],
-    trip == "13" ~ trip_df$trip.end[13],
-    trip == "14" ~ trip_df$trip.end[15],
-    trip == "15" ~ trip_df$trip.end[16],
-    trip == "16" ~ trip_df$trip.end[17],
-    trip == "17" ~ trip_df$trip.end[18],
-    trip == "18" ~ trip_df$trip.end[19],
-    trip == "19" ~ trip_df$trip.end[20],
-    trip == "20" ~ trip_df$trip.end[21],
-    trip == "21" ~ trip_df$trip.end[22],
-    trip == "22" ~ trip_df$trip.end[23],
-    trip == "23" ~ trip_df$trip.end[24])) %>% 
-  mutate(trip_end = lubridate::ymd(trip_end))
-
 # add a variable to identify season 
-# three seasons (early/late wet and dry) 
-# and two seasons (wet/dry))    
+# two seasons (wet/dry))    
 sampleresults <- sampleresults %>% 
   mutate(trip = factor(trip, levels = 0:23),
-         three_seasons = case_when(
-           trip == 0 ~ "SCAN QA-QC", 
-           trip %in% 1:4 ~ "early wet [Oct-Dec]",   # (second half) Oct-Dec 2018
-           trip %in% 5:9 ~ "late wet [Jan-May]",           # Jan-May 2019 
-           trip %in% 10:16 ~ "summer [June-Oct]",  # June-Oct (first half) 2019
-           trip %in% 17:21 ~ "early wet [Oct-Dec]", # Oct-Dec 2019
-           trip %in% 22:23 ~ "late wet [Jan-May]"), # Jan-Feb 2020
          two_seasons = case_when(
            trip == 0 ~ "SCAN QA-QC", 
            trip %in% 1:9 ~ "wet",   # mid-Oct 2018 to May 2019
@@ -749,8 +704,7 @@ metalslab <- left_join(x = metals,
          Site = factor(site),
          metal_parameters = factor(Parameters)) %>% 
   drop_na(site, metal_parameters) %>% 
-  select(-"BONEYARD") %>% 
-  mutate()
+  select(-"BONEYARD") 
 
 ```
 
@@ -920,17 +874,6 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 ```
 
-```
-#r, QA-QC}
-# check stages of missing samples
-corr_stage %>% 
-  filter(interval == 23,
-         source == "ChrisCrk") %>% 
-  summarise(min_stage = min(corr_stage_cm),
-            max_stage = max(corr_stage_cm))
-```
-
-
 
 # Match bottle height to logged stage
 
@@ -1052,7 +995,7 @@ results3 <- within(results2,
 # save as a new dataframe
 results <- results3 %>% 
   ungroup() %>% 
-  select(-c("trip_end", "three_seasons", "dt_sampled")) %>% 
+  select(-c("dt_sampled")) %>% 
   mutate(trip = factor(trip), 
          site = factor(site), 
          sample_type = factor(sample_type),
@@ -1237,7 +1180,9 @@ stg_sample <- stg_sample %>%
     DateTime %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
     DateTime %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
     DateTime %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    DateTime %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
+    DateTime %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+    DateTime %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+    DateTime %within% interval(events$StartDate[18], "2019-03-01") ~ events$ID[18]
              )  )
 
 # alter the odyssey corrected stage dataframe to include storm event data
@@ -1259,8 +1204,11 @@ corr_stage <- corr_stage %>%
     DateTime %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
     DateTime %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
     DateTime %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    DateTime %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
+    DateTime %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+    DateTime %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+    DateTime %within% interval(events$StartDate[18], "2019-03-01") ~ events$ID[18]
              )  )
+
 # ---- 
 
 # summarize mean and standard deviation for each trip and event
@@ -1314,7 +1262,9 @@ results <- results %>%
     Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
     Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
     Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], "2019-02-30") ~ events$ID[16]
+    Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+    Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+    Date %within% interval(events$StartDate[18], "2019-03-01") ~ events$ID[18]
              )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(
