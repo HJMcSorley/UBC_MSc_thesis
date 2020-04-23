@@ -739,7 +739,7 @@ The Leech river watershed hydroclimatic regime is pluvial, therefore precipitati
 # read it in
 precip_data <- 
   list.files("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", pattern = "*.CSV") %>% 
-  #set_names(str_extract(., "([A-ZA-Z]{4,}+)")) %>%
+  set_names(str_extract(., "([A-ZA-Z]{4,}+)")) %>%
   purrr::map_dfr(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", .), 
                             col_names = TRUE,
                             col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 

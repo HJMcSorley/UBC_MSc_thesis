@@ -1,4 +1,4 @@
-StationName,DateTime,Temp,Tmin,Tmax,SnowDep,Rn_1,Rn24,Rn15,Precip,Prec_24,Prec_1
+StationName,DateTime,Temp,TMin,TMax,SnowDep,Rn_1,Rn24,Rn15,Precip,Prec_24,Prec_1
 FWx Martins Gulch,2020-01-29 23:45,-0.9,,,,,,0,,,
 FWx Martins Gulch,2020-01-30 0:00,-0.7,-0.9,-0.4,0.01,0,29.97,0,1349,34,0
 FWx Martins Gulch,2020-01-30 0:15,-0.8,,,,,,0,,,
