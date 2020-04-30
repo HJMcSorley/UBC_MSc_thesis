@@ -685,6 +685,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 
 ## augment dataframes
 ```{r, mutate}
+# create a "first-flush category in rain_season(s)
 sampleresults <- sampleresults %>% 
   #select(-c(ID, DateTime)) %>% 
   mutate(rain_seasons = case_when(
@@ -694,7 +695,28 @@ sampleresults <- sampleresults %>%
            Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
            event_ID == 9 ~ "first flush",
            event_ID %in% 10:16 ~ "wet")) %>% 
-  mutate(rain_seasons = factor(rain_seasons))
+  mutate(rain_season = as.character(rain_season))
+
+# fill in any gaps and save as factors
+sampleresults <- within(sampleresults, 
+                 rain_seasons <- ifelse(
+                   is.na(rain_seasons), rain_season, rain_seasons)) %>% 
+  mutate(rain_season = factor(rain_season),
+         rain_seasons = factor(rain_seasons))
+
+# further group sites
+sampleresults <- sampleresults %>% 
+  mutate(site_type = case_when(
+           site == "Weeks" ~ "subbasin",   
+           site == "ChrisCrk" ~ "subbasin",
+           site == "LeechHead"  ~ "subbasin",
+           site == "CraggCrk" ~ "subbasin",
+           site == "WestLeech" ~ "subbasin",
+           site == "Tunnel" ~ "subbasin",
+           site == "Lab" ~ "LabQAQC",
+           TRUE ~ "synoptic")) %>% 
+  mutate(site_type = factor(site_type))
+
 ```
 
 
@@ -721,26 +743,28 @@ n_SynopticGrabs <- sampleresults %>%
 # synsites <- c("WestLeech","Tunnel","CraggCrk","LeechHead","Weeks","ChrisCrk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
 
 # create a subset dataframe for the synoptically sampled sites for tidier calling
-synopticfilter <- sampleresults %>% filter(site == "Weeks"|
-                                             site == "ChrisCrk"|
-                                             site == "LeechHead"|
-                                             site == "CraggCrk"|
-                                             site == "WestLeech"|
-                                             site == "Tunnel"|
-                                             
-                                             site == "Rithet"|
-                                             site == "Lazar"|
-                                             site == "Jarvis"|
-                                             site == "Judge"|
-                                             site == "Leech-downstreamconf"|
-                                             site == "Boneyard"|
-                                             #site == "Deception-crk"|  ## only two samples
-                                             #site == "West-Jordan"| ## only two samples
-                                             site == "Deception-res"
-                                             ) %>% 
+synopticfilter <- sampleresults %>% 
+  filter(site == "Weeks"|
+           site == "ChrisCrk"|
+           site == "LeechHead"|
+           site == "CraggCrk"|
+           site == "WestLeech"|
+           site == "Tunnel"|
+           
+           site == "Rithet"|
+           site == "Lazar"|
+           site == "Jarvis"|
+           site == "Judge"|
+           site == "Leech-downstreamconf"|
+           site == "Boneyard"|
+           #site == "Deception-crk"|  ## only two samples
+           #site == "West-Jordan"| ## only two samples
+           site == "Deception-res",
+         analysis == "DOC"
+  ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
                        levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
-
+# rename funky names
 synopticfilter$site <- synopticfilter$site %>% 
   plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",
                   "Jarvis" = "Jarvis-crk",
@@ -751,23 +775,32 @@ synopticfilter$site <- synopticfilter$site %>%
                   #"Deception-crk" = "Deception-Gluch",
                   "Weeks" = "weeks-crk"))
 # ---
+
 # create a subset dataframe for the six install sites for tidier calling
-sixfilter <- sampleresults %>% filter(site == "Weeks" |
-                                        site == "LeechHead" |
-                                        site == "ChrisCrk" |
-                                        site == "CraggCrk" |
-                                        site == "WestLeech"| 
-                                        site == "Tunnel") %>% 
+sixfilter <- sampleresults %>% 
+  filter(site_type == "subbasin",
+         analysis == "DOC") %>% 
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+
+# further categorize site_type
+sixfilter <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+           site == "Weeks" ~ "headwater",   
+           site == "ChrisCrk" ~ "headwater",
+           site == "LeechHead"  ~ "headwater",
+           site == "CraggCrk" ~ "mainstem",
+           site == "WestLeech" ~ "mainstem",
+           site == "Tunnel" ~ "mainstem")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
 ```
 
 ## table: sample summary
 ```{r, summary-table}
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   group_by(site, sample_type) %>%   
   summarise(number_of_samples = n()) %>% 
   ungroup()
@@ -780,24 +813,21 @@ write_csv(n_subbbasinSamples,
 
 # Grab samples
 n_installGrabSamples <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
   summarise(number_of_samples = n()) %>% 
   summarize(total = sum(number_of_samples)) %>% 
   pull(total)
 
 # Rack samples
 n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% 
   summarize(total = sum(number_of_samples)) %>% 
   pull(total) 
 
 # How many samples were collected overall
 n_totalSamples <- sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   #group_by(sample_type) %>% 
   summarise(sample_count = n()) %>% 
   ungroup() %>% 
@@ -806,8 +836,7 @@ n_totalSamples <- sampleresults %>%
 
 # 15 synoptic sites (including the install sites)
 synopticfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Grab") %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
   ungroup() 
@@ -837,8 +866,7 @@ tibble::tibble(
 # DOC by site 
 # grab and rack combined (all)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -859,8 +887,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 
 # all sites
 synopticfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   # geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
@@ -880,8 +907,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_boxplots.png")
 
 # all sites
 synopticfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
   theme_bw() +
@@ -901,8 +927,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_ridgeplots.png")
 
 # DOC summary table, Grabs and Racks combined
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site) %>% 
   summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
             DOC_sd = sd(NPOC_ppm, na.rm = T),
@@ -917,8 +942,7 @@ sixfilter %>%
 ```{r, summaryDOC-table}
 # DOC summary table -- Grab vs Rack
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, sample_type) %>% 
   summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
             DOC_sd = sd(NPOC_ppm, na.rm = T),
@@ -936,8 +960,7 @@ sixfilter %>%
 # site vs DOC
 # facet wrap by sample type
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
                 two_seasons == "wet") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
@@ -961,8 +984,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-subbasin_GvsR_boxplot.png")
 # density ridge 
 # wrap by sample_type
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~sample_type, ncol = 1, nrow = 2) +
@@ -1004,16 +1026,17 @@ not sure about this one...
 
 # at each of the six sites (DOC over time)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_point(aes(shape = site))+
-  facet_wrap(~site, nrow = 1)
-  #geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
-  #scale_fill_manual(values = c("#D55E00", "#999999")) +
-  theme_bw() +
+  geom_jitter(aes(fill = site), size = 2, shape = 21, alpha = 0.6)+
+  geom_smooth(aes(group = site, colour = site), se = FALSE)+
+  scale_fill_brewer(palette="Set2")+
+  scale_colour_brewer(palette="Set2")+
   labs(y = "DOC (mg/L)", x = "", fill = "Sample type:",
        caption = glue::glue("DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})")) +
+  theme_bw() +
+  guides(fill = guide_legend("Site:"),
+         colour = guide_legend("Site:"))+
   #facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
   theme(axis.text.x = element_text(angle = 60, hjust = 1), 
         legend.position = "top",
@@ -1083,8 +1106,7 @@ synopticfilter %>%
 ```{r}
 # count dry season samples
 n_dry_samples <- sixfilter %>%
-  filter(analysis == "DOC", 
-         rain_season == "dry") %>% 
+  filter(rain_season == "dry") %>% 
   group_by(site) %>% 
   summarise(samples = n()) %>% 
   ungroup() %>% 
@@ -1093,8 +1115,7 @@ n_dry_samples <- sixfilter %>%
 
 # count wet season samples
 n_wet_samples <- sixfilter %>%
-  filter(analysis == "DOC", 
-         rain_season == "wet") %>% 
+  filter(rain_season == "wet") %>% 
   group_by(site) %>% 
   summarise(samples = n()) %>% 
   ungroup() %>% 
@@ -1106,8 +1127,8 @@ n_wet_samples <- sixfilter %>%
 
 # count samples for both DOC and DOC_eq
 n_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
                 !is.na(DOCeq_ppm)) %>%
   group_by(site) %>% 
   summarise(samples = n()) %>% 
@@ -1117,8 +1138,8 @@ n_DOCCDOM <- synopticfilter %>%
 
 #count wet samples
 n_wet_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
                 !is.na(DOCeq_ppm),
                 rain_seasons == "wet") %>%
   group_by(site) %>% 
@@ -1129,8 +1150,8 @@ n_wet_DOCCDOM <- synopticfilter %>%
 
 # count dry samples 
 n_dry_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
                 !is.na(DOCeq_ppm),
                 rain_seasons == "dry") %>%
   group_by(site) %>% 
@@ -1141,8 +1162,8 @@ n_dry_DOCCDOM <- synopticfilter %>%
 
 # count wet = "first flush" samples 
 n_ff_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
                 !is.na(DOCeq_ppm),
                 rain_seasons == "first flush") %>%
   group_by(site) %>% 
@@ -1156,8 +1177,7 @@ n_ff_DOCCDOM <- synopticfilter %>%
 ```{r, seasonal-DOC-table-ridgeplot, fig.width=8, fig.height=6, echo = FALSE}
 # density ridge plots (facet wrap by season)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
@@ -1176,8 +1196,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.p
 # scatterplot of DOC vs absorb-DOC by season
 synopticfilter %>% 
   filter(!is.na(rain_seasons)) %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
   geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3, alpha = 0.6)+
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
@@ -1207,8 +1227,7 @@ At each of the six sub-basin monitoring locations, mean DOC was higher during th
 ```{r, seasonal-DOC-table2, echo = FALSE}
 # summary table
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, two_seasons) %>% 
   summarize(DOC_mean = mean(NPOC_ppm),
             DOC_sd = sd(NPOC_ppm),
@@ -1218,8 +1237,7 @@ sixfilter %>%
 
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -1238,8 +1256,7 @@ To remove the variance of stormflow DOC concentrations, Table 2-B and Figure 9 s
 ```{r, seasonal-Grab-DOC-table2B, echo = FALSE}
 # summary table (grabs only)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
   group_by(site, two_seasons) %>% 
   summarize(DOC_mean = mean(NPOC_ppm),
             DOC_sd = sd(NPOC_ppm),
@@ -1250,8 +1267,7 @@ sixfilter %>%
 
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
@@ -1360,8 +1376,7 @@ Figure 6 shows results from all samples comparing DOC concentrations (as NPOC, d
 
 # all sites: DOC vs CDOM
 synopticfilter %>% 
-  filter(analysis == "DOC",
-         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+  filter(sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
   mutate(site = factor(site, exclude = "Lab"),
          site = factor(site)) %>% 
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +  
@@ -1380,8 +1395,9 @@ Figure 7 shows the same DOC-CDOM comparison from Figure 6, isolated to the six s
 
 ```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
 # six primary sites: DOC vs CDOM
-sixfilter %>% filter(analysis == "DOC",
-         sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+sixfilter %>% filter(sample_type == "Rack" | 
+                       sample_type == "Grab" & 
+                       sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +
   geom_jitter(shape = 21, size = 2, alpha = 0.6) +
   xlim(0, 20) +
