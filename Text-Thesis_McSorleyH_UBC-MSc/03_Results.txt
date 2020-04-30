@@ -69,6 +69,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 * decreasing concentrations over the wet season
 * what was the variability within low-order streams versus higher-order streams? was there greater variability within each site than between them?
 
+### vertical rack samples
+At the six sub-basin monitoring sites, vertical racks were installed to collect samples as the rivers rose in response to precipitation events.
+These vertical racks collected samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. As the vertical racks require a hydrologic response to collect samples, they are only applicable during the wet season.
+
 ```{r subbasin-DOC-table}
 # read and format table of DOC conc summary of subbain sites (looks good with boxplot)
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_summary-table.csv", col_names = TRUE) %>% 

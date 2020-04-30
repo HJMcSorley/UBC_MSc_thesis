@@ -18,7 +18,8 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-ou
 ```{r, processing-packages, package.startup.message = FALSE, include=FALSE}
 
 # load packages
-library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
+library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
+library(lubridate)  # dates and times
 library(knitr)      # tidy tables
 library(viridis)    # nice colours for plots gradient fills
 library(ggpmisc)    # linear regression line values
@@ -56,12 +57,15 @@ cbPalette <- c(grey = "#999999",
 ## define functions
 Define function for number extraction from alphanumerics.
 ```{r NumberXtract}
-# create a function:
+# define functions
+
 # ---- Alpha-numeric extraction function ---- #
 # from http://stla.github.io/stlapblog/posts/Numextract.html
 NumberXtract <- function(alphnum){
   unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
 }
+
+
 ```
 
 # Load datasets
@@ -679,6 +683,21 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 
 # Samples
 
+## augment dataframes
+```{r, mutate}
+sampleresults <- sampleresults %>% 
+  #select(-c(ID, DateTime)) %>% 
+  mutate(rain_seasons = case_when(
+           event_ID %in% 1:8 ~ "wet",   
+           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+           event_ID == 9 ~ "first flush",
+           event_ID %in% 10:16 ~ "wet")) %>% 
+  mutate(rain_seasons = factor(rain_seasons))
+```
+
+
 ## subset df + sample counts
 ```{r, subsetting-campaign}
 # primary synoptic sampling sites (n > 1)
@@ -691,7 +710,7 @@ n_SynopticGrabs <- sampleresults %>%
                 sample_type == "Grab") %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
-  filter(grab_sample_count > 1) %>% 
+  filter(grab_sample_count > 2) %>% 
   mutate(what = "synoptic grab count") %>% 
   ungroup() %>%  # drop the following code to see samples by sites
   group_by(what) %>% 
@@ -715,8 +734,8 @@ synopticfilter <- sampleresults %>% filter(site == "Weeks"|
                                              site == "Judge"|
                                              site == "Leech-downstreamconf"|
                                              site == "Boneyard"|
-                                             site == "Deception-crk"|
-                                             site == "West-Jordan"|
+                                             #site == "Deception-crk"|  ## only two samples
+                                             #site == "West-Jordan"| ## only two samples
                                              site == "Deception-res"
                                              ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
@@ -727,9 +746,9 @@ synopticfilter$site <- synopticfilter$site %>%
                   "Jarvis" = "Jarvis-crk",
                   "Judge" = "Judge-crk", 
                   "Lazar" = "Lazar-crk", 
-                  "West-Jordan" = "W.Jordan-Trib", 
+                  #"West-Jordan" = "W.Jordan-Trib", 
                   "Rithet" = "Rithet-crk",
-                  "Deception-crk" = "Deception-Gluch",
+                  #"Deception-crk" = "Deception-Gluch",
                   "Weeks" = "weeks-crk"))
 # ---
 # create a subset dataframe for the six install sites for tidier calling
@@ -835,7 +854,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 
 ```
 
-### all sites
+### synoptic box, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -844,17 +863,35 @@ synopticfilter %>%
                 sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
-  #scale_fill_brewer(palette="Accent") +
+  # geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1)) +
   labs(caption = 
-         glue::glue("DOC concentrations across fifteen sites over 16 months (", {n_SynopticGrabs+n_installRackSamples}, " samples)"), 
+         glue::glue("DOC concentrations across thirteen sites over 16 months (", {n_SynopticGrabs+n_installRackSamples}, " samples)"), 
        x = "", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_15sites_boxplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_boxplots.png")
+```
+
+### synoptic ridge, all sites
+```{r, synoptic-all-sites}
+
+# all sites
+synopticfilter %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(caption = 
+         glue::glue("DOC concentrations across thirteen sites over 16 months (", {n_SynopticGrabs+n_installRackSamples}, " samples)"), 
+       x = "DOC (mg/L)", y = "")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_ridgeplots.png")
 ```
 
 ## Subbasin DOC summaries
@@ -919,14 +956,13 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-subbasin_GvsR_boxplot.png")
 ```
 
 ### plot: subbasin ridgeplot (G/R)
-
-```{r, sample_type-ridgeplots, include=FALSE, echo = FALSE}
+```{r, sample_type-ridgeplots}
 
 # density ridge 
 # wrap by sample_type
 sixfilter %>% 
   dplyr::filter(analysis == "DOC", 
-                sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
+                sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~sample_type, ncol = 1, nrow = 2) +
@@ -970,16 +1006,15 @@ not sure about this one...
 sixfilter %>% 
   dplyr::filter(analysis == "DOC",
                 sample_type == "Rack" | sample_type == "Grab") %>%
-  mutate(trip = factor(trip)) %>% 
   ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
+  geom_point(aes(shape = site))+
+  facet_wrap(~site, nrow = 1)
+  #geom_jitter(aes(fill = sample_type), size = 2, shape = 21, alpha = 0.6) +
   #scale_fill_manual(values = c("#D55E00", "#999999")) +
   theme_bw() +
   labs(y = "DOC (mg/L)", x = "", fill = "Sample type:",
        caption = glue::glue("DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})")) +
-  facet_wrap(~site, ncol = 1, 
-             strip.position = "right",
-             scales = "free_y")+
+  #facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
   theme(axis.text.x = element_text(angle = 60, hjust = 1), 
         legend.position = "top",
         text = element_text(size = 12))+
@@ -1065,11 +1100,59 @@ n_wet_samples <- sixfilter %>%
   ungroup() %>% 
   summarise(total = sum(samples)) %>% 
   pull(total)
+
+
+##  subbasin samples for which DOC and UV surrogate were measured ---
+
+# count samples for both DOC and DOC_eq
+n_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab",
+                !is.na(DOCeq_ppm)) %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+#count wet samples
+n_wet_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "wet") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+# count dry samples 
+n_dry_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "dry") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+# count wet = "first flush" samples 
+n_ff_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(analysis == "DOC",
+                sample_type == "Rack" | sample_type == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "first flush") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
 ```
 
-### DOC
-
-#### plot: subbasin Ridge plots
+### plot: DOC subbasin Ridge plots
 ```{r, seasonal-DOC-table-ridgeplot, fig.width=8, fig.height=6, echo = FALSE}
 # density ridge plots (facet wrap by season)
 sixfilter %>% 
@@ -1090,63 +1173,33 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.p
 ### plot NPOC/CDOM scatter 1:1 plot
 ```{r, DOC-vs-surrogate}
 
-# count samples for both DOC and DOC_eq
-n_DOCCDOM <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
-                !is.na(DOCeq_ppm)) %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-#count wet samples
-n_wet_DOCCDOM <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
-                !is.na(DOCeq_ppm),
-                rain_season == "wet") %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-# count dry samples 
-n_dry_DOCCDOM <- sixfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Rack" | sample_type == "Grab",
-                !is.na(DOCeq_ppm),
-                rain_season == "dry") %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
 # scatterplot of DOC vs absorb-DOC by season
-sixfilter %>% 
+synopticfilter %>% 
+  filter(!is.na(rain_seasons)) %>% 
   dplyr::filter(analysis == "DOC",
                 sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
-  geom_point(aes(fill = rain_season), shape = 21, size = 3, alpha = 0.6)+
-  scale_fill_manual(values = c("wet" = "#62ACC8", "dry" = "#f4AB0E"))+
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3, alpha = 0.6)+
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
   geom_abline(slope = 1, intercept = 0, linetype = 2)+
   theme_bw()+
-  ylim(NA, 19) + 
-  xlim(NA, 19)+
-  labs(x = "DOC (ppm, as NPOC)",
-       y = "DOC surrogate (ppm eqv.)",
-       fill = "Sampling Season",
-       caption = glue::glue("Plot of DOC (measured as NPOC) versus aromatic DOC (measured via UV-Vis spectroscopy). \n The dotted line show equivalent measurements. The seasonal separation indicates samples \n generally had more aromatic character in the wet season than during the dry season \n (n = {n_DOCCDOM}: wet = {n_wet_DOCCDOM}, dry = {n_dry_DOCCDOM})"))+
+  ylim(0, 20) + 
+  xlim(0, 20)+
+  labs(x = "DOC (ppm)",
+       y = "DOC estimate (ppm eqv.)",
+       caption = 
+         glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques (n = {n_DOCCDOM}: wet = {n_wet_DOCCDOM}, first flush = {n_ff_DOCCDOM}, dry = {n_dry_DOCCDOM})."))+
+  guides(fill = guide_legend("Sample season"),
+         shape = guide_legend("Sample season"))+
   theme(text = element_text(size = 12),
         legend.position = "top")
-#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png") 
-
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png") 
 
 ```
-
+additional text for caption: "Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
 
 
 At each of the six sub-basin monitoring locations, mean DOC was higher during the dry season than during the wet season (Table 2, Fig.8). There was less variation in dry season DOC concentrations at each site also (Table 2), which could be due to actual reduction in variance in the absence of stormflow pulses and also due to fewer dry season samples (n = 46) compared to wet season samples (n = 278). 
