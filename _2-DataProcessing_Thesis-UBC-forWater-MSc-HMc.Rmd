@@ -786,12 +786,12 @@ sixfilter <- sampleresults %>%
 # further categorize site_type
 sixfilter <- sixfilter %>% 
   mutate(subbasin_type = case_when(
-           site == "Weeks" ~ "headwater",   
-           site == "ChrisCrk" ~ "headwater",
-           site == "LeechHead"  ~ "headwater",
-           site == "CraggCrk" ~ "mainstem",
-           site == "WestLeech" ~ "mainstem",
-           site == "Tunnel" ~ "mainstem")) %>% 
+           site == "Weeks" ~ "headwaters",   
+           site == "ChrisCrk" ~ "headwaters",
+           site == "LeechHead"  ~ "headwaters",
+           site == "CraggCrk" ~ "mainstems",
+           site == "WestLeech" ~ "mainstems",
+           site == "Tunnel" ~ "mainstems")) %>% 
   mutate(subbasin_type = factor(subbasin_type))
 
 ```
@@ -1000,7 +1000,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
 
-### WIP: plot Rack DOC (by level)
+### Rack DOC trends (WIP)
+#### plot: DOC by event
 ```{r, rackDOC}
 # rising limb
 sixfilter %>% 
@@ -1020,35 +1021,58 @@ sixfilter %>%
              scales = "free")
 ```
 
-### WIP plot: DOC over time by site
-not sure about this one...
+#### table: DOC trends by event & site
+```{r}
+# calculate trend
+sixfilter %>% 
+  filter(sample_type == "Rack", analysis != "QA-QC") %>%
+  group_by(site, forcats::fct_explicit_na(event_ID) ) %>% 
+  summarise(yint_DOC = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[1],
+            slope = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[2],
+            r_sq = summary(lm(formula = NPOC_ppm ~ sampleStage_cm))$r.squared,
+            n = n(),
+            range_DOC = max(NPOC_ppm, na.rm = TRUE) - min(NPOC_ppm, na.rm = TRUE),
+            DOC_min = sample[which.min(NPOC_ppm)],
+            DOC_max = sample[which.max(NPOC_ppm)],
+            first_event = first(event_ID),
+            last_event = last(event_ID),
+            first_rack = first(sample, order_by = DateTime_sampled),
+            last_rack = last(sample, order_by = DateTime_sampled)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_rack-trends_lm.csv")
+  
+```
+
+### plot: DOC/time x site & subbasin type
 ```{r DOC_overtime-by-site}
 
 # at each of the six sites (DOC over time)
 sixfilter %>% 
+  mutate(site = factor(site, levels = c("Weeks", "CraggCrk", "ChrisCrk", "WestLeech", "LeechHead", "Tunnel"))) %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_jitter(aes(fill = site), size = 2, shape = 21, alpha = 0.6)+
-  geom_smooth(aes(group = site, colour = site), se = FALSE)+
-  scale_fill_brewer(palette="Set2")+
-  scale_colour_brewer(palette="Set2")+
+  geom_point(aes(fill = site), size = 2, shape = 21, alpha = 0.4)+
+  geom_smooth(aes(group = site, colour = site, linetype = site), se = FALSE)+
+  scale_fill_brewer(palette="Dark2")+
+  scale_colour_brewer(palette="Dark2")+
+  scale_linetype_manual(values=c(4,4,3,3,1,1)) + 
   labs(y = "DOC (mg/L)", x = "", fill = "Sample type:",
-       caption = glue::glue("DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})")) +
+       caption = glue::glue(
+         "DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})")) +
   theme_bw() +
   guides(fill = guide_legend("Site:"),
-         colour = guide_legend("Site:"))+
-  #facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
+         colour = guide_legend("Site:"),
+         linetype = guide_legend("Site:"))+
+  facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.position = "top",
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")
 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-over-time_subbasins_by-sampletype.png", 
-       width = 4, height = 6, units = "in") 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-overtime-subbasins_types-loess.png")
+#, width = 4, height = 6, units = "in") 
 
-# maybe try this with stage as a line and plot NPOC points by size (concentration)
 ```
 
 ## Synoptic Grab samples
@@ -1212,29 +1236,36 @@ synopticfilter %>%
        y = "DOC estimate (ppm eqv.)",
        caption = 
          glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques (n = {n_DOCCDOM}: wet = {n_wet_DOCCDOM}, first flush = {n_ff_DOCCDOM}, dry = {n_dry_DOCCDOM})."))+
-  guides(fill = guide_legend("Sample season"),
-         shape = guide_legend("Sample season"))+
+  guides(fill = guide_legend("Sample season:"),
+         shape = guide_legend("Sample season:"))+
   theme(text = element_text(size = 12),
         legend.position = "top")
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png") 
+
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_surrogate-NPOC.png") 
 
 ```
-additional text for caption: "Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
+additional text for caption: 
+"Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
 
-
-At each of the six sub-basin monitoring locations, mean DOC was higher during the dry season than during the wet season (Table 2, Fig.8). There was less variation in dry season DOC concentrations at each site also (Table 2), which could be due to actual reduction in variance in the absence of stormflow pulses and also due to fewer dry season samples (n = 46) compared to wet season samples (n = 278). 
-
-```{r, seasonal-DOC-table2, echo = FALSE}
+### table: subbasin seasonal DOC
+```{r}
 # summary table
 sixfilter %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site, two_seasons) %>% 
+  group_by(site, rain_season) %>% 
   summarize(DOC_mean = mean(NPOC_ppm),
             DOC_sd = sd(NPOC_ppm),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
-  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "Table 2: DOC concentrations by season at the six main sites")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/table_subbasin-seasonal-DOC.csv")
 
+# for when you read this into results
+  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "Table 2: DOC concentrations by season at the six main sites")
+```
+
+### 
+```{r}
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
