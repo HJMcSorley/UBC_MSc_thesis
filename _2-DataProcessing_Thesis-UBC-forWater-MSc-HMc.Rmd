@@ -796,7 +796,9 @@ sixfilter <- sixfilter %>%
 
 ```
 
-## table: sample summary
+## tables: 
+
+### count sample summary
 ```{r, summary-table}
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
@@ -853,6 +855,81 @@ tibble::tibble(
   pivot_longer(everything(),
                names_to = "sample category", values_to = "count") %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
+
+```
+### DOC synoptic grabs by site Mean/Min/Max  
+```{r, Grab-synoptic-table}
+# synoptic grab samples DOC concs by site
+a <- synopticfilter %>%
+  filter(sample_type == "Grab") %>% 
+  group_by(site) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T))  
+
+# all together  
+b <- synopticfilter %>% 
+  filter(sample_type == "Grab") %>% 
+  summarize(site = "total summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) 
+
+# tag totals summary onto site summary
+rbind(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", 
+            col_names = T)
+```
+
+### DOC all sites, by sample_type Mean/Min/Max 
+```{r, all-samples-together}
+# synoptic samples DOC concs by site (Grab + Rack)
+a <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, sample_type) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# grouped summary
+b <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(sample_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, sample_type, count, DOCmean, DOCsd, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+  
+# full summary
+c <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "total",
+            sample_type = "all",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T))
+
+# tag totals summary onto site summary
+rbind(a, b, c) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-summary.csv", col_names = T)
 
 ```
 
@@ -1074,52 +1151,124 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-overtime-subbasins_types-loes
 #, width = 4, height = 6, units = "in") 
 
 ```
+### Variance 
 
-## Synoptic Grab samples
+#### 1: within or among - DOC ranges  
 
-### table: synoptic grabs by site Mean/Min/Max  
-```{r, Grab-synoptic-table}
-# synoptic grab samples DOC concs by site
-synopticfilter %>%
-  filter(sample_type == "Grab") %>% 
-  group_by(site) %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_site-summary.csv", 
-            col_names = T)
-```
+Q: is the variance greater within each site or among all sites?
 
-### table: synoptic grabs allover Mean/Min/Max  
-```{r, Grab-synoptic-table}
-# all together
-synopticfilter %>%
-  filter(sample_type == "Grab") %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-GrabSynoptic_all-summary.csv", 
-            col_names = T)
-```
+Ha: there is greater variance within each site compared to the variance among all sites 
+Ho: the variance within each site is not greater than variance among all sites 
 
-### table: all synoptic sites, all samples, together
-```{r, all-samples-together}
-# all together including rack samples
-synopticfilter %>%
+```{r}
+# calculate range of DOC within each site and among all sites 
+
+# subbasin samples DOC concs (Grab + Rack)
+a <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(count = n(), 
+  group_by(site) %>% 
+  summarize(subbasin_type = first(subbasin_type),
+            count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-conc-summary.csv", col_names = T)
+  ungroup()
+
+# grouped by headwaters VS mainstem
+b <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(subbasin_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# full summary
+c <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "summary",
+            subbasin_type = "all",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# combine 
+rbind(a, b, c) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-summary.csv", col_names = T)
+
+```
+
+#### 2: Tunnel integration - DOC ranges
+
+Q: is the variance at the watershed outlet greater than the variance in each subbasin?
+
+Ha: each subbasin has a greater range in concentrations than the range observed at the watershed outlet (Tunnel site)
+Ho: there is no difference in the range observed at each subbasin site compared to the outlet.
+
+```{r}
+# calculate range of DOC within each site and between each site for subbasins
+# this code was copied -- needs to be modified and updated
+
+# subbasin samples DOC concs (Grab + Rack)
+a <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(subbasin_type = first(subbasin_type),
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# grouped by headwaters VS mainstem
+b <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(subbasin_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# full summary
+c <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "summary",
+            subbasin_type = "all",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# combine 
+rbind(a, b, c) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = T)
 
 ```
 
