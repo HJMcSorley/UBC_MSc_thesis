@@ -22,8 +22,8 @@ library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
 library(lubridate)  # dates and times
 library(knitr)      # tidy tables
 library(viridis)    # nice colours for plots gradient fills
-library(ggpmisc)    # linear regression line values
-library(cowplot)    # add-on to ggplot for layout
+library(ggpmisc)    # linear regression line values (ggplot)
+library(cowplot)    # add-on to ggplot for layout (nice grid)
 library(gghighlight)# plot highlighting
 library(car)        # stats: Companion to Applied Regression
 
@@ -55,6 +55,7 @@ cbPalette <- c(grey = "#999999",
                red = "#D55E00", 
                pink = "#CC79A7")
 ```
+
 ## define functions
 Define function for number extraction from alphanumerics.
 ```{r NumberXtract}
@@ -65,7 +66,6 @@ Define function for number extraction from alphanumerics.
 NumberXtract <- function(alphnum){
   unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
 }
-
 
 ```
 
@@ -1659,14 +1659,15 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png")
 
 # Metals 
 
-## plot: metals+DOC in solution
+## plots: metals+DOC in solution
 
+### ug/L
 ```{r}
 # filter out the parameters with insufficient data
 # plot DOC against metals concentrations 
 
 # ug/L
-a <- metalslab %>% 
+metalslab %>% 
   filter(metal_parameters == "Total Aluminum (Al)"|
            metal_parameters == "Total Barium (Ba)"|
            metal_parameters == "Total Copper (Cu)"|
@@ -1699,9 +1700,14 @@ a <- metalslab %>%
   #stat_poly_eq(formula = y ~ x, 
   #              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
   #              parse = TRUE, rr.digits = 4) #+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_strong_scatterplots.png")
 
+```
+
+### mg/L
+```{r}
 # mg/L
-b <- metalslab %>% 
+metalslab %>% 
   filter(metal_parameters == "Total Magnesium (Mg)"|
          metal_parameters == "Total Calcium (Ca)" |
          metal_parameters == "Total Potassium (K)"|
@@ -1719,11 +1725,8 @@ b <- metalslab %>%
   #              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
   #              parse = TRUE, rr.digits = 4) #+
 
-cowplot::plot_grid(a, b,
-                   ncol = 1, 
-                   align = "v")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_subbasin_scatterplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_weak_scatterplots.png")
 ```
 
 ## table: correlation metals/DOC 
@@ -1756,6 +1759,13 @@ metalslab %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.png")
 
 ```
+
+# Stage --WIP
+
+```{r}
+# odyssey_data
+```
+
 
 # fin
 
