@@ -25,6 +25,7 @@ library(viridis)    # nice colours for plots gradient fills
 library(ggpmisc)    # linear regression line values
 library(cowplot)    # add-on to ggplot for layout
 library(gghighlight)# plot highlighting
+library(car)        # stats: Companion to Applied Regression
 
 ```
 ## define colours
@@ -1077,7 +1078,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
 
-### Rack DOC trends (WIP)
+### WIP - Rack DOC trends
 #### plot: DOC by event
 ```{r, rackDOC}
 # rising limb
@@ -1119,7 +1120,7 @@ sixfilter %>%
   
 ```
 
-### plot: DOC/time x site & subbasin type
+### plot: DOC/time lm() site & subbasin type
 ```{r DOC_overtime-by-site}
 
 # at each of the six sites (DOC over time)
@@ -1216,15 +1217,24 @@ rbind(a, b, c) %>%
 
 Q: is the variance at the watershed outlet greater than the variance in each subbasin?
 
-Ha: each subbasin has a greater range in concentrations than the range observed at the watershed outlet (Tunnel site)
-Ho: there is no difference in the range observed at each subbasin site compared to the outlet.
-
+##### table: descriptive stats summary
 ```{r}
 # calculate range of DOC within each site and between each site for subbasins
 # this code was copied -- needs to be modified and updated
 
+# separate Tunnel from mainstems in subbasin_type
+a <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+           site == "Weeks" ~ "headwaters",   
+           site == "ChrisCrk" ~ "headwaters",
+           site == "LeechHead"  ~ "headwaters",
+           site == "CraggCrk" ~ "mainstems",
+           site == "WestLeech" ~ "mainstems",
+           site == "Tunnel" ~ "outlet")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
 # subbasin samples DOC concs (Grab + Rack)
-a <- sixfilter %>%
+b <- a %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site) %>% 
   summarize(subbasin_type = first(subbasin_type),
@@ -1237,9 +1247,10 @@ a <- sixfilter %>%
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup()
 
-# grouped by headwaters VS mainstem
-b <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+# grouped by headwaters / mainstem / outlet
+c <- a %>%
+  filter(sample_type == "Grab" | sample_type == "Rack",
+         subbasin_type != "outlet") %>% 
   group_by(subbasin_type) %>% 
   summarize(site = "summary",
             count = n(), 
@@ -1252,25 +1263,72 @@ b <- sixfilter %>%
   select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
   ungroup()
 
-# full summary
-c <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "summary",
-            subbasin_type = "all",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
 # combine 
-rbind(a, b, c) %>% 
+rbind(b, c) %>%
   write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = T)
 
 ```
+
+##### inferential/inductive stats
+
+Levene's test: And alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+Ha: at least two subbasins have different variances 
+Ho: the variances are equal (there is no difference in the range observed among each site 
+```{r}
+car::leveneTest(NPOC_ppm ~ site, data = sixfilter) # response ~ independent variable
+
+# p-value is << 0.001 -- reject the null hypothesis of homogeneous variance and conclude there is significant difference between site variances.
+
+# piece-wise compare to tunnel:
+
+# 1 - 6 -- Reject that the variances are equal
+v1 <- sixfilter %>%
+  filter(site == "Weeks" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 2 - 6 -- Reject that the variances are equal
+v2 <- sixfilter %>%
+  filter(site == "ChrisCrk" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 3 - 6 -- Reject that the variances are equal 
+v3 <- sixfilter %>%
+  filter(site == "LeechHead" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 4 - 6 -- Reject that the variances are equal 
+v4 <- sixfilter %>%
+  filter(site == "CraggCrk" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 5 - 6 -- the variances are equal with 98%  
+v5 <- sixfilter %>%
+  filter(site == "WestLeech" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# write a table
+# *** = 99.9% confidence, * = 95% confidence
+tibble::tibble("sub-basin site compared to outlet" = c("Weeks ***", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech *"),
+               "p-value" = c(v1, v2, v3, v4, v5))
+
+```
+
 
 
 ## Seasonal dynamics 
