@@ -935,32 +935,7 @@ rbind(a, b, c) %>%
 ```
 
 
-## plots: DOC across watershed
-
-### subbasins
-```{r, subbasin-DOCspace}
-
-# Boxplot with jitter scatter 
-# DOC by site 
-# grab and rack combined (all)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  labs(caption = 
-         glue::glue("DOC concentrations across six sub-basin sites over 16 months (", {n_installGrabSamples+n_installRackSamples}, " samples)"), 
-       x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
-
-```
-
-### synoptic box, all sites
+## plot: synoptic box, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -968,6 +943,7 @@ synopticfilter %>%
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
   # geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
   theme_bw() +
   theme(legend.position = "none",
@@ -980,7 +956,7 @@ synopticfilter %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_boxplots.png")
 ```
 
-### synoptic ridge, all sites
+## plot: synoptic ridge, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -988,6 +964,7 @@ synopticfilter %>%
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12)) +
@@ -1043,7 +1020,7 @@ sixfilter %>%
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
+  scale_fill_brewer(palette="Set2") +
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 60, hjust = 1),
@@ -1066,7 +1043,7 @@ sixfilter %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
   facet_wrap(~sample_type, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Accent") +
+  scale_fill_brewer(palette="Set2") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
        caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n
@@ -1078,25 +1055,33 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
 
-### WIP - Rack DOC trends
-#### plot: DOC by event
+### Rack DOC trends
+#### plot: rack DOC by event
 ```{r, rackDOC}
 # rising limb
 sixfilter %>% 
   filter(sample_type == "Rack") %>%
-  filter(event_ID != 8, event_ID != 13, event_ID != 7) %>% 
-  group_by(site, forcats::fct_explicit_na(event_ID)) %>% 
+  filter(event_ID != "NA") %>% 
+  group_by(site, event_ID) %>% 
   mutate(RisingLimb = NumberXtract(sample),
-         RisingLimb = factor(RisingLimb, levels = c(1:15))) %>%
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_jitter(aes(colour = site),
-              size = 3) +
-  scale_colour_viridis(direction = -1, discrete = TRUE) +
+         RisingLimb = factor(RisingLimb, levels = c(1:9))) %>%
+  ggplot(aes(x = DateTime_sampled, y = RisingLimb))+
+  geom_point(aes(size = NPOC_ppm, colour = event_ID))+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
-  facet_wrap(~event_ID, #nrow = 16,
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        text = element_text(size = 12),
+        legend.position = "left")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  labs(y = "Sampling Rack Position", x = "", size = "DOC (ppm)", colour = "Rain Event")+
+  facet_wrap(~site, ncol = 1,
              strip.position = "right",
-             scales = "free")
+             scales = "free_y")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
+       height = 8, width = 6, unit ="in")
+
 ```
 
 #### table: DOC trends by event & site
@@ -1325,11 +1310,33 @@ v5 <- sixfilter %>%
 # write a table
 # *** = 99.9% confidence, * = 95% confidence
 tibble::tibble("sub-basin site compared to outlet" = c("Weeks ***", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech *"),
-               "p-value" = c(v1, v2, v3, v4, v5))
+               "p-value" = c(v1, v2, v3, v4, v5)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = T)
 
 ```
 
+#### plot: subbasins boxplot
+```{r, subbasin-DOCspace}
 
+# Boxplot with jitter scatter 
+# DOC by site 
+# grab and rack combined (all)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(caption = 
+         glue::glue("DOC concentrations across six sub-basin sites over 16 months (", {n_installGrabSamples+n_installRackSamples}, " samples)"), 
+       x = "", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
+
+```
 
 ## Seasonal dynamics 
 
@@ -1404,33 +1411,51 @@ n_ff_DOCCDOM <- synopticfilter %>%
   pull(total)
 ```
 
-### plot: DOC subbasin Ridge plots
-```{r, seasonal-DOC-table-ridgeplot, fig.width=8, fig.height=6, echo = FALSE}
+### plot: subbasin seasonal DOC boxplot
+```{r}
+# Boxplot with jitter scatter (DOC by season)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~rain_season, ncol = 2, nrow = 1) +  
+  labs(caption = "DOC concentration by season (dry: n = 46, wet: n = 278)", 
+       x = "", y = "DOC (mg/L)")
+
+```
+
+### plot: subbasin seasonal DOC Ridge plots
+```{r}
 # density ridge plots (facet wrap by season)
 sixfilter %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~two_seasons, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Accent") +
+  facet_wrap(~rain_season, ncol = 1) +
+  scale_fill_brewer(palette="Set2") +
   theme_bw() +
   labs(y = "", x = "DOC (mg/L)", 
        caption = glue::glue("Density distribution of DOC concentration by season (dry: n = {n_dry_samples}, wet: n = {n_wet_samples})")) +
   theme(legend.position = "none") 
+# save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
 
 ```
 
 ### plot NPOC/CDOM scatter 1:1 plot
-```{r, DOC-vs-surrogate}
-
+```{r}
 # scatterplot of DOC vs absorb-DOC by season
 synopticfilter %>% 
   filter(!is.na(rain_seasons)) %>% 
   dplyr::filter(sample_type == "Rack" | 
                   sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
-  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3, alpha = 0.6)+
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8)+
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
@@ -1455,123 +1480,108 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_surrogate-NPOC.png")
 additional text for caption: 
 "Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
 
+#### ?plot: subbasin NPOC/CDOM
+```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
+# six primary sites: DOC vs CDOM
+sixfilter %>% 
+  filter(sample_type == "Rack" | 
+                       sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = rain_seasons)) +
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 2.5, alpha = 0.8)+
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  theme_bw()+
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  ylim(0, 20) + 
+  xlim(0, 20)+
+  labs(x = "DOC (ppm)",
+       y = "DOC estimate (ppm eqv.)",
+       caption = 
+         glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques"))+
+  guides(fill = guide_legend("Sample season:"),
+         shape = guide_legend("Sample season:"))+
+  theme(text = element_text(size = 12),
+        legend.position = "top")
+#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig7_DOCvsCDOM_6sites_scatterplot.png") 
+```
+
 ### table: subbasin seasonal DOC
 ```{r}
 # summary table
 sixfilter %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, rain_season) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm),
+  summarize(count = n(),
+            DOC_mean = mean(NPOC_ppm),
             DOC_sd = sd(NPOC_ppm),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/table_subbasin-seasonal-DOC.csv")
 
 # for when you read this into results
-  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "Table 2: DOC concentrations by season at the six main sites")
+  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "DOC concentrations by season at the six main sites")
 ```
 
-### 
-```{r}
-# Boxplot with jitter scatter (DOC by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
-  labs(caption = "Fig.8 DOC concentration by season (dry: n = 46, wet: n = 278)", 
-       x = "", y = "DOC (mg/L)")
 
-```
-
-To remove the variance of stormflow DOC concentrations, Table 2-B and Figure 9 shows seasonal concentrations based only on Grab samples (excludes 166 stormflow samples collected by Racks).
-
-```{r, seasonal-Grab-DOC-table2B, echo = FALSE}
-# summary table (grabs only)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>% 
-  group_by(site, two_seasons) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm),
-            DOC_sd = sd(NPOC_ppm),
-            RSD = (DOC_sd/DOC_mean)*100) %>% 
-  ungroup() %>% 
-  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"),
-               label = "Table 2-B: Grab sample DOC concentrations by season at the six main sites")
-
-# Boxplot with jitter scatter (DOC by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
-  labs(caption = "Fig.9 DOC concentration by season (dry: n = 45, wet: n = 112)", 
-       x = "", y = "DOC (mg/L)")
-# ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "DOC_boxplot-seasonal.png") 
+# Spectral Indices
 
 
-```
-
-## Spectral Indices
-
+## plot: SUVA vs NPOC
 ```{r, spectral-plots, echo = FALSE}
 # SUVA vs NPOC by season
 sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = NPOC_ppm, y = SUVA)) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
+  geom_jitter(aes(fill = rain_seasons), size = 3.5, shape = 21, alpha = 0.8) +
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  ylim(0.2, 4.5) +
+  labs(y = expression(paste("SUVA "[254])),
+       x = "DOC (mg/L)")+
   theme_bw() +
-  theme(legend.position = "none") +
-  facet_wrap(~two_seasons, ncol = 2, nrow = 1) 
+  theme(legend.position = "top",
+        text = element_text(size = 12)) +
+  guides(fill = guide_legend("Sample season:", override.aes = list(size = 3.5)))
 
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_SUVA-NPOC.png") 
+
+```
+
+## plot: E2:E3
+```{r}
 # E2:E3
 sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack",
                 E2E3 < 15) %>% 
   ggplot(aes(x = NPOC_ppm, y = E2E3 )) +
-  geom_jitter(aes(fill = two_seasons), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
+  geom_jitter(aes(fill = rain_seasons), alpha = 0.8, size = 3.5, shape = 21) +
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
   theme_bw() +
-  theme(legend.position = "none") +
-  facet_wrap(~sample_type, ncol = 2) 
+  theme(legend.position = "top")  
 ```
 
+## questionable
 
 ```{r, seasonal-plots, include=FALSE}
 # Boxplot with jitter scatter 
-sampleresults %>% 
-  dplyr::filter(site == "Weeks" |
-                  site == "LeechHead" |
-                  site == "ChrisCrk" |
-                  site == "CraggCrk" |
-                  site == "WestLeech"| 
-                  site == "Tunnel" |
-                  site == "Rithet" |
-                  site == "Judge-crk", 
-                analysis == "DOC", 
-                sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
+synopticfilter %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Accent") +
+  #scale_fill_brewer(palette="Accent") +
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~two_seasons, ncol = 2, nrow = 1) +  
+  facet_wrap(~rain_season, ncol = 2) +  
   labs(caption = "DOC concentrations in the Leech and two main tribs to the Sooke Reservoir", 
        x = "", y = "DOC (mg/L)")
 
@@ -1604,96 +1614,23 @@ sampleresults %>%
 ```
 
 
-### Plots of DOC & proxy
+# Nitrate
 
-DOC was quantified as non-purgeable organic carbon (NPOC) on the Shimadzu TOC auto analyzer, and samples were also measured on a Spectrolyser spectrophotometer. A spectrophotometer can only measure the fraction of organic matter that is able to absorb UV or Visible light, and therefore DOC measured on the Spectrolyser was a measure of CDOM and an indicator of aromaticity (molecular character).
-
-Figure 6 shows results from all samples comparing DOC concentrations (as NPOC, direct measure) to CDOM concentrations (UV-Vis, proxy measure of DOC). There was a strong seasonal separation of the relationship between these two measurements. These results indicate a seasonally-driven physiochemical difference in the aquatic NOM in this drinking water supply area.
-
-```{r, DOC-vs-CDOM, echo = FALSE}
-
-# all sites: DOC vs CDOM
+```{r}
+# nitrate and DOC
 synopticfilter %>% 
-  filter(sample_type == "Rack" | sample_type == "Grab" & sample == "Grab") %>%
-  mutate(site = factor(site, exclude = "Lab"),
-         site = factor(site)) %>% 
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +  
-  geom_jitter(shape = 21, size = 3, alpha = 0.6) +
-  xlim(0, 20) +
-  ylim(0, 20) +
-  geom_abline(slope = 1, intercept = 0, lty = "dotted",) +  
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) + 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
   theme_bw() +
-  theme(legend.position = "top") +
-  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis) ", fill = "sampling season:",
-       caption = "Fig.6 DOC concentration from direct measure versus CDOM from UV-Vis absorbance") 
-```
-
-Figure 7 shows the same DOC-CDOM comparison from Figure 6, isolated to the six sub-basin monitoring sites. The seasonal relationship appears similar for the six sites.
-
-```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
-# six primary sites: DOC vs CDOM
-sixfilter %>% filter(sample_type == "Rack" | 
-                       sample_type == "Grab" & 
-                       sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = two_seasons)) +
-  geom_jitter(shape = 21, size = 2, alpha = 0.6) +
-  xlim(0, 20) +
-  ylim(0, 20) +
-  geom_abline(slope = 1, intercept = 0, lty = "dotted",) + 
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  theme_bw() +
-  theme(legend.position = "top") +
-  labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L from UV-Vis)", fill = "sampling season:",
-       caption = "Fig.7 Six installation sites showing DOC concentration versus CDOM from UV-Vis absorbance")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig7_DOCvsCDOM_6sites_scatterplot.png") 
-```
-
-#### SUVA
-In progress: analysis of spectral fingerprint data for slope ratio indices, which will help to elucidate seasonal DOM character shifts.
-
-```{r, SUVA-plots-in-progress}
-
-# SUVA vs time
-sampleresults %>% 
-  filter(sample_type == "Rack" | sample_type == "Grab", 
-         analysis == "DOC") %>%
-  mutate(site = factor(site, exclude = "Lab"),
-         site = factor(site)) %>% 
-  ggplot(aes(x = DateTime_sampled, y = pseudoSUVA, fill = two_seasons)) +  
-  geom_jitter(shape = 21, size = 3, alpha = 0.6) +
-  scale_fill_manual(values = c("#f4AB0E", "#09A4D2")) +
-  theme_bw() +
-  ylim(0, 20) +
-  theme(legend.position = "bottom",
-       axis.text.x = element_text(angle = 90)) +
-  labs(x = "", y = expression("SUVA "[254]), fill = "sampling season:",
-       caption = "Specific UV-absorbance at 254nm ")
-
-
-
-# --- UV-Vis parameters
-# --- Spectrolyser data with TOCV data
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab",
-         site == "Weeks-out" |
-           site == "Leech-head" |
-           site == "Chris-crk" |
-           site == "Cragg-crk" |
-           site == "West-Leech"| 
-           site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = two_seasons)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
-  geom_point(shape = 21, size = 2) +
-  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
-  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
   theme(legend.position = "bottom") +
   labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (mg/L)", fill = "sampling season:",
        caption = "Grab sample DOC and nitrate concentrations (via spectrophotometry)...")
+```
 
+### WIP
+```{r}
 # --- Spectrolyser data - SAC254_Abs.m vs SAC436_Abs.m
 sampleresults %>% 
   filter(sample_type == "Grab" & sample == "Grab",
