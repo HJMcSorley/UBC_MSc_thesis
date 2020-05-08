@@ -1519,7 +1519,7 @@ sixfilter %>%
             DOC_sd = sd(NPOC_ppm),
             RSD = (DOC_sd/DOC_mean)*100) %>% 
   ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/table_subbasin-seasonal-DOC.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv")
 
 # for when you read this into results
   knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "DOC concentrations by season at the six main sites")
@@ -1614,8 +1614,7 @@ sampleresults %>%
 ```
 
 
-# Nitrate
-
+# Nitrate & DOC
 ```{r}
 # nitrate and DOC
 synopticfilter %>% 
@@ -1624,228 +1623,139 @@ synopticfilter %>%
   geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
   theme_bw() +
   scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "bottom") +
-  labs(x = "C-DOM (proxy DOC, mg/L)", y = "nitrate (mg/L)", fill = "sampling season:",
-       caption = "Grab sample DOC and nitrate concentrations (via spectrophotometry)...")
-```
+  theme(legend.position = "top",
+        text = element_text(size = 12)) +
+  labs(x = "DOC (mg/L)", y = "nitrate (mg/L)", fill = "Sample type:")+
+  stat_poly_eq(formula = y ~ x, 
+                aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+                parse = TRUE, rr.digits = 4)
 
-### WIP
-```{r}
-# --- Spectrolyser data - SAC254_Abs.m vs SAC436_Abs.m
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab",
-         site == "Weeks-out" |
-           site == "Leech-head" |
-           site == "Chris-crk" |
-           site == "Cragg-crk" |
-           site == "West-Leech"| 
-           site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  ggplot(aes(x = SAC254_Abs.m, y = SAC436_Abs.m, fill = two_seasons)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
-  geom_point(shape = 21, size = 2) +
-  geom_abline(lty = "dotted", slope = 1, intercept = 0) +
-  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-  labs(x = "SAC254_Abs.m", y = "SAC436_Abs.m", fill = "sampling season:",
-       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
-
-# --- Spectrolyser data - NPOC vs SAC254_Abs.m
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab",
-         site == "Weeks-out" |
-           site == "Leech-head" |
-           site == "Chris-crk" |
-           site == "Cragg-crk" |
-           site == "West-Leech"| 
-           site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = two_seasons)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
-  geom_point(shape = 21, size = 2) +
-  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-  labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
-       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
-
-
-
-# all sites DOC versus SAC 254
-sampleresults %>% 
-  filter(sample_type == "Grab" & sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m, fill = two_seasons)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
-  geom_point(shape = 21, size = 2) +
-  scale_fill_manual(values = c("#5B99CC", "#3B3838", "#f4AB0E")) +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-  labs(x = "DOC (mg/L as NPOC)", y = "CDOM abs (SAC 254 /m)", fill = "sampling season:",
-       caption = "Grab sample spectral concentrations (via spectrophotometry)...")
-
-
-# --- RACK SAMPLES
-
-
-# --- DOC versus CDOM on rack samples
-sampleresults %>% 
-  filter(sample_type == "Rack",
-         site == "Weeks-out" |
-           site == "Leech-head" |
-           site == "Chris-crk" |
-           site == "Cragg-crk" |
-           site == "West-Leech"| 
-           site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = sample)) +  
-  geom_point(shape = 21, size = 2) +
-  theme_bw() +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  viridis::scale_fill_viridis(discrete = TRUE) 
-labs(x = "DOC (mg/L as NPOC)", y = "CDOM (mg/L)", fill = "Rack Position:",
-     caption = "Rack sample DOC concentration based on direct (combustion measuring all non-purgeable organic carbon) and proxy (spectrophotometry measuring chromophoric fraction) methods of quantification...")
-
-# --- DOC versus NO3- on rack samples
-sampleresults %>% 
-  filter(sample_type == "Rack",
-         site == "Weeks-out" |
-           site == "Leech-head" |
-           site == "Chris-crk" |
-           site == "Cragg-crk" |
-           site == "West-Leech"| 
-           site == "Tunnel") %>%
-  mutate(site = factor(site, levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel"))) %>%
-  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm, fill = sample)) +  # exchange NPOC_ppm with DOCeq_ppm -- similar pattern but split seasonally
-  geom_point(shape = 21, size = 2) +
-  theme_bw() +
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  viridis::scale_fill_viridis(discrete = TRUE) +
-  labs(x = "DOC (mg/L as NPOC)", y = "nitrate (mg/L)", fill = "Rack Position:",
-       caption = "Rack sample DOC and nitrate concentrations (via spectrophotometry)...")
-
-# --- facet wrap scatter plots of conc --- ## W.I.P. ###
-# DOC over time (by trip) -- try mutating in a month-year for clarity
-sixfilter %>%
-  filter(sample_type == "Rack" | sample_type == "Grab", 
-         analysis == "DOC") %>% 
-  mutate(trip = factor(trip, levels = (1:22))) %>% 
-  ggplot(aes(x = trip, y = NPOC_ppm, fill = sample)) +
-  geom_jitter(shape = 21, size = 2) +
-  #facet_wrap(~site, ncol = 2, nrow = 3) +
-  viridis::scale_fill_viridis(discrete = TRUE) 
-  #geom_jitter() +
-  #theme_bw() +
-  #labs(y = "DOC (mg/L)", x = "time span", colour = "sample type:") +
-  #theme(legend.position = "top",
-  # axis.text.x = element_text(angle = 90))   # rotate tick labels for clarity
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png") 
   
 ```
 
-
-#  Synoptic
-
-## plot: buckshot overall
-```{r DOC-buckshot-plot_sample_type}
-
-# DOC over time by sample_type
+## Nitrate & DOC_eq
+```{r}
+# nitrate and DOC
 synopticfilter %>% 
-  dplyr::filter(analysis == "DOC",
-                sample_type == "Grab" | sample_type == "Rack") %>%
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) + 
-  geom_jitter(aes(fill = sample_type), size = 3, shape = 22, alpha = 0.75) +
-  scale_fill_manual(values = c("#D55E00", "#999999")) +
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = DOCeq_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
   theme_bw() +
-  labs(y = "DOC (mg/L)", x = "", fill = "sample type")
-  theme(legend.position = "top")
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "bottom",
+        text = element_text(size = 12)) +
+  labs(x = "DOC eqiv. (estimated mg/L)", y = "nitrate (mg/L)", fill = "Sample type:",
+       caption = "Estimated DOC and nitrate concentrations (via spectrophotometry)")+
+  stat_poly_eq(formula = y ~ x, 
+                aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+                parse = TRUE, rr.digits = 4)
 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/buckshot_DOC-total-sampletype.png") 
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png") 
+  
 ```
 
+# Metals 
 
-# Metals and DOC in solution
+## plot: metals+DOC in solution
 
-```{r, metals-NPOC}
-
+```{r}
 # filter out the parameters with insufficient data
 # plot DOC against metals concentrations 
-metalslab %>% 
+
+# ug/L
+a <- metalslab %>% 
   filter(metal_parameters == "Total Aluminum (Al)"|
            metal_parameters == "Total Barium (Ba)"|
            metal_parameters == "Total Copper (Cu)"|
            metal_parameters == "Total Iron (Fe)"|
            metal_parameters == "Total Mercury (Hg)"|
-           metal_parameters == "Total Manganese (Mn)"
-         #metal_parameters == "Total Magnesium (Mg)"|
-         #metal_parameters == "Total Silicon (Si)"
-  ) %>%
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"
+           ) %>%
   mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
                                    levels = c("Total Mercury (Hg)",
                                               "Total Aluminum (Al)",
                                               "Total Iron (Fe)",
                                               "Total Copper (Cu)",
                                               "Total Barium (Ba)",
-                                              "Total Manganese (Mn)"
-                                              #"Total Silicon (Si)",
-                                              #"Total Magnesium (Mg)"
-                                   ))) %>% 
-  ggplot(aes(x = NPOC_ppm, 
-             y = metals_values)) +
-  geom_jitter(aes(shape = site)) +
-  facet_wrap(~metal_parameters,
-             scales = "free",
-             ncol = 2) +
+                                              "Total Manganese (Mn)",
+                                              "Total Silicon (Si)",
+                                              "Total Arsenic (As)",
+                                              "Total Strontium (Sr)"))) %>% 
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free") +
   theme_bw() +
-  theme(legend.position ="right") +
-  labs(y = "ug/L", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x) +
+  theme(text = element_text(size = 12)) +
+  labs(y = "metals concentrations (ug/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
 ## to get equations include these lines:
-  stat_poly_eq(formula = y ~ x, 
-                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-                parse = TRUE, rr.digits = 4) #+
-## to check  
- #geom_hline(aes(yintercept = MAC), na.rm = TRUE)
+  #stat_poly_eq(formula = y ~ x, 
+  #              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+  #              parse = TRUE, rr.digits = 4) #+
 
-# save
-ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/figures/", filename = "DOC-Metals_subbasin_scatterplots.png")
-
-# make a summary table of Metals regression
-tibble::tibble(Metal = c("Total Mercury (Hg)", "Total Aluminum (Al)", "Total Iron (Fe)", "Total Copper (Cu)", "Total Barium (Ba)", "Total Manganese (Mn)"),
-               Eqn = c("0.000437x -0.000123", "20.1x -1.21", "30.9x -74.5",
-                       "0.0558x +0.403", "0.225x +2.28", "4.38x -21.4"),
-               n = c("3", "37", "40", "34", 
-                     "35", "15"),
-               R2 = c("0.999", "0.397", "0.693", "0.176", "0.225", "0.594"))
-```
-
-## WIP Metals and CDOM
-
-```{r, metals-CDOM-dontinclude}
-
-# limited metals with DOC_eq
-# filter out the parameters with insufficient data
-# plot DOC agains metals concentrations
-metalslab %>% filter(metal_parameters == "Total Aluminum (Al)"|
-                       metal_parameters == "Total Barium (Ba)"|
-                       metal_parameters == "Total Copper (Cu)"|
-                       metal_parameters == "Total Iron (Fe)"|
-                       #metal_parameters == "Total Mercury (Hg)"| # insufficient
-                       metal_parameters == "Total Magnesium (Mg)"|
-                       metal_parameters == "Total Manganese (Mn)"
-                       #metal_parameters == "Total Silicon (Si)"
-                       ) %>% 
-  ggplot(aes(x = DOCeq_ppm, 
-             y = metals_values)) +
-  geom_jitter(aes(shape = site)) +
-  facet_wrap(~metal_parameters,
-             scales = "free",
-             ncol = 2) +
-  stat_smooth(method=lm) +
+# mg/L
+b <- metalslab %>% 
+  filter(metal_parameters == "Total Magnesium (Mg)"|
+         metal_parameters == "Total Calcium (Ca)" |
+         metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)") %>%
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free", ncol = 3) +
   theme_bw() +
-  theme(legend.position ="right") +
-  labs(y = "ug/L", x = "CDOM (mg/L eq.)")
+  labs(y = "metals concentrations (mg/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
+## to get equations include these lines:
+  #stat_poly_eq(formula = y ~ x, 
+  #              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+  #              parse = TRUE, rr.digits = 4) #+
 
+cowplot::plot_grid(a, b,
+                   ncol = 1, 
+                   align = "v")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_subbasin_scatterplots.png")
 ```
 
+## table: correlation metals/DOC 
+```{r}
+# make a summary table of Metals regression
+metalslab %>% 
+  filter(metal_parameters == "Total Aluminum (Al)"|
+           metal_parameters == "Total Barium (Ba)"|
+           metal_parameters == "Total Copper (Cu)"|
+           metal_parameters == "Total Iron (Fe)"|
+           metal_parameters == "Total Mercury (Hg)"|
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"|
+           metal_parameters == "Total Magnesium (Mg)"|
+           metal_parameters == "Total Calcium (Ca)" |
+           metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)"
+  ) %>%
+  group_by(metal_parameters) %>% 
+  filter(!is.na(metals_values)) %>% 
+  summarise(unit = first(UNITS), 
+            count = n(), 
+            slope = coefficients(lm(formula = metals_values ~ NPOC_ppm))[2],
+            yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
+            r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
+  dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.png")
+
+```
 
 # fin
 
