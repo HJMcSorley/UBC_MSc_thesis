@@ -1036,17 +1036,14 @@ sixfilter_join <- results %>%
   #droplevels() %>%  # 2020-05-09 
   filter(!is.na(sample_type))
 
-# round datetime in stage
-corr_stage_join <- corr_stage %>% 
-  mutate(DateTime = lubridate::round_date(DateTime, unit = "hour")) 
-
 # join odyssey and result 
 stg_sample <- left_join(corr_stage, sixfilter_join, 
                         by = c("DateTime", 
                                "source" = "site", 
                                "corr_stage_cm")) %>% 
   dplyr::rename(site = source,
-                Date = Date.x)   # new_name = old_name 
+                Date = Date.x) %>%    # new_name = old_name 
+  select(-c(Date.y))
 
 # make a hydrochemo plot combo
 stg_sample %>% 
@@ -1054,10 +1051,8 @@ stg_sample %>%
   geom_line(aes(x = DateTime, y = corr_stage_cm), na.rm = TRUE,
             colour = "#0072B2")+
   geom_point(aes(x = DateTime, y = sampleStage_cm, shape = sample_type),
-             na.rm = TRUE)+ #, 
-             #shape = 21, colour = "black")+
+             na.rm = TRUE)+ 
   scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
-  #scale_fill_manual(values = c("Grab" = "#E69F00", "Rack" = "#009E73"), na.translate = FALSE)+
   facet_wrap(~site, ncol = 1, 
              strip.position = "right",
              scales = "free_y")+
