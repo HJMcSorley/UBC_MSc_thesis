@@ -148,6 +148,9 @@ stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chem
 events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", col_names = TRUE) %>% 
   mutate(ID = factor(ID, levels = c(1:18)))
 
+# treatability results from U.Waterloo
+treatability <- read_csv()
+
 ```
 
 
@@ -671,7 +674,7 @@ odyssey_data %>%
   dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
   ggplot(aes(x = norm_stg, y = fct_rev(source)))+
   ggridges::geom_density_ridges(aes(fill = source), alpha = 0.6) +
-  scale_fill_brewer(palette="Accent") +
+  scale_fill_brewer(palette="Set2") +
   theme_bw() +
   scale_y_discrete() +
   theme(legend.position = "none")+
@@ -1411,7 +1414,7 @@ n_ff_DOCCDOM <- synopticfilter %>%
   pull(total)
 ```
 
-### plot: subbasin seasonal DOC boxplot
+### plot: boxplot subbasin seasonal DOC
 ```{r}
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
@@ -1429,7 +1432,7 @@ sixfilter %>%
 
 ```
 
-### plot: subbasin seasonal DOC Ridge plots
+### plot: Ridge subbasin seasonal DOC
 ```{r}
 # density ridge plots (facet wrap by season)
 sixfilter %>% 
