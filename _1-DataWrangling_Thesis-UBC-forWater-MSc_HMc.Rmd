@@ -905,7 +905,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
   filter(analysis == "DOC",
          trip != 0,
          sample_type != "QA-QC") %>% 
-  droplevels() %>%
+  #droplevels() %>%
   rename(sampleStage_cm = fillStage_cm)
 
 # rack samples ---
@@ -976,7 +976,7 @@ sampleresults_grab <- sampleresults_grabstage %>%
 # Join time-stamped rack and grab dfs
 results1 <- full_join(sampleresults_grab, sampleresults_rack, 
                  by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm", "ID")) %>% 
-  dplyr::distinct(site, trip, NPOC_ppm, ID, .keep_all = TRUE)
+  dplyr::distinct(site, trip, ID, .keep_all = TRUE)  #NPOC_ppm, 
 
 # join matched sample dataframes with the original sampleresults  
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
@@ -1015,11 +1015,7 @@ results %>%
   summarize(total = sum(number_of_samples)) %>% 
   pull(total)
 
-# check max
-corr_stage %>% 
-  filter(interval == "3", source == "ChrisCrk") %>% 
-  summarise(max = max(corr_stage_cm),
-            min = min(corr_stage_cm))
+
 
 ```
 
@@ -1037,7 +1033,7 @@ sixfilter_join <- results %>%
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel"))) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  droplevels() %>% 
+  #droplevels() %>%  # 2020-05-09 
   filter(!is.na(sample_type))
 
 # round datetime in stage
@@ -1049,7 +1045,8 @@ stg_sample <- left_join(corr_stage, sixfilter_join,
                         by = c("DateTime", 
                                "source" = "site", 
                                "corr_stage_cm")) %>% 
-  dplyr::rename(site = source)   # new_name = old_name 
+  dplyr::rename(site = source,
+                Date = Date.x)   # new_name = old_name 
 
 # make a hydrochemo plot combo
 stg_sample %>% 
@@ -1252,7 +1249,6 @@ stg_sample %>%
 # update sample results with rain events
 ```{r, update samples}
 results <- results %>% 
-  mutate(Date = as_date(DateTime)) %>%
   # add event ID (ugly code)
   mutate(event_ID =
              case_when(
