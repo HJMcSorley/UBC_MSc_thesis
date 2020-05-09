@@ -1789,8 +1789,17 @@ treatdat_UW <- treatdat_UW %>%
 treatdat <- sampleresults %>% 
   filter(sample == "Treatability") %>% 
   full_join(treatdat_UW, by = c("Date", "site"))
+
+# plot DOC and NPOC
+treatdat %>% 
+  ggplot(aes(x = 'DOC_[ppm]', y = 'THMsfp_ug/L'))+
+  geom_point()+
+  theme_bw()+
+  facet_wrap(~site, ncol = 1, )
+
 ```
 
+# QA-QC (temp)
 
 # Stage --WIP
 
