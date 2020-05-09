@@ -319,6 +319,8 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
     "Rithet-crk" = "Rithet",
     "W.Jarvis" = "Jarvis"
   ))
+
+
 # check sites again
 levels(spectrolyser_samples$site)
 
@@ -976,12 +978,21 @@ sampleresults_grab <- sampleresults_grabstage %>%
 # Join time-stamped rack and grab dfs
 results1 <- full_join(sampleresults_grab, sampleresults_rack, 
                  by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm", "ID")) %>% 
-  dplyr::distinct(site, trip, ID, .keep_all = TRUE)  #NPOC_ppm, 
+  dplyr::distinct(site, trip, ID, .keep_all = TRUE) %>%  #NPOC_ppm,
+  mutate(sample_type = factor(sample_type), 
+         sample = factor(sample),
+         trip = factor(trip), 
+         analysis = factor(analysis))
+
 
 # join matched sample dataframes with the original sampleresults  
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
 results2 <- full_join(results1, sampleresults, 
-                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) #%>% 
+                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>%
+  mutate(sample_type = factor(sample_type), 
+         sample = factor(sample),
+         trip = factor(trip, levels = c(0:23)), 
+         analysis = factor(analysis))
   #dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
@@ -999,12 +1010,9 @@ results3 <- within(results2,
 results <- results3 %>% 
   ungroup() %>% 
   select(-c("dt_sampled")) %>% 
-  mutate(trip = factor(trip), 
-         site = factor(site), 
-         sample_type = factor(sample_type),
-         analysis = factor(analysis),
+  mutate(site = factor(site), 
          two_seasons = factor(two_seasons)) %>% 
-  dplyr::distinct(site, trip, ID, .keep_all = TRUE)  
+  dplyr::distinct(site, trip, DateTime_sampled, .keep_all = TRUE)  
 
 # check count
 results %>% 
@@ -1014,8 +1022,6 @@ results %>%
   ungroup() %>% 
   summarize(total = sum(number_of_samples)) %>% 
   pull(total)
-
-
 
 ```
 
