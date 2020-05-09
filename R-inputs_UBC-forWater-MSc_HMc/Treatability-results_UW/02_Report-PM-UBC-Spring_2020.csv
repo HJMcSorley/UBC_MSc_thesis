@@ -1,0 +1,24 @@
+Report: R-2020S-PM-UBC-MJ,,,,,,,,,,,,,,,,,
+University of Waterloo WaterSTP Laboratory Seasonal Report,,,,,,,,,,,,,,,,,
+Date: 26/03/2020,,,,,,,,,,,,,,,,,
+Pacific Maritime,,,,,,,,,,,,,,,,,
+Spring 2020,DL,,,,,,,,,,,,,,,,
+(a): Bromodichloromethane Formation Potential,,,,,,,,,,,,,,,,,
+(b): Tribromomethane Formation Potential,0.34,,,,,,,,,,,,,,,,
+(c): Trichloromethane Formation Potential,,,,,,,,,,,,,,,,,
+(d): Dibromochloromethane Formation Potential,0.37,,,,,,,,,,,,,,,,
+(e): Monochloroacetic Acid Formation Potential,4.7,,,,,,,,,,,,,,,,
+(f): Monobromoacetic Acid Formation Potential,2.9,,,,,,,,,,,,,,,,
+(g): Dichloroacetic Acid Formation Potential,,,,,,,,,,,,,,,,,
+(h): Dibromoacetic Acid Formation Potential,2,,,,,,,,,,,,,,,,
+(i): Trichloroacetic Acid Formation Potential,,,,,,,,,,,,,,,,,
+,,,,,,,a,b,c,d ,,e,f,g,h,i,NA = ND
+Sample_ID,pH,UV254_[cm-1],DOC_[ppm],Turbidity_[NTU],Zeta_Potential_[mV],THMsfp_ug/L,BDCMfp_ug/L,TBMfp_ug/L,TCMfp_ug/L,DBCMfp_ug/L,HAAsfp_ug/L,MCAAfp_ug/L,MBAAfp_ug/L,DCAAfp_ug/L,DBAAfp_ug/L,TCAAfp_ug/L,Free_Chlorine_Final_mg/L
+12Nov19_PM-UBC-HMC_DCP.375,6.7,0.067,2.6,1.52,-15,160,8.8,NA,151,0.39,202,6.1,NA,78,NA,118,3.6
+12Nov19_PM-UBC-HMC_TUN.601,6.9,0.107,2.8,0.41,-8,243,8.5,NA,235,NA,370,5.8,NA,124,NA,240,3.2
+12Nov19_PM-UBC-HMC_RTH.145,7.3,0.063,1.9,0.18,-11,176,8.2,NA,167,NA,201,NA,NA,88.7,NA,113,4.57
+12Nov19_PM-UBC-HMC_JDG.855,7.3,0.283,7,0.65,-15,615,11,NA,604,NA,1020,14,NA,329,NA,678,5.26
+18FEB20_PM-UBC-HMC_DCP.517,6.5,0.108,3.1,1.7,-16,258,5.2,NA,253,NA,441,8.1,NA,150,NA,283,4.21
+18FEB20_PM-UBC-HMC_TUN.863,6.4,0.084,2.2,0.36,-12,236,5.6,NA,230,NA,322,5.4,NA,106,NA,210,4.61
+18FEB20_PM-UBC-HMC_RTH.123,6.7,0.047,4.3,0.19,-16,156,5.3,NA,151,NA,136,NA,NA,54.7,NA,81.5,4.04
+18FEB20_PM-UBC-HMC_JDG.007,6.8,0.108,5.7,0.38,-13,313,6.4,NA,307,NA,335,6.7,NA,130,NA,199,3.26
