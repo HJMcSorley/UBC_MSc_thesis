@@ -1768,22 +1768,27 @@ treatdat_UW <-
   set_names(str_extract(., "([0-9]{2,}+)")) %>%
   purrr::map_dfr(~ read_csv(
     file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
-                            col_names = TRUE, skip = 15)) 
+                            col_names = TRUE, skip = 15), .id = "source") 
+
+# add date
+treatdat_UW <- treatdat_UW %>% 
+  filter(source == "02") %>%   ## turns out, everything was included in second report
+  mutate(day = substr(Sample_ID, 1, 2),
+         site = substr(Sample_ID, 20, 22)) %>% 
+  mutate(Date = case_when(
+    day == "12" ~ as_date("2019-11-12"),
+    day == "18" ~ as_date("2020-02-18"))) %>% 
+  mutate(site = case_when(
+      site == "DCP" ~ "Deception-res",
+      site == "TUN" ~ "Tunnel",
+      site == "JDG" ~ "Judge",
+      site == "RTH" ~ "Rithet")) %>% 
+  mutate(site = factor(site))
 
 # isolate my results for these samples
-treatdat_UBC 
-a <- sampleresults %>% 
-  mutate(Date = as_date(DateTime_sampled)) %>% 
-  filter(sample_type == "Grab", analysis == "DOC",
-         Date %within% interval("2020-02-17", "2020-02-21"),
-         site == "Tunnel"|
-           site == "Rithet"|
-           site == "Judge" |
-           site == "Deception-res") %>% 
-  
-  mutate(sample_type )
-  filter(sample_type == "Grab",
-         sample == "Treatability")
+treatdat <- sampleresults %>% 
+  filter(sample == "Treatability") %>% 
+  full_join(treatdat_UW, by = c("Date", "site"))
 ```
 
 
