@@ -5,7 +5,7 @@
 measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 1,Lab,QA-QC,RO,,,3
 2,W.Jarvis,Grab,Grab,2019-11-23 8:25,,3
-3,Chris-crk,Rack,L1,,26,3
+3,Chris-crk,Rack,L1,,25,3
 4,Chris-crk,Grab,Grab,2019-11-23 8:55,,3
 5,Weeks-out,Grab,Grab,2019-11-23 9:15,,3
 6,Leech-head,Grab,Grab,2019-11-23 10:00,,3

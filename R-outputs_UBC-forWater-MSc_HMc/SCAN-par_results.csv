@@ -277,8 +277,8 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 23,West-Leech,Rack,L6,NA,99,0.532,0.033,6.646,5.305,12.938,0.235
 23,West-Leech,Rack,L7,NA,114,13.199,0,8.357,5.451,13.296,0.255
 23,Tunnel,Grab,Grab,2020-01-30T20:30:00Z,110,0,0,5.649,4.615,11.257,0.206
-23,Tunnel,Grab,Grab,2020-02-18T19:00:00Z,20,0,0,5.044,4.255,10.378,0.216
 23,Tunnel,Grab,Grab,2020-02-19T19:00:00Z,19,0,0,4.951,4.048,9.873,0.206
+23,Tunnel,Grab,Treatability,2020-02-18T19:00:00Z,20,0,0,5.044,4.255,10.378,0.216
 23,Tunnel,Rack,L1,NA,41,0,0.05,6.961,5.577,13.603,0.264
 23,Tunnel,Rack,L2,NA,57,0,0.076,7.239,5.662,13.809,0.269
 23,Tunnel,Rack,L3,NA,70,0,0.075,7.039,5.57,13.584,0.26
@@ -305,7 +305,7 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 23,Weeks-out,Grab,Grab,2020-01-09T19:35:00Z,NA,0,0.331,10.526,8.69,21.194,0.372
 23,Weeks-out,Grab,Grab,2020-02-20T08:00:00Z,51.5,1.003,0.354,11.817,9.358,22.825,0.384
 23,Weeks-out,Rack,L1,NA,59,0.662,0.088,6.747,5.389,13.145,0.221
-23,Weeks-out,Rack,L2,NA,38,0,0.051,6.545,5.379,13.119,0.234
+23,Weeks-out,Rack,L2,NA,68,0,0.051,6.545,5.379,13.119,0.234
 23,Weeks-out,Rack,L3,NA,85,0,0.04,6.339,5.121,12.489,0.224
 23,Weeks-out,Rack,L4,NA,97,0,0.159,7.683,6.379,15.558,0.26
 23,Chris-crk,Grab,Grab,2020-01-09T19:20:00Z,NA,0,0,4.229,3.736,9.112,0.197
@@ -317,11 +317,11 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 23,Chris-crk,Rack,L5,NA,67,0,0,5.096,4.204,10.254,0.194
 23,Chris-crk,Rack,L6,NA,115,0,0.075,6.132,5.138,12.53,0.213
 23,Rithet,Grab,Grab,2020-02-20T00:00:00Z,NA,0,0,3.188,2.808,6.85,0.159
-23,Rithet,Grab,Grab,2020-02-20T21:50:00Z,NA,0,0,3.347,2.925,7.135,0.169
-23,Deception-res,Grab,Grab,2020-02-18T17:00:00Z,NA,0,0.115,6.156,5.196,12.673,0.221
+23,Rithet,Grab,Treatability,2020-02-18T22:30:00Z,NA,0,0,3.347,2.925,7.135,0.169
+23,Deception-res,Grab,Treatability,2020-02-18T17:00:00Z,NA,0,0.115,6.156,5.196,12.673,0.221
 23,Leech-downstreamconf,Grab,Grab,2020-02-08T19:10:00Z,NA,0,0,5.16,4.262,10.395,0.196
-23,Judge,Grab,Grab,2020-02-18T22:00:00Z,NA,0,0.053,6.019,5.061,12.345,0.227
 23,Judge,Grab,Grab,2020-02-19T23:00:00Z,NA,0,0.04,5.92,5.042,12.298,0.221
+23,Judge,Grab,Treatability,2020-02-18T22:00:00Z,NA,0,0.053,6.019,5.061,12.345,0.227
 23,Jordan-trib,Grab,Grab,2020-01-09T22:09:00Z,NA,0,0.191,5.63,4.892,11.931,0.207
 3,Lab,QA-QC,RO,NA,NA,0,0,1.8775,1.4565000000000001,NaN,NaN
 3,West-Leech,Grab,Grab,2019-11-23T20:15:00Z,NA,0,0.388,11.026,8.913,NaN,NaN
@@ -333,7 +333,7 @@ trip,site,sample_type,sample,dt_sampled,fillStage_cm,Turbid.FTUeq,NO3.Neq_ppm,TO
 3,Leech-head,Grab,Grab,2019-11-23T18:00:00Z,NA,0,0.577,13.674,11.014,NaN,NaN
 3,Weeks-out,Grab,Grab,2019-11-23T17:15:00Z,NA,0.42,0.965,17.871,14.057,NaN,NaN
 3,Chris-crk,Grab,Grab,2019-11-23T16:55:00Z,NA,0,0.205,7.425,6.044,NaN,NaN
-3,Chris-crk,Rack,L1,NA,26,0,0.455,10.349,8.244,NaN,NaN
+3,Chris-crk,Rack,L1,NA,25,0,0.455,10.349,8.244,NaN,NaN
 3,Jarvis,Grab,Grab,2019-11-23T16:25:00Z,NA,0,0.607,15.914,12.917,NaN,NaN
 3,Boneyard,Grab,Grab,2019-11-23T21:20:00Z,NA,0,0.28,9.588,7.731,NaN,NaN
 4,West-Leech,Grab,Grab,2018-12-06T21:30:00Z,25,0,0.026,6.273,5.187,NaN,NaN

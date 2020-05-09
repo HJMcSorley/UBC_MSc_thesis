@@ -688,7 +688,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 ```{r, mutate}
 # create a "first-flush category in rain_season(s)
 sampleresults <- sampleresults %>% 
-  #select(-c(ID, DateTime)) %>% 
+  select(-c(ID, DateTime)) %>% 
   mutate(rain_seasons = case_when(
            event_ID %in% 1:8 ~ "wet",   
            Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
@@ -1762,15 +1762,28 @@ metalslab %>%
 
 # Treatability
 ```{r, message = FALSE}
-# read it in
-treatdat <- 
+# read in data
+treatdat_UW <- 
   list.files("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", pattern = "*.csv") %>% 
   set_names(str_extract(., "([0-9]{2,}+)")) %>%
   purrr::map_dfr(~ read_csv(
     file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
                             col_names = TRUE, skip = 15)) 
-#%>% 
- # mutate(DateTime = lubridate::parse_date_time(DateTime, c("dmY HM", "Ymd HM", "Ymd HMS", "Ymd HMS Op!*")))
+
+# isolate my results for these samples
+treatdat_UBC 
+a <- sampleresults %>% 
+  mutate(Date = as_date(DateTime_sampled)) %>% 
+  filter(sample_type == "Grab", analysis == "DOC",
+         Date %within% interval("2020-02-17", "2020-02-21"),
+         site == "Tunnel"|
+           site == "Rithet"|
+           site == "Judge" |
+           site == "Deception-res") %>% 
+  
+  mutate(sample_type )
+  filter(sample_type == "Grab",
+         sample == "Treatability")
 ```
 
 

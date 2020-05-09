@@ -3,9 +3,9 @@
 ,,,,,,
 ,,,,,,
 measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
-1,Deception-res,Grab,Grab,2020-02-18 9:00,,23
-2,Rithet-crk,Grab,Grab,2020-02-20 13:50,,23
-3,Judge-crk,Grab,Grab,2020-02-18 14:00,,23
+1,Deception-res,Grab,Treatability,2020-02-18 9:00,,23
+2,Rithet-crk,Grab,Treatability,2020-02-18 14:30,,23
+3,Judge-crk,Grab,Treatability,2020-02-18 14:00,,23
 4,Rithet-crk,Grab,Grab,2020-02-19 16:00,,23
 5,Judge-crk,Grab,Grab,2020-02-19 15:00,,23
 6,Jordan-trib,Grab,Grab,2020-01-09 14:09,,23
@@ -30,11 +30,11 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 25,Leech-head,Rack,L6,,195,23
 26,Weeks-out,Grab,Grab,2020-02-20 0:00,51.5,23
 27,Weeks-out,Rack,L1,,59,23
-28,Weeks-out,Rack,L2,,38,23
+28,Weeks-out,Rack,L2,,68,23
 29,Weeks-out,Rack,L3,,85,23
 30,Weeks-out,Rack,L4,,97,23
 31,Weeks-out,Grab,Grab,2020-01-09 11:35,,23
-32,Tunnel,Grab,Grab,2020-02-18 11:00,20,23
+32,Tunnel,Grab,Treatability,2020-02-18 11:00,20,23
 33,Tunnel,Grab,Grab,2020-02-19 11:00,19,23
 34,Tunnel,Rack,L1,,41,23
 35,Tunnel,Rack,L2,,57,23
