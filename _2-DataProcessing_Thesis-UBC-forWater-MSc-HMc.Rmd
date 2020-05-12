@@ -1756,7 +1756,7 @@ metalslab %>%
             yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
             r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
   dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.png")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
 
 ```
 
@@ -1770,7 +1770,7 @@ treatdat_UW <-
     file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
                             col_names = TRUE, skip = 15), .id = "source") 
 
-# add date
+# add date, timing, update site names
 treatdat_UW <- treatdat_UW %>% 
   filter(source == "02") %>%   ## turns out, everything was included in second report
   mutate(day = substr(Sample_ID, 1, 2),
@@ -1778,6 +1778,10 @@ treatdat_UW <- treatdat_UW %>%
   mutate(Date = case_when(
     day == "12" ~ as_date("2019-11-12"),
     day == "18" ~ as_date("2020-02-18"))) %>% 
+  mutate(Collection = case_when(
+    day == "12" ~ "Nov 2019",
+    day == "18" ~ "Feb 2020")) %>% 
+  mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
   mutate(site = case_when(
       site == "DCP" ~ "Deception-res",
       site == "TUN" ~ "Tunnel",
@@ -1788,16 +1792,223 @@ treatdat_UW <- treatdat_UW %>%
 # isolate my results for these samples
 treatdat <- sampleresults %>% 
   filter(sample == "Treatability") %>% 
-  full_join(treatdat_UW, by = c("Date", "site"))
+  full_join(treatdat_UW, by = c("Date", "site")) %>% 
+  mutate(site = factor(site))
+```
 
-# plot DOC and NPOC
+## plot DOC with: 
+
+### THM-FP
+```{r}
+# plot DOC and THM-FP
 treatdat %>% 
-  ggplot(aes(x = 'DOC_[ppm]', y = 'THMsfp_ug/L'))+
-  geom_point()+
+  ggplot(aes(x = DOC_ppm, y = THMsfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
   theme_bw()+
-  facet_wrap(~site, ncol = 1, )
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "THM-FP (ug/L)",
+       colour = "Sampling site")
 
 ```
+
+### TCM-FP 
+```{r}
+# plot DOC and TCM-FP
+treatdat %>% 
+  ggplot(aes(x = DOC_ppm, y = TCMfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "TCM-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### BDCM-FP 
+```{r}
+# plot DOC and BDCM-FP
+treatdat %>% 
+  ggplot(aes(x = DOC_ppm, y = BDCMfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "BDCM-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### HAAs-FP
+```{r}
+# plot DOC and HAA-FP
+treatdat %>% 
+  ggplot(aes(x = DOC_ppm, y = HAAsfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "HAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### DCAA-FP
+```{r}
+# plot DOC and DCAA-FP
+treatdat %>% 
+  ggplot(aes(x = DOC_ppm, y = DCAAfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "DCAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### TCAA-FP 
+```{r}
+# plot DOC and TCAA-FP
+treatdat %>% 
+  ggplot(aes(x = DOC_ppm, y = TCAAfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "DOC (mg/L)", y = "TCAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+## plot UV254 with: 
+
+### THM-FP
+```{r}
+# plot DOC and THM-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = THMsfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "THM-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### TCM-FP 
+```{r}
+# plot DOC and TCM-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = TCMfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "TCM-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### BDCM-FP 
+```{r}
+# plot DOC and BDCM-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = BDCMfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "BDCM-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### HAAs-FP
+```{r}
+# plot DOC and HAA-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = HAAsfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "HAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### DCAA-FP
+```{r}
+# plot DOC and DCAA-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = DCAAfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "DCAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+### TCAA-FP 
+```{r}
+# plot DOC and TCAA-FP
+treatdat %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = TCAAfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  theme(text = element_text(size = 12),
+        legend.position = "right")+
+  labs(x = "UV254 (abs/cm)", y = "TCAA-FP (ug/L)",
+       colour = "Sampling site")
+
+```
+
+## Compilation plot
+```{r}
+
+```
+
 
 # QA-QC (temp)
 

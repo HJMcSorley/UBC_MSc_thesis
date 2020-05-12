@@ -12,8 +12,8 @@ Fall 2019,,,,,DL,,,,,,,,,,,,
 (g): Dichloroacetic Acid Formation Potential,,,,,,,,,,,,,,,,,
 (h): Dibromoacetic Acid Formation Potential,,,,,2,,,,,,,,,,,,
 (i): Trichloroacetic Acid Formation Potential,,,,,,,,,,,,,,,,,
-,,,,,,,a,b,c,d ,,e,f,g,h,i,NA = ND
-Sample_ID,pH,UV254_[cm-1],DOC_[ppm],Turbidity_[NTU],Zeta_Potential_[mV],THMsfp_ug/L,BDCMfp_ug/L,TBMfp_ug/L,TCMfp_ug/L,DBCMfp_ug/L,HAAsfp_ug/L,MCAAfp_ug/L,MBAAfp_ug/L,DCAAfp_ug/L,DBAAfp_ug/L,TCAAfp_ug/L,Free_Chlorine_Final_mg/L
+* all DBP listed are FP in ug/L,,,,,,,a,b,c,d ,,e,f,g,h,i,NA = ND
+Sample_ID,pH,UV254_cm-1,DOC_ppm,Turbidity_NTU,Zeta_Potential_mV,THMs,BDCM,TBM,TCM,DBCM,HAAs,MCAA,MBAA,DCAA,DBAA,TCAA,Free_Chlorine_Final_mgL
 12Nov19_PM-UBC-HMC_DCP.375,6.7,0.067,2.6,1.52,-15,160,8.8,NA,151,0.39,202,6.1,NA,78,NA,118,3.6
 12Nov19_PM-UBC-HMC_JDG.855,7.3,0.283,7,0.65,-15,615,11,NA,604,NA,1020,14,NA,329,NA,678,5.26
 12Nov19_PM-UBC-HMC_TUN.601,6.9,0.107,2.8,0.41,-8,243,8.5,NA,235,NA,370,5.8,NA,124,NA,240,3.2
