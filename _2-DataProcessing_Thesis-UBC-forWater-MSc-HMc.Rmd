@@ -830,7 +830,8 @@ n_installRackSamples <- sixfilter %>%
 
 # How many samples were collected overall
 n_totalSamples <- sampleresults %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                analysis == "DOC") %>%
   #group_by(sample_type) %>% 
   summarise(sample_count = n()) %>% 
   ungroup() %>% 
@@ -858,6 +859,7 @@ tibble::tibble(
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
 
 ```
+
 ### DOC synoptic grabs by site Mean/Min/Max  
 ```{r, Grab-synoptic-table}
 # synoptic grab samples DOC concs by site
@@ -1865,11 +1867,12 @@ QAQC %>%
             sd = sd(NPOC_ppm, na.rm = T),
             RSD = (sd/DOC_mean)*100)
 
+# % error
 # (actual - expected / expected)*100
-((5.767-5.60)/5.60)*100
-((4.95-4.56)/4.56)*100
-((6.79-5.82)/5.82)*100
-(((5.767-5.60)/5.60)*100 + ((4.95-4.56)/4.56)*100 + ((6.79-5.82)/5.82)*100)/3
+a <- ((5.767-5.60)/5.60)*100
+b <- ((4.95-4.56)/4.56)*100
+c <- ((6.79-5.82)/5.82)*100
+(a+b+c)/3
 ```
 
 ## Hold-time experiments (Tunnel rack)
