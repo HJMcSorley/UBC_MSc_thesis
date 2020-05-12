@@ -80,7 +80,7 @@ For quantification of DOC, samples were filtered with 0.45-micron PES filters; a
 
 Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). 
 
-## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
+ ## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
 
 Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed.
 
@@ -903,7 +903,7 @@ sixfilter <- sampleresults %>% filter(site == "Weeks" |
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          trip = factor(trip, levels = c(0:23)),
-         ID = row_number(sample))%>% 
+         ID = row_number(NPOC_ppm))%>% 
   filter(analysis == "DOC",
          trip != 0,
          sample_type != "QA-QC") %>% 
@@ -916,7 +916,7 @@ rack_sample_df <- sixfilter %>%
   select(c(site, trip, sample_type, sample, dt_sampled, sampleStage_cm, analysis, NPOC_ppm, ID)) %>%
   mutate(sampleStage_cm = floor(sampleStage_cm)) %>% 
   filter(sample_type == "Rack") %>% 
-  droplevels() %>% 
+  #droplevels() %>% 
   group_by(site, trip)  # group by key joining variables
 
 # this is corrected stage used for mapping RACK samples to rack stage
@@ -982,8 +982,7 @@ results1 <- full_join(sampleresults_grab, sampleresults_rack,
   mutate(sample_type = factor(sample_type), 
          sample = factor(sample),
          trip = factor(trip), 
-         analysis = factor(analysis))
-
+         analysis = factor(analysis)) 
 
 # join matched sample dataframes with the original sampleresults  
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
@@ -993,8 +992,6 @@ results2 <- full_join(results1, sampleresults,
          sample = factor(sample),
          trip = factor(trip, levels = c(0:23)), 
          analysis = factor(analysis))
-  #dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
-# there were some ghost rows full of NA (likely imported from Excel)
 
 # create DateTime_sampled variable by combining DateTime and dt_sampled
 results3 <- within(results2, 
@@ -1012,11 +1009,14 @@ results <- results3 %>%
   select(-c("dt_sampled")) %>% 
   mutate(site = factor(site), 
          two_seasons = factor(two_seasons)) %>% 
-  dplyr::distinct(site, trip, DateTime_sampled, .keep_all = TRUE)  
+  dplyr::distinct(site, trip, sample_type, sample, DateTime_sampled, .keep_all = TRUE) #%>% 
+  #dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
+# there were some ghost rows full of NA (likely imported from Excel)
 
 # check count
 results %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>%  
+  filter(sample_type == "Grab" | sample_type == "Rack",
+         analysis == "DOC") %>%  
   group_by(site, sample_type) %>%   
   summarise(number_of_samples = n()) %>%
   ungroup() %>% 

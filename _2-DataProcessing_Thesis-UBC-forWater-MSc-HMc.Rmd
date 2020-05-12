@@ -1860,15 +1860,25 @@ QAQC <- sampleresults %>%
 QAQC %>% 
   filter(site == "Lab") %>% 
   group_by(sample) %>% 
-  summarise(DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd = sd(NPOC_ppm, na.rm = T))
+  summarise(count = n(),
+            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
+            sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (sd/DOC_mean)*100)
 
-
+# (actual - expected / expected)*100
+((5.767-5.60)/5.60)*100
+((4.95-4.56)/4.56)*100
+((6.79-5.82)/5.82)*100
+(((5.767-5.60)/5.60)*100 + ((4.95-4.56)/4.56)*100 + ((6.79-5.82)/5.82)*100)/3
 ```
 
 ## Hold-time experiments (Tunnel rack)
 ```{r}
-
+HT <- sampleresults %>% 
+  filter(site == "Tunnel",
+         sample_type == "QA-QC") %>% 
+  mutate(HoldTime_set = substr(sample, 10, 10),
+         HoldTime_rep = substr(sample, 11, 11))
 ```
 
 # Stage --WIP
