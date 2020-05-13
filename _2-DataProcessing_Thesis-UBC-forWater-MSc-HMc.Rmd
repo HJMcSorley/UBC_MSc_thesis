@@ -1972,7 +1972,7 @@ HT %>%
   
 ```
 
-## then -- Hobo TidbiTs
+## next -- Hobo TidbiTs
 
 # then -- Stage 
 ```{r}
