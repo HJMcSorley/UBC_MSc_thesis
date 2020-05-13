@@ -3,11 +3,11 @@
 ,,,,,,
 ,,,,,,
 measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
-1,Tunnel,QA-QC,HoldTime-C6,2019-11-12,,20
-2,Tunnel,QA-QC,HoldTime-C7,2019-11-12,,20
-3,Tunnel,QA-QC,HoldTime-C8,2019-11-12,,20
-4,Tunnel,QA-QC,HoldTime-C9,2019-11-12,,20
-5,Tunnel,QA-QC,HoldTime-C10,2019-11-12,,20
+1,Tunnel,QA-QC,HoldTime-C6,2019-12-16 22:00,,20
+2,Tunnel,QA-QC,HoldTime-C7,2019-12-16 22:00,,20
+3,Tunnel,QA-QC,HoldTime-C8,2019-12-16 22:00,,20
+4,Tunnel,QA-QC,HoldTime-C9,2019-12-16 22:00,,20
+5,Tunnel,QA-QC,HoldTime-C10,2019-12-16 22:00,,20
 6,Tunnel,Grab,Grab,2019-12-13 10:25,,20
 7,Tunnel,Grab,Grab,2019-12-13 14:45,,20
 8,Tunnel,Grab,Grab,2019-12-16 11:00,36,20

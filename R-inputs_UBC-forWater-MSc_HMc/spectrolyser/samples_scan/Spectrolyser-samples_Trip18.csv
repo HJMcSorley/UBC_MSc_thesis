@@ -16,16 +16,16 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 11,Cragg-crk,Grab,Grab,2019-11-14 13:00,,18
 12,Tunnel,Grab,Treatability,2019-11-12 11:30,0,18
 13,Tunnel,Grab,Treatability,2019-11-12 11:30,0,18
-14,Tunnel,QA-QC,HoldTime-B6,2019-10-23,,18
-15,Tunnel,QA-QC,HoldTime-B7,2019-10-23,,18
-16,Tunnel,QA-QC,HoldTime-B8,2019-10-23,,18
-17,Tunnel,QA-QC,HoldTime-B9,2019-10-23,,18
-18,Tunnel,QA-QC,HoldTime-B10,2019-10-23,,18
-19,Tunnel,QA-QC,HoldTime-C1,2019-11-12,,18
-20,Tunnel,QA-QC,HoldTime-C2,2019-11-12,,18
-21,Tunnel,QA-QC,HoldTime-C3,2019-11-12,,18
-22,Tunnel,QA-QC,HoldTime-C4,2019-11-12,,18
-23,Tunnel,QA-QC,HoldTime-C5,2019-11-12,,18
+14,Tunnel,QA-QC,HoldTime-B6,2019-11-12 10:00,,18
+15,Tunnel,QA-QC,HoldTime-B7,2019-11-12 10:00,,18
+16,Tunnel,QA-QC,HoldTime-B8,2019-11-12 10:00,,18
+17,Tunnel,QA-QC,HoldTime-B9,2019-11-12 10:00,,18
+18,Tunnel,QA-QC,HoldTime-B10,2019-11-12 10:00,,18
+19,Tunnel,QA-QC,HoldTime-C1,2019-11-12 10:00,,18
+20,Tunnel,QA-QC,HoldTime-C2,2019-11-12 10:00,,18
+21,Tunnel,QA-QC,HoldTime-C3,2019-11-12 10:00,,18
+22,Tunnel,QA-QC,HoldTime-C4,2019-11-12 10:00,,18
+23,Tunnel,QA-QC,HoldTime-C5,2019-11-12 10:00,,18
 24,Tunnel,Grab,R1,2019-11-13 14:00,,18
 25,Tunnel,Grab,R2,2019-11-13 14:00,,18
 26,Tunnel,Grab,R3,2019-11-13 14:00,,18

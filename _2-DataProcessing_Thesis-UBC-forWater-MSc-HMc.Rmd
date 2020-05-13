@@ -1937,13 +1937,39 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 ```
 
-## NEXT -- Hold-time experiments (Tunnel rack)
+## Hold-time experiments (Tunnel rack)
 ```{r}
-HT <- sampleresults %>% 
-  filter(site == "Tunnel",
-         sample_type == "QA-QC") %>% 
+# three cycles of hold time experiments (A, B , C)
+# each time, 5 samples were collected (grab) while 5 were placed on the rack with siphon lids
+# the held samples (rack) were collected later after sitting out
+# compare results between fresh and held samples
+
+# subset QAQC df for holdtime samples
+# extract set and rep values and group sets
+HT <- QAQC %>% 
+  filter(site == "Tunnel") %>% 
+  #select(-c(sampleStage_cm, fillStage_cm, corr_stage_cm)) %>% 
   mutate(HoldTime_set = substr(sample, 10, 10),
-         HoldTime_rep = substr(sample, 11, 11))
+         HoldTime_rep = substr(sample, 11, 12),
+         HoldTime_group = case_when(
+           HoldTime_rep == c(1:5) ~ "G",  # 'fresh' grab samples
+           HoldTime_rep == c(6:10) ~ "R", # 'held' rack samples
+         )) %>% 
+ # don't need?
+  mutate(group = case_when(
+    HoldTime_set == "A" & HoldTime_rep == c(1:5) ~ "AG", # first set grabs, 2019-10-12 (trip 16)
+    HoldTime_set == "A" & HoldTime_rep == c(6:10) ~ "AR", # first set rack, 2019-10-23 (trip 17)
+    HoldTime_set == "B" & HoldTime_rep == c(1:5) ~ "BG", # second set grabs, 2019-10-23 (trip 17)
+    HoldTime_set == "B" & HoldTime_rep == c(6:10) ~ "BR", # second set rack, 2019-11-12 (trip 18)
+    HoldTime_set == "C" & HoldTime_rep == c(1:5) ~ "CG", # third set grabs, 2019-11-12 (trip 18)
+    HoldTime_set == "C" & HoldTime_rep == c(6:10) ~ "CR", # third set rack, 2019-12-16 (trip 20)
+  ))
+
+# how many days passed between collecting fresh and held samples?
+HT %>% 
+  group_by(group, trip) %>% 
+  summarise(date = first(Date))
+  
 ```
 
 ## then -- Hobo TidbiTs

@@ -39,11 +39,11 @@ measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
 34,West-Leech,Rack,L3,,53,17
 35,West-Leech,Rack,L4,,65,17
 36,West-Leech,Grab,Grab,2019-10-24 10:25,32,17
-37,Tunnel,QA-QC,HoldTime-B1,2019-10-12,,17
-38,Tunnel,QA-QC,HoldTime-B2,2019-10-12,,17
-39,Tunnel,QA-QC,HoldTime-B3,2019-10-12,,17
-40,Tunnel,QA-QC,HoldTime-B4,2019-10-12,,17
-41,Tunnel,QA-QC,HoldTime-B5,2019-10-12,,17
+37,Tunnel,QA-QC,HoldTime-B1,2019-10-23 10:00,,17
+38,Tunnel,QA-QC,HoldTime-B2,2019-10-23 10:00,,17
+39,Tunnel,QA-QC,HoldTime-B3,2019-10-23 10:00,,17
+40,Tunnel,QA-QC,HoldTime-B4,2019-10-23 10:00,,17
+41,Tunnel,QA-QC,HoldTime-B5,2019-10-23 10:00,,17
 42,Tunnel,QA-QC,HoldTime-A6,2019-11-23 10:12,,17
 43,Tunnel,QA-QC,HoldTime-A7,2019-11-23 10:12,,17
 44,Tunnel,QA-QC,HoldTime-A8,2019-11-23 10:12,,17
