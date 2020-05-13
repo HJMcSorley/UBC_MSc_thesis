@@ -1857,22 +1857,24 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
 ```{r}
 QAQC <- sampleresults %>% 
   filter(sample_type == "QA-QC")
-```
-
-## WIP -- Lab: Cal-vers and blanks
-```{r}
 
 # subset for calibration verification 
 # extract cal-ver concentrations from sample name (with 'str_extract()')
 calver <- QAQC %>% 
   filter(site == "Lab") %>% 
   select(c(site, sample_type, sample, analysis, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm)) %>% 
-  mutate(cal_ver = str_extract(sample, "([0-9]{1,}+\\.[0-9]{1,}+)")) %>% 
+  mutate(cal_ver = str_extract(sample, "([0-9]{1,}+\\.[0-9]{1,}+)"),
+         cal_ver = as.numeric(cal_ver),
+         rn = row_number(cal_ver)) %>% 
   mutate(sample_type = case_when(
     !is.na(cal_ver) ~ "cal_ver",
     is.na(cal_ver) ~ "RO" )) 
+```
 
+## Lab: blanks
+```{r}
 # check lab blanks
+# this is a difficult measure of precision because the RO water is not the most reliably stable
 calver %>% 
   filter(sample_type == "RO",
          sample == "RO" | sample == "RO_pH<2",
@@ -1883,6 +1885,56 @@ calver %>%
             sd_DOC = sd(NPOC_ppm, na.rm = T),
             RSD = (sd_DOC/DOC_mean)*100)
   
+```
+## Lab: Cal Vers
+```{r}
+# percent error calculated as 'measured' minus 'actual'
+# negative error indicates the method was under-estimating DOC concentration 
+# positive error indicates the method was over-estimating DOC concentration
+
+# check cal vers for shimadzu
+a <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(NPOC_ppm),
+         rn != 7,  # error -- did not add standard 
+         cal_ver != 5.7) %>%  # true concs were not calculated
+  group_by(rn) %>% 
+  summarise(count = n(),
+            calc = mean(cal_ver),
+            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            percent_error = ((DOC_mean - calc)/ calc)*100) %>% 
+  ungroup() %>% 
+  summarise(count = sum(count),
+            error_percent = mean(percent_error))
+
+# check cal vers for spectrolyser
+b <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(DOCeq_ppm)) %>% 
+  group_by(rn) %>% 
+  summarise(count = n(),
+            calc = mean(cal_ver),
+            DOCeq_mean = mean(DOCeq_ppm, na.rm = TRUE),
+            sd_DOCeq = sd(DOCeq_ppm, na.rm = T),
+            percent_error = ((DOCeq_mean - calc)/ calc)*100) %>% 
+  ungroup() %>%  
+  summarise(count = sum(count),
+            error_percent = mean(percent_error))
+
+
+# total cal-vers included
+n_calvers <- a[1,1]+b[1,1]
+
+# percent error from shimadzu
+error_shimadzu <- a %>% pull(error_percent)
+
+# percent error from spectrolyser
+error_spectrolyser <- b %>% pull(error_percent)
+
+# average percent error from both methods:
+error_overall <- (error_shimadzu + error_spectrolyser)/2
+
 ```
 
 ## NEXT -- Hold-time experiments (Tunnel rack)
