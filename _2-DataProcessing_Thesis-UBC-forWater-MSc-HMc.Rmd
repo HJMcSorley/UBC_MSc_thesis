@@ -1476,7 +1476,8 @@ synopticfilter %>%
         legend.position = "top")
 
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_surrogate-NPOC.png") 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_surrogate-NPOC.png",
+       height = 7, width = 7, units = "in") 
 
 ```
 additional text for caption: 
@@ -1857,25 +1858,34 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
 QAQC <- sampleresults %>% 
   filter(sample_type == "QA-QC")
 ```
-## Lab: Cal-vers and blanks
+
+## WIP -- Lab: Cal-vers and blanks
 ```{r}
-QAQC %>% 
+
+# subset for calibration verification 
+# extract cal-ver concentrations from sample name (with 'str_extract()')
+calver <- QAQC %>% 
   filter(site == "Lab") %>% 
+  select(c(site, sample_type, sample, analysis, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm)) %>% 
+  mutate(cal_ver = str_extract(sample, "([0-9]{1,}+\\.[0-9]{1,}+)")) %>% 
+  mutate(sample_type = case_when(
+    !is.na(cal_ver) ~ "cal_ver",
+    is.na(cal_ver) ~ "RO" )) 
+
+# check lab blanks
+calver %>% 
+  filter(sample_type == "RO",
+         sample == "RO" | sample == "RO_pH<2",
+         NPOC_ppm != 0) %>% 
   group_by(sample) %>% 
   summarise(count = n(),
             DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (sd/DOC_mean)*100)
-
-# % error
-# (actual - expected / expected)*100
-a <- ((5.767-5.60)/5.60)*100
-b <- ((4.95-4.56)/4.56)*100
-c <- ((6.79-5.82)/5.82)*100
-(a+b+c)/3
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            RSD = (sd_DOC/DOC_mean)*100)
+  
 ```
 
-## Hold-time experiments (Tunnel rack)
+## NEXT -- Hold-time experiments (Tunnel rack)
 ```{r}
 HT <- sampleresults %>% 
   filter(site == "Tunnel",
@@ -1884,8 +1894,9 @@ HT <- sampleresults %>%
          HoldTime_rep = substr(sample, 11, 11))
 ```
 
-# Stage --WIP
+## then -- Hobo TidbiTs
 
+# then -- Stage 
 ```{r}
 # odyssey_data
 ```
