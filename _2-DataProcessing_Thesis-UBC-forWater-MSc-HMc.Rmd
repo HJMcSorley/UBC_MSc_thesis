@@ -1947,8 +1947,9 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 # subset QAQC df for holdtime samples
 # extract set and rep values and group sets
 HT <- QAQC %>% 
-  filter(site == "Tunnel") %>% 
-  #select(-c(sampleStage_cm, fillStage_cm, corr_stage_cm)) %>% 
+  filter(site == "Tunnel",
+         !is.na(NPOC_ppm)) %>% 
+  select(-c(sampleStage_cm, fillStage_cm, corr_stage_cm)) %>% 
   mutate(HoldTime_set = substr(sample, 10, 10),
          HoldTime_rep = substr(sample, 11, 12),
          HoldTime_group = case_when(
@@ -1966,13 +1967,100 @@ HT <- QAQC %>%
   ))
 
 # how many days passed between collecting fresh and held samples?
+a <- HT %>% 
+  group_by(HoldTime_set, Date) %>% 
+  summarise(group = first(group)) %>%
+  group_by(HoldTime_set) %>% 
+  summarize(lapse = diff.Date(Date))
+# mutate lapse to HT df
+HT <- full_join(HT, a, by = "HoldTime_set")
+
+
+# summarize
 HT %>% 
-  group_by(group, trip) %>% 
-  summarise(date = first(Date))
-  
+  group_by(group) %>% 
+  summarise(lapse = first(lapse),
+            mean_DOC = mean(NPOC_ppm),
+            sd_DOC = sd(NPOC_ppm),
+            RSD_DOC = (sd_DOC/mean_DOC)*100,
+            mean_DOCeq = mean(DOCeq_ppm), 
+            sd_DOCeq = sd(DOCeq_ppm),
+            mean_UV254 = mean(SAC254_Abs.m),
+            sd_UV254 = sd(SAC254_Abs.m))
+
+# damn t-tests (use Wilcoxon Rank Sum in case data is not normally distributed)
+# null hypothesis: there is no difference between the means
+# alternative hypothesis: the difference between means is significant 
+# p-value > 0.05 --> cannot reject null hypothesis
+# p-value < 0.05 --> reject the null hypothesis 
+
+
+# set A
+AG <- HT %>% filter(group == "AG")
+AR <- HT %>% filter(group == "AR")
+## t-tests
+# DOC (NPOC)
+A_DOC_pvalue <- t.test(AG$NPOC_ppm, AR$NPOC_ppm, paired = TRUE)$p.value
+A_DOC_sig <- if_else(A_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
+# DOC equiv.
+A_DOCeq_pvalue <- t.test(AG$DOCeq_ppm, AR$DOCeq_ppm, paired = TRUE)$p.value 
+A_DOCeq_sig <- if_else(A_DOCeq_pvalue < 0.05, "sig.", " ")
+# UV254
+A_UV254_pvalue <- t.test(AG$SAC254_Abs.m, AR$SAC254_Abs.m, paired = TRUE)$p.value 
+A_UV254_sig <- if_else(A_UV254_pvalue < 0.05, "sig.", " ")
+
+# set B
+BG <- HT %>% filter(group == "BG")
+BR <- HT %>% filter(group == "BR")
+## t-tests
+# DOC (NPOC)
+B_DOC_pvalue <- t.test(BG$NPOC_ppm, BR$NPOC_ppm, paired = TRUE)$p.value
+B_DOC_sig <- if_else(B_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
+# DOC equiv.
+B_DOCeq_pvalue <- t.test(BG$DOCeq_ppm, BR$DOCeq_ppm, paired = TRUE)$p.value 
+B_DOCeq_sig <- if_else(B_DOCeq_pvalue < 0.05, "sig.", " ")
+# UV254
+B_UV254_pvalue <- t.test(BG$SAC254_Abs.m, BR$SAC254_Abs.m, paired = TRUE)$p.value 
+B_UV254_sig <- if_else(B_UV254_pvalue < 0.05, "sig.", " ")
+
+# set A
+CG <- HT %>% filter(group == "CG")
+CR <- HT %>% filter(group == "CR")
+## t-tests
+# DOC (NPOC)
+C_DOC_pvalue <- t.test(CG$NPOC_ppm, CR$NPOC_ppm, paired = TRUE)$p.value
+C_DOC_sig <- if_else(C_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
+# DOC equiv.
+C_DOCeq_pvalue <- t.test(CG$DOCeq_ppm, CR$DOCeq_ppm, paired = TRUE)$p.value 
+C_DOCeq_sig <- if_else(C_DOCeq_pvalue < 0.05, "sig.", " ")
+# UV254
+C_UV254_pvalue <- t.test(CG$SAC254_Abs.m, CR$SAC254_Abs.m, paired = TRUE)$p.value 
+C_UV254_sig <- if_else(C_UV254_pvalue < 0.05, "sig.", " ")
+
+# COMPILE
+HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise('hold-time_days' = first(lapse),
+            season_G = first(rain_seasons),
+            season_R = last(rain_seasons)) %>% 
+  mutate(DOC_pValue = c(A_DOC_pvalue, B_DOC_pvalue, C_DOC_pvalue),
+         sig_DOC = c(A_DOC_sig, B_DOC_sig, C_DOC_sig),
+         DOCeq_pValues = c(A_DOCeq_pvalue, B_DOCeq_pvalue, C_DOCeq_pvalue),
+         sig_DOCeq = c(A_DOCeq_sig, B_DOCeq_sig, C_DOCeq_sig),
+         UV254_pValues = c(A_UV254_pvalue, B_UV254_pvalue, C_UV254_pvalue),
+         sig_UV254 = c(A_UV254_sig, B_UV254_sig, C_UV254_sig)) 
+
+# the difference between AG and AR is wild and unexpected
+# perhaps this was due to temperature? Check out Hobo TidbiTs
+# or maybe due to high initial concentrations of DOC (first flush)
+# maybe high DOC and temperature together
 ```
 
-## next -- Hobo TidbiTs
+## Hobo TidbiTs
+```{r}
+
+```
+
 
 # then -- Stage 
 ```{r}
