@@ -2057,8 +2057,23 @@ HT %>%
 ```
 
 ## Hobo TidbiTs
-```{r}
+```{r, message=FALSE, warning=FALSE}
+# read in data
+Hobo <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", pattern = "*.csv") %>% 
+  set_names(str_extract(., "([a-z]+\\-[a-z]*\\_[a-z]+)")) %>%
+  purrr::map_dfr(~ read_csv(
+    file.path("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", .), 
+    col_names = TRUE, skip = 1), .id = "source") 
 
+# update
+Hobo <- Hobo[1:4] # drop serial numbers
+names(Hobo) <- c("source", "num", "DateTime", "Temp_C")
+
+Hobo %>% 
+  mutate(DateTime = lubridate::mdy_hms(DateTime),
+         source = factor(source))
+  
 ```
 
 
