@@ -26,6 +26,7 @@ library(ggpmisc)    # linear regression line values (ggplot)
 library(cowplot)    # add-on to ggplot for layout (nice grid)
 library(gghighlight)# plot highlighting
 library(car)        # stats: Companion to Applied Regression
+library(randomForest)
 
 ```
 ## define colours
@@ -2226,35 +2227,31 @@ HT_Hobo_L <- HT_Hobo %>%
 # plot it  
 HT_Hobo_L %>% 
   ggplot(aes(x = Date, y = degrees_C))+
-  # both 10 minute temp and daily mean
   geom_line(aes(colour = Temp, size = Temp))+
-  scale_colour_manual(values = c(forWater_colours2[["SkyBlue"]], 
-                                 forWater_colours2[["DeepBlue"]]),
+  scale_colour_manual(values = c(forWater_colours2[["SkyBlue"]], ## 30 minute 
+                                 forWater_colours2[["DeepBlue"]]), ## daily average
                       labels = c("30 minute measurement", "Daily mean"))+
   scale_size_manual(values = c(1, 1.5), labels = c("30 minute measurement", "Daily mean"))+
   guides(colour = guide_legend("Temperature:"), size = guide_legend("Temperature:"))+
-  # horizontal lines for "refrigerator" range (0-7 C)
+  # horizontal lines for lab refrigerator range (0-7 C)
   geom_hline(yintercept = c(0, 7), linetype = "solid", colour = "red")+
   annotate("text", label = "fridge range", angle = 90, colour = "red",
            x = first(HT_Hobo_L$Date)+1, y = 3.5)+
   # vertical lines for HT sample dates
   geom_vline(xintercept = c(HT_dates$date_fresh, HT_dates$date_held), 
              linetype = "dashed", colour = "black", size = 0.8) +
-  # label hold-time sets
-  annotate("text", label = c("Hold-time set:\n", paste(HT_dates$HoldTime_set, "\n")), 
+  annotate("text", label = c("Hold-time set:\n", paste(HT_dates$HoldTime_set, "\n")), ## set 
            x = c(HT_dates$date_fresh[1]-15, 
                  HT_dates$date_held[1]-HT_dates$half_lapse[1],
                  HT_dates$date_held[2]-HT_dates$half_lapse[2],
                  HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
            y = 27)+
-  # label time lapse for each set (same x positions, lower down)
-  annotate("text", label = c("Days:\n", paste(HT_dates$lapse, "\n")), 
+  annotate("text", label = c("Days:\n", paste(HT_dates$lapse, "\n")), ## time lapse
            x = c(HT_dates$date_fresh[1]-8, 
                  HT_dates$date_held[1]-HT_dates$half_lapse[1],
                  HT_dates$date_held[2]-HT_dates$half_lapse[2],
                  HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
            y = 25)+
-  # styling
   theme_bw()+
   labs(x = "", y = "Air Temperature (°C)")+
   theme(legend.position = "top", 
@@ -2263,7 +2260,6 @@ HT_Hobo_L %>%
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_ai-Temp.png")
-
 
 ```
 
