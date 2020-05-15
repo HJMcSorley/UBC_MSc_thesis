@@ -2195,10 +2195,11 @@ Hobo %>%
 ```{r}
 # combine Temperature with hold-time (Tunnel)
 HT_Hobo <- Hobo %>% 
-  filter(site == "Tunnel") %>% 
-  full_join(HT, by = c("site")) %>% 
-  mutate(date = as_date(DateTime))
-  
+  filter(site == "Tunnel",
+         location == "air") %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  full_join(HT, by = c("site", "Date")) %>% 
+  mutate(site = factor(site))
 ```
 
 ### plot: Hobo HT
@@ -2206,43 +2207,64 @@ HT_Hobo <- Hobo %>%
 # set sample dates
 HT_dates <- HT %>% 
   group_by(HoldTime_set) %>% 
+  mutate(lapse = as.numeric(lapse)) %>% 
   summarise(date_fresh = as_date(first(DateTime_sampled)),
-            date_held = as_date(last(DateTime_sampled)))
+            date_held = as_date(last(DateTime_sampled)),
+            lapse = mean(lapse),
+            half_lapse = lapse*0.5)
 
 # save mean temp
-HT_Hobo_DailyT <- 
-  
-  
-  HT_Hobo %>% 
-  filter(location == "air") %>% 
-  mutate(date = as_date(DateTime)) %>%
-  group_by(date) %>% 
-  summarise(T_daily = mean(Temp_C)) %>% 
-  full_join((
-    HT_Hobo %>% 
-      filter(location == "air")), by = date)
+HT_Hobo_L <- HT_Hobo %>% 
+  group_by(Date) %>% 
+  summarise(Temp_daily = mean(Temp_C)) %>% 
+  full_join(HT_Hobo, by = "Date") %>% 
+  pivot_longer(cols = starts_with("Temp_"),
+               names_to = "Temp",
+               values_to = "degrees_C") %>% 
+  mutate(Temp = factor(Temp))
 
 # plot it  
-HT_Hobo %>% 
-  filter(location == "air") %>% 
-  mutate(date = as_date(DateTime)) %>%
-  ggplot()+
-  geom_line(aes(x = date, y = Temp_C), colour = forWater_colours2[["DeepBlue"]], size = 1.5)+
-  geom_line(aes(x = HT_Hobo_DailyT$date, y = HT_Hobo_DailyT$T_daily), colour = forWater_colours2[["SkyBlue"]], size = 1)+
-  theme_bw()+
-  # plot "refrigerator" range (0-7 C)
-  geom_hline(yintercept = 0, linetype = "dashed", colour = forWater_colours2[["Gray"]], size = 0.7)+
-  geom_hline(yintercept = 7, linetype = "dashed", colour = forWater_colours2[["Gray"]], size = 0.7)+
-  labs(x = "", y = "Mean Daily Temperature (°C)",
-       colour = "Temperature measurement:")+
-  theme(legend.position = "top", 
-        text = element_text(size = 12))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  scale_x_date(date_labels = "%Y %b %d",
-                   date_breaks = "1.5 months",
-                   date_minor_breaks = "1 months")+
+HT_Hobo_L %>% 
+  ggplot(aes(x = Date, y = degrees_C))+
+  # both 10 minute temp and daily mean
+  geom_line(aes(colour = Temp, size = Temp))+
+  scale_colour_manual(values = c(forWater_colours2[["SkyBlue"]], 
+                                 forWater_colours2[["DeepBlue"]]),
+                      labels = c("30 minute measurement", "Daily mean"))+
+  scale_size_manual(values = c(1, 1.5), labels = c("30 minute measurement", "Daily mean"))+
+  guides(colour = guide_legend("Temperature:"), size = guide_legend("Temperature:"))+
+  # horizontal lines for "refrigerator" range (0-7 C)
+  geom_hline(yintercept = c(0, 7), linetype = "solid", colour = "red")+
+  annotate("text", label = "fridge range", angle = 90, colour = "red",
+           x = first(HT_Hobo_L$Date)+1, y = 3.5)+
+  # vertical lines for HT sample dates
   geom_vline(xintercept = c(HT_dates$date_fresh, HT_dates$date_held), 
-             linetype = "dashed", colour = "black", size = 0.8) 
+             linetype = "dashed", colour = "black", size = 0.8) +
+  # label hold-time sets
+  annotate("text", label = c("Hold-time set:\n", paste(HT_dates$HoldTime_set, "\n")), 
+           x = c(HT_dates$date_fresh[1]-15, 
+                 HT_dates$date_held[1]-HT_dates$half_lapse[1],
+                 HT_dates$date_held[2]-HT_dates$half_lapse[2],
+                 HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
+           y = 27)+
+  # label time lapse for each set (same x positions, lower down)
+  annotate("text", label = c("Days:\n", paste(HT_dates$lapse, "\n")), 
+           x = c(HT_dates$date_fresh[1]-8, 
+                 HT_dates$date_held[1]-HT_dates$half_lapse[1],
+                 HT_dates$date_held[2]-HT_dates$half_lapse[2],
+                 HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
+           y = 25)+
+  # styling
+  theme_bw()+
+  labs(x = "", y = "Air Temperature (°C)")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12)) +
+  scale_x_date(date_breaks = "1 months")
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_ai-Temp.png")
+
+
 ```
 
 
