@@ -1977,7 +1977,7 @@ HT <- full_join(HT, a, by = "HoldTime_set")
 
 
 # summarize
-HT %>% 
+HT_summ <- HT %>% 
   group_by(group) %>% 
   summarise(lapse = first(lapse),
             mean_DOC = mean(NPOC_ppm),
@@ -1987,7 +1987,9 @@ HT %>%
             sd_DOCeq = sd(DOCeq_ppm),
             mean_UV254 = mean(SAC254_Abs.m),
             sd_UV254 = sd(SAC254_Abs.m))
-
+```
+### t-tests
+```{r}
 # t-tests
 ## (I don't know a tidy way to do these base stats)
 # null hypothesis: there is no difference between the means
@@ -2038,23 +2040,77 @@ C_DOCeq_sig <- if_else(C_DOCeq_pvalue < 0.05, "sig.", " ")
 C_UV254_pvalue <- t.test(CG$SAC254_Abs.m, CR$SAC254_Abs.m, paired = TRUE)$p.value 
 C_UV254_sig <- if_else(C_UV254_pvalue < 0.05, "sig.", " ")
 
-# COMPILE
-HT %>% 
-  group_by(HoldTime_set) %>% 
-  summarise('hold-time_days' = first(lapse),
-            season_G = first(rain_seasons),
-            season_R = last(rain_seasons)) %>% 
-  mutate(DOC_pValue = c(A_DOC_pvalue, B_DOC_pvalue, C_DOC_pvalue),
-         sig_DOC = c(A_DOC_sig, B_DOC_sig, C_DOC_sig),
-         DOCeq_pValues = c(A_DOCeq_pvalue, B_DOCeq_pvalue, C_DOCeq_pvalue),
-         sig_DOCeq = c(A_DOCeq_sig, B_DOCeq_sig, C_DOCeq_sig),
-         UV254_pValues = c(A_UV254_pvalue, B_UV254_pvalue, C_UV254_pvalue),
-         sig_UV254 = c(A_UV254_sig, B_UV254_sig, C_UV254_sig)) 
-
 # the difference between AG and AR is wild and unexpected
 # perhaps this was due to temperature? Check out Hobo TidbiTs
 # or maybe due to high initial concentrations of DOC (first flush)
 # maybe high DOC and temperature together
+
+```
+
+#### tabulate
+```{r}
+
+# COMPILE
+HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(season_G = first(rain_seasons),
+            season_R = last(rain_seasons),
+            date_G = first(Date),
+            date_R = last(Date),
+            HoldTime_days = first(lapse)) %>% 
+  mutate(# DOC
+    fresh_DOC_ppm = paste(c(round(HT_summ$mean_DOC[1], 2), 
+                            round(HT_summ$mean_DOC[3], 2),
+                            round(HT_summ$mean_DOC[5], 2)),
+                          "±",
+                          c(round(HT_summ$sd_DOC[1], 2), 
+                            round(HT_summ$sd_DOC[3], 2), 
+                            round(HT_summ$sd_DOC[5], 2))),
+    held_DOC_ppm = paste(c(round(HT_summ$mean_DOC[2], 2), 
+                           round(HT_summ$mean_DOC[4], 2), 
+                           round(HT_summ$mean_DOC[6], 2)),
+                         "±",
+                         c(round(HT_summ$sd_DOC[2], 2), 
+                           round(HT_summ$sd_DOC[4], 2), 
+                           round(HT_summ$sd_DOC[6], 2))),
+    DOC_pValue = c(A_DOC_pvalue, B_DOC_pvalue, C_DOC_pvalue),
+    sig_DOC = c(A_DOC_sig, B_DOC_sig, C_DOC_sig),
+    # DOC_eq
+    fresh_DOCeq_ppm = paste(c(round(HT_summ$mean_DOCeq[1], 2),
+                              round(HT_summ$mean_DOCeq[3], 2), 
+                              round(HT_summ$mean_DOCeq[5], 2)),
+                            "±",
+                            c(round(HT_summ$sd_DOCeq[1], 2), 
+                              round(HT_summ$sd_DOCeq[3], 2), 
+                              round(HT_summ$sd_DOCeq[5], 2))),
+    held_DOCeq_ppm = paste(c(round(HT_summ$mean_DOCeq[2], 2),
+                             round(HT_summ$mean_DOCeq[4], 2), 
+                             round(HT_summ$mean_DOCeq[6], 2)),
+                           "±",
+                           c(round(HT_summ$sd_DOCeq[2], 2), 
+                             round(HT_summ$sd_DOCeq[4], 2), 
+                             round(HT_summ$sd_DOCeq[6], 2))),
+    DOCeq_pValues = c(A_DOCeq_pvalue, B_DOCeq_pvalue, C_DOCeq_pvalue),
+    sig_DOCeq = c(A_DOCeq_sig, B_DOCeq_sig, C_DOCeq_sig),
+    # UV254
+    fresh_UV254_ppm = paste(c(round(HT_summ$mean_UV254[1], 2), 
+                              round(HT_summ$mean_UV254[3], 2), 
+                              round(HT_summ$mean_UV254[5], 2)),
+                            "±",
+                            c(round(HT_summ$sd_UV254[1], 2), 
+                              round(HT_summ$sd_UV254[3], 2), 
+                              round(HT_summ$sd_UV254[5], 2))),
+    held_UV254_ppm = paste(c(round(HT_summ$mean_UV254[2], 2), 
+                             round(HT_summ$mean_UV254[4], 2), 
+                             round(HT_summ$mean_UV254[6], 2)),
+                           "±",
+                           c(round(HT_summ$sd_UV254[2], 2), 
+                             round(HT_summ$sd_UV254[4], 2), 
+                             round(HT_summ$sd_UV254[6], 2))),
+    UV254_pValues = c(A_UV254_pvalue, B_UV254_pvalue, C_UV254_pvalue),
+    sig_UV254 = c(A_UV254_sig, B_UV254_sig, C_UV254_sig)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_tTests.csv")
+
 ```
 
 ## Hobo TidbiTs
@@ -2078,7 +2134,8 @@ Hobo <- Hobo_dat %>%
   filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
   filter(Temp_C < 35.0) %>% 
   mutate(DateTime = lubridate::mdy_hms(DateTime),
-         position = stringr::str_sub(source, -3, -1),
+         location = stringr::str_sub(source, -3, -1),
+         location = factor(location),
          site = substr(source, 1, 3),
          site = case_when(
            site == "chr" ~ "ChrisCrk",
@@ -2089,29 +2146,104 @@ Hobo <- Hobo_dat %>%
            site == "wks" ~ "Weeks"),
          site = factor(site, 
                        levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) 
+# rename position from wet/dry to water/air
+Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
 
 ```
+
 ### plot: Hobo temp
 ```{r}
 Hobo %>% 
-  ggplot(aes(x = DateTime, y = Temp_C))+
-  geom_line(aes(colour = position))+
-  scale_color_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
-                                "dry" = forWater_colours2[["MyOrange"]]))+
+  mutate(date = as_date(DateTime)) %>%
+  group_by(site, location, date) %>% 
+  summarise(T_daily = mean(Temp_C)) %>% 
+  ggplot(aes(x = date, y = T_daily))+
+  geom_line(aes(colour = location), size = 1.5)+
+  scale_color_manual(values = c("water" = forWater_colours2[["SkyBlue"]], 
+                                "air" = forWater_colours2[["MyOrange"]]))+
   theme_bw()+
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
+  geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
   facet_wrap(~site, ncol = 1,
-             scales = "free_y")
+             strip.position = "right")+
+  labs(x = "", y = "Mean Daily Temperature (°C)",
+       colour = "Temperature measurement:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "1.5 months",
+                   date_minor_breaks = "1 months")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Hobo-TidbiTs_daily-temps.png", 
+       width = 6, height = 7, units = "in")
+```
+
+### table: Hobo temp
+```{r}
+Hobo %>%
+  mutate(month = lubridate::month(DateTime, label = TRUE),
+         year = lubridate::year(DateTime)) %>% 
+  group_by(site, location, year, month) %>% 
+  summarise(T_mean = mean(Temp_C),
+            T_sd = sd(Temp_C)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
 ```
 
 
-### Hobo HoldTime
+## Hobo HoldTime
 ```{r}
 # combine Temperature with hold-time (Tunnel)
 HT_Hobo <- Hobo %>% 
   filter(site == "Tunnel") %>% 
-  full_join(HT, by = c("site", "DateTime" = "DateTime_sampled"))
+  full_join(HT, by = c("site")) %>% 
+  mutate(date = as_date(DateTime))
+  
 ```
 
+### plot: Hobo HT
+```{r}
+# set sample dates
+HT_dates <- HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(date_fresh = as_date(first(DateTime_sampled)),
+            date_held = as_date(last(DateTime_sampled)))
+
+# save mean temp
+HT_Hobo_DailyT <- 
+  
+  
+  HT_Hobo %>% 
+  filter(location == "air") %>% 
+  mutate(date = as_date(DateTime)) %>%
+  group_by(date) %>% 
+  summarise(T_daily = mean(Temp_C)) %>% 
+  full_join((
+    HT_Hobo %>% 
+      filter(location == "air")), by = date)
+
+# plot it  
+HT_Hobo %>% 
+  filter(location == "air") %>% 
+  mutate(date = as_date(DateTime)) %>%
+  ggplot()+
+  geom_line(aes(x = date, y = Temp_C), colour = forWater_colours2[["DeepBlue"]], size = 1.5)+
+  geom_line(aes(x = HT_Hobo_DailyT$date, y = HT_Hobo_DailyT$T_daily), colour = forWater_colours2[["SkyBlue"]], size = 1)+
+  theme_bw()+
+  # plot "refrigerator" range (0-7 C)
+  geom_hline(yintercept = 0, linetype = "dashed", colour = forWater_colours2[["Gray"]], size = 0.7)+
+  geom_hline(yintercept = 7, linetype = "dashed", colour = forWater_colours2[["Gray"]], size = 0.7)+
+  labs(x = "", y = "Mean Daily Temperature (°C)",
+       colour = "Temperature measurement:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "1.5 months",
+                   date_minor_breaks = "1 months")+
+  geom_vline(xintercept = c(HT_dates$date_fresh, HT_dates$date_held), 
+             linetype = "dashed", colour = "black", size = 0.8) 
+```
 
 
 # then -- Stage 
