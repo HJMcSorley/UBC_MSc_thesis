@@ -958,7 +958,7 @@ stage_grabs <- corr_stage %>%
   
 # Join grab-stage and grab-sample dataframes to get stage from DateTime
 sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
-                 by = c("site", "DateTime_R"))
+                 by = c("site", "trip", "DateTime_R"))  #### added trip
 
 # combine DateTime and dt_sampled
 sampleresults_grabstage <- within(sampleresults_grabstage, 
@@ -968,9 +968,9 @@ sampleresults_grabstage <- within(sampleresults_grabstage,
 # take that join and rename and drop variables
 sampleresults_grab <- sampleresults_grabstage %>% 
   ungroup() %>% 
-  dplyr::mutate(sampleStage_cm = corr_stage_cm,
-                trip = trip.x) %>% 
-  select(-c( trip.x, trip.y, DateTime_R)) 
+  dplyr::mutate(sampleStage_cm = corr_stage_cm) %>% 
+  select(-DateTime_R)
+
 # DateTime and sampleStage_cm are the good good
 
 # good!
