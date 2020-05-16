@@ -27,6 +27,7 @@ library(cowplot)    # add-on to ggplot for layout (nice grid)
 library(gghighlight)# plot highlighting
 library(car)        # stats: Companion to Applied Regression
 library(randomForest)
+library(glue)       # glue() is an object-integrated 'paste'-like function
 
 ```
 ## define colours
@@ -2137,7 +2138,7 @@ Hobo <- Hobo_dat %>%
   mutate(DateTime = lubridate::mdy_hms(DateTime),
          location = stringr::str_sub(source, -3, -1),
          location = factor(location),
-         site = substr(source, 1, 3),
+         site = substr(source, 1, 3), # first three characters
          site = case_when(
            site == "chr" ~ "ChrisCrk",
            site == "cra" ~ "CraggCrk",
@@ -2200,11 +2201,32 @@ HT_Hobo <- Hobo %>%
          location == "air") %>% 
   mutate(Date = as_date(DateTime)) %>% 
   full_join(HT, by = c("site", "Date")) %>% 
-  mutate(site = factor(site))
+  mutate(site = factor(site),
+         group = factor(group, levels = c("AG", "AR", "BG", "BR", "CG", "CR")))
+# get dates
+HT_range <- HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(start = first(Date),
+            end = last(Date))
+          
+
+# SUMMARY FROM HT CHUNK -- summarize = HT_summ  
+HT_Hobo %>% 
+  group_by(group) %>% 
+  summarise(lapse = first(lapse),
+            mean_DOC = mean(NPOC_ppm),
+            sd_DOC = sd(NPOC_ppm),
+            RSD_DOC = (sd_DOC/mean_DOC)*100,
+            mean_DOCeq = mean(DOCeq_ppm), 
+            sd_DOCeq = sd(DOCeq_ppm),
+            mean_UV254 = mean(SAC254_Abs.m),
+            sd_UV254 = sd(SAC254_Abs.m))
 ```
 
 ### plot: Hobo HT
 ```{r}
+# pull & set values for plot
+
 # set sample dates
 HT_dates <- HT %>% 
   group_by(HoldTime_set) %>% 
@@ -2224,6 +2246,29 @@ HT_Hobo_L <- HT_Hobo %>%
                values_to = "degrees_C") %>% 
   mutate(Temp = factor(Temp))
 
+# summarize mean temp for each hold-time set
+A_temp <- HT_Hobo %>% 
+  filter(!is.na(Temp_C),
+         Date %within% interval(HT_range$start[1], HT_range$end[1])) %>%
+  summarise(set_temp = mean(Temp_C, na.rm = TRUE),
+            set_temp_sd = sd(Temp_C, na.rm = TRUE)) 
+A_temp <- paste(round(A_temp$set_temp, 1), "±", round(A_temp$set_temp_sd, 1))
+
+B_temp <- HT_Hobo %>% 
+  filter(!is.na(Temp_C),
+         Date %within% interval(HT_range$start[2], HT_range$end[2])) %>%
+  summarise(set_temp = mean(Temp_C, na.rm = TRUE),
+            set_temp_sd = sd(Temp_C, na.rm = TRUE)) 
+B_temp <- paste(round(B_temp$set_temp, 1), "±", round(B_temp$set_temp_sd, 1))
+
+C_temp <- HT_Hobo %>% 
+  filter(!is.na(Temp_C),
+         Date %within% interval(HT_range$start[3], HT_range$end[3])) %>%
+  summarise(set_temp = mean(Temp_C, na.rm = TRUE),
+            set_temp_sd = sd(Temp_C, na.rm = TRUE))
+C_temp <- paste(round(C_temp$set_temp, 1), "±", round(C_temp$set_temp_sd, 1))
+
+## ---------------
 # plot it  
 HT_Hobo_L %>% 
   ggplot(aes(x = Date, y = degrees_C))+
@@ -2253,23 +2298,33 @@ HT_Hobo_L %>%
                  HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
            y = 25)+
   theme_bw()+
-  labs(x = "", y = "Air Temperature (°C)")+
+  labs(x = "", y = "Air Temperature (°C)",
+       caption = glue::glue("Mean temperatures during vertical rack hold-time experiments: {A_temp} (set A), {B_temp} (set B), {C_temp} (set C).")) +
   theme(legend.position = "top", 
         text = element_text(size = 12)) +
   scale_x_date(date_breaks = "1 months")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_ai-Temp.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png")
 
 ```
 
 
-# then -- Stage 
+# Stage 
 ```{r}
 # odyssey_data
+stage_samples %>% 
+  group_by(site, trip, interval, event_ID) %>% 
+  summarise(stage_min = min(corr_stage_cm),
+            stage_max = max(corr_stage_cm))
+  
 ```
 
 
+# Next: Random Forest
+```{r}
+
+```
 
 
   
