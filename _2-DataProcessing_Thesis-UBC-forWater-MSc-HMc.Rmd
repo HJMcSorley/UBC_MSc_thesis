@@ -14,8 +14,8 @@ added to applicable sections).
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
-
-```{r, processing-packages, package.startup.message = FALSE, include=FALSE}
+## Packages
+```{r, processing-packages, package.startup.message = FALSE}
 
 # load packages
 library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
@@ -102,6 +102,7 @@ odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-s
   mutate(source = factor(source,
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          interval = factor(interval),
+         event_ID = factor(event_ID),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
 
 # precip_data df
@@ -145,7 +146,9 @@ stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chem
          sample = factor(sample),
          analysis = factor(analysis),
          two_seasons = factor(two_seasons),
-         event_ID = factor(event_ID, levels = c(1:18)))
+         event_ID = factor(event_ID, levels = c(1:18)),
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
+         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ))
 
 # rain events
 events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", col_names = TRUE) %>% 
@@ -213,7 +216,7 @@ tempplot <- precip_data %>%
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_Tmean)) +
   geom_line(colour = "#f4AB0E") +
-  geom_hline(yintercept = 0,
+  geom_hline(yintercept = 0, 
              linetype = "dotted") +
   labs(x = "", y = expression('mean air temp ('*~degree*C*'/day)')) +
   theme_bw() +
@@ -398,7 +401,7 @@ cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot,
                    rel_heights = c(1,1,1))
 
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-means_LWSA.png", 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", 
        width = 4, 
        height = 3, 
        units = "in")
@@ -548,7 +551,7 @@ subasin_snow_plot <- LWSA_meanWx %>%
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_snow-plot_subbasins.png")
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_snow-plot_subbasins.png")
 
 # 2 plot 
 # LWSA temp for the same time span
@@ -575,7 +578,7 @@ subasin_meantemp_plot <- LWSA_meanWx %>%
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_temp-plot_subbasins.png")
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_temp-plot_subbasins.png")
 
 # 3 plot rainfall
 # mean LWSA rain for study period
@@ -601,7 +604,7 @@ subbasin_meanrain_plot <- LWSA_meanWx %>%
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_rain-plot_subbasins.png")
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_rain-plot_subbasins.png")
 
 # 4 plot stage
 # stage at each of the subbasins
@@ -621,7 +624,7 @@ stage_plot <- odyssey_data %>%
         axis.text.x = element_text(angle = 60, hjust = 1),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Stage-plot_subbasins.png")
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Stage-plot_subbasins.png")
 
 # mega-plot!! 
 # stack snow, temp, precip and stage with cowplot::plot_grid
@@ -743,41 +746,38 @@ n_SynopticGrabs <- sampleresults %>%
   summarise(total = sum(grab_sample_count)) %>% 
   pull(total)
 
-# synoptically sampled sites
-# synsites <- c("WestLeech","Tunnel","CraggCrk","LeechHead","Weeks","ChrisCrk","Jarvis","Lazar","Rithet","Deception-res","West-Jordan","Leech-downstreamconf","Judge-crk","Deception-crk","Boneyard")
-
 # create a subset dataframe for the synoptically sampled sites for tidier calling
 synopticfilter <- sampleresults %>% 
-  filter(site == "Weeks"|
-           site == "ChrisCrk"|
-           site == "LeechHead"|
-           site == "CraggCrk"|
-           site == "WestLeech"|
-           site == "Tunnel"|
-           
-           site == "Rithet"|
-           site == "Lazar"|
-           site == "Jarvis"|
-           site == "Judge"|
-           site == "Leech-downstreamconf"|
-           site == "Boneyard"|
-           #site == "Deception-crk"|  ## only two samples
-           #site == "West-Jordan"| ## only two samples
-           site == "Deception-res",
-         analysis == "DOC"
+  filter(# subbasin sites 
+    site == "Weeks"|
+      site == "ChrisCrk"|
+      site == "LeechHead"|
+      site == "CraggCrk"|
+      site == "WestLeech"|
+      site == "Tunnel"|
+      # other sites
+      site == "Rithet"|
+      site == "Lazar"|
+      site == "Jarvis"|
+      site == "Judge"|
+      site == "Leech-downstreamconf"|
+      site == "Boneyard"|
+      #site == "Deception-crk"|  ## only two samples
+      #site == "West-Jordan"| ## only two samples
+      site == "Deception-res",
+    analysis == "DOC"
   ) %>% 
   mutate(site = factor(site, # order as you want to see them in plots
                        levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
 # rename funky names
 synopticfilter$site <- synopticfilter$site %>% 
-  plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",
+  plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",  ## old = new
                   "Jarvis" = "Jarvis-crk",
                   "Judge" = "Judge-crk", 
                   "Lazar" = "Lazar-crk", 
-                  #"West-Jordan" = "W.Jordan-Trib", 
-                  "Rithet" = "Rithet-crk",
+                  #"West-Jordan" = "W.Jordan-Trib",
                   #"Deception-crk" = "Deception-Gluch",
-                  "Weeks" = "weeks-crk"))
+                  "Rithet" = "Rithet-crk"))
 # ---
 
 # create a subset dataframe for the six install sites for tidier calling
@@ -925,7 +925,7 @@ b <- synopticfilter %>%
 c <- synopticfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   summarize(site = "total",
-            sample_type = "all",
+            sample_type = "all_G&R",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
@@ -945,20 +945,20 @@ rbind(a, b, c) %>%
 
 # all sites
 synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab") %>%  
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
   scale_fill_viridis(discrete = TRUE)+
-  # geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
+  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1)) +
   labs(caption = 
-         glue::glue("DOC concentrations across thirteen sites over 16 months (", {n_SynopticGrabs+n_installRackSamples}, " samples)"), 
+         glue::glue("DOC concentrations in grab samples across 13 sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
        x = "", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_boxplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
 ```
 
 ## plot: synoptic ridge, all sites
@@ -966,7 +966,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_boxplots.png")
 
 # all sites
 synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
   ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
   ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
   scale_fill_viridis(discrete = TRUE)+
@@ -974,10 +974,10 @@ synopticfilter %>%
   theme(legend.position = "none",
         text = element_text(size = 12)) +
   labs(caption = 
-         glue::glue("DOC concentrations across thirteen sites over 16 months (", {n_SynopticGrabs+n_installRackSamples}, " samples)"), 
+         glue::glue("DOC concentrations in grab samples across thirteen sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
        x = "DOC (mg/L)", y = "")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_13sites_ridgeplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_ridgeplots.png")
 ```
 
 ## Subbasin DOC summaries
@@ -1010,7 +1010,7 @@ sixfilter %>%
             DOC_min = min(NPOC_ppm, na.rm = T),
             DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin-SampleType_MeanMinMax_table.csv", col_names = TRUE)
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin-SampleType_MeanMinMax_table.csv", col_names = TRUE)
 
 ```
 
@@ -1034,7 +1034,8 @@ sixfilter %>%
   labs(caption = (glue::glue("DOC concentration by sample type and site during wet season \n
        Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")), 
        x = "", y = "DOC (mg/L)")
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-subbasin_GvsR_boxplot.png") 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png") 
 
 ```
 
@@ -1055,7 +1056,7 @@ sixfilter %>%
        Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")) +
   theme(legend.position = "none",
         text = element_text(size = 12)) 
-
+# save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
@@ -1138,7 +1139,7 @@ sixfilter %>%
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")
 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-overtime-subbasins_types-loess.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
 #, width = 4, height = 6, units = "in") 
 
 ```
@@ -1479,7 +1480,7 @@ synopticfilter %>%
         legend.position = "top")
 
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_surrogate-NPOC.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png",
        height = 7, width = 7, units = "in") 
 
 ```
@@ -1511,7 +1512,7 @@ sixfilter %>%
          shape = guide_legend("Sample season:"))+
   theme(text = element_text(size = 12),
         legend.position = "top")
-#ggsave(path = "R-outputs_UBC-forWater-MSc_HMc/", filename = "Fig7_DOCvsCDOM_6sites_scatterplot.png") 
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_subbasin-DOC-surrogate.png") 
 ```
 
 ### table: subbasin seasonal DOC
@@ -1555,7 +1556,7 @@ sampleresults %>%
   guides(fill = guide_legend("Sample season:", override.aes = list(size = 3.5)))
 
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_SUVA-NPOC.png") 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png") 
 
 ```
 
@@ -2227,7 +2228,6 @@ HT_Hobo %>%
 ### plot: Hobo HT
 ```{r}
 # pull & set values for plot
-
 # set sample dates
 HT_dates <- HT %>% 
   group_by(HoldTime_set) %>% 
@@ -2306,66 +2306,115 @@ HT_Hobo_L %>%
   scale_x_date(date_breaks = "1 months")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png", 
+       width = 7, height = 7 , units = "in")
 
 ```
 
 
 # Stage --WIP
-```{r}
-# odyssey_data
-# determine the rate of stage rise for each event at each site
-wut <- stage_samples %>% 
-  group_by(site, event_ID) %>% 
-  summarise(type = first(sample_type),
-            stage_min = min(corr_stage_cm),
-            stage_max = max(corr_stage_cm))
-#,
-            #peaks_g = ggpmisc::find_peaks(corr_stage_cm))
 
-## visualize
-p <- stage_samples %>% 
-  ggplot()+
-  geom_line(aes(x = DateTime, y = corr_stage_cm), na.rm = TRUE,
-            colour = "#0072B2")+
-  geom_point(aes(x = DateTime, y = sampleStage_cm, shape = sample_type),
-             na.rm = TRUE)+ 
-  scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
-  facet_wrap(~site, ncol = 1, 
-             strip.position = "right",
-             scales = "free_y")+
-  labs(y = "River stage (cm)", x = "",
-       shape = "Sample Type")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust=1),
-        text = element_text(size=12),
-        legend.position = "top")
+## trash- EcoHydRology baseflow separation 
+```{r}
+# note: don't call the 'EcoHydRology' package into the library if you're using it
+## access it's functions with "::" only because it masks tidyverse functions and makes workflow annoying if it's loaded into the workspace.
+
+# separate stage into base and quick (no flow data available)
+# separate each site, base R style (ugh)
+BF_QF_Weeks <- odyssey_data %>% 
+  filter(source == "Weeks")  
+BF_QF_Weeks <- EcoHydRology::BaseflowSeparation(BF_QF_Weeks$corr_stage_cm) %>% 
+  mutate(site = "Weeks")
+
+BF_QF_Chris <- odyssey_data %>% 
+  filter(source == "ChrisCrk")  
+BF_QF_Chris <- EcoHydRology::BaseflowSeparation(BF_QF_Chris$corr_stage_cm) %>% 
+  mutate(site = "ChrisCrk")
+
+BF_QF_Head <- odyssey_data %>% 
+  filter(source == "LeechHead")  
+BF_QF_Head <- EcoHydRology::BaseflowSeparation(BF_QF_Head$corr_stage_cm) %>% 
+  mutate(site = "LeechHead")
+
+BF_QF_Cragg <- odyssey_data %>% 
+  filter(source == "CraggCrk")  
+BF_QF_Cragg <- EcoHydRology::BaseflowSeparation(BF_QF_Cragg$corr_stage_cm) %>% 
+  mutate(site = "CraggCrk")
+
+BF_QF_West <- odyssey_data %>% 
+  filter(source == "WestLeech")  
+BF_QF_West <- EcoHydRology::BaseflowSeparation(BF_QF_West$corr_stage_cm) %>% 
+  mutate(site = "WestLeech")
+
+BF_QF_Tunnel <- odyssey_data %>% 
+  filter(source == "Tunnel")  
+BF_QF_Tunnel <- EcoHydRology::BaseflowSeparation(BF_QF_Tunnel$corr_stage_cm) %>% 
+  mutate(site = "Tunnel")
+
+# combine all 
+BF_QF <- bind_rows(BF_QF_Weeks, BF_QF_Chris, BF_QF_Head, BF_QF_Cragg, BF_QF_West, BF_QF_Tunnel) %>%
+  mutate(site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  mutate(row = row_number(bt))
+
+# join to stage data for datetime
+BF_QF_Odyssey <- odyssey_data %>%
+  mutate(row = row_number(corr_stage_cm)) %>% 
+  mutate(site = factor(source, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  full_join(BF_QF, by = c("site", "row"))
+
+```
+
+## WIP -- find peaks(notworking)
+```{r}
+# determine the rate of stage rise for each event at each site
+# odyssey_data
 
 # pull dates for trip
 trip_bysite <- stage_samples %>%
-  group_by(site, trip) %>% 
-  summarise(trip_start = first(Date),
-            trip_end = last(Date))
+  group_by(trip) %>% 
+  summarise(start = first(DateTime),
+            end = last(DateTime))
 # pull dates for trip and event
 event_bysite <- stage_samples %>%
-  group_by(site, event_ID) %>% 
-  summarise(trip_start = first(Date),
-            trip_end = last(Date))
-
-## visualize
-stage_samples %>% 
-  ggplot()+
-  geom_line(aes(x = DateTime, y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+  ## stage
-  geom_point(aes(x = DateTime, y = sampleStage_cm, shape = sample_type), na.rm = TRUE)+ ## samples 
-  scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
+  group_by(event_ID) %>% 
+  summarise(start = first(DateTime),
+            end = last(DateTime))
+# --
+# isolate peaks
+stage_samples_pks <- stage_samples %>% 
+  select(c(site, event_ID, corr_stage_cm, DateTime)) %>% 
+  filter(!is.na(event_ID)) %>% 
+  group_by(site, event_ID) %>%
+  summarise(DateTime_peak = DateTime[which.max(corr_stage_cm)],
+            peak = max(corr_stage_cm),
+            DateTime = DateTime_peak) %>% 
+  full_join(odyssey_data,  
+            by = c("site" = "source", "event_ID", "DateTime")) %>% 
+  select(-c(stage_cm, Date)) %>% 
+  full_join(stage_samples, by = c("site", "event_ID", "DateTime", "interval", "corr_stage_cm"))
+  
+## plot
+stage_samples_pks %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+  ## stage
+  geom_point(aes(y = peak, shape = sample_type), na.rm = TRUE)+ ## samples 
+  # scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
   facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
   labs(y = "River stage (cm)", x = "", shape = "Sample Type")+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust=1), text = element_text(size=12), legend.position = "top")
+  theme_bw()
+
+
+#+
+  theme(axis.text.x = element_text(angle = 60, hjust=1), text = element_text(size=12), legend.position = "top")+
+  # add vertical lines for events
+  geom_vline(xintercept = event_bysite$start, 
+             linetype = "dashed", colour = "red", size = 0.7)
+  # add vertical lines for trip
+  geom_vline(xintercept = trip_bysite$start, 
+             linetype = "solid", colour = "red", size = 0.6)
   
 ```
 
