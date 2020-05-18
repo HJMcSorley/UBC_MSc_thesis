@@ -202,6 +202,11 @@ Rain events were defined using the USGS Rainmaker package in R with 15-minute ra
 
 # River samples for DOC analysis
 
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+
 ## DOC in association with other water quality parameters
  
 ### Metals & DOC 
@@ -243,9 +248,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC
 
 ```{r}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", col_names = TRUE) %>% 
-  knitr::kable()
-```
-### Spatial patterns  
+  knitr::kable(digits = 2)
+```  
 
 ```{r, out.width = "100%", fig.pos="h"}
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
@@ -282,11 +286,31 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasintype
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 ```
 
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_MeanMinMax.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-summary.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+
+Levene's test to compare DOC in each subbasin to the outlet p-values
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
 
 ## Seasonal trends
 
 ```{r, out.width = "100%", fig.pos="h"}
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_ridgeplot.png")
+```
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = TRUE) %>% 
+  knitr::kable()
 ```
 
 ## Stormflow representation
@@ -298,6 +322,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_Gvs
 ```{r, out.width = "100%", fig.pos="h"}
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_ridgeplot_GvsR.png")
 ```
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin-SampleType_MeanMinMax.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+
 ## Rising limb -- hydrologic versus supply controls on export
 
 
