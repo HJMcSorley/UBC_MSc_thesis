@@ -1687,14 +1687,15 @@ metalslab %>%
   ) %>%
   mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
                                    levels = c("Total Mercury (Hg)",
-                                              "Total Aluminum (Al)",
                                               "Total Iron (Fe)",
-                                              "Total Copper (Cu)",
-                                              "Total Barium (Ba)",
                                               "Total Manganese (Mn)",
-                                              "Total Silicon (Si)",
+                                              "Total Aluminum (Al)",
+                                              "Total Barium (Ba)",
+                                              "Total Copper (Cu)",
                                               "Total Arsenic (As)",
-                                              "Total Strontium (Sr)"))) %>% 
+                                              "Total Strontium (Sr)",
+                                              "Total Silicon (Si)"
+                                              ))) %>% 
   ggplot(aes(x = NPOC_ppm, y = metals_values)) +
   geom_jitter() +
   #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
@@ -1707,7 +1708,7 @@ metalslab %>%
 #stat_poly_eq(formula = y ~ x, 
 #              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
 #              parse = TRUE, rr.digits = 4) #+
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_strong_scatterplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
 
 ```
 
@@ -1720,6 +1721,14 @@ metalslab %>%
            metal_parameters == "Total Potassium (K)"|
            metal_parameters == "Total Sodium (Na)"|
            metal_parameters == "Total Hardness (CaCO3)") %>%
+  # order as you want to see them in plots
+  mutate(metal_parameters = factor(metal_parameters, 
+                                   levels = c("Total Magnesium (Mg)",
+                                              "Total Potassium (K)",
+                                              "Total Hardness (CaCO3)",
+                                              "Total Calcium (Ca)",
+                                              "Total Sodium (Na)"
+                                              ))) %>%
   ggplot(aes(x = NPOC_ppm, y = metals_values)) +
   geom_jitter() +
   #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
@@ -1733,7 +1742,7 @@ metalslab %>%
 #              parse = TRUE, rr.digits = 4) #+
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_weak_scatterplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
 ```
 
 ## table: correlation metals/DOC 

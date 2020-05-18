@@ -158,7 +158,7 @@ DOC concentrationshad strong positive relationships with total mercury (R^2^=0.9
 Two stations collect precipitation and temperature data, Chris Creek weather station is located in the headwaters of the Leech watershed and Martin's Gulch is located near the future point of diversion. 
  
 ```{r, out.width = "100%", fig.pos="h"}
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
 ```
 ```{r}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names = TRUE) %>% 
@@ -167,7 +167,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 As there were too few stations to estimate watershed precipitation via Theissen polygons or isohyetal lines, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmethic means of precipitation and temperatures were representative of conditions across the Leech watershed.
 
 ```{r, out.width = "100%", fig.pos="h"}
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
 ```
 ```{r}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_names = TRUE) %>% 
@@ -178,7 +178,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 The Leech WSA fire-weather stations were recently installed and therefore weather during this study period could not be compared to a record from previous years. A nearby weather station (Malahat) had data from 2014 which was used to check if weather the study period was consistent with previous trends.
 
 ```{r, out.width = "100%", fig.pos="h"}
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 ```
 ```{r}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv", col_names = TRUE) %>% 
@@ -189,37 +189,137 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv", col_nam
 River stage was continuously recorded at six locations across the LWSA. Below is a plot of mean LWSA weather and stage at each of the sites.
  
 ```{r, out.width = "100%", fig.pos="h"}
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png")
+```
+### Connectivity / synchronisity among subbasins
+ 
+* plot and summary table 
+ 
+## Rain events 
+Rain events were defined using the USGS Rainmaker package in R with 15-minute rain measurements. Major events were defined by cumulative precipitation in excess of 50 mm, and separated by a period of 14 hours between events. 
+
+* plot and summary table   
+
+# River samples for DOC analysis
+
+## DOC in association with other water quality parameters
+ 
+### Metals & DOC 
+ micro-gram/L metals
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
+```
+mg/L total metals
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
+```
+Relationships between DOC and total metals are represented here:
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 2, col.names = c("Metal", "unit", "count", "slope", "Y intercept", R squared")
 ```
 
-### Connectivity / synchronisity among subbasins 
-## Rain events 
-
-# DOC concentrations
-## Association with other water quality parameters
-### Metals & DOC
 ### Nitrate & DOC 
-### Treatability
-## Synoptic sampling (grab samples)
-### Broad spatial patterns  
+Sample nitrate concentrations were estimated by UV-absorption using the Spectrolyser.
+Nitrate was positively related to DOC concentration.
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png")
+```
 
-## Seasonal patterns
-### DOC concentrations over time
-### UV-absorption as indicator of molecular character
+UV absorbance based estimations of DOC concentration were more strongly correlated to nitrate estimates:
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png")
+```
+### Treatability & DOC
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png")
+```
+#### treatability metrics of Tunnel versus Sooke Tribs
+
+## Synoptic sampling (grab samples): DOC
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+### Spatial patterns  
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
+```
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_ridgeplots.png")
+```
+
+ 
+### Seasonal patterns: UV-absorption as indicator of molecular character
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png")
+```
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png")
+```
+
 
 # Nested sub-catchment studies
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasintypes-overtime_loess.png")
+```
+
+
 ## Variability in DOC among subbasins VS within each site
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
+```
+
+
 ## Seasonal trends
 
-# Rising limb for hydrologic versus supply controls on export
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_ridgeplot.png")
+```
+
+## Stormflow representation
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
+```
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_ridgeplot_GvsR.png")
+```
+## Rising limb -- hydrologic versus supply controls on export
 
 
 # Quality Control 
+
 ## Hold-Time experiments - Vertical Racks
+
+```{r, out.width = "100%", fig.pos="h"}
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png")
+```
+
+```{r}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_tTests.csv", col_names = TRUE) %>% 
+  knitr::kable()
+```
+
+
 ## Laboratory 
 
+UBC-based laboratory analysis of samples resulted in an overall accuracy of ```error_overall``` based on analysis of calibration verification standards (n = ```n_calvers_total```).
 
-# treatability metrics of Tunnel versus Sooke Tribs
+
 
 # Random Forests
 
