@@ -811,8 +811,7 @@ n_subbbasinSamples <- sixfilter %>%
   summarise(number_of_samples = n()) %>% 
   ungroup()
 # save to outputs
-write_csv(n_subbbasinSamples, 
-          path = "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
+write_csv(n_subbbasinSamples, "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
 
 # how many of each type total?
 # save values as objects to implant in text
@@ -995,7 +994,7 @@ sixfilter %>%
             DOC_min = min(NPOC_ppm, na.rm = T),
             DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_MeanMinMax_table.csv", col_names = TRUE)
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
 ```
 
 ### table: G/R DOC means+sd min/max
@@ -1010,7 +1009,7 @@ sixfilter %>%
             DOC_min = min(NPOC_ppm, na.rm = T),
             DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin-SampleType_MeanMinMax_table.csv", col_names = TRUE)
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
 
 ```
 
@@ -1187,7 +1186,7 @@ b <- sixfilter %>%
 # full summary
 c <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "summary",
+  summarize(site = "Total",
             subbasin_type = "all",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
@@ -1239,7 +1238,7 @@ b <- a %>%
   ungroup()
 
 # grouped by headwaters / mainstem / outlet
-c <- a %>%
+C <- a %>%
   filter(sample_type == "Grab" | sample_type == "Rack",
          subbasin_type != "outlet") %>% 
   group_by(subbasin_type) %>% 
@@ -1255,7 +1254,7 @@ c <- a %>%
   ungroup()
 
 # combine 
-rbind(b, c) %>%
+rbind(b, C, c) %>%
   write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = T)
 
 ```
@@ -1935,8 +1934,12 @@ b <- calver %>%
   summarise(count = sum(count),
             error_percent = mean(percent_error))
 
-
 # total cal-vers included
+n_calvers_total <- calver %>% 
+  filter(sample_type == "cal_ver") %>% 
+  summarise(n = n())
+
+# cal-vers included
 n_calvers <- a[1,1]+b[1,1]
 
 # percent error from shimadzu
