@@ -272,79 +272,6 @@ precip_data %>%
 ```
 
 
-## FWx water year summaries (table)
-
-look at water year
-(not sure how useful the other objects are)
-```{r, Wx-Stn_summaries}
-# I want to know precip totals over the study period
-# by month and by season
-# use rain to define storm events
-
-# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
-rn_MScTotal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx",
-         date >= "2018-10-23") %>% 
-  group_by(StationName) %>% 
-  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup() 
-
-# rain seasons rainfalls
-rn_seasonal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
-  mutate(month = lubridate::month(DateTime),
-         year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year, rain_season) %>% 
-  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# annual rainfalls
-rn_annual <- precip_data %>% 
-  mutate(year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# mean annual and seasonal rainfalls
-rn_seasonalAnnual <- precip_data %>% 
-  mutate(year = lubridate::year(DateTime),
-         month = lubridate::month(DateTime),
-         season = case_when(
-           between(month, 6, 9) ~ "dry",
-           TRUE ~ "wet")) %>%
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE),
-                   rn = sum(rain_monthly, na.rm = TRUE)) %>% 
-  ungroup()
-
-# water-year rainfalls (Oct 1 - Sept 30) 
-rn_wateryr <-precip_data %>%
-  group_by(StationName) %>% 
-  filter(StationName != "Survey Mtn Wx") %>% 
-  mutate(month = lubridate::month(DateTime),
-         year = lubridate::year(DateTime),
-         water_year = case_when(
-           between(month, 1, 9) & year == "2018" ~ "2018",
-           between(month, 10, 12) & year == "2018" ~ "2019",
-           between(month, 1, 9) & year == "2019" ~ "2019",
-           between(month, 10, 12) & year == "2019" ~ "2020",
-           between(month, 1, 9) & year == "2020" ~ "2020")) %>%
-  ungroup() %>% 
-  filter(water_year != "2018") %>% 
-  group_by(StationName, water_year) %>% 
-  dplyr::summarise(rain = sum(Rn_1, na.rm = TRUE),
-                   max_snow = max(SnowDep, na.rm = TRUE),
-                   annual_mean_temp = mean(Temp, na.rm = TRUE),
-                   temp_sd = sd(Temp, na.rm = TRUE)) %>% 
-  ungroup %>% 
-  rename(annual_precip_mm = rain, 
-         max_snow_m = max_snow) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
-
-```
-
 ## Mean Wx LWSA 
 
 Arithmetic means from ChrisCrk and MartinsGulch.
@@ -354,7 +281,11 @@ Arithmetic means from ChrisCrk and MartinsGulch.
 # add seasons to mean weather df
 LWSA_meanWx <- precip_data %>% 
   select(DateTime, rain_season) %>% 
-  right_join(LWSA_meanWx, by = "DateTime")
+  right_join(LWSA_meanWx, by = "DateTime") %>% 
+  mutate(Year = lubridate::year(DateTime),
+         year = case_when(Year == 2018 ~ "2018",
+                          Year == 2019 ~ "2019",
+                          Year == 2020 ~ "Jan-Feb 2020")) 
 
 # check seasons visually
 LWSA_meanWx %>% 
@@ -441,10 +372,13 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png",
 ```{r, table_mean-FWx_summary}
 # mean weather summary
 precip_data %>%
-  mutate(Year = lubridate::year(DateTime)) %>% 
+  mutate(Year = lubridate::year(DateTime),
+         year = case_when(Year == 2018 ~ "2018",
+                          Year == 2019 ~ "2019",
+                          Year == 2020 ~ "Jan & Feb 2020")) %>% 
   filter(StationName != "Survey Mtn Wx", 
-         Year != 2017) %>%  # add 2020 back in
-  group_by(Year, StationName) %>%
+         Year != 2017) %>%  
+  group_by(Year, year, StationName) %>%
   summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
             max_snow_m = max(SnowDep, na.rm = TRUE),
             annual_temp = mean(Temp, na.rm = TRUE),
@@ -452,7 +386,7 @@ precip_data %>%
             annual_min_temp = min(TMin, na.rm = TRUE),
             annual_max_temp = max(TMax, na.rm = TRUE)) %>%
   ungroup() %>% 
-  group_by(Year) %>%
+  group_by(year) %>%
   summarise(mean_rain_mm = mean(total_rain_mm, na.rm = TRUE),
             sd_rain_mm = sd(total_rain_mm, na.rm = TRUE),
             mean_max_snow_m = mean(max_snow_m, na.rm = TRUE),
@@ -463,8 +397,7 @@ precip_data %>%
             annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
             #TMax_sd = sd(annual_max_temp, na.rm = TRUE)) %>% 
   ungroup() %>% 
-  dplyr::rename("year" = Year, 
-                "mean annual rain (mm)" = mean_rain_mm,
+  dplyr::rename("mean annual rain (mm)" = mean_rain_mm,
                 "stdev rain. (±mm)" = sd_rain_mm,
                 "mean snow accum. (m)" = mean_max_snow_m,
                 "mean temp. (°C)" = annual_mean_temp, 
@@ -476,13 +409,68 @@ precip_data %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
+#### questionable objects
+
+```{r, Wx-Stn_summaries}
+# I want to know precip totals over the study period
+# by month and by season
+# use rain to define storm events
+
+# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
+rn_MScTotal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx",
+         date >= "2018-10-23") %>% 
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup() 
+
+# rain seasons rainfalls
+rn_seasonal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(month = lubridate::month(DateTime),
+         year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year, rain_season) %>% 
+  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# annual rainfalls
+rn_annual <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# water-year rainfalls (Oct 1 - Sept 30)
+rn_wateryr <- LWSA_meanWx %>%
+  mutate(month = lubridate::month(DateTime),
+         water_year = case_when(
+           between(month, 1, 9) & Year == "2018" ~ "2018",
+           between(month, 10, 12) & Year == "2018" ~ "2019",
+           between(month, 1, 9) & Year == "2019" ~ "2019",
+           between(month, 10, 12) & Year == "2019" ~ "2020",
+           between(month, 1, 9) & Year == "2020" ~ "2020")) %>%
+  #filter(water_year != "2018") %>% 
+  group_by(water_year) %>% 
+  dplyr::summarise(annual_precip_mm = sum(Rn_1_mean, na.rm = TRUE),
+                   max_snow_m = max(SnowDep_mean, na.rm = TRUE),
+                   annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
+                   temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
+
+```
+
 ### Events
 ```{r}
 events %>% 
   select(ID, rain, StartDate, EndDate) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
-
 ```
 
 # Malahat Wx
