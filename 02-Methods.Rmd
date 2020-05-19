@@ -23,9 +23,15 @@ library(gghighlight)# plot highlighting
 
 ##	2.1 	Study Site: Leech River Watershed
 
-The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure ### shows the Leech and Sooke Water Supply areas with elevation.  
+The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure \@ref(fig:GVWSA) shows the Leech and Sooke Water Supply areas with elevation.  
 
-![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_map-3.png)
+\  
+
+```{r GVWSA, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "*The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)*"
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_map-3.png")
+```
+
 \  
 
 While monitoring programs began in 2017, the hydrology and water quality in the LWSA are poorly understood. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several small headwater lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake and Lazar meadows north of Jarvis Lake). Runoff peaks in the winter under saturated conditions when rivers respond rapidly to precipitation events, rising and falling dramatically. Across the watershed, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. 
@@ -36,46 +42,66 @@ The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone 
 
 \  
 
-There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from 2018-01-01 to 2020-01-30. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure PPP. Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Between the two sites, average annual rainfalls were 2010 mm in 2018, and 1460 mm in 2019. In January 2020, the LWSA weather stations recorded 512 mm of rain (including periods of rain on snow). 
+There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from January 2018 to March 2020. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(fig:WxLWSA). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Annual weather data from each of the LWSA weather stations are summarized in Table \@ref(tab:WxLWSAdata). 
 
 \  
-
-These data included air temperature and precipitation. Precipitation data acquired from the CRD was used to delineate storms using (R package Rainmaker). Temperature data was referenced to subbasin temperatures recorded by vertical rack TidbiT loggers. 
-
-\  
-
-![__Figure PPP__Plots of weather from the two fire weather stations in the Leech Water Supply Area_](R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png)
-\  
-
-There is a weather station on the Malahat mountain pass, east of the study site (ID 62091, BC Ministry of Transportation and Infrastructure and Pacific Climate Impacts) that had precipitation and air temperature data available from 2014 to 2020. Figure ##### shows weather data from the Malahat weather station and highlights the period in which this research occurred in which there were no obvious deviations from previous years.
  
+```{r WxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:WxLWSA} *Weather from two stations in the Leech water supply area. Coloured sections of plots highlight the field study period of this project.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
+```
+
 \  
 
-![__Figure__Plot of weather from the nearby Malahat Wx station with the period of study highlighted_](R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png)
-\newline
+
+```{r WxLWSAdata}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "*Two years of weather from CRD stations in Leech water supply area*", 
+               digits = c(2, 2, 2, 2, 1, 1))
+``` 
+
+\  
 
 ###	2.1.2		Synoptic sampling sites 
 
-Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure ### shows the locations of the synoptically sampled sites as well as the two weather stations.
+Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites as well as the two weather stations.
 
 \  
 
-![__Figure__The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)_](R-inputs_UBC-forWater-MSc_HMc/images/Sample-Sites_Wx_map.png)
+```{r sampleSitesMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:sampleSitesMap} *Sample sites across the Greater Victoria Water Supply Areas*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Sample-Sites_Wx_map.png")
+```
+
 \  
 
 Synoptic sampling involved collecting grab samples in triple-rinsed acid-washed 250 mL amber HDPE bottles. Samples were capped with minimal headspace and transported on ice. Synoptic samples were collected bi-weekly to monthly. Results from synoptic sampling help to inform spatiotemporal patterns in water quality.   			
 
 ###	2.1.3 		Subbasin monitoring sites 
 
-Six sites were selected across the Leech Water Supply Area which represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. These subbasin research sites represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel).	
+Six sites were selected across the Leech Water Supply Area which represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. Figure \@ref(fig:subbasinMap) shows a map of the sub-basin monitoring sites. The sub-basin sites represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel).	
 
-![__Figure__Subbasin monitoring sites in the Leech Water Supply Area_](R-inputs_UBC-forWater-MSc_HMc/images/sub-basins.jpg)
-	
 \  
 
-```{r subbasin-table}
+```{r subbasinMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinMap} *Subbasin monitoring sites in the Leech Water Supply Area*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/sub-basins.jpg")
+```
+
+\  
+
+Table \@ref(tab:subbasinTable) includes watershed characteristic data for each sub-basin.
+
+* TO DO: update with GIS data (needs to be distilled/summarized)
+
+\  
+
+```{r subbasinTable}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics.csv", col_names = TRUE) %>% 
-  knitr::kable()
+  knitr::kable(caption = "*Sub-basin characteristics*")
 ```
 
 \  
@@ -90,11 +116,15 @@ The passive sampling bottles employ principles of a siphon design to collect riv
 
 \  
 
-Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids (Fig. #####). By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
+Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an [Odyssey Capacitance water level logger](http://odysseydatarecording.com/index.php?route=product/product&product_id=50); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids (Figure \@ref(fig:verticalRack)). By combining the height at which each siphon bottle filled with observed stage from the stilling-well tape and Logger data, the date and time for each rising-stage sample collection was determined. 
 
 \  
 
-![__Figure ###__: Rising limb siphon sampler bottle](R-inputs_UBC-forWater-MSc_HMc/images/Rack_bottle-insert.png)
+```{r verticalRack, out.width = "30%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of instalations at six sub-basin locations across the LWSA (shown here is Chris Creek (site 2).*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_bottle-insert.png")
+```
 
 \  
 
@@ -102,7 +132,7 @@ These vertical racks collected whole water samples on the rising limb of the hyd
 	
 ##### 	2.1.3.1.1	Vertical rack sampling QA/QC: Siphon sampler assumptions
 
-Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the subbasins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system {tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the subbasins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system (tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
 
 ##### 	2.1.3.1.2	Vertical rack sampling QA/QC:	Sample hold-times and temperatures
 
@@ -120,10 +150,12 @@ In keeping with goals of low-cost, low-powered passive sampling, a falling-limb 
 
 Four of the synoptic sampling sites were selected to collect source water treatability data in collaboration with researchers in the forWater Network. The sites were: 
 
-1. the Leech River at the future point of diversion, 	
-2. Deception Reservoir
-3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
-4. Judge Creek (largest tributary to Sooke Reservoir)
+  1. the Leech River at the future point of diversion 	
+  2. Deception Reservoir
+  3. Rithet Creek (2nd largest tributary to Sooke Reservoir) 
+  4. Judge Creek (largest tributary to Sooke Reservoir)
+
+\  
 
 These sites were selected to represent the future supplemental source water, the terminus or future balancing reservoir between Leech and Sooke water supply areas, and the current tributary source waters in the Sooke WSA (respectively).
 

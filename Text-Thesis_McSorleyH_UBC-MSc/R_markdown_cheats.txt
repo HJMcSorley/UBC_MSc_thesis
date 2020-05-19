@@ -2,7 +2,7 @@ R-markdown cheats
 
 * insert a table from csv file:
 
-\@ref(tab:FwxStndata)
+Table \@ref(tab:FwxStndata)
 
 ```{r FwxStndata}
 read_csv("path/to/file.csv", col_names = TRUE) %>% 
@@ -12,7 +12,7 @@ read_csv("path/to/file.csv", col_names = TRUE) %>%
 
  insert an image from file
  
- Figure \@ref(fig:WxLWSA))
+Figure \@ref(fig:WxLWSA)
  
 ```{r WxLWSA, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "text caption"
