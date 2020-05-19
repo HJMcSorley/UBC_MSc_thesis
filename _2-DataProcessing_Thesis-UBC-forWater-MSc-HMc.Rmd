@@ -109,9 +109,11 @@ odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-s
 # 2018-2020 weather station data compiled and formatted
 precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
                         col_names = TRUE,
-                        col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
+                        col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>% 
   mutate(StationName = factor(StationName),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
+         event_ID = factor(event_ID),
+         rain_season = factor(rain_season))    
 
 # LWSA mean precip data (FWx-mean-LWSA df)
 # 2018-2020 weather station data compiled and formatted
@@ -160,7 +162,6 @@ events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", col_names
 # FWx (CC+MG) 
 
 ## plots: rain/snow/temp
-
 At Chris Creek and Martin's Gulch FWx stations
 ```{r, FWx-plots}
 
@@ -248,15 +249,18 @@ FWx means
 precip_data %>%
   mutate(Year = lubridate::year(DateTime)) %>% 
   filter(StationName != "Survey Mtn Wx", 
-         Year != 2017, Year != 2020) %>% 
-  group_by(Year, StationName) %>%
+         Year != 2017) %>%   #, Year != 2020
+  mutate(year = case_when(Year == 2018 ~ "2018",
+                          Year == 2019 ~ "2019",
+                          Year == 2020 ~ "Jan-Feb 2020")) %>% 
+  group_by(year, StationName) %>%
   summarise(total_precip_mm = sum(Rn15, na.rm = TRUE),
             max_snow_m = max(SnowDep, na.rm = TRUE), # not sure how to report
             annual_mean_temp = mean(Temp, na.rm = TRUE),
             temp_sd = sd(Temp, na.rm = TRUE),
             annual_min_temp = min(TMin, na.rm = TRUE),
             annual_max_temp = max(TMax, na.rm = TRUE)) %>% 
-  dplyr::rename("year" = Year, 
+  dplyr::rename("Year" = year, 
                 "station name" = StationName, 
                 "annual precip. (mm)" = total_precip_mm,
                 "max snow (m)" = max_snow_m,
@@ -278,17 +282,22 @@ look at water year
 # use rain to define storm events
 
 # calculate total rainfall at each of the wx-stns (survey mountain went in in late)
-rn_total <- precip_data %>% 
+rn_MScTotal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx",
+         date >= "2018-10-23") %>% 
   group_by(StationName) %>% 
-  dplyr::summarise(rain_MSc = sum(Rn_1, na.rm = TRUE)) %>% 
+  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
   ungroup() 
 
-# monthly rainfalls
-rn_monthly <- precip_data %>% 
+# rain seasons rainfalls
+rn_seasonal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
   mutate(month = lubridate::month(DateTime),
          year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year, month) %>% 
-  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
+  group_by(StationName, year, rain_season) %>% 
+  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
   ungroup()
 
 # annual rainfalls
@@ -338,10 +347,32 @@ rn_wateryr <-precip_data %>%
 
 ## Mean Wx LWSA 
 
-### plots
 Arithmetic means from ChrisCrk and MartinsGulch.
-
 *Too few stations to do Theissen polygons (2 point polygon = straight line) or isohyetal lines.*
+
+```{r}
+# add seasons to mean weather df
+LWSA_meanWx <- precip_data %>% 
+  select(DateTime, rain_season) %>% 
+  right_join(LWSA_meanWx, by = "DateTime")
+
+# check seasons visually
+LWSA_meanWx %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(date >= "2018-10-23") %>% 
+  ggplot(aes(x = DateTime, y = Rn_1_mean)) +
+  geom_col(aes(colour = rain_season)) +
+  scale_y_reverse() +
+  labs(x = "", y = "Rain\n(mm/day)") +
+  theme_bw() +
+  scale_x_datetime(date_breaks = "2 months", date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 11),
+        axis.text.x = element_text(angle = 60, hjust = 1))
+
+```
+
+
+### plots
 ```{r, mean-Wx_plot}
 # mean precip plot
 mean_rainplot <- LWSA_meanWx %>% 
@@ -412,7 +443,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png",
 precip_data %>%
   mutate(Year = lubridate::year(DateTime)) %>% 
   filter(StationName != "Survey Mtn Wx", 
-         Year != 2017, Year != 2020) %>%
+         Year != 2017) %>%  # add 2020 back in
   group_by(Year, StationName) %>%
   summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
             max_snow_m = max(SnowDep, na.rm = TRUE),
@@ -710,7 +741,7 @@ sampleresults <- sampleresults %>%
     Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
     Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
     event_ID == 9 ~ "first flush",
-    event_ID %in% 10:16 ~ "wet")) %>% 
+    event_ID %in% 10:18 ~ "wet")) %>% 
   mutate(rain_season = as.character(rain_season))
 
 # fill in any gaps and save as factors
