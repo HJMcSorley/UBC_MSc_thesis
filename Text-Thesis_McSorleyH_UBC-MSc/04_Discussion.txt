@@ -20,9 +20,7 @@ Like most forested areas on Vancouver Island, the Leech watershed is second-grow
 Tobi:
 	- With a coupled data-set, “rule-curves” can be created to support decisions about water diversion through the tunnel to ensure water quality drinking standards are maintained 
 
-#### 2020-04-18
-16 unique precipitation events were sampled, where each event was defined by rainfall greater than 50mm with a period of 14 hours between events. Half of these events (eight) were captured in the 2019 water year (2018-2019 wet season), the other half in the 2020 water year. Events were delineated (using USGS Rainmaker package, RMevents function, in R) based on mean 15-minute rainfall measured at Chris Creek and Martin's Gulch fire-weather stations (CRD provided data); it was assumed that rainfall was evenly distributed over the watershed and the average rainfall between the stations located at Leech headwaters and mouth were representative of rainfall over the entire water supply area.  
+ 
 
-## SUVA-254
-Molecules with greater aromaticity (i.e., greater density of conjugated pi bonds, e.g. humic substances??) will absorb more UV energy at wavelength 254nm than non-aromatic molecules. And because absorbance is proportional to the concentration of analyte in a sample, specific UV absorbance at 254nm (SUVA~254~) -- calculated by dividing absorbance at 254nm by the sample's DOC concentration -- is a widely adopted indicator of a sample's aromaticity. A greater SUVA~254~ value indicates a sample with more aromatic character than a sample with low SUVA~254~.   
+  
 

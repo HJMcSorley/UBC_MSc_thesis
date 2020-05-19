@@ -1,4 +1,4 @@
-year,annual precip. (mm),mean air temp. (°C),stdev air temp. (± °C)
+year,annual precip. (mm),mean air temp. (°C),std.dev. (± °C)
 2014,1260,10.587832965394286,6.74485295832428
 2015,1281,11.286708506466667,6.28074031405217
 2016,1526,10.588850003894738,6.23016934057362
