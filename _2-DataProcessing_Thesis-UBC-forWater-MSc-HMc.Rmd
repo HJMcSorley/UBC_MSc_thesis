@@ -553,12 +553,40 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 
 ```
 
-## t-test
+## t-test -- Wilcoxon's rank sum test
+
+### lag-years
 ```{r}
-# tidy solution from:
+# check for normality
+# The central limit theorem:
+## sampling distribution tends to be normal if the sample is large enough (n > 30)
+malahat_data %>% 
+  filter(!is.na(Value),
+         Analysis == "Precipitation Amount (mm)" | Analysis == "Temperature (Mean) (celsius)") %>% 
+  group_by(Year, Analysis) %>% 
+  summarise(count = n())
+# could assume normal distribution because each year has daily values (>>30)
+
+# visually check for normality 
+malahat_data %>% 
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                 color = "Year", 
+                 palette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" ),
+                 facet.by = "Analysis")
+## Precipitation was not normally distributed (seasonality)
+
+# tidy wilcoxon tests: lag-year 
+## solution from:
 ## https://stackoverflow.com/questions/32477863/r-run-t-test-on-previous-years-by-group-using-dplyr
 
-Malahat_Wx_ttest <- malahat_data %>% 
+# t-test comparing each year to the last year
+Malahat_test_lagyear <- malahat_data %>% 
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value)) %>%  # remove missing values 
   select(Analysis, Year) %>% 
   arrange(Analysis, Year) %>% 
   distinct() %>% 
@@ -566,36 +594,106 @@ Malahat_Wx_ttest <- malahat_data %>%
   mutate(lag_year = lag(Year)) %>% 
   filter(!is.na(lag_year)) %>% 
   group_by(Analysis, Year, lag_year) %>% 
-  do(tidy(t.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
+  do(tidy(wilcox.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
                  malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
 
-# look at 2013 - 2017 compared to 2018-2019
-pre_Msc <- malahat_data %>% 
-  filter(Year == (2013:2017)) %>% 
-  group_by(Analysis, Year)
+# identify signficantly different years
+Malahat_test_lagyear %>% 
+  filter(p.value < 0.10)
 
-MSc <- malahat_data %>% 
-  filter(Year == (2018:2019)) %>% 
-  group_by(Analysis, Year) 
-
-# t-tests for each parameter
-# make a tibble for tidiness
-Malahat_Wx_ttest <-  bind_rows(
-  # rain
-  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Precipitation Amount (mm)"], 
-              MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"])) %>% 
-    mutate(Parameter = "rain"),
-  # snow
-  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Surface Snow Depth (Point) (cm)"], 
-              MSc$Value[MSc$Analysis == "Surface Snow Depth (Point) (cm)"])) %>% 
-    mutate(Parameter = "snow"),
-  # air temp
-  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Temperature (Mean) (celsius)"], 
-              MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
-    mutate(Parameter = "temp"))
-
-
+# 2015 was an incredible drought year, so it makes sense that 2015-2016 would differ
   
+```
+
+### pre & during MSc
+```{r}
+# group
+malahat_test_data <- malahat_data %>% 
+  filter(!is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data 
+  mutate(set = case_when(Year == 2016 | Year == 2017 ~ "pre",
+                         Year == 2018 | Year == 2019 ~ "MSc"),
+         set = as_factor(set)) %>% 
+  filter(!is.na(set)) 
+
+# subset for tests
+pre_MSc <- malahat_test_data %>% filter(set == "pre")
+MSc <- malahat_test_data %>% filter(set == "MSc")
+```
+
+#### plots
+```{r}
+# plot sets
+malahat_test_data %>% 
+  ggplot(aes(x = set, y = Value, fill = set))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    labels = c(pre = "2016-2017", MSc = "2018-2019"),
+                    name = "Year span")+
+  labs(y = "value", x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~Analysis)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
+
+# looks like precip is not normally distributed because of seasons
+# Tests for normality 
+# Pre-MSc
+pre_MSc %>% 
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                 color = "Year", palette = c("#648326", "#f4AB0E", "#62ACC8", "#535353"),
+                 facet.by = "Analysis")
+
+# during
+MSc %>% 
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                 color = "Year", palette = c("#648326", "#f4AB0E"),
+                 facet.by = "Analysis")
+
+```
+
+#### tests
+```{r}
+# t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
+# ggpubr::ggqqplot() to check for normality
+## if points fall approximately along the reference line, assume normality
+
+# t-tests for temperature (normally distributed)
+# Wilcoxon signed rank test for Precip (not normally distributed)
+# make a tibble for tidiness
+# note: snow data was only available 2017-2019 -- not included
+Malahat_testMSc_Wx <- bind_rows(
+  # rain
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Precipitation Amount (mm)"], 
+              MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"],
+              )) %>% 
+    mutate(Parameter = "rain"),
+  # air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Mean) (celsius)"], 
+              MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
+    mutate(Parameter = "temp_mean"),
+  # Min air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Min.) (celsius)"], 
+              MSc$Value[MSc$Analysis == "Temperature (Min.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_min"),
+  # Max air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Max.) (celsius)"], 
+              MSc$Value[MSc$Analysis == "Temperature (Max.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_max")) %>% 
+  # pull values of interest to summarize
+  select(Parameter, p.value) %>% 
+  mutate(signicance = case_when(p.value < 0.1 ~ "at 90%",
+                                p.value < 0.05 ~ "at 95%",
+                                p.value > 0.1 ~ "NA")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
+
+# interpretation
+# null hypothesis = both means are equal
+# if the p-value is less than the significance level critical value, reject the null hypothesis 
+
 ```
 
 # Mega Plot: FWx+RiverStage
