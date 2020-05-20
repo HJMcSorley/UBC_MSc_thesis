@@ -1,5 +1,5 @@
 Parameter,p.value,signicance
-rain,1.905606189375665e-10,at 90%
+rain,1.905606189375665e-10,at 99%
 temp_mean,0.3904245970682534,"NA"
 temp_min,0.38261656311894054,"NA"
 temp_max,0.46945091804119427,"NA"

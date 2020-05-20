@@ -19,7 +19,7 @@ The primary objectives of this project was to characterize the range of hydroche
 
 ### CRD F-Wx stations
 
-The Capital Regional District (CRD) provided data from two fire-weather stations they operate within the Leech water supply area (LWSA). Chris Creek weather station is located in the headwaters of the Leech watershed and Martin's Gulch is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation and temperatures were representative of conditions across the Leech watershed. Figure \@ref(fig:meanWxLWSA) shows average precipitation and air temperature over 2018 and 2019 with the study period highlighted, and Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year. Not included here was rainfall for January 2020, which saw an average of 512 mm of rain. 
+The Capital Regional District (CRD) provided data from two fire-weather stations they operate within the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation and temperatures were representative of conditions across the Leech watershed. Figure \@ref(fig:meanWxLWSA) shows average precipitation and air temperature over 2018 and 2019 with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
 
 \    
 
@@ -44,7 +44,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 The LWSA weather stations were recently installed and therefore data during the study period could not be compared to a record from previous years. A nearby weather station operated by the BC Ministry of Transportation and Infrastructure (Malahat, station ID 62091) had data available from late 2013 which was used to check if weather during the study period departed from previous year trends. Figure \@ref(fig:WxMalahat) shows Malahat weather data, which are summarized in Table \@ref(tab:WxMalahat-data).
 
 ```{r WxMalahat, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:WxMalahat} *Five year weather from nearby Malahat station.*"
+fig_cap = "\\label{fig:WxMalahat} *Five year weather from nearby Malahat station (MoTI ID 62091).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 ```
@@ -54,8 +54,28 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 ```{r WxMalahat-data}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(1, 2, 1, 1),
-               caption = "*Annual weather data from Malahat station*")
+               caption = "*Annual weather data from Malahat station (MoTI ID 62091)*")
 ```
+
+\  
+
+Malahat weather station data were grouped by years 2016-2017 and 2018-2019 to check if there was a statistical difference in precipitation and air temperature for the two years prior to this study compared to the two years associated with this study (Figure \@ref(fig:MalahatTestBox)). Table \ref(tab:MalahatTest) summarizes the results Wilcoxon rank sum test comparing these two sets.
+
+
+```{r MalahatTestBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:MalahatTestBox} *Weather from the Malahat station for two year periods prior to and during this study (MoTI ID 62091).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
+```
+
+\  
+
+```{r MalahatTest}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(1, 12),
+               caption = "*Results of Wilcoxon test for Malahat weather data before and during the study period*")
+```
+
 
 ### Leech River Responses 
 

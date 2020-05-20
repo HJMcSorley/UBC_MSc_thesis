@@ -685,8 +685,9 @@ Malahat_testMSc_Wx <- bind_rows(
     mutate(Parameter = "temp_max")) %>% 
   # pull values of interest to summarize
   select(Parameter, p.value) %>% 
-  mutate(signicance = case_when(p.value < 0.1 ~ "at 90%",
+  mutate(signicance = case_when(p.value < 0.01 ~ "at 99%",
                                 p.value < 0.05 ~ "at 95%",
+                                p.value < 0.1 ~ "at 90%",
                                 p.value > 0.1 ~ "NA")) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
 
