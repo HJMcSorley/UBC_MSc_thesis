@@ -410,7 +410,6 @@ precip_data %>%
 ```
 
 #### questionable objects
-
 ```{r, Wx-Stn_summaries}
 # I want to know precip totals over the study period
 # by month and by season
@@ -460,15 +459,20 @@ rn_wateryr <- LWSA_meanWx %>%
                    max_snow_m = max(SnowDep_mean, na.rm = TRUE),
                    annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
                    temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
+  ungroup() #%>% 
+  #write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
 
 ```
 
-### Events
+### table of Events
 ```{r}
 events %>% 
-  select(ID, rain, StartDate, EndDate) %>% 
+  mutate('Start date' = format(as.POSIXct(StartDate), "%Y-%m-%d %H:%M"), 
+         'End date' = format(as.POSIXct(EndDate), "%Y-%m-%d %H:%M")) %>% 
+  select(stormnum, ID, 'Start date', 'End date', rain) %>% 
+  dplyr::rename('Storm number' = stormnum,
+                'Major event no.' = ID,
+                'Rain (mm)' = rain) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
 ```
@@ -514,7 +518,6 @@ malahat_data %>%
 ```
 
 ## plots: Malahat Wx
-
 ```{r, malahat-plots}
 # plots
 # plot malahat rain and highlight my study period
@@ -548,6 +551,51 @@ cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 
+```
+
+## t-test
+```{r}
+# tidy solution from:
+## https://stackoverflow.com/questions/32477863/r-run-t-test-on-previous-years-by-group-using-dplyr
+
+Malahat_Wx_ttest <- malahat_data %>% 
+  select(Analysis, Year) %>% 
+  arrange(Analysis, Year) %>% 
+  distinct() %>% 
+  group_by(Analysis) %>% 
+  mutate(lag_year = lag(Year)) %>% 
+  filter(!is.na(lag_year)) %>% 
+  group_by(Analysis, Year, lag_year) %>% 
+  do(tidy(t.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
+                 malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
+
+# look at 2013 - 2017 compared to 2018-2019
+pre_Msc <- malahat_data %>% 
+  filter(Year == (2013:2017)) %>% 
+  group_by(Analysis, Year)
+
+MSc <- malahat_data %>% 
+  filter(Year == (2018:2019)) %>% 
+  group_by(Analysis, Year) 
+
+# t-tests for each parameter
+# make a tibble for tidiness
+Malahat_Wx_ttest <-  bind_rows(
+  # rain
+  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Precipitation Amount (mm)"], 
+              MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"])) %>% 
+    mutate(Parameter = "rain"),
+  # snow
+  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Surface Snow Depth (Point) (cm)"], 
+              MSc$Value[MSc$Analysis == "Surface Snow Depth (Point) (cm)"])) %>% 
+    mutate(Parameter = "snow"),
+  # air temp
+  tidy(t.test(pre_Msc$Value[pre_Msc$Analysis == "Temperature (Mean) (celsius)"], 
+              MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
+    mutate(Parameter = "temp"))
+
+
+  
 ```
 
 # Mega Plot: FWx+RiverStage
