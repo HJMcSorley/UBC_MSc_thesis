@@ -148,7 +148,7 @@ trip,vial,NPOC_ppm,site,sample_type,sample,dt_sampled,fillStage_cm,analysis
 18,11,2.842,Cragg-crk,Grab,Grab,2019-11-14T21:00:00Z,NA,DOC
 18,12,3.019,Tunnel,Grab,Treatability,2019-11-12T19:30:00Z,0,DOC
 18,13,3.426,Tunnel,Grab,Treatability,2019-11-12T19:30:00Z,0,DOC
-18,14,5.464,Tunnel,QA-QC,HoldTime-B6,2019-11-12T18:00:00Z,NA,DOC
+18,14,5.258,Tunnel,QA-QC,HoldTime-B6,2019-11-12T18:00:00Z,NA,DOC
 18,15,5.443,Tunnel,QA-QC,HoldTime-B7,2019-11-12T18:00:00Z,NA,DOC
 18,16,5.482,Tunnel,QA-QC,HoldTime-B8,2019-11-12T18:00:00Z,NA,DOC
 18,17,5.542,Tunnel,QA-QC,HoldTime-B9,2019-11-12T18:00:00Z,NA,DOC

@@ -20,14 +20,17 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-ou
 # load packages
 library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
 library(lubridate)  # dates and times
+library(broom)      # tidy up
+library(glue)       # glue() is an object-integrated 'paste'-like function
 library(knitr)      # tidy tables
 library(viridis)    # nice colours for plots gradient fills
-library(ggpmisc)    # linear regression line values (ggplot)
 library(cowplot)    # add-on to ggplot for layout (nice grid)
 library(gghighlight)# plot highlighting
+library(ggpmisc)    # linear regression line values (ggplot)
+library(ggpubr)     # Q-Q plots
 library(car)        # stats: Companion to Applied Regression
 library(randomForest)
-library(glue)       # glue() is an object-integrated 'paste'-like function
+
 
 ```
 ## define colours
@@ -481,7 +484,8 @@ events %>%
 
 Longer data record from the Malahat weather station (for comparison).
 
-```{r, malahat-wx}
+```
+#{r, malahat-wx}
 
 # malahat weather
 malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
@@ -518,7 +522,8 @@ malahat_data %>%
 ```
 
 ## plots: Malahat Wx
-```{r, malahat-plots}
+```
+#{r, malahat-plots}
 # plots
 # plot malahat rain and highlight my study period
 malahat_rn <- malahat_data %>% 
@@ -556,7 +561,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 ## t-test -- Wilcoxon's rank sum test
 
 ### lag-years
-```{r}
+```
+#{r}
 # check for normality
 # The central limit theorem:
 ## sampling distribution tends to be normal if the sample is large enough (n > 30)
@@ -606,7 +612,8 @@ Malahat_test_lagyear %>%
 ```
 
 ### Wx pre & during MSc
-```{r}
+```
+#{r}
 # group
 malahat_test_data <- malahat_data %>% 
   filter(!is.na(Value),
@@ -622,7 +629,8 @@ MSc <- malahat_test_data %>% filter(set == "MSc")
 ```
 
 #### plots
-```{r}
+```
+#{r}
 # plot sets
 malahat_test_data %>% 
   ggplot(aes(x = set, y = Value, fill = set))+
@@ -656,7 +664,8 @@ MSc %>%
 ```
 
 #### tests
-```{r}
+```
+#{r}
 # t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
 # ggpubr::ggqqplot() to check for normality
 ## if points fall approximately along the reference line, assume normality
@@ -2107,6 +2116,82 @@ cowplot::plot_grid(a, b, ncol = 2, align = "h")
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
          width = 7, height = 9, units = "in")
 ```
+# Hobo TidbiTs
+```{r, message=FALSE, warning=FALSE}
+# read in data
+Hobo_dat <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", pattern = "*.csv") %>% 
+  set_names(str_extract(., "([a-z]+\\-*[a-z]*\\_[a-z]+)")) %>%
+  purrr::map_dfr(~read_csv(
+    file.path("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", .), 
+    skip = 2,  ## column names contain unique SN values 
+    col_names = FALSE), # don'tread names, it prevents row binding
+    .id = "source") 
+
+# simplify
+Hobo_dat <- Hobo_dat[1:4] # drop serial numbers
+names(Hobo_dat) <- c("source", "num", "DateTime", "Temp_C")  # rename, less verbose
+
+# update
+Hobo <- Hobo_dat %>% 
+  filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
+  filter(Temp_C < 35.0) %>% 
+  mutate(DateTime = lubridate::mdy_hms(DateTime),
+         location = stringr::str_sub(source, -3, -1),
+         location = factor(location),
+         site = substr(source, 1, 3), # first three characters
+         site = case_when(
+           site == "chr" ~ "ChrisCrk",
+           site == "cra" ~ "CraggCrk",
+           site == "lee" ~ "LeechHead",
+           site == "tun" ~ "Tunnel",
+           site == "wes" ~ "WestLeech",
+           site == "wks" ~ "Weeks"),
+         site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) 
+# rename position from wet/dry to water/air
+Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
+
+```
+
+## plot: Hobo temp
+```{r}
+Hobo %>% 
+  mutate(date = as_date(DateTime)) %>%
+  group_by(site, location, date) %>% 
+  summarise(T_daily = mean(Temp_C)) %>% 
+  ggplot(aes(x = date, y = T_daily))+
+  geom_line(aes(colour = location), size = 1.5)+
+  scale_color_manual(values = c("water" = forWater_colours2[["SkyBlue"]], 
+                                "air" = forWater_colours2[["MyOrange"]]))+
+  theme_bw()+
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
+  geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
+  facet_wrap(~site, ncol = 1,
+             strip.position = "right")+
+  labs(x = "", y = "Mean Daily Temperature (°C)",
+       colour = "Temperature measurement:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "1.5 months",
+                   date_minor_breaks = "1 months")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Hobo-TidbiTs_daily-temps.png", 
+       width = 6, height = 7, units = "in")
+```
+
+## table: Hobo temp
+```{r}
+Hobo %>%
+  mutate(month = lubridate::month(DateTime, label = TRUE),
+         year = lubridate::year(DateTime)) %>% 
+  group_by(site, location, year, month) %>% 
+  summarise(T_mean = mean(Temp_C),
+            T_sd = sd(Temp_C)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
+```
 
 # QA-QC 
 ```{r}
@@ -2126,75 +2211,6 @@ calver <- QAQC %>%
     is.na(cal_ver) ~ "RO" )) 
 ```
 
-## Lab: blanks
-```{r}
-# check lab blanks
-# this is a difficult measure of precision because the RO water is not the most reliably stable
-calver %>% 
-  filter(sample_type == "RO",
-         sample == "RO" | sample == "RO_pH<2",
-         NPOC_ppm != 0) %>% 
-  group_by(sample) %>% 
-  summarise(count = n(),
-            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd_DOC = sd(NPOC_ppm, na.rm = T),
-            RSD = (sd_DOC/DOC_mean)*100)
-  
-```
-## Lab: Cal Vers
-```{r}
-# percent error calculated as 'measured' minus 'actual'
-# negative error indicates the method was under-estimating DOC concentration 
-# positive error indicates the method was over-estimating DOC concentration
-
-# check cal vers for shimadzu
-a <- calver %>% 
-  filter(sample_type == "cal_ver",
-         !is.na(NPOC_ppm),
-         rn != 7,  # error -- did not add standard 
-         cal_ver != 5.7) %>%  # true concs were not calculated
-  group_by(rn) %>% 
-  summarise(count = n(),
-            calc = mean(cal_ver),
-            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd_DOC = sd(NPOC_ppm, na.rm = T),
-            percent_error = ((DOC_mean - calc)/ calc)*100) %>% 
-  ungroup() %>% 
-  summarise(count = sum(count),
-            error_percent = mean(percent_error))
-
-# check cal vers for spectrolyser
-b <- calver %>% 
-  filter(sample_type == "cal_ver",
-         !is.na(DOCeq_ppm)) %>% 
-  group_by(rn) %>% 
-  summarise(count = n(),
-            calc = mean(cal_ver),
-            DOCeq_mean = mean(DOCeq_ppm, na.rm = TRUE),
-            sd_DOCeq = sd(DOCeq_ppm, na.rm = T),
-            percent_error = ((DOCeq_mean - calc)/ calc)*100) %>% 
-  ungroup() %>%  
-  summarise(count = sum(count),
-            error_percent = mean(percent_error))
-
-# total cal-vers included
-n_calvers_total <- calver %>% 
-  filter(sample_type == "cal_ver") %>% 
-  summarise(n = n())
-
-# cal-vers included
-n_calvers <- a[1,1]+b[1,1]
-
-# percent error from shimadzu
-error_shimadzu <- a %>% pull(error_percent)
-
-# percent error from spectrolyser
-error_spectrolyser <- b %>% pull(error_percent)
-
-# average percent error from both methods:
-error_overall <- (error_shimadzu + error_spectrolyser)/2
-
-```
 
 ## Hold-time experiments (Tunnel rack)
 ```{r}
@@ -2236,25 +2252,26 @@ HT <- full_join(HT, a, by = "HoldTime_set") %>%
   mutate(HoldTime_set = factor(HoldTime_set, levels = c("A", "B", "C")), 
          HoldTime_rep= as_factor(HoldTime_rep), 
          HoldTime_group = as_factor(HoldTime_group), 
-         group = as_factor(group)) %>% 
+         group = factor(group, levels = c("AG", "AR", "BG", "BR", "CG", "CR"))) %>% 
   mutate(HT_set_labels = HoldTime_set,
          HT_group_labels = HoldTime_group)
 
-
-# summarize
-HT_summ <- HT %>% 
-  group_by(group) %>% 
-  summarise(lapse = first(lapse),
-            mean_DOC = mean(NPOC_ppm),
-            sd_DOC = sd(NPOC_ppm),
-            RSD_DOC = (sd_DOC/mean_DOC)*100,
-            mean_DOCeq = mean(DOCeq_ppm), 
-            sd_DOCeq = sd(DOCeq_ppm),
-            mean_UV254 = mean(SAC254_Abs.m),
-            sd_UV254 = sd(SAC254_Abs.m)) 
-
+# add labels for plots
 HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
 HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
+
+
+# ---
+# Join Tunnel HOBO TidbiT data with HT data
+# combine Temperature with hold-time
+HT_Hobo <- Hobo %>% 
+  filter(site == "Tunnel",
+         location == "air") %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  full_join(HT, by = c("site", "Date")) %>% 
+  mutate(site = factor(site),
+         group = factor(group, levels = c("AG", "AR", "BG", "BR", "CG", "CR")))
+
 ```
 
 ### HT plots
@@ -2284,52 +2301,61 @@ b <- HT %>%
   
 cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6))  
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HT-exp_boxplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HT-exp_stat-boxplots.png")
 
-```
 
-### tests: Wilcoxon
-```{r}
-# Tests NPOC for normality 
+# ---
+# Visual Tests NPOC for normality 
+# density
 HT %>% 
   ggplot(aes(NPOC_ppm))+
   geom_density(aes(colour = HoldTime_set))+
   theme_bw()+
   theme(legend.position = "none")+
   facet_wrap(~ HoldTime_set,
+             nrow = 3,
              scales = "free_y")
-# not normal
+# QQ plot
 ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
                  color = "HoldTime_set")
-# not normal
+# A = not normal
+# B = not normal
+# C = not normal
 
-# Tests NPOC for normality 
+# Tests UV254 abs for normality 
 HT %>% 
   ggplot(aes(SAC254_Abs.m))+
   geom_density(aes(colour = HoldTime_set))+
   theme_bw()+
   theme(legend.position = "none")+
   facet_wrap(~ HoldTime_set,
+             nrow = 3,
              scales = "free_y")
-# not normal
+# QQ plot
 ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
                  color = "HoldTime_set")
-# not normal
+# A = not normal
+# B = not normal
+# C = not normal
 
+```
 
-# t-tests --> Wilcoxon tests (not normally distributed + small sample size)
+### HT tests: Wilcoxon
+```{r}
+# Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
 # alternative hypothesis: the difference between means is significant 
 # p-value > 0.05 --> cannot reject null hypothesis
 # p-value < 0.05 --> reject the null hypothesis 
 
 # tests
+# note -- this could probably be a function for tidiness
 HT_Wilcoxon_tests <- bind_rows(
   ## NPOC ---
   # set A
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"])) %>% 
     mutate(Set = "A", Analysis = "NPOC_ppm"),
-  # set B
+  # set B 
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "BG"], HT$NPOC_ppm[HT$group == "BR"])) %>% 
     mutate(Set = "B", Analysis = "NPOC_ppm"),
   # set C
@@ -2345,35 +2371,73 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"])) %>% 
     mutate(Set = "C", Analysis = "SAC254_Abs.m")) %>% 
-  # pull values of interest to summarize
   select(Analysis, Set, p.value) %>% 
+  # pull values of interest to summarize
   mutate(sig.diff = case_when(p.value < 0.01 ~ "at 99%",
                                 p.value < 0.05 ~ "at 95%",
                                 p.value < 0.1 ~ "at 90%",
-                                p.value > 0.1 ~ "NA")) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_Wilcoxon-tests.csv")
+                                p.value > 0.1 ~ "NA")) 
 
-# view
-HT_Wilcoxon_tests
-cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
+## view
+# HT_Wilcoxon_tests
+# cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
 
 ```
 
-#### tabulate
+### table: results summary
+```{r}
+# summarize
+HT_summ <- HT %>% 
+  group_by(group) %>% 
+  summarise(lapse = first(lapse),
+            count = n(),
+            mean_DOC = mean(NPOC_ppm),
+            sd_DOC = sd(NPOC_ppm),
+            RSD_DOC = (sd_DOC/mean_DOC)*100,
+            mean_UV254 = mean(SAC254_Abs.m),
+            sd_UV254 = sd(SAC254_Abs.m)) %>% 
+  # save
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_F-H-summary.csv")
+
+# summarize Hobo HT 
+Hobo_summ <- HT_Hobo %>% 
+  filter(!is.na(group)) %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(lapse = first(lapse),
+            mean_T = mean(Temp_C),
+            sd_T = sd(Temp_C))
+
+# join statistical results with Hobo results
+HT_tests_summary <- HT_Wilcoxon_tests %>% 
+  pivot_wider(names_from = Analysis, values_from = c("p.value", "sig.diff")) %>% 
+  full_join(., Hobo_summ,
+            by = c("Set" = "HoldTime_set")) %>% 
+  mutate('temp range' = paste(round(mean_T, 2), "±", round(sd_T, 2))) %>% 
+  select(Set, "Days held" = lapse, 
+         'temp range', 
+         "DOC sig.diff" = sig.diff_NPOC_ppm,  # new = old
+         "DOC p-value" = p.value_NPOC_ppm, 
+         "UV 254 sig.diff" = sig.diff_SAC254_Abs.m, 
+         "UV 254 p-value" = p.value_SAC254_Abs.m) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_stat-tests.csv")
+
+```
+
+
+#### tabulate MESS
 ```{r}
 
-# COMPILE
+
+# COMPILE -- bigg ol mess
 HT %>% 
   group_by(HoldTime_set) %>% 
   summarise(season_G = first(rain_seasons),
-            #season_R = last(rain_seasons),
-            #date_G = first(Date),
-            #date_R = last(Date),
             HoldTime_days = first(lapse)) %>% 
   mutate(
     Mean_temps = c("7.3°C ± 2.1°C", "6.1°C ± 2.7°C", "4.4°C ± 3.2°C"),
+    Analysis = "NPOC_ppm",
     # DOC
-    DOC_ppm_fresh_held = paste(c(round(HT_summ$mean_DOC[1], 2), 
+    fresh_held = paste(c(round(HT_summ$mean_DOC[1], 2), 
                             round(HT_summ$mean_DOC[3], 2),
                             round(HT_summ$mean_DOC[5], 2)),
                           "±",
@@ -2387,29 +2451,17 @@ HT %>%
                          "±",
                          c(round(HT_summ$sd_DOC[2], 2), 
                            round(HT_summ$sd_DOC[4], 2), 
-                           round(HT_summ$sd_DOC[6], 2))),
-    DOC_pValue = c(A_DOC_pvalue, B_DOC_pvalue, C_DOC_pvalue),
-    sig_DOC = c(A_DOC_sig, B_DOC_sig, C_DOC_sig),
-    # DOC_eq
-    #DOCeq_ppm_fresh_held = paste(c(round(HT_summ$mean_DOCeq[1], 2),
-     #                         round(HT_summ$mean_DOCeq[3], 2), 
-      #                        round(HT_summ$mean_DOCeq[5], 2)),
-       #                     "±",
-        #                    c(round(HT_summ$sd_DOCeq[1], 2), 
-         #                     round(HT_summ$sd_DOCeq[3], 2), 
-          #                    round(HT_summ$sd_DOCeq[5], 2)),
-           #                 " // ",
-            #                c(round(HT_summ$mean_DOCeq[2], 2),
-             #                round(HT_summ$mean_DOCeq[4], 2), 
-              #               round(HT_summ$mean_DOCeq[6], 2)),
-               #            "±",
-                #           c(round(HT_summ$sd_DOCeq[2], 2), 
-                 #            round(HT_summ$sd_DOCeq[4], 2), 
-                  #           round(HT_summ$sd_DOCeq[6], 2))),
-    #DOCeq_pValues = c(A_DOCeq_pvalue, B_DOCeq_pvalue, C_DOCeq_pvalue),
-    #sig_DOCeq = c(A_DOCeq_sig, B_DOCeq_sig, C_DOCeq_sig),
-    # UV254
-    UV254_fresh_held = paste(c(round(HT_summ$mean_UV254[1], 2), 
+                           round(HT_summ$sd_DOC[6], 2)))) %>% 
+  bind_rows(
+     # UV254
+    HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(season_G = first(rain_seasons),
+            HoldTime_days = first(lapse)) %>% 
+  mutate(
+    Mean_temps = c("7.3°C ± 2.1°C", "6.1°C ± 2.7°C", "4.4°C ± 3.2°C"),
+    Analysis = "UV254",
+    fresh_held = paste(c(round(HT_summ$mean_UV254[1], 2), 
                               round(HT_summ$mean_UV254[3], 2), 
                               round(HT_summ$mean_UV254[5], 2)),
                             "±",
@@ -2423,122 +2475,23 @@ HT %>%
                            "±",
                            c(round(HT_summ$sd_UV254[2], 2), 
                              round(HT_summ$sd_UV254[4], 2), 
-                             round(HT_summ$sd_UV254[6], 2))),
-    UV254_pValues = c(A_UV254_pvalue, B_UV254_pvalue, C_UV254_pvalue),
-    sig_UV254 = c(A_UV254_sig, B_UV254_sig, C_UV254_sig)) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_tTests.csv")
+                             round(HT_summ$sd_UV254[6], 2)))))
+    #UV254_pValues = c(A_UV254_pvalue, B_UV254_pvalue, C_UV254_pvalue),
+    #sig_UV254 = c(A_UV254_sig, B_UV254_sig, C_UV254_sig)) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_tTests.csv")
 
 ```
 
-## Hobo TidbiTs
-```{r, message=FALSE, warning=FALSE}
-# read in data
-Hobo_dat <- 
-  list.files("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", pattern = "*.csv") %>% 
-  set_names(str_extract(., "([a-z]+\\-*[a-z]*\\_[a-z]+)")) %>%
-  purrr::map_dfr(~read_csv(
-    file.path("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", .), 
-    skip = 2,  ## column names contain unique SN values 
-    col_names = FALSE), # don'tread names, it prevents row binding
-    .id = "source") 
-
-# simplify
-Hobo_dat <- Hobo_dat[1:4] # drop serial numbers
-names(Hobo_dat) <- c("source", "num", "DateTime", "Temp_C")  # rename, less verbose
-
-# update
-Hobo <- Hobo_dat %>% 
-  filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
-  filter(Temp_C < 35.0) %>% 
-  mutate(DateTime = lubridate::mdy_hms(DateTime),
-         location = stringr::str_sub(source, -3, -1),
-         location = factor(location),
-         site = substr(source, 1, 3), # first three characters
-         site = case_when(
-           site == "chr" ~ "ChrisCrk",
-           site == "cra" ~ "CraggCrk",
-           site == "lee" ~ "LeechHead",
-           site == "tun" ~ "Tunnel",
-           site == "wes" ~ "WestLeech",
-           site == "wks" ~ "Weeks"),
-         site = factor(site, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) 
-# rename position from wet/dry to water/air
-Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
-
-```
-
-### plot: Hobo temp
-```{r}
-Hobo %>% 
-  mutate(date = as_date(DateTime)) %>%
-  group_by(site, location, date) %>% 
-  summarise(T_daily = mean(Temp_C)) %>% 
-  ggplot(aes(x = date, y = T_daily))+
-  geom_line(aes(colour = location), size = 1.5)+
-  scale_color_manual(values = c("water" = forWater_colours2[["SkyBlue"]], 
-                                "air" = forWater_colours2[["MyOrange"]]))+
-  theme_bw()+
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  facet_wrap(~site, ncol = 1,
-             strip.position = "right")+
-  labs(x = "", y = "Mean Daily Temperature (°C)",
-       colour = "Temperature measurement:")+
-  theme(legend.position = "top", 
-        text = element_text(size = 12))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  scale_x_date(date_labels = "%Y %b %d",
-                   date_breaks = "1.5 months",
-                   date_minor_breaks = "1 months")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Hobo-TidbiTs_daily-temps.png", 
-       width = 6, height = 7, units = "in")
-```
-
-### table: Hobo temp
-```{r}
-Hobo %>%
-  mutate(month = lubridate::month(DateTime, label = TRUE),
-         year = lubridate::year(DateTime)) %>% 
-  group_by(site, location, year, month) %>% 
-  summarise(T_mean = mean(Temp_C),
-            T_sd = sd(Temp_C)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
-```
-
-## Hobo HoldTime - Tunnel
-```{r}
-# combine Temperature with hold-time (Tunnel)
-HT_Hobo <- Hobo %>% 
-  filter(site == "Tunnel",
-         location == "air") %>% 
-  mutate(Date = as_date(DateTime)) %>% 
-  full_join(HT, by = c("site", "Date")) %>% 
-  mutate(site = factor(site),
-         group = factor(group, levels = c("AG", "AR", "BG", "BR", "CG", "CR")))
-# get dates
-HT_range <- HT %>% 
-  group_by(HoldTime_set) %>% 
-  summarise(start = first(Date),
-            end = last(Date))
-          
-
-# SUMMARY FROM HT CHUNK -- summarize = HT_summ  
-HT_Hobo %>% 
-  group_by(group) %>% 
-  summarise(lapse = first(lapse),
-            mean_DOC = mean(NPOC_ppm),
-            sd_DOC = sd(NPOC_ppm),
-            RSD_DOC = (sd_DOC/mean_DOC)*100,
-            mean_DOCeq = mean(DOCeq_ppm), 
-            sd_DOCeq = sd(DOCeq_ppm),
-            mean_UV254 = mean(SAC254_Abs.m),
-            sd_UV254 = sd(SAC254_Abs.m))
-```
 
 ### plot: Hobo HT
 ```{r}
 # pull & set values for plot
+
+# set dates
+HT_range <- HT %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(start = first(Date),
+            end = last(Date))
+
 # set sample dates
 HT_dates <- HT %>% 
   group_by(HoldTime_set) %>% 
@@ -2620,6 +2573,76 @@ HT_Hobo_L %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png", 
        width = 7, height = 7 , units = "in")
+
+```
+
+## Lab: blanks
+```{r}
+# check lab blanks
+# this is a difficult measure of precision because the RO water is not the most reliably stable
+calver %>% 
+  filter(sample_type == "RO",
+         sample == "RO" | sample == "RO_pH<2",
+         NPOC_ppm != 0) %>% 
+  group_by(sample) %>% 
+  summarise(count = n(),
+            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            RSD = (sd_DOC/DOC_mean)*100)
+  
+```
+## Lab: Cal Vers
+```{r}
+# percent error calculated as 'measured' minus 'actual'
+# negative error indicates the method was under-estimating DOC concentration 
+# positive error indicates the method was over-estimating DOC concentration
+
+# check cal vers for shimadzu
+a <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(NPOC_ppm),
+         rn != 7,  # error -- did not add standard 
+         cal_ver != 5.7) %>%  # true concs were not calculated
+  group_by(rn) %>% 
+  summarise(count = n(),
+            calc = mean(cal_ver),
+            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            percent_error = ((DOC_mean - calc)/ calc)*100) %>% 
+  ungroup() %>% 
+  summarise(count = sum(count),
+            error_percent = mean(percent_error))
+
+# check cal vers for spectrolyser
+b <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(DOCeq_ppm)) %>% 
+  group_by(rn) %>% 
+  summarise(count = n(),
+            calc = mean(cal_ver),
+            DOCeq_mean = mean(DOCeq_ppm, na.rm = TRUE),
+            sd_DOCeq = sd(DOCeq_ppm, na.rm = T),
+            percent_error = ((DOCeq_mean - calc)/ calc)*100) %>% 
+  ungroup() %>%  
+  summarise(count = sum(count),
+            error_percent = mean(percent_error))
+
+# total cal-vers included
+n_calvers_total <- calver %>% 
+  filter(sample_type == "cal_ver") %>% 
+  summarise(n = n())
+
+# cal-vers included
+n_calvers <- a[1,1]+b[1,1]
+
+# percent error from shimadzu
+error_shimadzu <- a %>% pull(error_percent)
+
+# percent error from spectrolyser
+error_spectrolyser <- b %>% pull(error_percent)
+
+# average percent error from both methods:
+error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 ```
 

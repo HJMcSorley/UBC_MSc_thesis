@@ -84,6 +84,8 @@ Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectro
 
 Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed.
 
+## Shimadzu
+
 ```{r, TOC-V, message = FALSE}
 ## Shimadzu TOC-V samples and results
 # sample IDs and results from analysis of DOC (as NPOC)
@@ -754,7 +756,6 @@ wx_mean <- precip_data %>%
   group_by(DateTime) %>% 
   select(-StationName) %>% 
   summarise_all(list(mean = mean))
-
 ```
 
 
