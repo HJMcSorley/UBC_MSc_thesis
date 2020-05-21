@@ -1340,8 +1340,7 @@ results <- results %>%
     trip == "23" ~ trip_df$trip.end[24])) %>% 
   mutate(Date_sampled = date(DateTime_sampled),
          Date_collected = date(collection)) %>% 
-  mutate(HoldTime_days = Date_collected - Date_sampled) %>% 
-select(site, sample_type, trip, DateTime_sampled, collection, HoldTime_days) 
+  mutate(HoldTime_days = Date_collected - Date_sampled) 
 ```
 
 

@@ -605,7 +605,7 @@ Malahat_test_lagyear %>%
   
 ```
 
-### pre & during MSc
+### Wx pre & during MSc
 ```{r}
 # group
 malahat_test_data <- malahat_data %>% 
@@ -2232,7 +2232,13 @@ a <- HT %>%
   group_by(HoldTime_set) %>% 
   summarize(lapse = diff.Date(Date))
 # mutate lapse to HT df
-HT <- full_join(HT, a, by = "HoldTime_set")
+HT <- full_join(HT, a, by = "HoldTime_set") %>% 
+  mutate(HoldTime_set = factor(HoldTime_set, levels = c("A", "B", "C")), 
+         HoldTime_rep= as_factor(HoldTime_rep), 
+         HoldTime_group = as_factor(HoldTime_group), 
+         group = as_factor(group)) %>% 
+  mutate(HT_set_labels = HoldTime_set,
+         HT_group_labels = HoldTime_group)
 
 
 # summarize
@@ -2245,64 +2251,111 @@ HT_summ <- HT %>%
             mean_DOCeq = mean(DOCeq_ppm), 
             sd_DOCeq = sd(DOCeq_ppm),
             mean_UV254 = mean(SAC254_Abs.m),
-            sd_UV254 = sd(SAC254_Abs.m))
+            sd_UV254 = sd(SAC254_Abs.m)) 
+
+HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
+HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
 ```
-### t-tests
+
+### HT plots
 ```{r}
-# t-tests
-## (I don't know a tidy way to do these base stats)
+# plot sets
+a <- HT %>% 
+  ggplot(aes(x = HT_group_labels, y = NPOC_ppm, fill = HT_group_labels))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    #labels = c(G = "Fresh", R = "Held"),
+                    name = "Hold-time sample type:")+
+  labs(y = "DOC (mg/L)", x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~HoldTime_set)
+
+b <- HT %>% 
+  ggplot(aes(x = HT_group_labels, y = SAC254_Abs.m, fill = HT_group_labels))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    #labels = c(G = "Fresh", R = "Held"),
+                    name = "Hold-time sample type:")+
+  labs(y = "UV abs at 254nm (a.u.)", x = "")+
+  theme_bw()+
+  theme(legend.position = "none")+
+  facet_wrap(~HoldTime_set)
+  
+cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6))  
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HT-exp_boxplots.png")
+
+```
+
+### tests: Wilcoxon
+```{r}
+# Tests NPOC for normality 
+HT %>% 
+  ggplot(aes(NPOC_ppm))+
+  geom_density(aes(colour = HoldTime_set))+
+  theme_bw()+
+  theme(legend.position = "none")+
+  facet_wrap(~ HoldTime_set,
+             scales = "free_y")
+# not normal
+ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
+                 color = "HoldTime_set")
+# not normal
+
+# Tests NPOC for normality 
+HT %>% 
+  ggplot(aes(SAC254_Abs.m))+
+  geom_density(aes(colour = HoldTime_set))+
+  theme_bw()+
+  theme(legend.position = "none")+
+  facet_wrap(~ HoldTime_set,
+             scales = "free_y")
+# not normal
+ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
+                 color = "HoldTime_set")
+# not normal
+
+
+# t-tests --> Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
 # alternative hypothesis: the difference between means is significant 
 # p-value > 0.05 --> cannot reject null hypothesis
 # p-value < 0.05 --> reject the null hypothesis 
 
+# tests
+HT_Wilcoxon_tests <- bind_rows(
+  ## NPOC ---
+  # set A
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"])) %>% 
+    mutate(Set = "A", Analysis = "NPOC_ppm"),
+  # set B
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "BG"], HT$NPOC_ppm[HT$group == "BR"])) %>% 
+    mutate(Set = "B", Analysis = "NPOC_ppm"),
+  # set C
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"])) %>% 
+    mutate(Set = "C", Analysis = "NPOC_ppm"),
+  ## UV-254 ---
+  # set A
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"])) %>% 
+    mutate(Set = "A", Analysis = "SAC254_Abs.m"),
+  # set B
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "BG"], HT$SAC254_Abs.m[HT$group == "BR"])) %>% 
+    mutate(Set = "B", Analysis = "SAC254_Abs.m"),
+  # set C
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"])) %>% 
+    mutate(Set = "C", Analysis = "SAC254_Abs.m")) %>% 
+  # pull values of interest to summarize
+  select(Analysis, Set, p.value) %>% 
+  mutate(sig.diff = case_when(p.value < 0.01 ~ "at 99%",
+                                p.value < 0.05 ~ "at 95%",
+                                p.value < 0.1 ~ "at 90%",
+                                p.value > 0.1 ~ "NA")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_Wilcoxon-tests.csv")
 
-# set A
-AG <- HT %>% filter(group == "AG")
-AR <- HT %>% filter(group == "AR")
-## t-tests
-# DOC (NPOC)
-A_DOC_pvalue <- t.test(AG$NPOC_ppm, AR$NPOC_ppm, paired = TRUE)$p.value
-A_DOC_sig <- if_else(A_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
-# DOC equiv.
-A_DOCeq_pvalue <- t.test(AG$DOCeq_ppm, AR$DOCeq_ppm, paired = TRUE)$p.value 
-A_DOCeq_sig <- if_else(A_DOCeq_pvalue < 0.05, "sig.", " ")
-# UV254
-A_UV254_pvalue <- t.test(AG$SAC254_Abs.m, AR$SAC254_Abs.m, paired = TRUE)$p.value 
-A_UV254_sig <- if_else(A_UV254_pvalue < 0.05, "sig.", " ")
-
-# set B
-BG <- HT %>% filter(group == "BG")
-BR <- HT %>% filter(group == "BR")
-## t-tests
-# DOC (NPOC)
-B_DOC_pvalue <- t.test(BG$NPOC_ppm, BR$NPOC_ppm, paired = TRUE)$p.value
-B_DOC_sig <- if_else(B_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
-# DOC equiv.
-B_DOCeq_pvalue <- t.test(BG$DOCeq_ppm, BR$DOCeq_ppm, paired = TRUE)$p.value 
-B_DOCeq_sig <- if_else(B_DOCeq_pvalue < 0.05, "sig.", " ")
-# UV254
-B_UV254_pvalue <- t.test(BG$SAC254_Abs.m, BR$SAC254_Abs.m, paired = TRUE)$p.value 
-B_UV254_sig <- if_else(B_UV254_pvalue < 0.05, "sig.", " ")
-
-# set A
-CG <- HT %>% filter(group == "CG")
-CR <- HT %>% filter(group == "CR")
-## t-tests
-# DOC (NPOC)
-C_DOC_pvalue <- t.test(CG$NPOC_ppm, CR$NPOC_ppm, paired = TRUE)$p.value
-C_DOC_sig <- if_else(C_DOC_pvalue < 0.05, "sig.", " ")  # at 95% confidence level
-# DOC equiv.
-C_DOCeq_pvalue <- t.test(CG$DOCeq_ppm, CR$DOCeq_ppm, paired = TRUE)$p.value 
-C_DOCeq_sig <- if_else(C_DOCeq_pvalue < 0.05, "sig.", " ")
-# UV254
-C_UV254_pvalue <- t.test(CG$SAC254_Abs.m, CR$SAC254_Abs.m, paired = TRUE)$p.value 
-C_UV254_sig <- if_else(C_UV254_pvalue < 0.05, "sig.", " ")
-
-# the difference between AG and AR is wild and unexpected
-# perhaps this was due to temperature? Check out Hobo TidbiTs
-# or maybe due to high initial concentrations of DOC (first flush)
-# maybe high DOC and temperature together
+# view
+HT_Wilcoxon_tests
+cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
 
 ```
 
@@ -2453,8 +2506,7 @@ Hobo %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
 ```
 
-
-## Hobo HoldTime
+## Hobo HoldTime - Tunnel
 ```{r}
 # combine Temperature with hold-time (Tunnel)
 HT_Hobo <- Hobo %>% 
