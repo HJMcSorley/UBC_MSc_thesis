@@ -161,7 +161,7 @@ These sites were selected to represent the future supplemental source water, the
 
 \  
 
-Replicate samples were collected November 12, 2019 and January 18, 2020 and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
+Replicate samples were collected November 12, 2019 and January 18, 2020 and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes and haloacetic acids, (μg/L)), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), Zeta Potential (mV), THM-FP(μg/L), HAA-FP (μg/L). At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM. 
 	
 ##	2.2 	Analytical techniques & data
 

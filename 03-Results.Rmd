@@ -59,7 +59,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv", col_nam
 
 \  
 
-Malahat weather station data were grouped by years 2016-2017 and 2018-2019 to check if there was a statistical difference in precipitation and air temperature for the two years prior to this study compared to the two years associated with this study (Figure \@ref(fig:MalahatTestBox)). Table \ref(tab:MalahatTest) summarizes the results Wilcoxon rank sum test comparing these two sets.
+Malahat weather station data were grouped by years 2016-2017 and 2018-2019 to check if there was a statistical difference in precipitation and air temperature for the two years prior to this study compared to the two years associated with this study (Figure \@ref(fig:MalahatTestBox)). Table \ref(tab:MalahatTest) summarizes the results Wilcoxon rank sum test comparing these two sets. Based on this two-set, two-year comparison, it was determined that precipitation during the 2018-2019 period was different than the 2016-2017 period.    
 
 
 ```{r MalahatTestBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
@@ -119,7 +119,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_ra
 
 ## River samples for DOC analysis
 
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, 445 samples (Table \@ref(tab:samplecount))  were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to _for_Water partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory. 
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, 445 samples (Table \@ref(tab:samplecount)) were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to _for_Water partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory. 
 
 \  
 

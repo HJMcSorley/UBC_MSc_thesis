@@ -1307,9 +1307,46 @@ results <- within(results,
                    is.na(rain_season), two_seasons, rain_season)) 
 
 ```
+#### Add Hold-Time span for each sample
+```{r}
+
+# I am sure this could be a loop!?!?!?!?!
+
+# add a HoldTime_span for period each rack sample sat on the rack before collection
+results <- results %>% 
+  mutate(collection = case_when(  
+    trip == "1" ~ trip_df$trip.end[1],
+    trip == "2" ~ trip_df$trip.end[2],
+    trip == "3" ~ trip_df$trip.end[3],
+    trip == "4" ~ trip_df$trip.end[4],
+    trip == "5" ~ trip_df$trip.end[5],
+    trip == "6" ~ trip_df$trip.end[6],
+    trip == "7" ~ trip_df$trip.end[7],
+    trip == "8" ~ trip_df$trip.end[8],
+    trip == "9" ~ trip_df$trip.end[9],
+    trip == "10" ~ trip_df$trip.end[10],
+    trip == "11" ~ trip_df$trip.end[11],
+    trip == "12" ~ trip_df$trip.end[12],
+    trip == "13" ~ trip_df$trip.end[13],
+    trip == "14" ~ trip_df$trip.end[15],
+    trip == "15" ~ trip_df$trip.end[16],
+    trip == "16" ~ trip_df$trip.end[17],
+    trip == "17" ~ trip_df$trip.end[18],
+    trip == "18" ~ trip_df$trip.end[19],
+    trip == "19" ~ trip_df$trip.end[20],
+    trip == "20" ~ trip_df$trip.end[21],
+    trip == "21" ~ trip_df$trip.end[22],
+    trip == "22" ~ trip_df$trip.end[23],
+    trip == "23" ~ trip_df$trip.end[24])) %>% 
+  mutate(Date_sampled = date(DateTime_sampled),
+         Date_collected = date(collection)) %>% 
+  mutate(HoldTime_days = Date_collected - Date_sampled) %>% 
+select(site, sample_type, trip, DateTime_sampled, collection, HoldTime_days) 
+```
+
 
 ### update precip data with rain events
-```{r, update samples}
+```{r update}
 precip_data <- precip_data %>% 
   mutate(Date = lubridate::date(DateTime)) %>% 
   # add event ID (ugly code)
