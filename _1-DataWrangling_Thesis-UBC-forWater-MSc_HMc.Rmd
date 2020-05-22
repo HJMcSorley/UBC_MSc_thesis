@@ -759,7 +759,7 @@ wx_mean <- precip_data %>%
 ```
 
 
-## River stage data 
+## Odyssey - River stage data 
 
 At the six installation sites, water level loggers were installed (Odyssey capacitance water level loggers). The level loggers recorded stage at 10 minute intervals. Each logger was in a stilling well with a secured external stage measuring tape; the stage data must be adjusted with an offset value to match with the observed stage in order to match sample collection to logger datetimes.
 
@@ -1383,6 +1383,73 @@ precip_data <- precip_data %>%
 precip_data <- within(precip_data, 
                  rain_season <- ifelse(
                    is.na(rain_season), "dry", rain_season)) 
+
+```
+
+# Hobo TidbiTs
+```{r, message=FALSE, warning=FALSE}
+# read in data
+Hobo_dat <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", pattern = "*.csv") %>% 
+  set_names(str_extract(., "([a-z]+\\-*[a-z]*\\_[a-z]+)")) %>%
+  purrr::map_dfr(~read_csv(
+    file.path("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", .), 
+    skip = 2,  ## column names contain unique SN values 
+    col_names = FALSE), # don'tread names, it prevents row binding
+    .id = "source") 
+
+# simplify
+Hobo_dat <- Hobo_dat[1:4] # drop serial numbers
+names(Hobo_dat) <- c("source", "num", "DateTime", "Temp_C")  # rename, less verbose
+
+# update
+Hobo <- Hobo_dat %>% 
+  filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
+  filter(Temp_C < 35.0) %>% 
+  mutate(DateTime = lubridate::mdy_hms(DateTime, tz = TZ),
+         location = stringr::str_sub(source, -3, -1),
+         location = factor(location),
+         site = substr(source, 1, 3), # first three characters
+         site = case_when(
+           site == "chr" ~ "ChrisCrk",
+           site == "cra" ~ "CraggCrk",
+           site == "lee" ~ "LeechHead",
+           site == "tun" ~ "Tunnel",
+           site == "wes" ~ "WestLeech",
+           site == "wks" ~ "Weeks"),
+         site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) 
+# rename position from wet/dry to water/air
+Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
+
+# --------
+## Add trips
+Hobo_Trip <- Hobo %>%
+  select(-c(source, num)) %>%
+  mutate(Date = as_date(DateTime),
+         trip = case_when(  
+    Date %within% interval(trip_df$trip.start[1], trip_df$trip.end[2]) ~ trip_df$trip[2],
+    Date %within% interval(trip_df$trip.end[2], trip_df$trip.end[3]) ~ trip_df$trip[3],
+    Date %within% interval(trip_df$trip.end[3], trip_df$trip.end[4]) ~ trip_df$trip[4],
+    Date %within% interval(trip_df$trip.end[4], trip_df$trip.end[5]) ~ trip_df$trip[5],
+    Date %within% interval(trip_df$trip.end[5], trip_df$trip.end[6]) ~ trip_df$trip[6],
+    Date %within% interval(trip_df$trip.end[6], trip_df$trip.end[7]) ~ trip_df$trip[7],
+    Date %within% interval(trip_df$trip.end[7], trip_df$trip.end[8]) ~ trip_df$trip[8],
+    Date %within% interval(trip_df$trip.end[8], trip_df$trip.end[9]) ~ trip_df$trip[9],
+    Date %within% interval(trip_df$trip.end[9], trip_df$trip.end[10]) ~ trip_df$trip[10],
+    Date %within% interval(trip_df$trip.end[10], trip_df$trip.end[11]) ~ trip_df$trip[11],
+    Date %within% interval(trip_df$trip.end[11], trip_df$trip.end[12]) ~ trip_df$trip[12],
+    Date %within% interval(trip_df$trip.end[12], trip_df$trip.end[13]) ~ trip_df$trip[13],
+    Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[15]) ~ trip_df$trip[15], # changed pattern
+    Date %within% interval(trip_df$trip.end[15], trip_df$trip.end[16]) ~ trip_df$trip[16],
+    Date %within% interval(trip_df$trip.end[16], trip_df$trip.end[17]) ~ trip_df$trip[17],
+    Date %within% interval(trip_df$trip.end[17], trip_df$trip.end[18]) ~ trip_df$trip[18],
+    Date %within% interval(trip_df$trip.end[18], trip_df$trip.end[19]) ~ trip_df$trip[19],
+    Date %within% interval(trip_df$trip.end[19], trip_df$trip.end[20]) ~ trip_df$trip[20],
+    Date %within% interval(trip_df$trip.end[20], trip_df$trip.end[21]) ~ trip_df$trip[21],
+    Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
+    Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23],
+    Date %within% interval(trip_df$trip.end[23], trip_df$trip.end[24]) ~ trip_df$trip[24]) )
 
 ```
 

@@ -22,7 +22,6 @@ knitr::include_graphics("path/to/file.png")
 
 
 
-
 June 30, 2019 - January 31 2020 (year 3)
 Hannah McSorley
 
