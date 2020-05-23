@@ -3,17 +3,17 @@
 ,,,,,,
 ,,,,,,
 measurement,site,sample-type,sample,date-time_sampled,fill-stage,trip
-1,Jarvis-lake,Grab,Secchi,lake,lake,14
-2,Jarvis-lake,Grab,Secchi,lake,lake,14
-3,Jarvis-lake,Grab,Secchi-1m,lake,lake,14
-4,Jarvis-lake,Grab,Secchi-1m,lake,lake,14
-5,Jarvis-lake,Grab,Surface,lake,lake,14
-6,Jarvis-lake,Grab,Surface,lake,lake,14
-7,Weeks-lake,Grab,Secchi+1m,lake,lake,14
-8,Weeks-lake,Grab,Secchi+1m,lake,lake,14
-9,Weeks-lake,Grab,Secchi,lake,lake,14
-10,Weeks-lake,Grab,Secchi,lake,lake,14
-11,Weeks-lake,Grab,Secchi-1m,lake,lake,14
-12,Weeks-lake,Grab,Secchi-1m,lake,lake,14
-13,Weeks-lake,Grab,Surface,lake,lake,14
-14,Weeks-lake,Grab,Surface,lake,lake,14
+1,Jarvis-lake,Grab,Secchi,2019-08-29 9:00,,Lake
+2,Jarvis-lake,Grab,Secchi,2019-08-29 9:00,,Lake
+3,Jarvis-lake,Grab,Secchi-1m,2019-08-29 9:00,,Lake
+4,Jarvis-lake,Grab,Secchi-1m,2019-08-29 9:00,,Lake
+5,Jarvis-lake,Grab,Surface,2019-08-29 9:00,,Lake
+6,Jarvis-lake,Grab,Surface,2019-08-29 9:00,,Lake
+7,Weeks-lake,Grab,Secchi+1m,2019-08-29 10:30,,Lake
+8,Weeks-lake,Grab,Secchi+1m,2019-08-29 10:30,,Lake
+9,Weeks-lake,Grab,Secchi,2019-08-29 10:30,,Lake
+10,Weeks-lake,Grab,Secchi,2019-08-29 10:30,,Lake
+11,Weeks-lake,Grab,Secchi-1m,2019-08-29 10:30,,Lake
+12,Weeks-lake,Grab,Secchi-1m,2019-08-29 10:30,,Lake
+13,Weeks-lake,Grab,Surface,2019-08-29 10:30,,Lake
+14,Weeks-lake,Grab,Surface,2019-08-29 10:30,,Lake

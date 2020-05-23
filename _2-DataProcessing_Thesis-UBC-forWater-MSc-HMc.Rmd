@@ -2117,42 +2117,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
          width = 7, height = 9, units = "in")
 ```
 # Hobo TidbiTs
-```{r, message=FALSE, warning=FALSE}
-# read in data
-Hobo_dat <- 
-  list.files("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", pattern = "*.csv") %>% 
-  set_names(str_extract(., "([a-z]+\\-*[a-z]*\\_[a-z]+)")) %>%
-  purrr::map_dfr(~read_csv(
-    file.path("R-inputs_UBC-forWater-MSc_HMc/Hobo_TidbiTs/", .), 
-    skip = 2,  ## column names contain unique SN values 
-    col_names = FALSE), # don'tread names, it prevents row binding
-    .id = "source") 
-
-# simplify
-Hobo_dat <- Hobo_dat[1:4] # drop serial numbers
-names(Hobo_dat) <- c("source", "num", "DateTime", "Temp_C")  # rename, less verbose
-
-# update
-Hobo <- Hobo_dat %>% 
-  filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
-  filter(Temp_C < 35.0) %>% 
-  mutate(DateTime = lubridate::mdy_hms(DateTime, tz = TZ),
-         location = stringr::str_sub(source, -3, -1),
-         location = factor(location),
-         site = substr(source, 1, 3), # first three characters
-         site = case_when(
-           site == "chr" ~ "ChrisCrk",
-           site == "cra" ~ "CraggCrk",
-           site == "lee" ~ "LeechHead",
-           site == "tun" ~ "Tunnel",
-           site == "wes" ~ "WestLeech",
-           site == "wks" ~ "Weeks"),
-         site = factor(site, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) 
-# rename position from wet/dry to water/air
-Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
-
-```
 
 ## plot: Hobo temp
 ```{r}

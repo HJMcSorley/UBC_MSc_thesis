@@ -10,32 +10,32 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 5,Tunnel,QA-QC,HoldTime-C10,2019-12-16 22:00,,DOC,20
 6,Tunnel,Grab,Grab,2019-12-13 10:25,,DOC,20
 7,Tunnel,Grab,Grab,2019-12-13 14:45,,DOC,20
-8,Tunnel,Grab,Grab,2019-12-16 11:00,36,DOC,20
+8,Tunnel,Grab,Grab,2019-12-16 11:00,,DOC,20
 9,Tunnel,Rack,L1,,33,DOC,20
 10,Tunnel,Rack,L2,,53,DOC,20
 11,Tunnel,Rack,L3,,69,DOC,20
-12,Tunnel,Grab,Grab,2019-12-18 10:30,34,DOC,20
-13,Cragg-crk,Grab,Grab,2019-12-16 12:00,43,DOC,20
+12,Tunnel,Grab,Grab,2019-12-18 10:30,,DOC,20
+13,Cragg-crk,Grab,Grab,2019-12-16 12:00,,DOC,20
 14,Cragg-crk,Rack,L1,,43,DOC,20
 15,Cragg-crk,Rack,L2,,59,DOC,20
 16,Cragg-crk,Rack,L3,,72,DOC,20
 17,Chris-crk,Grab,Grab,2019-12-17 11:45,26,DOC,20
 18,Cragg-crk,Grab,Grab,2019-12-17 14:00,,DOC,20
-19,Cragg-crk,Grab,Grab,2019-12-19 12:00,63,DOC,20
+19,Cragg-crk,Grab,Grab,2019-12-19 12:00,,DOC,20
 20,Cragg-crk,Rack,L1,,45,DOC,20
 21,Cragg-crk,Rack,L2,,63,DOC,20
-22,Chris-crk,Grab,Grab,2019-12-16 13:35,27,DOC,20
+22,Chris-crk,Grab,Grab,2019-12-16 13:35,,DOC,20
 23,Chris-crk,Rack,L1,,26,DOC,20
 24,Chris-crk,Rack,L2,,36,DOC,20
-25,Leech-head,Grab,Grab,2019-12-16 13:00,124,DOC,20
+25,Leech-head,Grab,Grab,2019-12-16 13:00,,DOC,20
 26,Leech-head,Rack,L1,,122,DOC,20
 27,Leech-head,Rack,L2,,139,DOC,20
 28,Leech-head,Grab,Grab,2019-12-17 12:00,,DOC,20
-29,Weeks-out,Grab,Grab,2019-12-16 13:20,79,DOC,20
+29,Weeks-out,Grab,Grab,2019-12-16 13:20,,DOC,20
 31,Weeks-out,Rack,L2,,74,DOC,20
 32,Weeks-out,Rack,L3,,87,DOC,20
 33,Weeks-out,Grab,Grab,2019-12-17 10:00,,DOC,20
-34,West-Leech,Grab,Grab,2019-12-16 9:45,32,DOC,20
+34,West-Leech,Grab,Grab,2019-12-16 9:45,,DOC,20
 35,West-Leech,Rack,L1,,34,DOC,20
 36,West-Leech,Rack,L2,,50,DOC,20
 37,Deception-crk,Grab,Grab,2019-12-13 9:00,,DOC,20

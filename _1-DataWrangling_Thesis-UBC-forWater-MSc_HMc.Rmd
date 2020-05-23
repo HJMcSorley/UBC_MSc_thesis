@@ -80,7 +80,7 @@ For quantification of DOC, samples were filtered with 0.45-micron PES filters; a
 
 Spectral properties of sample NOM were analyzed using a "Spectro::lyser" spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of dissolved organic matter to estimate concentrations of total organic carbon (TOC), DOC as well as nitrate-nitrogen (NO^-3^-N). 
 
- ## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
+## DOC: Shimadzu TOC-V for DOC concentrations (as mg/L NPOC)
 
 Water samples were filtered (0.45-micron PES filters) and acidified to bring pH below 2, then sparged with ultra-pure hydrocarbon-free air to drive off inorganic carbon. Following sparging, the sample was combusted to convert all organic carbon to carbon dioxide which was measured with a non-dispersive infrared gas detector to quanitify the DOC content of the sample. This method representd the most direct method of measuring DOC, as all natural organic carbon in the sample is measured. However, very small volatile organic carbon compounds would be removed in the sparging process. Because most NOM compounds are of higher molecular weight, it is unlikely that NOM DOC analytes would be removed.
 
@@ -146,7 +146,8 @@ shimadzu_samples$site <- shimadzu_samples$site %>%
     "Judge-crk" = "Judge",
     "Rithet-N" = "Rithet",
     "Rithet-S" = "Rithet",
-    "Rithet-crk" = "Rithet"
+    "Rithet-crk" = "Rithet",
+    "Weeks-Lk-SE" = "Weeks-Lake"
   ))
 # check sites again
 # levels(shimadzu_samples$site)
@@ -319,7 +320,10 @@ spectrolyser_samples$site <- spectrolyser_samples$site %>%
     "Judge-crk" = "Judge",
     "West-jordan" = "West-Jordan",
     "Rithet-crk" = "Rithet",
-    "W.Jarvis" = "Jarvis"
+    "W.Jarvis" = "Jarvis",
+    "Weeks-Lk-SE" = "Weeks-Lake", 
+    "Weeks-Lk-NE" = "Weeks-Lake",
+    "Weeks-lake" = "Weeks-Lake"
   ))
 
 
@@ -796,7 +800,7 @@ odyssey_data <- list.files(path = odyssey_path, pattern = "*.CSV") %>%
 # str(odyssey_data)
 
 # check levels
-levels(odyssey_data$source)
+# levels(odyssey_data$source)
 # rename site IDs
 odyssey_data$source <- forcats::fct_recode(odyssey_data$source, 
                                            LeechHead = "12040",
@@ -806,7 +810,7 @@ odyssey_data$source <- forcats::fct_recode(odyssey_data$source,
                                            Weeks = "WEEKS",
                                            WestLeech = "WEST")
 # re-check levels
-levels(odyssey_data$source)
+# levels(odyssey_data$source)
 
 
 # there is certainly a better way to do this -- with a loop or map or apply or metaprogramming
@@ -933,7 +937,7 @@ stage_racks <- corr_stage %>%
 # Join rack-stage and rack-sample dataframes
 # then, drop all the NA values so you just have sampleresults with 
 sampleresults_rack <- left_join(rack_sample_df, stage_racks,  
-                 by = c("site", "trip", "sampleStage_cm")) %>% 
+                                by = c("site", "trip", "sampleStage_cm")) %>% 
   ungroup()
 
 # great! now, you have a Rack-sample dataframe with DateTime!!!
@@ -956,15 +960,15 @@ stage_grabs <- corr_stage %>%
   mutate(DateTime_R = lubridate::round_date(DateTime, unit = "hour")) %>%  # round hour
   rename(site = source, trip = interval) %>%  # new = old
   group_by(site, trip) 
-  
+
 # Join grab-stage and grab-sample dataframes to get stage from DateTime
 sampleresults_grabstage <- left_join(grab_sample_df, stage_grabs,  
-                 by = c("site", "trip", "DateTime_R"))  #### added trip
+                                     by = c("site", "trip", "DateTime_R"))  #### added trip
 
 # combine DateTime and dt_sampled
 sampleresults_grabstage <- within(sampleresults_grabstage, 
-                 corr_stage_cm <- ifelse(
-                   is.na(corr_stage_cm), sampleStage_cm, corr_stage_cm)) 
+                                  corr_stage_cm <- ifelse(
+                                    is.na(corr_stage_cm), sampleStage_cm, corr_stage_cm)) 
 
 # take that join and rename and drop variables
 sampleresults_grab <- sampleresults_grabstage %>% 
@@ -978,7 +982,7 @@ sampleresults_grab <- sampleresults_grabstage %>%
 
 # Join time-stamped rack and grab dfs
 results1 <- full_join(sampleresults_grab, sampleresults_rack, 
-                 by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm", "ID")) %>% 
+                      by = c("site", "trip", "sample_type", "sample", "DateTime", "dt_sampled", "sampleStage_cm", "NPOC_ppm", "analysis", "corr_stage_cm", "ID")) %>% 
   dplyr::distinct(site, trip, ID, .keep_all = TRUE) %>%  #NPOC_ppm,
   mutate(sample_type = factor(sample_type), 
          sample = factor(sample),
@@ -988,7 +992,7 @@ results1 <- full_join(sampleresults_grab, sampleresults_rack,
 # join matched sample dataframes with the original sampleresults  
 # result is a full dataset with time-stamped, stage, Grab, Rack & QA-QC results
 results2 <- full_join(results1, sampleresults, 
-                 by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>%
+                      by = c("site", "trip", "sample_type", "sample", "NPOC_ppm", "analysis", "dt_sampled")) %>%
   mutate(sample_type = factor(sample_type), 
          sample = factor(sample),
          trip = factor(trip, levels = c(0:23)), 
@@ -996,8 +1000,8 @@ results2 <- full_join(results1, sampleresults,
 
 # create DateTime_sampled variable by combining DateTime and dt_sampled
 results3 <- within(results2, 
-                 DateTime_sampled <- ifelse(
-                   is.na(DateTime), dt_sampled, DateTime)) %>% 
+                   DateTime_sampled <- ifelse(
+                     is.na(DateTime), dt_sampled, DateTime)) %>% 
   mutate(DateTime_sampled = lubridate::as_datetime(DateTime_sampled, tz = TZ),
          Date = lubridate::as_date(ifelse(
            is.na(DateTime_sampled), as_date(DateTime), as_date(DateTime_sampled))))
@@ -1011,7 +1015,7 @@ results <- results3 %>%
   mutate(site = factor(site), 
          two_seasons = factor(two_seasons)) %>% 
   dplyr::distinct(site, trip, sample_type, sample, DateTime_sampled, .keep_all = TRUE) #%>% 
-  #dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
+#dplyr::filter(!is.na(NPOC_ppm) & !is.na(DOCeq_ppm))  
 # there were some ghost rows full of NA (likely imported from Excel)
 
 # check count
@@ -1095,9 +1099,9 @@ stage_sample_plot <-
   labs(y = "River stage (cm)", x = "",
        fill = "Sample Type")+
   scale_x_date(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months",
-                   limits = as_date(c("2018-10-24", "2020-03-01")))+
+               date_breaks = "2 months",
+               date_minor_breaks = "1 months",
+               limits = as_date(c("2018-10-24", "2020-03-01")))+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 60, hjust=1),
         text = element_text(size=12),
@@ -1174,33 +1178,33 @@ events <- Wx_CC_storms[["storms2"]] %>%
 # alter the sample results dataframe to include storm event data
 stg_sample <- stg_sample %>%
   mutate(event_ID =
-             case_when(
-    Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
-    Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
-    Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
-    Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
-    Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
-    Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
-    Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
-    Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
-    Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
-    Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
-    Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
-    Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
-    Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
-    Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
-    Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
-    Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
-    Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
-             )  ) %>% 
+           case_when(
+             Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+             Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+             Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+             Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+             Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+             Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+             Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+             Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+             Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
+             Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+             Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+             Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+             Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+             Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+             Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+             Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+             Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+             Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
+           )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(
-           event_ID %in% 1:8 ~ "wet",   
-           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-           event_ID %in% 9:18 ~ "wet"))
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID %in% 9:18 ~ "wet"))
 ```
 
 ### update corr_stage with rain events
@@ -1209,33 +1213,33 @@ stg_sample <- stg_sample %>%
 # alter the odyssey corrected stage dataframe to include storm event data
 corr_stage <- corr_stage %>%
   mutate(event_ID =
-             case_when(
-    Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
-    Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
-    Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
-    Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
-    Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
-    Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
-    Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
-    Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
-    Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
-    Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
-    Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
-    Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
-    Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
-    Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
-    Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
-    Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
-    Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
-             )  ) %>% 
+           case_when(
+             Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+             Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+             Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+             Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+             Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+             Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+             Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+             Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+             Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
+             Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+             Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+             Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+             Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+             Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+             Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+             Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+             Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+             Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
+           )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(
-           event_ID %in% 1:8 ~ "wet",   
-           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-           event_ID %in% 9:18 ~ "wet"))
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID %in% 9:18 ~ "wet"))
 
 # ---- 
 
@@ -1273,39 +1277,39 @@ stg_sample %>%
 results <- results %>% 
   # add event ID (ugly code)
   mutate(event_ID =
-             case_when(
-    Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
-    Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
-    Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
-    Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
-    Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
-    Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
-    Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
-    Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
-    Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
-    Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
-    Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
-    Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
-    Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
-    Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
-    Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
-    Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
-    Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
-             )  ) %>% 
+           case_when(
+             Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+             Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+             Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+             Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+             Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+             Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+             Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+             Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+             Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
+             Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+             Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+             Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+             Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+             Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+             Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+             Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+             Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+             Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
+           )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(
-           event_ID %in% 1:8 ~ "wet",   
-           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-           event_ID %in% 9:18 ~ "wet")) %>% 
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID %in% 9:18 ~ "wet")) %>% 
   mutate(two_seasons = as.character(two_seasons))
 
 # fill in any gaps
 results <- within(results, 
-                 rain_season <- ifelse(
-                   is.na(rain_season), two_seasons, rain_season)) 
+                  rain_season <- ifelse(
+                    is.na(rain_season), two_seasons, rain_season)) 
 
 ```
 #### Add Hold-Time span for each sample
@@ -1351,38 +1355,38 @@ precip_data <- precip_data %>%
   mutate(Date = lubridate::date(DateTime)) %>% 
   # add event ID (ugly code)
   mutate(event_ID =
-             case_when(
-    Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
-    Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
-    Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
-    Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
-    Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
-    Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
-    Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
-    Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
-    Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
-    Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
-    Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
-    Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
-    Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
-    Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
-    Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
-    Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
-    Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
-    Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
-             )  ) %>% 
+           case_when(
+             Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+             Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+             Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+             Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+             Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+             Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+             Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+             Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+             Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
+             Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+             Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+             Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+             Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+             Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+             Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+             Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+             Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+             Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
+           )  ) %>% 
   # add seasons
   mutate(rain_season = case_when(
-           event_ID %in% 1:8 ~ "wet",   
-           Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-           Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-           Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-           event_ID %in% 9:18 ~ "wet"))
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID %in% 9:18 ~ "wet"))
 
 # fill in any gaps
 precip_data <- within(precip_data, 
-                 rain_season <- ifelse(
-                   is.na(rain_season), "dry", rain_season)) 
+                      rain_season <- ifelse(
+                        is.na(rain_season), "dry", rain_season)) 
 
 ```
 
@@ -1422,37 +1426,163 @@ Hobo <- Hobo_dat %>%
 # rename position from wet/dry to water/air
 Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
 
+```
+
+## update Hobo (ugly)
+
+```{r}
+
 # --------
 ## Add trips
+
+# I don't know how to loop or map between dataframes (only within one)...
+#### MAYBE lapply() with a function!?!?!?!
+# continuing with this janky method:
 Hobo_Trip <- Hobo %>%
   select(-c(source, num)) %>%
   mutate(Date = as_date(DateTime),
          trip = case_when(  
-    Date %within% interval(trip_df$trip.start[1], trip_df$trip.end[2]) ~ trip_df$trip[2],
-    Date %within% interval(trip_df$trip.end[2], trip_df$trip.end[3]) ~ trip_df$trip[3],
-    Date %within% interval(trip_df$trip.end[3], trip_df$trip.end[4]) ~ trip_df$trip[4],
-    Date %within% interval(trip_df$trip.end[4], trip_df$trip.end[5]) ~ trip_df$trip[5],
-    Date %within% interval(trip_df$trip.end[5], trip_df$trip.end[6]) ~ trip_df$trip[6],
-    Date %within% interval(trip_df$trip.end[6], trip_df$trip.end[7]) ~ trip_df$trip[7],
-    Date %within% interval(trip_df$trip.end[7], trip_df$trip.end[8]) ~ trip_df$trip[8],
-    Date %within% interval(trip_df$trip.end[8], trip_df$trip.end[9]) ~ trip_df$trip[9],
-    Date %within% interval(trip_df$trip.end[9], trip_df$trip.end[10]) ~ trip_df$trip[10],
-    Date %within% interval(trip_df$trip.end[10], trip_df$trip.end[11]) ~ trip_df$trip[11],
-    Date %within% interval(trip_df$trip.end[11], trip_df$trip.end[12]) ~ trip_df$trip[12],
-    Date %within% interval(trip_df$trip.end[12], trip_df$trip.end[13]) ~ trip_df$trip[13],
-    Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[15]) ~ trip_df$trip[15], # changed pattern
-    Date %within% interval(trip_df$trip.end[15], trip_df$trip.end[16]) ~ trip_df$trip[16],
-    Date %within% interval(trip_df$trip.end[16], trip_df$trip.end[17]) ~ trip_df$trip[17],
-    Date %within% interval(trip_df$trip.end[17], trip_df$trip.end[18]) ~ trip_df$trip[18],
-    Date %within% interval(trip_df$trip.end[18], trip_df$trip.end[19]) ~ trip_df$trip[19],
-    Date %within% interval(trip_df$trip.end[19], trip_df$trip.end[20]) ~ trip_df$trip[20],
-    Date %within% interval(trip_df$trip.end[20], trip_df$trip.end[21]) ~ trip_df$trip[21],
-    Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
-    Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23],
-    Date %within% interval(trip_df$trip.end[23], trip_df$trip.end[24]) ~ trip_df$trip[24]) )
+           Date %within% interval(trip_df$trip.start[1], trip_df$trip.end[2]) ~ trip_df$trip[2],
+           Date %within% interval(trip_df$trip.end[2], trip_df$trip.end[3]) ~ trip_df$trip[3],
+           Date %within% interval(trip_df$trip.end[3], trip_df$trip.end[4]) ~ trip_df$trip[4],
+           Date %within% interval(trip_df$trip.end[4], trip_df$trip.end[5]) ~ trip_df$trip[5],
+           Date %within% interval(trip_df$trip.end[5], trip_df$trip.end[6]) ~ trip_df$trip[6],
+           Date %within% interval(trip_df$trip.end[6], trip_df$trip.end[7]) ~ trip_df$trip[7],
+           Date %within% interval(trip_df$trip.end[7], trip_df$trip.end[8]) ~ trip_df$trip[8],
+           Date %within% interval(trip_df$trip.end[8], trip_df$trip.end[9]) ~ trip_df$trip[9],
+           Date %within% interval(trip_df$trip.end[9], trip_df$trip.end[10]) ~ trip_df$trip[10],
+           Date %within% interval(trip_df$trip.end[10], trip_df$trip.end[11]) ~ trip_df$trip[11],
+           Date %within% interval(trip_df$trip.end[11], trip_df$trip.end[12]) ~ trip_df$trip[12],
+           Date %within% interval(trip_df$trip.end[12], trip_df$trip.end[13]) ~ trip_df$trip[13],
+           Date %within% interval(trip_df$trip.end[13], trip_df$trip.end[15]) ~ trip_df$trip[15], # changed pattern
+           Date %within% interval(trip_df$trip.end[15], trip_df$trip.end[16]) ~ trip_df$trip[16],
+           Date %within% interval(trip_df$trip.end[16], trip_df$trip.end[17]) ~ trip_df$trip[17],
+           Date %within% interval(trip_df$trip.end[17], trip_df$trip.end[18]) ~ trip_df$trip[18],
+           Date %within% interval(trip_df$trip.end[18], trip_df$trip.end[19]) ~ trip_df$trip[19],
+           Date %within% interval(trip_df$trip.end[19], trip_df$trip.end[20]) ~ trip_df$trip[20],
+           Date %within% interval(trip_df$trip.end[20], trip_df$trip.end[21]) ~ trip_df$trip[21],
+           Date %within% interval(trip_df$trip.end[21], trip_df$trip.end[22]) ~ trip_df$trip[22],
+           Date %within% interval(trip_df$trip.end[22], trip_df$trip.end[23]) ~ trip_df$trip[23],
+           Date %within% interval(trip_df$trip.end[23], trip_df$trip.end[24]) ~ trip_df$trip[24])) %>% 
+  # add event ID (ugly code)
+  mutate(event_ID =
+           case_when(
+             Date %within% interval(events$StartDate[1], events$StartDate[2]) ~ events$ID[1],
+             Date %within% interval(events$StartDate[2], events$StartDate[3]) ~ events$ID[2],
+             Date %within% interval(events$StartDate[3], events$StartDate[4]) ~ events$ID[3],
+             Date %within% interval(events$StartDate[4], events$StartDate[5]) ~ events$ID[4],
+             Date %within% interval(events$StartDate[5], events$StartDate[6]) ~ events$ID[5],
+             Date %within% interval(events$StartDate[6], events$StartDate[7]) ~ events$ID[6],
+             Date %within% interval(events$StartDate[7], events$StartDate[8]) ~ events$ID[7],
+             Date %within% interval(events$StartDate[8], "2019-01-25") ~ events$ID[8],
+             Date %within% interval(events$StartDate[9]-10^5.5, events$StartDate[10]) ~ events$ID[9],
+             Date %within% interval(events$StartDate[10], events$StartDate[11]) ~ events$ID[10],
+             Date %within% interval(events$StartDate[11], events$StartDate[12]) ~ events$ID[11],
+             Date %within% interval(events$StartDate[12], events$StartDate[13]) ~ events$ID[12],
+             Date %within% interval(events$StartDate[13], events$StartDate[14]) ~ events$ID[13],
+             Date %within% interval(events$StartDate[14], events$StartDate[15]) ~ events$ID[14],
+             Date %within% interval(events$StartDate[15], events$StartDate[16]) ~ events$ID[15],
+             Date %within% interval(events$StartDate[16], events$StartDate[17]) ~ events$ID[16],
+             Date %within% interval(events$StartDate[17], events$StartDate[18]) ~ events$ID[17],
+             Date %within% interval(events$StartDate[18], "2020-03-01") ~ events$ID[18]
+           )  ) %>% 
+  # add seasons
+  mutate(rain_season = case_when(
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID %in% 9:18 ~ "wet"))
+
+# add trip
 
 ```
 
+## Join Hobo with sixfilter
+
+```{r}
+# subset updated results
+# rack samples
+# join to Hobo data
+sixfilter_join <- results %>% 
+  filter(site == "Weeks" | 
+           site == "ChrisCrk" | 
+           site == "LeechHead" |
+           site == "CraggCrk" |
+           site == "WestLeech" | 
+           site == "Tunnel",
+         sample_type == "Rack") %>% 
+  mutate(Date = as_date(DateTime_sampled)) %>% 
+  filter(Date >= "2019-08-21",
+         !is.na(site), !is.na(sample_type)) %>% 
+  # summarize
+  group_by(site, sample, trip, Date) %>% 
+  summarise(join_date = first(Date_sampled),  # for joining
+            Date_sampled = first(Date_sampled),
+            Date_collected = first(Date_collected),
+            sample_HT_days = first(HoldTime_days),
+            NPOC_ppm = first(NPOC_ppm)) %>% 
+  select(-Date) %>% 
+  ungroup() %>% 
+  # replicate dates for the full range between date_sampled and date_collected
+  group_by(site, sample, trip, NPOC_ppm, sample_HT_days) %>% 
+  # create sequence of daily dates between start & end
+  mutate(join_date = map2(Date_sampled, Date_collected, seq, by = "1 day")) %>% 
+  unnest()  # unnest the list column
+
+# join daily summaries
+Hobo_Rack_joined <- Hobo_Trip %>% 
+  filter(!is.na(location)) %>% 
+  full_join(sixfilter_join, by = c("site", "trip", "Date" = "join_date"))
+
+# yes!
+
+# now, summarize the temperature for each sample based on it's time on the rack
+subbasin_Hobos <- Hobo_Rack_joined %>% 
+  group_by(site, location, sample, rain_season, trip, NPOC_ppm, sample_HT_days) %>% 
+  summarise(Date_sampled = first(Date_sampled),
+            Date_collected = first(Date_collected),
+            Temp_daily = mean(Temp_C, na.rm = TRUE),
+            Temp_daily_sd = sd(Temp_C, na.rm = TRUE)) 
+
+wut <- sixfilter_join %>% 
+  filter(trip == 14,
+         site == "ChrisCrk")
+
+
+
+```
+
+### plot
+```{r}
+#check HObo joins
+Hobo_plot <- Hobo_full %>% 
+  filter(!is.na(location)) %>% 
+  group_by(site, location, Date) %>% 
+  summarise(daily_temp = mean(Temp_C, na.rm = TRUE),
+            Date_sampled = first(Date_sampled)) %>% 
+  ggplot(aes(x = Date, y = daily_temp))+
+  geom_line(aes(colour = location), size = 0.8)+
+  scale_color_manual(values = c("water" = "#62ACC8", # forWater "SkyBlue"
+                                "air" = "#f4AB0E"))+ # my orange
+  facet_wrap(~site, ncol = 1, 
+             strip.position = "right")+
+  labs(y = "Temperature (°C)", x = "", location = "Temperature of:") +
+  scale_x_date(date_labels = "%Y %b %d", date_breaks = "1 months", date_minor_breaks = "1 week")+
+  theme_bw()+
+  theme(#axis.text.x = element_text(angle = 60, hjust=1),
+        text = element_text(size=12),
+        legend.position = "top") 
+
+
+
+Hobo_plot +
+  geom_vline(xintercept = Hobo_full$Date_sampled, colour = "#CC79A7")+  
+  geom_vline(xintercept = Hobo_full$Date_collected, colour = "#648326", size = 0.75)+
+  scale_linetype(name = "Rack Samples")+
+  guides(linetype = guide_legend(override.aes = c(colour = c("#CC79A7", "#648326"))))
+  
+```
 
 # File Outputs
 
@@ -1531,12 +1661,13 @@ write_csv(events,
 # fin
 
 For some reason, RStudio truncates the session viewable... so here's some text to hold the place.
-```{r}
-# and an empty code chunk
-```
-
-
-
-
-
-
+         ```{r}
+         # and an empty code chunk
+         ```
+         
+         
+         
+         
+         
+         
+         
