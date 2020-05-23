@@ -86,7 +86,7 @@ TZ <- "Etc/GMT+8"
 # results df
 # compiled sample analyses results (wide)
 # including DateTime of Rack sample collection
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv",
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv",
                           col_names = TRUE) %>%   
   mutate(trip = factor(trip, levels = c(0:23)),
          sample_type = factor(sample_type),
@@ -100,7 +100,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv",
 
 # odyssey_data df
 # stage data compiled with interval/trip
-odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-stage.csv",
+odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv",
                          col_names = TRUE) %>% 
   mutate(source = factor(source,
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
@@ -110,7 +110,7 @@ odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-s
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", 
+precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", 
                         col_names = TRUE,
                         col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>% 
   mutate(StationName = factor(StationName),
@@ -120,7 +120,7 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.
 
 # LWSA mean precip data (FWx-mean-LWSA df)
 # 2018-2020 weather station data compiled and formatted
-LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", 
+LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", 
                         col_names = TRUE,
                         col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
   mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
@@ -128,7 +128,7 @@ LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp
 
 # metalslab df
 # metals sample analyses results with OC (long)
-metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_results-long.csv",
+metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals-DOCgrab-sample_results-long.csv",
                       col_names = TRUE) %>% 
   mutate(Trip = factor(Trip),
          site = factor(site), 
@@ -140,7 +140,7 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_resu
 
 # stage_samples
 # subbasin sample results with stage, timestamps, and precip event ID
-stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv",
+stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/subbasins_matched-chemohydro-samples.csv",
                           col_names = TRUE) %>% 
   select(-c(stage_cm, ID, fillStage_cm)) %>% 
   mutate(trip = factor(trip, levels = c(1:23)),
@@ -156,7 +156,8 @@ stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chem
          DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ))
 
 # rain events
-events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", col_names = TRUE) %>% 
+events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEvents.csv", 
+                   col_names = TRUE) %>% 
   mutate(ID = factor(ID, levels = c(1:18)))
 
 ```

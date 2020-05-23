@@ -14,7 +14,7 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 9,Tunnel,Rack,L1,,33,DOC,20
 10,Tunnel,Rack,L2,,53,DOC,20
 11,Tunnel,Rack,L3,,69,DOC,20
-12,Tunnel,Grab,Grab,2019-12-18 10:30,,DOC,20
+12,Tunnel,Grab,Grab,2019-12-17 10:30,,DOC,20
 13,Cragg-crk,Grab,Grab,2019-12-16 12:00,,DOC,20
 14,Cragg-crk,Rack,L1,,43,DOC,20
 15,Cragg-crk,Rack,L2,,59,DOC,20
@@ -39,7 +39,7 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 35,West-Leech,Rack,L1,,34,DOC,20
 36,West-Leech,Rack,L2,,50,DOC,20
 37,Deception-crk,Grab,Grab,2019-12-13 9:00,,DOC,20
-38,Rithet,Grab,Grab,2019-12-17,,DOC,20
-39,Lazar,Grab,Grab,2019-12-17,,DOC,20
-40,Jarvis,Grab,Grab,2019-12-17,,DOC,20
-41,Judge,Grab,Grab,2019-12-17,,DOC,20
+38,Rithet,Grab,Grab,2019-12-13 10:00,,DOC,20
+39,Lazar,Grab,Grab,2019-12-13 11:00,,DOC,20
+40,Jarvis,Grab,Grab,2019-12-13 11:20,,DOC,20
+41,Judge,Grab,Grab,2019-12-13 15:00,,DOC,20

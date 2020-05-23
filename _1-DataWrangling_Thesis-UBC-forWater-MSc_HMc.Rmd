@@ -1312,6 +1312,7 @@ results <- within(results,
                     is.na(rain_season), two_seasons, rain_season)) 
 
 ```
+
 #### Add Hold-Time span for each sample
 ```{r}
 
@@ -1343,9 +1344,10 @@ results <- results %>%
     trip == "21" ~ trip_df$trip.end[22],
     trip == "22" ~ trip_df$trip.end[23],
     trip == "23" ~ trip_df$trip.end[24])) %>% 
-  mutate(Date_sampled = date(DateTime_sampled),
-         Date_collected = date(collection)) %>% 
+  mutate(Date_sampled = as_date(DateTime_sampled),
+         Date_collected = as_date(collection)) %>% 
   mutate(HoldTime_days = Date_collected - Date_sampled) 
+
 ```
 
 
@@ -1503,158 +1505,188 @@ Hobo_Trip <- Hobo %>%
 ```{r}
 # subset updated results
 # rack samples
-# join to Hobo data
-sixfilter_join <- results %>% 
+sixfilter_Rack_join <- results %>% 
   filter(site == "Weeks" | 
            site == "ChrisCrk" | 
            site == "LeechHead" |
            site == "CraggCrk" |
            site == "WestLeech" | 
            site == "Tunnel",
-         sample_type == "Rack") %>% 
+           sample_type == "Rack") %>% 
   mutate(Date = as_date(DateTime_sampled)) %>% 
   filter(Date >= "2019-08-21",
          !is.na(site), !is.na(sample_type)) %>% 
   # summarize
-  group_by(site, sample, trip, Date) %>% 
+  group_by(site, sample_type, sample, trip, Date) %>% 
   summarise(join_date = first(Date_sampled),  # for joining
             Date_sampled = first(Date_sampled),
             Date_collected = first(Date_collected),
             sample_HT_days = first(HoldTime_days),
-            NPOC_ppm = first(NPOC_ppm)) %>% 
-  select(-Date) %>% 
+            NPOC_ppm = first(NPOC_ppm),
+            SAC254_Abs.m = first(SAC254_Abs.m),
+            "DOCeq_ppm" = first("DOCeq_ppm")) %>% 
   ungroup() %>% 
   # replicate dates for the full range between date_sampled and date_collected
-  group_by(site, sample, trip, NPOC_ppm, sample_HT_days) %>% 
+  group_by(site, sample_type, sample, trip, NPOC_ppm, sample_HT_days) %>% 
   # create sequence of daily dates between start & end
   mutate(join_date = map2(Date_sampled, Date_collected, seq, by = "1 day")) %>% 
-  unnest()  # unnest the list column
+  select(-Date) %>%
+  unnest(cols = c(join_date)) %>%    # unnest the list column
+  ungroup
 
-# join daily summaries
-Hobo_Rack_joined <- Hobo_Trip %>% 
+# grab samples
+sixfilter_Grab_join <- results %>% 
+  filter(site == "Weeks" | 
+           site == "ChrisCrk" | 
+           site == "LeechHead" |
+           site == "CraggCrk" |
+           site == "WestLeech" | 
+           site == "Tunnel",
+           sample_type == "Grab") %>% 
+  mutate(Date = as_date(DateTime_sampled)) %>% 
+  filter(Date >= "2019-08-21", !is.na(site), !is.na(sample_type)) %>% 
+  # summarize
+  group_by(site, sample_type, sample, trip, Date) %>% 
+  summarise(join_date = first(Date_sampled),  # for joining (no hold-time for grab samples)
+            Date_sampled = first(Date_sampled),
+            Date_collected = first(Date_collected),
+            sample_HT_days = first(HoldTime_days),
+            NPOC_ppm = first(NPOC_ppm),
+            SAC254_Abs.m = first(SAC254_Abs.m),
+            "DOCeq_ppm" = first("DOCeq_ppm")) %>% 
+  select(-Date) %>%
+  ungroup()
+
+# join all daily summaries
+Hobo_RacknGrab <- Hobo_Trip %>% 
   filter(!is.na(location)) %>% 
-  full_join(sixfilter_join, by = c("site", "trip", "Date" = "join_date"))
+  full_join(sixfilter_Rack_join, by = c("site" , "trip", "Date" = "join_date")) %>% 
+  full_join(sixfilter_Grab_join, by = c("site", "sample_type", "sample", "trip", 
+                                        "Date" = "join_date", 
+                                        "Date_sampled", "Date_collected", "sample_HT_days", "NPOC_ppm", "SAC254_Abs.m", "DOCeq_ppm")) %>% 
+  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
+         trip = factor(trip),
+         rain_season = factor(rain_season))
 
-# yes!
+# YES!
 
-# now, summarize the temperature for each sample based on it's time on the rack
-subbasin_Hobos <- Hobo_Rack_joined %>% 
-  group_by(site, location, sample, rain_season, trip, NPOC_ppm, sample_HT_days) %>% 
-  summarise(Date_sampled = first(Date_sampled),
+# --- when I do this, only rack samples result!??? 
+# now, summarize the temperature for each sample based on it's hold-time
+subbasin_Hobos <- Hobo_RacknGrab %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>%  
+  group_by(site, location, sample_type, sample, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm) %>% 
+  summarise(event_ID = first(event_ID),
+            rain_season = first(rain_season),
+            sample_HT_days = first(sample_HT_days),
+            trip = first(trip),
+            Date_sampled = first(Date_sampled),
             Date_collected = first(Date_collected),
             Temp_daily = mean(Temp_C, na.rm = TRUE),
-            Temp_daily_sd = sd(Temp_C, na.rm = TRUE)) 
+            Temp_daily_sd = sd(Temp_C, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  rename(TidbiT_location = "location") %>% 
+  # rearrange
+  select(trip, event_ID, rain_season, site, sample_type, sample, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm, Date_sampled, Date_collected, sample_HT_days, TidbiT_location, Temp_daily, Temp_daily_sd)
 
-wut <- sixfilter_join %>% 
-  filter(trip == 14,
-         site == "ChrisCrk")
 
-
-
-```
-
-### plot
-```{r}
-#check HObo joins
-Hobo_plot <- Hobo_full %>% 
-  filter(!is.na(location)) %>% 
-  group_by(site, location, Date) %>% 
-  summarise(daily_temp = mean(Temp_C, na.rm = TRUE),
-            Date_sampled = first(Date_sampled)) %>% 
-  ggplot(aes(x = Date, y = daily_temp))+
-  geom_line(aes(colour = location), size = 0.8)+
-  scale_color_manual(values = c("water" = "#62ACC8", # forWater "SkyBlue"
-                                "air" = "#f4AB0E"))+ # my orange
-  facet_wrap(~site, ncol = 1, 
-             strip.position = "right")+
-  labs(y = "Temperature (°C)", x = "", location = "Temperature of:") +
-  scale_x_date(date_labels = "%Y %b %d", date_breaks = "1 months", date_minor_breaks = "1 week")+
+# visualize
+subbasin_Hobos %>% 
+  ggplot(aes(x = Date_sampled, y = NPOC_ppm))+
+  geom_point(aes(colour = trip, shape = sample_type, size = sample_HT_days))+
   theme_bw()+
-  theme(#axis.text.x = element_text(angle = 60, hjust=1),
-        text = element_text(size=12),
-        legend.position = "top") 
-
-
-
-Hobo_plot +
-  geom_vline(xintercept = Hobo_full$Date_sampled, colour = "#CC79A7")+  
-  geom_vline(xintercept = Hobo_full$Date_collected, colour = "#648326", size = 0.75)+
-  scale_linetype(name = "Rack Samples")+
-  guides(linetype = guide_legend(override.aes = c(colour = c("#CC79A7", "#648326"))))
+  facet_wrap(~site, ncol = 1)
   
 ```
+
 
 # File Outputs
 
 save the compiled and formatted dataframes as .csv files.
 Keep this as a code-note so to prevent over-writing files unintentionally
 
-``` 
+```
 # {r output sample analysis files}
 
 ## save all compiled sample analysis as .csv files 
 # keep as code note to avoid accidental over-writing later*
 
+# --- compiled and formatted data:
 # TOCV_results df
 # Shimadzu sample analyses results
-write_csv(TOCV_results, path = "R-outputs_UBC-forWater-MSc_HMc/TOCV_results.csv", na = "NA")   
+write_csv(TOCV_results, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/TOCV_results.csv", na = "NA")   
 
 # SCAN_results df
 # Spectrolyser sample analyses results
-write_csv(SCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-par_results.csv", na = "NA")  
+write_csv(SCAN_results, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/SCAN-par_results.csv", na = "NA")  
 
 # FULLSCAN_results df
 # Spectrolyser fullscan (.fp) analyses results
-write_csv(FULLSCAN_results, path = "R-outputs_UBC-forWater-MSc_HMc/SCAN-fp_results.csv", na = "NA")
+write_csv(FULLSCAN_results, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/SCAN-fp_results.csv", na = "NA")
 
 # spectral_results df
 # Spectrolyser fullscan (.fp) analyses results
-write_csv(spectral_results, path = "R-outputs_UBC-forWater-MSc_HMc/spectral_results.csv", na = "NA")
+write_csv(spectral_results,
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/spectral_results.csv", na = "NA")
 
 # sampleresults df
 # compiled sample analyses results (wide)
 write_csv(sampleresults, 
-path = "R-outputs_UBC-forWater-MSc_HMc/samples-lab-analyses_results.csv", na = "NA")  
-
-# metalslab df
-# metals sample analyses results with OC (long)
-write_csv(metalslab, 
-path = "R-outputs_UBC-forWater-MSc_HMc/metals-DOCgrab-sample_results-long.csv", na = "NA")  
-
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/samples-lab-analyses_results.csv", na = "NA")  
 # odyssey_data df
 # stage data compiled with interval/trip
 write_csv(odyssey_data, 
-path = "R-outputs_UBC-forWater-MSc_HMc/Odyssey-stage_compiled.csv", na = "NA")
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/data_summaries/Odyssey-stage_compiled.csv", na = "NA")
 
-# corr_stage df
-# baseflow and rack corrected Odyssey data
-write_csv(corr_stage, 
-path = "R-outputs_UBC-forWater-MSc_HMc/Odyssey-RackCorrected-stage.csv", na = "NA")
 
-# precip_data df
-# 2018-2020 weather station data compiled and formatted
-write_csv(precip_data, 
-path = "R-outputs_UBC-forWater-MSc_HMc/FWx-PrecipTemp_compiled.csv", na = "NA")
 
-# wx_mean df
-# 2018-2020 weather station data averages from FWx stations Chris Creek and Martins Gulch
-write_csv(wx_mean, 
-path = "R-outputs_UBC-forWater-MSc_HMc/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
+# --- to be read into 2-DataProcessing RMD:
 
 # results
 # Complete sample results dataframe with sample DateTimes
 write_csv(results, 
-path = "R-outputs_UBC-forWater-MSc_HMc/Results_complete.csv", na = "NA")
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv", na = "NA")
+
+# Hobo_Trip
+# Rain events from Rainmaker
+write_csv(Hobo_Trip, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", na = "NA")
+
+# subbasin_Hobos
+write_csv(subbasin_Hobos, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", na = "NA")
+
+# corr_stage df
+# baseflow and rack corrected Odyssey data
+write_csv(corr_stage, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv", na = "NA")
+
+# precip_data df
+# 2018-2020 weather station data compiled and formatted
+write_csv(precip_data, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", na = "NA")
+
+# wx_mean df
+# 2018-2020 weather station data averages from FWx stations Chris Creek and Martins Gulch
+write_csv(wx_mean, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", na = "NA")
+
+# metalslab df
+# metals sample analyses results with OC (long)
+write_csv(metalslab, 
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals-DOCgrab-sample_results-long.csv", na = "NA") 
 
 # stg_sample
 # subbasin sample results with stage, timestamps, and precip event ID
 write_csv(stg_sample, 
-"R-outputs_UBC-forWater-MSc_HMc/subbasins_matched-chemohydro-samples.csv", na = "NA")
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasins_matched-chemohydro-samples.csv", na = "NA")
 
 # events
 # Rain events from Rainmaker
 write_csv(events, 
-"R-outputs_UBC-forWater-MSc_HMc/Wx-RainEvents.csv", na = "NA")
+          "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEvents.csv", na = "NA")
 
 ```
 
