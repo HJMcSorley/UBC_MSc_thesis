@@ -1160,7 +1160,7 @@ sampleresults <- sampleresults %>%
 ```
 
 
-## QA-QC ANALYSIS 
+# QA-QC ANALYSIS 
 ```{r}
 QAQC <- sampleresults %>% 
   filter(sample_type == "QA-QC")
@@ -1179,7 +1179,7 @@ calver <- QAQC %>%
 ```
 
 
-### Hold-time experiments (Tunnel rack)
+## Hold-time experiments (Tunnel rack)
 ```{r}
 # three cycles of hold time experiments (A, B , C)
 # each time, 5 samples were collected (grab) while 5 were placed on the rack with siphon lids
@@ -1245,7 +1245,7 @@ HT_Hobo <- Hobo %>%
 
 ```
 
-#### HT plots
+### HT plots
 ```{r}
 # plot sets
 a <- HT %>% 
@@ -1339,7 +1339,7 @@ ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 
 ```
 
-#### HT tests: Wilcoxon
+### HT tests: Wilcoxon
 ```{r}
 # Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
@@ -1398,7 +1398,7 @@ HT_Wilcoxon_tests <- bind_rows(
 ```
 # UPDATE THIS HOBO
 
-##### table: results summary
+#### table: results summary
 ```
 #{r}
 # summarize
@@ -1439,7 +1439,7 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
 ```
 
 
-#### plot: Hobo HT
+### plot: Hobo HT
 ```
 #{r}
 # pull & set values for plot
@@ -1528,7 +1528,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png",
 
 ```
 
-### LAB - blanks
+## LAB 
+
+### blanks
 ```{r}
 # check lab blanks
 # this is a difficult measure of precision because the RO water is not the most reliably stable
@@ -1544,7 +1546,7 @@ calver %>%
   
 ```
 
-### LAB - Cal Vers
+### cal vers
 ```{r}
 # percent error calculated as 'measured' minus 'actual'
 # negative error indicates the method was under-estimating DOC concentration 
@@ -1599,9 +1601,9 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 ```
 
-## RIVER SAMPLES
+# RIVER SAMPLES
 
-### subset df + sample counts
+## subset df + sample counts
 ```{r, subsetting-campaign}
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -1674,7 +1676,7 @@ sixfilter <- sixfilter %>%
 
 ```
 
-#### table: all samples count summary
+### table: all samples count summary
 ```{r, summary-table}
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
@@ -1734,7 +1736,7 @@ tibble::tibble(
 
 ```
 
-#### table: DOC synoptic grabs by site Mean/Min/Max  
+### table: DOC synoptic grabs by site Mean/Min/Max  
 ```{r, Grab-synoptic-table}
 # synoptic grab samples DOC concs by site
 a <- synopticfilter %>%
@@ -1764,7 +1766,7 @@ rbind(a, b) %>%
             col_names = T)
 ```
 
-#### table: DOC all sites, by sample_type Mean/Min/Max 
+### table: DOC all sites, by sample_type Mean/Min/Max 
 ```{r, all-samples-together}
 # synoptic samples DOC concs by site (Grab + Rack)
 a <- synopticfilter %>%
@@ -1810,7 +1812,9 @@ rbind(a, b, c) %>%
 
 ```
 
-#### plot: synoptic box, all sites
+## SYNOPTIC
+
+### plot: synoptic box, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -1830,7 +1834,7 @@ synopticfilter %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
 ```
 
-#### plot: synoptic ridge, all sites
+### plot: synoptic ridge, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -1847,58 +1851,9 @@ synopticfilter %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_ridgeplots.png")
 ```
+## SUBBASINS
 
-#### plot: subbasin ridgeplot (G/R)
-```{r, sample_type-ridgeplots}
-
-# density ridge 
-# wrap by sample_type
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~sample_type, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  labs(y = "",  
-       #caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})"),
-       x = "DOC (mg/L)") +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
-
-```
-
-#### table: subbasin DOC means+sd
-```{r, summaryDOC-table}
-
-# DOC summary table, Grabs and Racks combined
-a <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-b <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "All (summary)",
-            DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-bind_rows(a, b) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
-```
-
-#### table: subbasin DOC trends by event & site
+### table: subbasin DOC trends by event & site
 ```{r}
 # calculate trend
 sixfilter %>% 
@@ -1919,7 +1874,7 @@ sixfilter %>%
 
 ```
 
-#### plot: subbasin DOC by time geom_smooth -- site & subbasin type
+### plot: subbasin DOC by time geom_smooth -- site & subbasin type
 ```{r DOC_overtime-by-site}
 
 # at each of the six sites (DOC over time)
@@ -1952,7 +1907,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess
 
 ```
 
-### VARIANCE: subbasins 
+### VARIANCE 
 
 #### plot: subbasins boxplot
 ```{r, subbasin-DOCspace}
@@ -2154,10 +2109,60 @@ tibble::tibble("sub-basin site compared to outlet" = c("Weeks ***", "ChrisCrk", 
 
 ```
 
+### sample method
+#### plot: G/R subbasin ridgeplot 
+```{r, sample_type-ridgeplots}
 
-### SEASONAL dynamics 
+# density ridge 
+# wrap by sample_type
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~sample_type, ncol = 1, nrow = 2) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  labs(y = "",  
+       #caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})"),
+       x = "DOC (mg/L)") +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
-#### table: sample count
+```
+
+#### table: subbasin DOC means+sd
+```{r, summaryDOC-table}
+
+# DOC summary table, Grabs and Racks combined
+a <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+b <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "All (summary)",
+            DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+bind_rows(a, b) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
+```
+
+# SEASONAL dynamics 
+
+## seasonal counts
 ```{r}
 # count dry season samples
 n_dry_samples <- sixfilter %>%
@@ -2228,51 +2233,10 @@ n_ff_DOCCDOM <- synopticfilter %>%
   pull(total)
 ```
 
-#### plot: subbasin Box seasonal DOC
-```{r}
+## Synoptic seasonal
 
-sixfilter$rain_season <- fct_recode(sixfilter$rain_season, 
-             'Dry season' = "dry", 
-             'Wet season' = "wet") # new = old
+### plot: [1:1] NPOC/CDOM scatter 
 
-# Boxplot with jitter scatter (DOC by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1))+
-  facet_wrap(~rain_season, ncol = 2, nrow = 1) +  
-  labs(x = "", y = "DOC (mg/L)")
-
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png", width = 6, height = 3.5, units = "in")
-
-```
-
-#### plot: subbasin Ridge seasonal DOC
-```{r}
-# density ridge plots (facet wrap by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~rain_season, ncol = 1) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  labs(y = "",  
-       #caption = glue::glue("Density distribution of DOC concentration by season (dry: n = {n_dry_samples}, wet: n = {n_wet_samples})"),
-       x = "DOC (mg/L)") +
-  theme(legend.position = "none") 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
-
-```
-
-#### plot: [1:1] NPOC/CDOM scatter 
 ```{r}
 # scatterplot of DOC vs absorb-DOC by season
 synopticfilter %>% 
@@ -2305,7 +2269,55 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png",
 additional text for caption: 
 "Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
 
-#### ?plot: subbasin NPOC/CDOM
+
+## Subbasin seasonal
+
+### plot: dry-wet subbasin Box DOC
+```{r}
+
+sixfilter$rain_season <- fct_recode(sixfilter$rain_season, 
+             'Dry season' = "dry", 
+             'Wet season' = "wet") # new = old
+
+# Boxplot with jitter scatter (DOC by season)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~rain_season, ncol = 2, nrow = 1) +  
+  labs(x = "", y = "DOC (mg/L)")
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png", width = 6, height = 3.5, units = "in")
+
+```
+
+### plot: dry/wet subbasin Ridge seasonal DOC
+```{r}
+# density ridge plots (facet wrap by season)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~rain_season, ncol = 1) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  labs(y = "",  
+       #caption = glue::glue("Density distribution of DOC concentration by season (dry: n = {n_dry_samples}, wet: n = {n_wet_samples})"),
+       x = "DOC (mg/L)") +
+  theme(legend.position = "none") 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
+
+```
+
+
+#### ?plot: [1:1] subbasin NPOC/CDOM
 ```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
 # six primary sites: DOC vs CDOM
 sixfilter %>% 
@@ -2333,7 +2345,8 @@ sixfilter %>%
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_subbasin-DOC-surrogate.png") 
 ```
 
-##### WET table R.G. count
+### WET G/R count 
+
 Rack and Grab sample wetseason sample count summary
 ```{r, wet-summary-table}
 # how many of each sample_type are there at the 6 main sites?
@@ -2380,7 +2393,7 @@ wet_n_installRackSamples <- sixfilter %>%
 
 ```
 
-##### plot: wet G/R subbasin boxplot
+#### plot: wet G/R subbasin boxplot
 ```{r, DOC-space-time-boxplot}
 # Boxplot with jitter scatter 
 # site vs DOC
@@ -2405,7 +2418,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
 ```
 
 
-##### table: G/R DOC means+sd min/max
+#### table: wet G/R DOC means/min/max
 ```{r, summaryDOC-table}
 # DOC summary table -- Grab vs Rack
 sixfilter %>% 
@@ -2422,7 +2435,7 @@ sixfilter %>%
 
 ```
 
-##### plot: rack DOC by event
+#### plot: rack DOC by event
 ```{r, rackDOC}
 # rising limb
 sixfilter %>% 
@@ -2451,9 +2464,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 ```
 
 
-## SPECTRAL Indices
+# SPECTRAL Indices
 
-### plot: SUVA vs NPOC
+## plot: SUVA vs NPOC
 ```{r, spectral-plots, echo = FALSE}
 # SUVA vs NPOC by season
 sampleresults %>% 
@@ -2477,7 +2490,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png")
 
 ```
 
-### plot: E2:E3
+## plot: E2:E3
 ```{r}
 # E2:E3
 sampleresults %>% 
@@ -2493,8 +2506,8 @@ sampleresults %>%
   theme(legend.position = "top")  
 ```
 
-#### questionable
-```{r, seasonal-plots, include=FALSE}
+### questionable plots seasonal
+```{r seasonal-plots, include=FALSE}
 # Boxplot with jitter scatter 
 synopticfilter %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
@@ -2537,7 +2550,7 @@ sampleresults %>%
 ```
 
 
-### Nitrate & DOC
+# Nitrate & DOC
 ```{r}
 # nitrate and DOC
 synopticfilter %>% 
@@ -2558,7 +2571,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png")
 
 ```
 
-#### Nitrate & DOC_eq
+## Nitrate & DOC_eq
 ```{r}
 # nitrate and DOC
 synopticfilter %>% 
@@ -2580,9 +2593,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png")
 
 ```
 
-### METALS 
+# METALS 
 
-#### plot: ug/L metals+DOC in solution
+## plot: ug/L metals+DOC in solution
 ```{r}
 # filter out the parameters with insufficient data
 # plot DOC against metals concentrations 
@@ -2626,7 +2639,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
 
 ```
 
-#### plot: mg/L metals+DOC in solution
+## plot: mg/L metals+DOC in solution
 ```{r}
 # mg/L
 metalslab %>% 
@@ -2659,7 +2672,7 @@ metalslab %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
 ```
 
-#### table: correlation metals/DOC 
+## table: correlation metals/DOC 
 ```{r}
 # make a summary table of Metals regression
 metalslab %>% 
@@ -2775,15 +2788,14 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
 ```
 
 
-# Next: Random Forest
+# pending: Random Forest
 ```{r}
 
 ```
 
 
   
-# fin
-
+# end
 For some reason, RStudio truncates the session viewable... so here's some text to hold the place.
 ```{r}
 # and an empty code chunk
