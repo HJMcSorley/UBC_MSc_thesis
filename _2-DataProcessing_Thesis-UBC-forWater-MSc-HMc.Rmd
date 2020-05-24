@@ -5,15 +5,15 @@ author: "Hannah J McSorley"
 output: bookdown::word_document2
 ---
 
-# Data Visualization and Summaries
-This RMD file generates summary tables and figures but is not included in the final bookdown product (tables and figures will be 
-added to applicable sections).
+___Data Visualization and Summaries___
+This RMD file generates summary tables and figures but is not included in the final bookdown product (tables and figures will be added to applicable sections by reading them in).
 
 # Set-up
-```{r, processing-setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
 # save figures to folder 'figures' in the 'R-outputs...' folder
 ```
+
 ## Packages
 ```{r, processing-packages, package.startup.message = FALSE}
 
@@ -33,6 +33,7 @@ library(randomForest)
 
 
 ```
+
 ## define colours
 ```{r vectorize-colours}
 # use forWater defined colours (hexadecimal codes) for plots
@@ -98,6 +99,28 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Re
          site = factor(site),
          event_ID = factor(event_ID, levels = c(1:18)))
 
+# Wrangled Hobo TidibiT logger data with rain events and trip IDs
+Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
+                    col_names = TRUE) %>% 
+  mutate(location = factor(location),
+         site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
+         trip = factor(trip), 
+         event_ID = factor(event_ID), 
+         rain_season = factor(rain_season) ) %>% 
+  rename(TidbiT_location = "location")
+
+# subbasin_Hobos
+subbasin_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", 
+                        col_names = TRUE) %>% 
+  mutate(trip = factor(trip),
+         event_ID = factor(event_ID), 
+         rain_season = factor(rain_season),
+         site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
+         sample_type = factor(sample_type),
+         sample = factor(sample),
+         TidbiT_location = factor(TidbiT_location))
+
+
 # odyssey_data df
 # stage data compiled with interval/trip
 odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv",
@@ -112,7 +135,7 @@ odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Ody
 # 2018-2020 weather station data compiled and formatted
 precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", 
                         col_names = TRUE,
-                        col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>% 
+                        col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>%
   mutate(StationName = factor(StationName),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
          event_ID = factor(event_ID),
@@ -160,12 +183,21 @@ events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEv
                    col_names = TRUE) %>% 
   mutate(ID = factor(ID, levels = c(1:18)))
 
+# Treatability data from U.Waterloo
+treatdat_UW <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", pattern = "*.csv") %>% 
+  set_names(str_extract(., "([0-9]{2,}+)")) %>%
+  purrr::map_dfr(~ read_csv(
+    file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
+    col_names = TRUE, skip = 15), .id = "source") 
+
 ```
 
+# WEATHER - FWx
 
-# FWx (CC+MG) 
+## 2 stns: CC+MG
 
-## plots: rain/snow/temp
+### plots: rain/snow/temp
 At Chris Creek and Martin's Gulch FWx stations
 ```{r, FWx-plots}
 
@@ -245,7 +277,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png",
 ```
 
 
-## table: annual precip, max snow, mean temp 
+### table: annual precip, max snow, mean temp 
 
 FWx means
 ```{r, FWx-table}
@@ -372,7 +404,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png",
        units = "in")
 ```
 
-### table 
+### table: mean Wx
+
 ```{r, table_mean-FWx_summary}
 # mean weather summary
 precip_data %>%
@@ -468,6 +501,8 @@ rn_wateryr <- LWSA_meanWx %>%
 
 ```
 
+## RAIN EVENTS
+
 ### table of Events
 ```{r}
 events %>% 
@@ -481,7 +516,7 @@ events %>%
             col_names = TRUE) 
 ```
 
-# Malahat Wx
+## Malahat Wx
 
 Longer data record from the Malahat weather station (for comparison).
 
@@ -522,7 +557,7 @@ malahat_data %>%
 
 ```
 
-## plots: Malahat Wx
+### plots: Malahat Wx
 ```
 #{r, malahat-plots}
 # plots
@@ -559,9 +594,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 
 ```
 
-## t-test -- Wilcoxon's rank sum test
+### lag-years: Wilcoxon's rank sum test
 
-### lag-years
 ```
 #{r}
 # check for normality
@@ -612,7 +646,7 @@ Malahat_test_lagyear %>%
   
 ```
 
-### Wx pre & during MSc
+#### Wx pre & during MSc
 ```
 #{r}
 # group
@@ -629,7 +663,7 @@ pre_MSc <- malahat_test_data %>% filter(set == "pre")
 MSc <- malahat_test_data %>% filter(set == "MSc")
 ```
 
-#### plots
+##### plots
 ```
 #{r}
 # plot sets
@@ -664,7 +698,7 @@ MSc %>%
 
 ```
 
-#### tests
+##### tests
 ```
 #{r}
 # t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
@@ -707,8 +741,164 @@ Malahat_testMSc_Wx <- bind_rows(
 
 ```
 
-# Mega Plot: FWx+RiverStage
 
+
+
+## WIP -- STAGE: River Stage 
+
+### plot: normalized stage 
+
+The stage was normalized (min-max norm) to compare relative rises
+```{r, stage-line-plots}
+
+# plot stage, lines over time
+odyssey_data %>%
+  group_by(source) %>% 
+  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
+  ggplot(aes(x = DateTime, y = norm_stg))+
+  geom_line(colour = "#0072B2") +
+  #viridis::scale_colour_viridis(discrete = TRUE) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(y = "River stage (normalized)", x = "") +
+  facet_wrap(~source, ncol = 1, strip.position = "right")  
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_subbasins.png",
+       width = 8.5,
+       height = 11,
+       units = "in")
+```
+
+### plot: norm stage ridge
+```{r, ridgey}
+
+# plot stage, density ridges -- could be cool -- fix aesthetics 
+odyssey_data %>%
+  group_by(source) %>% 
+  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
+  ggplot(aes(x = norm_stg, y = fct_rev(source)))+
+  ggridges::geom_density_ridges(aes(fill = source), alpha = 0.6) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  scale_y_discrete() +
+  theme(legend.position = "none")+
+  labs(x = "River Stage (normalized)", y = "",
+       caption = "Density distribution of min-max normalized stage at six subbasins")
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_subbasins.png")
+
+```
+
+
+#### trash- EcoHydRology baseflow separation 
+```{r}
+# note: don't call the 'EcoHydRology' package into the library if you're using it
+## access it's functions with "::" only because it masks tidyverse functions and makes workflow annoying if it's loaded into the workspace.
+
+# separate stage into base and quick (no flow data available)
+# separate each site, base R style (ugh)
+BF_QF_Weeks <- odyssey_data %>% 
+  filter(source == "Weeks")  
+BF_QF_Weeks <- EcoHydRology::BaseflowSeparation(BF_QF_Weeks$corr_stage_cm) %>% 
+  mutate(site = "Weeks")
+
+BF_QF_Chris <- odyssey_data %>% 
+  filter(source == "ChrisCrk")  
+BF_QF_Chris <- EcoHydRology::BaseflowSeparation(BF_QF_Chris$corr_stage_cm) %>% 
+  mutate(site = "ChrisCrk")
+
+BF_QF_Head <- odyssey_data %>% 
+  filter(source == "LeechHead")  
+BF_QF_Head <- EcoHydRology::BaseflowSeparation(BF_QF_Head$corr_stage_cm) %>% 
+  mutate(site = "LeechHead")
+
+BF_QF_Cragg <- odyssey_data %>% 
+  filter(source == "CraggCrk")  
+BF_QF_Cragg <- EcoHydRology::BaseflowSeparation(BF_QF_Cragg$corr_stage_cm) %>% 
+  mutate(site = "CraggCrk")
+
+BF_QF_West <- odyssey_data %>% 
+  filter(source == "WestLeech")  
+BF_QF_West <- EcoHydRology::BaseflowSeparation(BF_QF_West$corr_stage_cm) %>% 
+  mutate(site = "WestLeech")
+
+BF_QF_Tunnel <- odyssey_data %>% 
+  filter(source == "Tunnel")  
+BF_QF_Tunnel <- EcoHydRology::BaseflowSeparation(BF_QF_Tunnel$corr_stage_cm) %>% 
+  mutate(site = "Tunnel")
+
+# combine all 
+BF_QF <- bind_rows(BF_QF_Weeks, BF_QF_Chris, BF_QF_Head, BF_QF_Cragg, BF_QF_West, BF_QF_Tunnel) %>%
+  mutate(site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  mutate(row = row_number(bt))
+
+# join to stage data for datetime
+BF_QF_Odyssey <- odyssey_data %>%
+  mutate(row = row_number(corr_stage_cm)) %>% 
+  mutate(site = factor(source, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  full_join(BF_QF, by = c("site", "row"))
+
+```
+
+#### WIP -- find peaks(notworking)
+```
+#r}
+# determine the rate of stage rise for each event at each site
+# odyssey_data
+
+# pull dates for trip
+trip_bysite <- stage_samples %>%
+  group_by(trip) %>% 
+  summarise(start = first(DateTime),
+            end = last(DateTime))
+# pull dates for trip and event
+event_bysite <- stage_samples %>%
+  group_by(event_ID) %>% 
+  summarise(start = first(DateTime),
+            end = last(DateTime))
+# --
+# isolate peaks
+stage_samples_pks <- stage_samples %>% 
+  select(c(site, event_ID, corr_stage_cm, DateTime)) %>% 
+  filter(!is.na(event_ID)) %>% 
+  group_by(site, event_ID) %>%
+  summarise(DateTime_peak = DateTime[which.max(corr_stage_cm)],
+            peak = max(corr_stage_cm),
+            DateTime = DateTime_peak) %>% 
+  full_join(odyssey_data,  
+            by = c("site" = "source", "event_ID", "DateTime")) %>% 
+  select(-c(stage_cm, Date)) %>% 
+  full_join(stage_samples, by = c("site", "event_ID", "DateTime", "interval", "corr_stage_cm"))
+  
+## plot
+stage_samples_pks %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+  ## stage
+  geom_point(aes(y = peak, shape = sample_type), na.rm = TRUE)+ ## samples 
+  # scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
+  facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
+  labs(y = "River stage (cm)", x = "", shape = "Sample Type")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
+  theme_bw()
+
+
+#+
+  theme(axis.text.x = element_text(angle = 60, hjust=1), text = element_text(size=12), legend.position = "top")+
+  # add vertical lines for events
+  geom_vline(xintercept = event_bysite$start, 
+             linetype = "dashed", colour = "red", size = 0.7)
+  # add vertical lines for trip
+  geom_vline(xintercept = trip_bysite$start, 
+             linetype = "solid", colour = "red", size = 0.6)
+  
+```
+
+
+
+## Wx MEGAPLOT: FWx+RiverStage
 Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
 
 ```{r, Wx-stage-megas-plots}
@@ -826,1301 +1016,11 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 
 ```
 
+## TEMP: Hobo TidbiTs
 
-# River Stage 
-
-## plot: normalized stage 
-
-The stage was normalized (min-max norm) to compare relative rises
-```{r, stage-line-plots}
-
-# plot stage, lines over time
-odyssey_data %>%
-  group_by(source) %>% 
-  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
-  ggplot(aes(x = DateTime, y = norm_stg))+
-  geom_line(colour = "#0072B2") +
-  #viridis::scale_colour_viridis(discrete = TRUE) +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  labs(y = "River stage (normalized)", x = "") +
-  facet_wrap(~source, ncol = 1, strip.position = "right")  
-# save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_subbasins.png",
-       width = 8.5,
-       height = 11,
-       units = "in")
+### plot: Hobo temp
 ```
-
-## plot: norm stage ridge
-```{r, ridgey}
-
-# plot stage, density ridges -- could be cool -- fix aesthetics 
-odyssey_data %>%
-  group_by(source) %>% 
-  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
-  ggplot(aes(x = norm_stg, y = fct_rev(source)))+
-  ggridges::geom_density_ridges(aes(fill = source), alpha = 0.6) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  scale_y_discrete() +
-  theme(legend.position = "none")+
-  labs(x = "River Stage (normalized)", y = "",
-       caption = "Density distribution of min-max normalized stage at six subbasins")
-# save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_subbasins.png")
-
-```
-
-# Samples
-
-## augment dataframes
-```{r, mutate}
-# create a "first-flush category in rain_season(s)
-sampleresults <- sampleresults %>% 
-  select(-c(ID, DateTime)) %>% 
-  mutate(rain_seasons = case_when(
-    event_ID %in% 1:8 ~ "wet",   
-    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-    event_ID == 9 ~ "first flush",
-    event_ID %in% 10:18 ~ "wet")) %>% 
-  mutate(rain_season = as.character(rain_season))
-
-# fill in any gaps and save as factors
-sampleresults <- within(sampleresults, 
-                        rain_seasons <- ifelse(
-                          is.na(rain_seasons), rain_season, rain_seasons)) %>% 
-  mutate(rain_season = factor(rain_season),
-         rain_seasons = factor(rain_seasons))
-
-# further group sites
-sampleresults <- sampleresults %>% 
-  mutate(site_type = case_when(
-    site == "Weeks" ~ "subbasin",   
-    site == "ChrisCrk" ~ "subbasin",
-    site == "LeechHead"  ~ "subbasin",
-    site == "CraggCrk" ~ "subbasin",
-    site == "WestLeech" ~ "subbasin",
-    site == "Tunnel" ~ "subbasin",
-    site == "Lab" ~ "LabQAQC",
-    TRUE ~ "synoptic")) %>% 
-  mutate(site_type = factor(site_type))
-
-```
-
-
-## subset df + sample counts
-```{r, subsetting-campaign}
-# primary synoptic sampling sites (n > 1)
-# 15 sites total
-
-# how many synoptic samples were grabbed?
-# save value as object to implant in text
-n_SynopticGrabs <- sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>%
-  group_by(site = forcats::fct_explicit_na(site)) %>% 
-  summarise(grab_sample_count = n()) %>% 
-  filter(grab_sample_count > 2) %>% 
-  mutate(what = "synoptic grab count") %>% 
-  ungroup() %>%  # drop the following code to see samples by sites
-  group_by(what) %>% 
-  summarise(total = sum(grab_sample_count)) %>% 
-  pull(total)
-
-# create a subset dataframe for the synoptically sampled sites for tidier calling
-synopticfilter <- sampleresults %>% 
-  filter(# subbasin sites 
-    site == "Weeks"|
-      site == "ChrisCrk"|
-      site == "LeechHead"|
-      site == "CraggCrk"|
-      site == "WestLeech"|
-      site == "Tunnel"|
-      # other sites
-      site == "Rithet"|
-      site == "Lazar"|
-      site == "Jarvis"|
-      site == "Judge"|
-      site == "Leech-downstreamconf"|
-      site == "Boneyard"|
-      #site == "Deception-crk"|  ## only two samples
-      #site == "West-Jordan"| ## only two samples
-      site == "Deception-res",
-    analysis == "DOC"
-  ) %>% 
-  mutate(site = factor(site, # order as you want to see them in plots
-                       levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
-# rename funky names
-synopticfilter$site <- synopticfilter$site %>% 
-  plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",  ## old = new
-                  "Jarvis" = "Jarvis-crk",
-                  "Judge" = "Judge-crk", 
-                  "Lazar" = "Lazar-crk", 
-                  #"West-Jordan" = "W.Jordan-Trib",
-                  #"Deception-crk" = "Deception-Gluch",
-                  "Rithet" = "Rithet-crk"))
-# ---
-
-# create a subset dataframe for the six install sites for tidier calling
-sixfilter <- sampleresults %>% 
-  filter(site_type == "subbasin",
-         analysis == "DOC") %>% 
-  mutate(site = factor(site, levels = 
-                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
-
-# further categorize site_type
-sixfilter <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "headwater",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "mainstem")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
-
-```
-
-## tables: 
-
-### count sample summary
-```{r, summary-table}
-# how many of each sample_type are there at the 6 main sites?
-n_subbbasinSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  group_by(site, sample_type) %>%   
-  summarise(number_of_samples = n()) %>% 
-  ungroup()
-# save to outputs
-write_csv(n_subbbasinSamples, "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
-
-# how many of each type total?
-# save values as objects to implant in text
-
-# Grab samples
-n_installGrabSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>% 
-  summarise(number_of_samples = n()) %>% 
-  summarize(total = sum(number_of_samples)) %>% 
-  pull(total)
-
-# Rack samples
-n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack") %>% 
-  summarise(number_of_samples = n()) %>% 
-  summarize(total = sum(number_of_samples)) %>% 
-  pull(total) 
-
-# How many samples were collected overall
-n_totalSamples <- sampleresults %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
-                analysis == "DOC") %>%
-  #group_by(sample_type) %>% 
-  summarise(sample_count = n()) %>% 
-  ungroup() %>% 
-  pull(sample_count)
-
-
-# 15 synoptic sites (including the install sites)
-synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>%
-  group_by(site = forcats::fct_explicit_na(site)) %>% 
-  summarise(grab_sample_count = n()) %>% 
-  ungroup() 
-
-
-# ----------------------------------
-# make a summary table:
-tibble::tibble(
-  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
-  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
-  "sub-basin synoptic grab samples" = n_installGrabSamples,
-  "sub-basin rack samples" = n_installRackSamples,
-  "total" = n_totalSamples) %>% 
-  pivot_longer(everything(),
-               names_to = "sample category", values_to = "count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
-
-```
-
-### DOC synoptic grabs by site Mean/Min/Max  
-```{r, Grab-synoptic-table}
-# synoptic grab samples DOC concs by site
-a <- synopticfilter %>%
-  filter(sample_type == "Grab") %>% 
-  group_by(site) %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T))  
-
-# all together  
-b <- synopticfilter %>% 
-  filter(sample_type == "Grab") %>% 
-  summarize(site = "total summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) 
-
-# tag totals summary onto site summary
-rbind(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", 
-            col_names = T)
-```
-
-### DOC all sites, by sample_type Mean/Min/Max 
-```{r, all-samples-together}
-# synoptic samples DOC concs by site (Grab + Rack)
-a <- synopticfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site, sample_type) %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-# grouped summary
-b <- synopticfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(sample_type) %>% 
-  summarize(site = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, sample_type, count, DOCmean, DOCsd, DOCmin, DOCmedian, DOCmax) %>%  # reorder
-  ungroup()
-
-# full summary
-c <- synopticfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "total",
-            sample_type = "all_G&R",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T))
-
-# tag totals summary onto site summary
-rbind(a, b, c) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-summary.csv", col_names = T)
-
-```
-
-
-## plot: synoptic box, all sites
-```{r, synoptic-all-sites}
-
-# all sites
-synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>%  
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  scale_fill_viridis(discrete = TRUE)+
-  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1)) +
-  labs(#caption = glue::glue("DOC concentrations in grab samples across 13 sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
-       x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
-```
-
-## plot: synoptic ridge, all sites
-```{r, synoptic-all-sites}
-
-# all sites
-synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>% 
-  ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
-  scale_fill_viridis(discrete = TRUE)+
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  labs(#caption = glue::glue("DOC concentrations in grab samples across thirteen sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
-       x = "DOC (mg/L)", y = "")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_ridgeplots.png")
-```
-
-## Subbasin DOC summaries
-
-### table: subbasin DOC means+sd
-```{r, summaryDOC-table}
-
-# DOC summary table, Grabs and Racks combined
-a <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-b <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "All (summary)",
-            DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-bind_rows(a, b) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
-```
-
-
-#### table: DOC trends by event & site
-```{r}
-# calculate trend
-sixfilter %>% 
-  filter(sample_type == "Rack", analysis != "QA-QC") %>%
-  group_by(site, forcats::fct_explicit_na(event_ID) ) %>% 
-  summarise(yint_DOC = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[1],
-            slope = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[2],
-            r_sq = summary(lm(formula = NPOC_ppm ~ sampleStage_cm))$r.squared,
-            n = n(),
-            range_DOC = max(NPOC_ppm, na.rm = TRUE) - min(NPOC_ppm, na.rm = TRUE),
-            DOC_min = sample[which.min(NPOC_ppm)],
-            DOC_max = sample[which.max(NPOC_ppm)],
-            first_event = first(event_ID),
-            last_event = last(event_ID),
-            first_rack = first(sample, order_by = DateTime_sampled),
-            last_rack = last(sample, order_by = DateTime_sampled)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_rack-trends_lm.csv")
-
-```
-
-### plot: DOC/time lm() site & subbasin type
-```{r DOC_overtime-by-site}
-
-# at each of the six sites (DOC over time)
-sixfilter %>% 
-  mutate(site = factor(site, levels = c("Weeks", "CraggCrk", "ChrisCrk", "WestLeech", "LeechHead", "Tunnel"))) %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_point(aes(fill = site), size = 2, shape = 21, alpha = 0.4)+
-  geom_smooth(aes(group = site, colour = site, linetype = site), se = FALSE)+
-  scale_fill_brewer(palette="Dark2")+
-  scale_colour_brewer(palette="Dark2")+
-  scale_linetype_manual(values=c(4,4,3,3,1,1)) + 
-  labs(y = "DOC (mg/L)", fill = "Sample type:",
-       #caption = glue::glue("DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})"),
-       x = "") +
-  theme_bw() +
-  guides(fill = guide_legend("Site:"),
-         colour = guide_legend("Site:"),
-         linetype = guide_legend("Site:"))+
-  facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-        legend.position = "top",
-        text = element_text(size = 12))+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")
-
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
-#, width = 4, height = 6, units = "in") 
-
-```
-### Variance 
-
-#### 1: within or among - DOC ranges  
-
-Q: is the variance greater within each site or among all sites?
-
-Ha: there is greater variance within each site compared to the variance among all sites 
-Ho: the variance within each site is not greater than variance among all sites 
-
-```{r}
-# calculate range of DOC within each site and among all sites 
-
-# subbasin samples DOC concs (Grab + Rack)
-a <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site) %>% 
-  summarize(subbasin_type = first(subbasin_type),
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-# grouped by headwaters VS mainstem
-b <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(subbasin_type) %>% 
-  summarize(site = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
-  ungroup()
-
-# full summary
-c <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "Total",
-            subbasin_type = "all",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-# combine 
-rbind(a, b, c) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-summary.csv", col_names = T)
-
-```
-
-#### 2: Tunnel integration - DOC ranges
-
-Q: is the variance at the watershed outlet greater than the variance in each subbasin?
-
-##### table: descriptive stats summary
-```{r}
-# calculate range of DOC within each site and between each site for subbasins
-# this code was copied -- needs to be modified and updated
-
-# separate Tunnel from mainstems in subbasin_type
-a <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "headwater",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "outlet")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
-
-# subbasin samples DOC concs (Grab + Rack)
-b <- a %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site) %>% 
-  summarize(subbasin_type = first(subbasin_type),
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()
-
-# grouped by headwaters / mainstem / outlet
-C <- a %>%
-  filter(sample_type == "Grab" | sample_type == "Rack",
-         subbasin_type != "outlet") %>% 
-  group_by(subbasin_type) %>% 
-  summarize(site = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
-  ungroup()
-
-# combine 
-rbind(b, C, c) %>%
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = T)
-
-```
-
-##### inferential/inductive stats
-
-Levene's test: And alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
-
-Ha: at least two subbasins have different variances 
-Ho: the variances are equal (there is no difference in the range observed among each site 
-```{r}
-car::leveneTest(NPOC_ppm ~ site, data = sixfilter) # response ~ independent variable
-
-# p-value is << 0.001 -- reject the null hypothesis of homogeneous variance and conclude there is significant difference between site variances.
-
-# piece-wise compare to tunnel:
-
-# 1 - 6 -- Reject that the variances are equal
-v1 <- sixfilter %>%
-  filter(site == "Weeks" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 2 - 6 -- Reject that the variances are equal
-v2 <- sixfilter %>%
-  filter(site == "ChrisCrk" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 3 - 6 -- Reject that the variances are equal 
-v3 <- sixfilter %>%
-  filter(site == "LeechHead" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 4 - 6 -- Reject that the variances are equal 
-v4 <- sixfilter %>%
-  filter(site == "CraggCrk" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 5 - 6 -- the variances are equal with 98%  
-v5 <- sixfilter %>%
-  filter(site == "WestLeech" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# write a table
-# *** = 99.9% confidence, * = 95% confidence
-tibble::tibble("sub-basin site compared to outlet" = c("Weeks ***", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech *"),
-               "p-value" = c(v1, v2, v3, v4, v5)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = T)
-
-```
-
-#### plot: subbasins boxplot
-```{r, subbasin-DOCspace}
-
-# Boxplot with jitter scatter 
-# DOC by site 
-# grab and rack combined (all)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  labs(#caption = glue::glue("DOC concentrations across six sub-basin sites over 16 months (", {n_installGrabSamples+n_installRackSamples}, " samples)"),
-       x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
-
-```
-
-## Seasonal dynamics 
-
-### seasonal sample count
-```{r}
-# count dry season samples
-n_dry_samples <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", rain_season == "dry") %>% 
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-# count wet season samples
-n_wet_samples <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", rain_season == "wet") %>% 
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-
-##  subbasin samples for which DOC and UV surrogate were measured ---
-
-# count samples for both DOC and DOC_eq
-n_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(sample_type == "Rack" | 
-                  sample_type == "Grab" & sample == "Grab",
-                !is.na(DOCeq_ppm)) %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-#count wet samples
-n_wet_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(sample_type == "Rack" | 
-                  sample_type == "Grab" & sample == "Grab",
-                !is.na(DOCeq_ppm),
-                rain_seasons == "wet") %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-# count dry samples 
-n_dry_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(sample_type == "Rack" | 
-                  sample_type == "Grab" & sample == "Grab",
-                !is.na(DOCeq_ppm),
-                rain_seasons == "dry") %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-
-# count wet = "first flush" samples 
-n_ff_DOCCDOM <- synopticfilter %>% 
-  dplyr::filter(sample_type == "Rack" | 
-                  sample_type == "Grab" & sample == "Grab",
-                !is.na(DOCeq_ppm),
-                rain_seasons == "first flush") %>%
-  group_by(site) %>% 
-  summarise(samples = n()) %>% 
-  ungroup() %>% 
-  summarise(total = sum(samples)) %>% 
-  pull(total)
-```
-
-### plot: boxplot subbasin seasonal DOC
-```{r}
-
-sixfilter$rain_season <- fct_recode(sixfilter$rain_season, 
-             'Dry season' = "dry", 
-             'Wet season' = "wet") # new = old
-
-# Boxplot with jitter scatter (DOC by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1))+
-  facet_wrap(~rain_season, ncol = 2, nrow = 1) +  
-  labs(x = "", y = "DOC (mg/L)")
-
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png", width = 6, height = 3.5, units = "in")
-
-```
-
-### plot: Ridge subbasin seasonal DOC
-```{r}
-# density ridge plots (facet wrap by season)
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~rain_season, ncol = 1) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  labs(y = "",  
-       #caption = glue::glue("Density distribution of DOC concentration by season (dry: n = {n_dry_samples}, wet: n = {n_wet_samples})"),
-       x = "DOC (mg/L)") +
-  theme(legend.position = "none") 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
-
-```
-
-### plot NPOC/CDOM scatter 1:1 plot
-```{r}
-# scatterplot of DOC vs absorb-DOC by season
-synopticfilter %>% 
-  filter(!is.na(rain_seasons)) %>% 
-  dplyr::filter(sample_type == "Rack" | 
-                  sample_type == "Grab" & sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
-  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8)+
-  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
-                               "dry" = forWater_colours2[["MyOrange"]], 
-                               "first flush" = cbPalette[["grey"]]))+
-  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
-  geom_abline(slope = 1, intercept = 0, linetype = 2)+
-  theme_bw()+
-  ylim(0, 20) + 
-  xlim(0, 20)+
-  labs(y = "DOC estimate (ppm eqv.)",
-       #caption = glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques (n = {n_DOCCDOM}: wet = {n_wet_DOCCDOM}, first flush = {n_ff_DOCCDOM}, dry = {n_dry_DOCCDOM})."), 
-       x = "DOC (ppm)")+
-  guides(fill = guide_legend("Sample season:"),
-         shape = guide_legend("Sample season:"))+
-  theme(text = element_text(size = 12),
-        legend.position = "top")
-
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png",
-       height = 7, width = 7, units = "in") 
-
-```
-additional text for caption: 
-"Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
-
-#### ?plot: subbasin NPOC/CDOM
-```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
-# six primary sites: DOC vs CDOM
-sixfilter %>% 
-  filter(sample_type == "Rack" | 
-           sample_type == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = rain_seasons)) +
-  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 2.5, alpha = 0.8)+
-  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
-                               "dry" = forWater_colours2[["MyOrange"]], 
-                               "first flush" = cbPalette[["grey"]]))+
-  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
-  geom_abline(slope = 1, intercept = 0, linetype = 2)+
-  theme_bw()+
-  facet_wrap(~site, nrow = 3, ncol = 2) +
-  ylim(0, 20) + 
-  xlim(0, 20)+
-  labs(x = "DOC (ppm)",
-       y = "DOC estimate (ppm eqv.)",
-       caption = 
-         glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques"))+
-  guides(fill = guide_legend("Sample season:"),
-         shape = guide_legend("Sample season:"))+
-  theme(text = element_text(size = 12),
-        legend.position = "top")
-#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_subbasin-DOC-surrogate.png") 
-```
-# Spectral Indices
-
-## plot: SUVA vs NPOC
-```{r, spectral-plots, echo = FALSE}
-# SUVA vs NPOC by season
-sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = NPOC_ppm, y = SUVA)) +
-  geom_jitter(aes(fill = rain_seasons), size = 3.5, shape = 21, alpha = 0.8) +
-  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
-                               "dry" = forWater_colours2[["MyOrange"]], 
-                               "first flush" = cbPalette[["grey"]]))+
-  ylim(0.2, 4.5) +
-  labs(y = expression(paste("SUVA "[254])),
-       x = "DOC (mg/L)")+
-  theme_bw() +
-  theme(legend.position = "top",
-        text = element_text(size = 12)) +
-  guides(fill = guide_legend("Sample season:", override.aes = list(size = 3.5)))
-
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png") 
-
-```
-
-## plot: E2:E3
-```{r}
-# E2:E3
-sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack",
-                E2E3 < 15) %>% 
-  ggplot(aes(x = NPOC_ppm, y = E2E3 )) +
-  geom_jitter(aes(fill = rain_seasons), alpha = 0.8, size = 3.5, shape = 21) +
-  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
-                               "dry" = forWater_colours2[["MyOrange"]], 
-                               "first flush" = cbPalette[["grey"]]))+
-  theme_bw() +
-  theme(legend.position = "top")  
-```
-
-## questionable
-
-```{r, seasonal-plots, include=FALSE}
-# Boxplot with jitter scatter 
-synopticfilter %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  #scale_fill_brewer(palette="Accent") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90)) +
-  facet_wrap(~rain_season, ncol = 2) +  
-  labs(caption = "DOC concentrations in the Leech and two main tribs to the Sooke Reservoir", 
-       x = "", y = "DOC (mg/L)")
-
-
-# --- DOC facet wrap scatter plots ---
-# I don't think these are good graphics
-# Scatter main sites including sooke tribs
-sampleresults %>% 
-  dplyr::filter(site == "Weeks" |
-                  site == "LeechHead" |
-                  site == "ChrisCrk" |
-                  site == "CraggCrk" |
-                  site == "WestLeech"| 
-                  site == "Tunnel" |
-                  site == "Rithet" |
-                  site == "Judge-crk", 
-                analysis == "DOC", 
-                sample_type == "Grab" & sample == "Grab") %>% 
-  mutate(site = factor(site, 
-                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm, fill = sample_type)) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21, size = 3) +
-  theme_bw() +
-  viridis::scale_fill_viridis(discrete = TRUE) +
-  labs(caption = "DOC concentrations", x = "", y = "DOC (mg/L, as NPOC)") +
-  theme(axis.text.x = element_text(angle = 90), legend.position = "none") +
-  facet_wrap(~site, ncol = 2, nrow = 4)
-# this is not a useful plot
-
-```
-
-
-### table: subbasin seasonal DOC
-```{r}
-# summary table
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site, rain_season) %>% 
-  summarize(count = n(),
-            DOC_mean = mean(NPOC_ppm),
-            DOC_sd = sd(NPOC_ppm),
-            RSD = (DOC_sd/DOC_mean)*100) %>% 
-  ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv")
-
-# for when you read this into results
-#  knitr::kable(digits = 1, col.names = c("season", "site", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (%)"), label = "DOC concentrations by season at the six main sites")
-```
-
-# Racks and Grabs - wet season
-
-## wet count sample summary
-```{r, wet-summary-table}
-# how many of each sample_type are there at the 6 main sites?
-a <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
-                rain_season == "Wet season") %>%
-  group_by(site, sample_type) %>%   
-  summarise(number_of_samples = n()) %>% 
-  ungroup()
-
-b <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab",
-                rain_season == "Wet season") %>% 
-  group_by(sample_type) %>% 
-  summarise(site = "TOTAL", 
-            number_of_samples = n()) %>% 
-  select(site, sample_type, number_of_samples)
-
-c <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack",
-                rain_season == "Wet season") %>% 
-  group_by(sample_type) %>% 
-  summarise(site = "TOTAL", 
-            number_of_samples = n()) %>% 
-  select(site, sample_type, number_of_samples)
-
-# bind & save to outputs
-bind_rows(a, b, c) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv")
-
-# Grab samples
-wet_n_installGrabSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Grab",
-                rain_season == "Wet season") %>% 
-  summarise(number_of_samples = n()) %>% 
-  pull(number_of_samples)
-
-# Rack samples
-wet_n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack",
-                rain_season == "Wet season") %>% 
-  summarise(number_of_samples = n()) %>% 
-  pull(number_of_samples) 
-
-```
-
-
-### plot: wet G/R subbasin boxplot
-```{r, DOC-space-time-boxplot}
-# Boxplot with jitter scatter 
-# site vs DOC
-# facet wrap by sample type
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
-                rain_season == "Wet season") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        text = element_text(size = 12)) +
-  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
-  labs(#caption = (glue::glue("DOC concentration by sample type and site during wet season \n Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")), 
-       x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png") 
-
-```
-
-
-### table: G/R DOC means+sd min/max
-```{r, summaryDOC-table}
-# DOC summary table -- Grab vs Rack
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
-                rain_season == "Wet season") %>% 
-  group_by(site, sample_type) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
-
-```
-
-### plot: subbasin ridgeplot (G/R)
-```{r, sample_type-ridgeplots}
-
-# density ridge 
-# wrap by sample_type
-sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(~sample_type, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  labs(y = "",  
-       #caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})"),
-       x = "DOC (mg/L)") +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
-
-```
-
-### Rack DOC trends
-#### plot: rack DOC by event
-```{r, rackDOC}
-# rising limb
-sixfilter %>% 
-  filter(sample_type == "Rack") %>%
-  filter(event_ID != "NA") %>% 
-  group_by(site, event_ID) %>% 
-  mutate(RisingLimb = NumberXtract(sample),
-         RisingLimb = factor(RisingLimb, levels = c(1:9))) %>%
-  ggplot(aes(x = DateTime_sampled, y = RisingLimb))+
-  geom_point(aes(size = NPOC_ppm, colour = event_ID))+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        text = element_text(size = 12),
-        legend.position = "left")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  labs(y = "Sampling Rack Position", x = "", size = "DOC (ppm)", colour = "Rain Event")+
-  facet_wrap(~site, ncol = 1,
-             strip.position = "right",
-             scales = "free_y")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
-       height = 8, width = 6, unit ="in")
-
-```
-
-
-
-
-# Nitrate & DOC
-```{r}
-# nitrate and DOC
-synopticfilter %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "top",
-        text = element_text(size = 12)) +
-  labs(x = "DOC (mg/L)", y = "nitrate (mg/L)", fill = "Sample type:")+
-  stat_poly_eq(formula = y ~ x, 
-               aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-               parse = TRUE, rr.digits = 4)
-
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png") 
-
-```
-
-## Nitrate & DOC_eq
-```{r}
-# nitrate and DOC
-synopticfilter %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = DOCeq_ppm, y = NO3.Neq_ppm)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "bottom",
-        text = element_text(size = 12)) +
-  labs(x = "DOC eqiv. (estimated mg/L)", y = "nitrate (mg/L)", fill = "Sample type:",
-       caption = "Estimated DOC and nitrate concentrations (via spectrophotometry)")+
-  stat_poly_eq(formula = y ~ x, 
-               aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-               parse = TRUE, rr.digits = 4)
-
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png") 
-
-```
-
-# Metals 
-
-## plots: metals+DOC in solution
-
-### ug/L
-```{r}
-# filter out the parameters with insufficient data
-# plot DOC against metals concentrations 
-
-# ug/L
-metalslab %>% 
-  filter(metal_parameters == "Total Aluminum (Al)"|
-           metal_parameters == "Total Barium (Ba)"|
-           metal_parameters == "Total Copper (Cu)"|
-           metal_parameters == "Total Iron (Fe)"|
-           metal_parameters == "Total Mercury (Hg)"|
-           metal_parameters == "Total Manganese (Mn)"|
-           metal_parameters == "Total Silicon (Si)"|
-           metal_parameters == "Total Arsenic (As)"|
-           metal_parameters == "Total Strontium (Sr)"
-  ) %>%
-  mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
-                                   levels = c("Total Mercury (Hg)",
-                                              "Total Iron (Fe)",
-                                              "Total Manganese (Mn)",
-                                              "Total Aluminum (Al)",
-                                              "Total Barium (Ba)",
-                                              "Total Copper (Cu)",
-                                              "Total Arsenic (As)",
-                                              "Total Strontium (Sr)",
-                                              "Total Silicon (Si)"
-                                              ))) %>% 
-  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
-  geom_jitter() +
-  #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
-  facet_wrap(~metal_parameters, scales = "free") +
-  theme_bw() +
-  theme(text = element_text(size = 12)) +
-  labs(y = "metals concentrations (μg/L)", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
-## to get equations include these lines:
-#stat_poly_eq(formula = y ~ x, 
-#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-#              parse = TRUE, rr.digits = 4) #+
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
-
-```
-
-### mg/L
-```{r}
-# mg/L
-metalslab %>% 
-  filter(metal_parameters == "Total Magnesium (Mg)"|
-           metal_parameters == "Total Calcium (Ca)" |
-           metal_parameters == "Total Potassium (K)"|
-           metal_parameters == "Total Sodium (Na)"|
-           metal_parameters == "Total Hardness (CaCO3)") %>%
-  # order as you want to see them in plots
-  mutate(metal_parameters = factor(metal_parameters, 
-                                   levels = c("Total Magnesium (Mg)",
-                                              "Total Potassium (K)",
-                                              "Total Hardness (CaCO3)",
-                                              "Total Calcium (Ca)",
-                                              "Total Sodium (Na)"
-                                              ))) %>%
-  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
-  geom_jitter() +
-  #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
-  facet_wrap(~metal_parameters, scales = "free", ncol = 3) +
-  theme_bw() +
-  labs(y = "metals concentrations (mg/L)", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
-## to get equations include these lines:
-#stat_poly_eq(formula = y ~ x, 
-#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-#              parse = TRUE, rr.digits = 4) #+
-
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
-```
-
-## table: correlation metals/DOC 
-```{r}
-# make a summary table of Metals regression
-metalslab %>% 
-  filter(metal_parameters == "Total Aluminum (Al)"|
-           metal_parameters == "Total Barium (Ba)"|
-           metal_parameters == "Total Copper (Cu)"|
-           metal_parameters == "Total Iron (Fe)"|
-           metal_parameters == "Total Mercury (Hg)"|
-           metal_parameters == "Total Manganese (Mn)"|
-           metal_parameters == "Total Silicon (Si)"|
-           metal_parameters == "Total Arsenic (As)"|
-           metal_parameters == "Total Strontium (Sr)"|
-           metal_parameters == "Total Magnesium (Mg)"|
-           metal_parameters == "Total Calcium (Ca)" |
-           metal_parameters == "Total Potassium (K)"|
-           metal_parameters == "Total Sodium (Na)"|
-           metal_parameters == "Total Hardness (CaCO3)"
-  ) %>%
-  group_by(metal_parameters) %>% 
-  filter(!is.na(metals_values)) %>% 
-  summarise(unit = first(UNITS), 
-            count = n(), 
-            slope = coefficients(lm(formula = metals_values ~ NPOC_ppm))[2],
-            yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
-            r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
-  dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
-
-```
-
-# Treatability
-```{r, message = FALSE}
-# read in data
-treatdat_UW <- 
-  list.files("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", pattern = "*.csv") %>% 
-  set_names(str_extract(., "([0-9]{2,}+)")) %>%
-  purrr::map_dfr(~ read_csv(
-    file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
-    col_names = TRUE, skip = 15), .id = "source") 
-
-# add date, timing, update site names
-treatdat_UW <- treatdat_UW %>% 
-  filter(source == "02") %>%   ## turns out, everything was included in second report
-  mutate(day = substr(Sample_ID, 1, 2),
-         site = substr(Sample_ID, 20, 22)) %>% 
-  mutate(Date = case_when(
-    day == "12" ~ as_date("2019-11-12"),
-    day == "18" ~ as_date("2020-02-18"))) %>% 
-  mutate(Collection = case_when(
-    day == "12" ~ "Nov 2019",
-    day == "18" ~ "Feb 2020")) %>% 
-  mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
-  mutate(site = case_when(
-    site == "DCP" ~ "Deception-res",
-    site == "TUN" ~ "Tunnel",
-    site == "JDG" ~ "Judge",
-    site == "RTH" ~ "Rithet")) %>% 
-  mutate(site = factor(site))
-
-# isolate and join to my UBC lab results for treatability samples
-treatdat <- sampleresults %>% 
-  filter(sample == "Treatability") %>% 
-  full_join(treatdat_UW, by = c("Date", "site")) %>% 
-  mutate(site = factor(site))
-
-# pivot long
-treatdat_long <- treatdat_UW %>%
-  filter(source == "02") %>% 
-  select(-c(source, Sample_ID, pH, Turbidity_NTU, Zeta_Potential_mV, TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date)) %>%
-  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:TCAA),
-                      values_to = "DBPfp_ugL") %>% 
-  mutate(DBP = factor(DBP, levels = c(
-    "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
-```
-
-## plot DOC/UV254 + DBP-FPs
-```{r}
-  
-# plot DOC
-a <- treatdat_long %>% 
-  ggplot(aes(x = DOC_ppm, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 3.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "top")+
-  labs(x = "DOC (ppm)", 
-       y = "DBP-FPs (ppb)",
-       colour = "Sampling site:")+
-  guides(shape = FALSE,
-         colour = guide_legend(nrow = 2))
-
-# plot UV-254
-b <- treatdat_long %>% 
-  ggplot(aes(x = `UV254_cm-1`, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 3.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "top")+
-  labs(x = "UV254 (abs/cm)", 
-       y = "",
-       shape = "Collection:")+
-  guides(colour = FALSE,
-         shape = guide_legend(nrow = 2))
-
-# join side by side
-cowplot::plot_grid(a, b, ncol = 2, align = "h") 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
-         width = 7, height = 9, units = "in")
-```
-# Hobo TidbiTs
-
-## plot: Hobo temp
-```{r}
+#{r}
 Hobo %>% 
   mutate(date = as_date(DateTime)) %>%
   group_by(site, location, date) %>% 
@@ -2147,8 +1047,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Hobo-TidbiTs_daily-temps.png",
        width = 6, height = 7, units = "in")
 ```
 
-## table: Hobo temp
-```{r}
+### table: Hobo temp
+```
+#{r}
 Hobo %>%
   mutate(month = lubridate::month(DateTime, label = TRUE),
          year = lubridate::year(DateTime)) %>% 
@@ -2158,8 +1059,9 @@ Hobo %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
 ```
 
-## WIP!! Hobo with subbasin stage_sample results
-```{r}
+### WIP!! Hobo with subbasin stage_sample results
+```
+#{r}
 a <- Hobo %>% 
   mutate(hr_DateTime = round_date(DateTime)) %>% 
   group_by(site, location, hr_DateTime) %>% 
@@ -2218,7 +1120,47 @@ wut <- subbasin_df %>%
 ```
 
 
-# QA-QC 
+
+# SAMPLES
+
+## augment dataframes
+```{r, mutate}
+# create a "first-flush category in rain_season(s)
+sampleresults <- sampleresults %>% 
+  select(-c(ID, DateTime)) %>% 
+  mutate(rain_seasons = case_when(
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID == 9 ~ "first flush",
+    event_ID %in% 10:18 ~ "wet")) %>% 
+  mutate(rain_season = as.character(rain_season))
+
+# fill in any gaps and save as factors
+sampleresults <- within(sampleresults, 
+                        rain_seasons <- ifelse(
+                          is.na(rain_seasons), rain_season, rain_seasons)) %>% 
+  mutate(rain_season = factor(rain_season),
+         rain_seasons = factor(rain_seasons))
+
+# further group sites
+sampleresults <- sampleresults %>% 
+  mutate(site_type = case_when(
+    site == "Weeks" ~ "subbasin",   
+    site == "ChrisCrk" ~ "subbasin",
+    site == "LeechHead"  ~ "subbasin",
+    site == "CraggCrk" ~ "subbasin",
+    site == "WestLeech" ~ "subbasin",
+    site == "Tunnel" ~ "subbasin",
+    site == "Lab" ~ "LabQAQC",
+    TRUE ~ "synoptic")) %>% 
+  mutate(site_type = factor(site_type))
+
+```
+
+
+## QA-QC ANALYSIS 
 ```{r}
 QAQC <- sampleresults %>% 
   filter(sample_type == "QA-QC")
@@ -2237,7 +1179,7 @@ calver <- QAQC %>%
 ```
 
 
-## Hold-time experiments (Tunnel rack)
+### Hold-time experiments (Tunnel rack)
 ```{r}
 # three cycles of hold time experiments (A, B , C)
 # each time, 5 samples were collected (grab) while 5 were placed on the rack with siphon lids
@@ -2285,7 +1227,11 @@ HT <- full_join(HT, a, by = "HoldTime_set") %>%
 HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
 HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
 
+```
 
+# UPDATE THIS HOBO
+```
+{R}
 # ---
 # Join Tunnel HOBO TidbiT data with HT data
 # combine Temperature with hold-time
@@ -2299,7 +1245,7 @@ HT_Hobo <- Hobo %>%
 
 ```
 
-### HT plots
+#### HT plots
 ```{r}
 # plot sets
 a <- HT %>% 
@@ -2393,7 +1339,7 @@ ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 
 ```
 
-### HT tests: Wilcoxon
+#### HT tests: Wilcoxon
 ```{r}
 # Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
@@ -2450,9 +1396,11 @@ HT_Wilcoxon_tests <- bind_rows(
 # cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
 
 ```
+# UPDATE THIS HOBO
 
-### table: results summary
-```{r}
+##### table: results summary
+```
+#{r}
 # summarize
 HT_summ <- HT %>% 
   group_by(group) %>% 
@@ -2491,8 +1439,9 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
 ```
 
 
-### plot: Hobo HT
-```{r}
+#### plot: Hobo HT
+```
+#{r}
 # pull & set values for plot
 
 # set dates
@@ -2579,7 +1528,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png",
 
 ```
 
-## Lab: blanks
+### LAB - blanks
 ```{r}
 # check lab blanks
 # this is a difficult measure of precision because the RO water is not the most reliably stable
@@ -2595,7 +1544,7 @@ calver %>%
   
 ```
 
-## Lab: Cal Vers
+### LAB - Cal Vers
 ```{r}
 # percent error calculated as 'measured' minus 'actual'
 # negative error indicates the method was under-estimating DOC concentration 
@@ -2650,111 +1599,1179 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 ```
 
+## RIVER SAMPLES
 
-# Stage --WIP
+### subset df + sample counts
+```{r, subsetting-campaign}
+# primary synoptic sampling sites (n > 1)
+# 15 sites total
 
-## trash- EcoHydRology baseflow separation 
-```{r}
-# note: don't call the 'EcoHydRology' package into the library if you're using it
-## access it's functions with "::" only because it masks tidyverse functions and makes workflow annoying if it's loaded into the workspace.
+# how many synoptic samples were grabbed?
+# save value as object to implant in text
+n_SynopticGrabs <- sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab") %>%
+  group_by(site = forcats::fct_explicit_na(site)) %>% 
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% 
+  mutate(what = "synoptic grab count") %>% 
+  ungroup() %>%  # drop the following code to see samples by sites
+  group_by(what) %>% 
+  summarise(total = sum(grab_sample_count)) %>% 
+  pull(total)
 
-# separate stage into base and quick (no flow data available)
-# separate each site, base R style (ugh)
-BF_QF_Weeks <- odyssey_data %>% 
-  filter(source == "Weeks")  
-BF_QF_Weeks <- EcoHydRology::BaseflowSeparation(BF_QF_Weeks$corr_stage_cm) %>% 
-  mutate(site = "Weeks")
+# create a subset dataframe for the synoptically sampled sites for tidier calling
+synopticfilter <- sampleresults %>% 
+  filter(# subbasin sites 
+    site == "Weeks"|
+      site == "ChrisCrk"|
+      site == "LeechHead"|
+      site == "CraggCrk"|
+      site == "WestLeech"|
+      site == "Tunnel"|
+      # other sites
+      site == "Rithet"|
+      site == "Lazar"|
+      site == "Jarvis"|
+      site == "Judge"|
+      site == "Leech-downstreamconf"|
+      site == "Boneyard"|
+      #site == "Deception-crk"|  ## only two samples
+      #site == "West-Jordan"| ## only two samples
+      site == "Deception-res",
+    analysis == "DOC"
+  ) %>% 
+  mutate(site = factor(site, # order as you want to see them in plots
+                       levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
+# rename funky names
+synopticfilter$site <- synopticfilter$site %>% 
+  plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",  ## old = new
+                  "Jarvis" = "Jarvis-crk",
+                  "Judge" = "Judge-crk", 
+                  "Lazar" = "Lazar-crk", 
+                  #"West-Jordan" = "W.Jordan-Trib",
+                  #"Deception-crk" = "Deception-Gluch",
+                  "Rithet" = "Rithet-crk"))
+# ---
 
-BF_QF_Chris <- odyssey_data %>% 
-  filter(source == "ChrisCrk")  
-BF_QF_Chris <- EcoHydRology::BaseflowSeparation(BF_QF_Chris$corr_stage_cm) %>% 
-  mutate(site = "ChrisCrk")
+# create a subset dataframe for the six install sites for tidier calling
+sixfilter <- sampleresults %>% 
+  filter(site_type == "subbasin",
+         analysis == "DOC") %>% 
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
 
-BF_QF_Head <- odyssey_data %>% 
-  filter(source == "LeechHead")  
-BF_QF_Head <- EcoHydRology::BaseflowSeparation(BF_QF_Head$corr_stage_cm) %>% 
-  mutate(site = "LeechHead")
-
-BF_QF_Cragg <- odyssey_data %>% 
-  filter(source == "CraggCrk")  
-BF_QF_Cragg <- EcoHydRology::BaseflowSeparation(BF_QF_Cragg$corr_stage_cm) %>% 
-  mutate(site = "CraggCrk")
-
-BF_QF_West <- odyssey_data %>% 
-  filter(source == "WestLeech")  
-BF_QF_West <- EcoHydRology::BaseflowSeparation(BF_QF_West$corr_stage_cm) %>% 
-  mutate(site = "WestLeech")
-
-BF_QF_Tunnel <- odyssey_data %>% 
-  filter(source == "Tunnel")  
-BF_QF_Tunnel <- EcoHydRology::BaseflowSeparation(BF_QF_Tunnel$corr_stage_cm) %>% 
-  mutate(site = "Tunnel")
-
-# combine all 
-BF_QF <- bind_rows(BF_QF_Weeks, BF_QF_Chris, BF_QF_Head, BF_QF_Cragg, BF_QF_West, BF_QF_Tunnel) %>%
-  mutate(site = factor(site, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
-  mutate(row = row_number(bt))
-
-# join to stage data for datetime
-BF_QF_Odyssey <- odyssey_data %>%
-  mutate(row = row_number(corr_stage_cm)) %>% 
-  mutate(site = factor(source, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
-  full_join(BF_QF, by = c("site", "row"))
+# further categorize site_type
+sixfilter <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "headwater",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "mainstem")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
 
 ```
 
-## WIP -- find peaks(notworking)
+#### table: all samples count summary
+```{r, summary-table}
+# how many of each sample_type are there at the 6 main sites?
+n_subbbasinSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  group_by(site, sample_type) %>%   
+  summarise(number_of_samples = n()) %>% 
+  ungroup()
+# save to outputs
+write_csv(n_subbbasinSamples, "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
+
+# how many of each type total?
+# save values as objects to implant in text
+
+# Grab samples
+n_installGrabSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
+  summarise(number_of_samples = n()) %>% 
+  summarize(total = sum(number_of_samples)) %>% 
+  pull(total)
+
+# Rack samples
+n_installRackSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% 
+  summarize(total = sum(number_of_samples)) %>% 
+  pull(total) 
+
+# How many samples were collected overall
+n_totalSamples <- sampleresults %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                analysis == "DOC") %>%
+  #group_by(sample_type) %>% 
+  summarise(sample_count = n()) %>% 
+  ungroup() %>% 
+  pull(sample_count)
+
+
+# 15 synoptic sites (including the install sites)
+synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab") %>%
+  group_by(site = forcats::fct_explicit_na(site)) %>% 
+  summarise(grab_sample_count = n()) %>% 
+  ungroup() 
+
+
+# ----------------------------------
+# make a summary table:
+tibble::tibble(
+  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
+  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
+  "sub-basin synoptic grab samples" = n_installGrabSamples,
+  "sub-basin rack samples" = n_installRackSamples,
+  "total" = n_totalSamples) %>% 
+  pivot_longer(everything(),
+               names_to = "sample category", values_to = "count") %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
+
+```
+
+#### table: DOC synoptic grabs by site Mean/Min/Max  
+```{r, Grab-synoptic-table}
+# synoptic grab samples DOC concs by site
+a <- synopticfilter %>%
+  filter(sample_type == "Grab") %>% 
+  group_by(site) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T))  
+
+# all together  
+b <- synopticfilter %>% 
+  filter(sample_type == "Grab") %>% 
+  summarize(site = "total summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) 
+
+# tag totals summary onto site summary
+rbind(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", 
+            col_names = T)
+```
+
+#### table: DOC all sites, by sample_type Mean/Min/Max 
+```{r, all-samples-together}
+# synoptic samples DOC concs by site (Grab + Rack)
+a <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, sample_type) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# grouped summary
+b <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(sample_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, sample_type, count, DOCmean, DOCsd, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# full summary
+c <- synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "total",
+            sample_type = "all_G&R",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T))
+
+# tag totals summary onto site summary
+rbind(a, b, c) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-summary.csv", col_names = T)
+
+```
+
+#### plot: synoptic box, all sites
+```{r, synoptic-all-sites}
+
+# all sites
+synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab") %>%  
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
+  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1)) +
+  labs(#caption = glue::glue("DOC concentrations in grab samples across 13 sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
+       x = "", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
+```
+
+#### plot: synoptic ridge, all sites
+```{r, synoptic-all-sites}
+
+# all sites
+synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
+  ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(#caption = glue::glue("DOC concentrations in grab samples across thirteen sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
+       x = "DOC (mg/L)", y = "")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_ridgeplots.png")
+```
+
+#### plot: subbasin ridgeplot (G/R)
+```{r, sample_type-ridgeplots}
+
+# density ridge 
+# wrap by sample_type
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~sample_type, ncol = 1, nrow = 2) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  labs(y = "",  
+       #caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})"),
+       x = "DOC (mg/L)") +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
+
+```
+
+#### table: subbasin DOC means+sd
+```{r, summaryDOC-table}
+
+# DOC summary table, Grabs and Racks combined
+a <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+b <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "All (summary)",
+            DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+bind_rows(a, b) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
+```
+
+#### table: subbasin DOC trends by event & site
 ```{r}
-# determine the rate of stage rise for each event at each site
-# odyssey_data
+# calculate trend
+sixfilter %>% 
+  filter(sample_type == "Rack", analysis != "QA-QC") %>%
+  group_by(site, forcats::fct_explicit_na(event_ID) ) %>% 
+  summarise(yint_DOC = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[1],
+            slope = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[2],
+            r_sq = summary(lm(formula = NPOC_ppm ~ sampleStage_cm))$r.squared,
+            n = n(),
+            range_DOC = max(NPOC_ppm, na.rm = TRUE) - min(NPOC_ppm, na.rm = TRUE),
+            DOC_min = sample[which.min(NPOC_ppm)],
+            DOC_max = sample[which.max(NPOC_ppm)],
+            first_event = first(event_ID),
+            last_event = last(event_ID),
+            first_rack = first(sample, order_by = DateTime_sampled),
+            last_rack = last(sample, order_by = DateTime_sampled)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_rack-trends_lm.csv")
 
-# pull dates for trip
-trip_bysite <- stage_samples %>%
-  group_by(trip) %>% 
-  summarise(start = first(DateTime),
-            end = last(DateTime))
-# pull dates for trip and event
-event_bysite <- stage_samples %>%
-  group_by(event_ID) %>% 
-  summarise(start = first(DateTime),
-            end = last(DateTime))
-# --
-# isolate peaks
-stage_samples_pks <- stage_samples %>% 
-  select(c(site, event_ID, corr_stage_cm, DateTime)) %>% 
-  filter(!is.na(event_ID)) %>% 
-  group_by(site, event_ID) %>%
-  summarise(DateTime_peak = DateTime[which.max(corr_stage_cm)],
-            peak = max(corr_stage_cm),
-            DateTime = DateTime_peak) %>% 
-  full_join(odyssey_data,  
-            by = c("site" = "source", "event_ID", "DateTime")) %>% 
-  select(-c(stage_cm, Date)) %>% 
-  full_join(stage_samples, by = c("site", "event_ID", "DateTime", "interval", "corr_stage_cm"))
+```
+
+#### plot: subbasin DOC by time geom_smooth -- site & subbasin type
+```{r DOC_overtime-by-site}
+
+# at each of the six sites (DOC over time)
+sixfilter %>% 
+  mutate(site = factor(site, levels = c("Weeks", "CraggCrk", "ChrisCrk", "WestLeech", "LeechHead", "Tunnel"))) %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  geom_point(aes(fill = site), size = 2, shape = 21, alpha = 0.4)+
+  geom_smooth(aes(group = site, colour = site, linetype = site), se = FALSE)+
+  scale_fill_brewer(palette="Dark2")+
+  scale_colour_brewer(palette="Dark2")+
+  scale_linetype_manual(values=c(4,4,3,3,1,1)) + 
+  labs(y = "DOC (mg/L)", fill = "Sample type:",
+       #caption = glue::glue("DOC over sixteen months (Oct 2018 to Feb 2020) in {n_installGrabSamples+n_installRackSamples} samples \n(Grab samples (n = {n_installGrabSamples}) and vertical Rack samples (n = {n_installRackSamples})"),
+       x = "") +
+  theme_bw() +
+  guides(fill = guide_legend("Site:"),
+         colour = guide_legend("Site:"),
+         linetype = guide_legend("Site:"))+
+  facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = "top",
+        text = element_text(size = 12))+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")
+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
+#, width = 4, height = 6, units = "in") 
+
+```
+
+### VARIANCE: subbasins 
+
+#### plot: subbasins boxplot
+```{r, subbasin-DOCspace}
+
+# Boxplot with jitter scatter 
+# DOC by site 
+# grab and rack combined (all)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(#caption = glue::glue("DOC concentrations across six sub-basin sites over 16 months (", {n_installGrabSamples+n_installRackSamples}, " samples)"),
+       x = "", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
+
+```
+
+
+#### within or among subbasins - DOC ranges  
+
+Q: is the variance greater within each site or among all sites?
+
+Ha: there is greater variance within each site compared to the variance among all sites 
+Ho: the variance within each site is not greater than variance among all sites 
+
+```{r}
+# calculate range of DOC within each site and among all sites 
+
+# subbasin samples DOC concs (Grab + Rack)
+a <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(subbasin_type = first(subbasin_type),
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# grouped by headwaters VS mainstem
+b <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(subbasin_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# full summary
+c <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "Total",
+            subbasin_type = "all",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# combine 
+rbind(a, b, c) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-summary.csv", col_names = T)
+
+```
+
+#### Tunnel as outlet nested catchments - DOC ranges
+
+Q: is the variance at the watershed outlet greater than the variance in each subbasin?
+
+##### table: descriptive stats summary
+```{r}
+# calculate range of DOC within each site and between each site for subbasins
+# this code was copied -- needs to be modified and updated
+
+# separate Tunnel from mainstems in subbasin_type
+a <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "headwater",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "outlet")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
+# subbasin samples DOC concs (Grab + Rack)
+b <- a %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site) %>% 
+  summarize(subbasin_type = first(subbasin_type),
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup()
+
+# grouped by headwaters / mainstem / outlet
+C <- a %>%
+  filter(sample_type == "Grab" | sample_type == "Rack",
+         subbasin_type != "outlet") %>% 
+  group_by(subbasin_type) %>% 
+  summarize(site = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOCsd/DOCmean)*100,
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# combine 
+rbind(b, C, c) %>%
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = T)
+
+```
+
+
+##### inferential/inductive stats
+
+Levene's test: And alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+Ha: at least two subbasins have different variances 
+Ho: the variances are equal (there is no difference in the range observed among each site 
+```{r}
+car::leveneTest(NPOC_ppm ~ site, data = sixfilter) # response ~ independent variable
+
+# p-value is << 0.001 -- reject the null hypothesis of homogeneous variance and conclude there is significant difference between site variances.
+
+# piece-wise compare to tunnel:
+
+# 1 - 6 -- Reject that the variances are equal
+v1 <- sixfilter %>%
+  filter(site == "Weeks" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 2 - 6 -- Reject that the variances are equal
+v2 <- sixfilter %>%
+  filter(site == "ChrisCrk" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 3 - 6 -- Reject that the variances are equal 
+v3 <- sixfilter %>%
+  filter(site == "LeechHead" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 4 - 6 -- Reject that the variances are equal 
+v4 <- sixfilter %>%
+  filter(site == "CraggCrk" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# 5 - 6 -- the variances are equal with 98%  
+v5 <- sixfilter %>%
+  filter(site == "WestLeech" |
+           site == "Tunnel") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
+  pull("Pr(>F)"[[1]]) %>% 
+  first()
+
+# write a table
+# *** = 99.9% confidence, * = 95% confidence
+tibble::tibble("sub-basin site compared to outlet" = c("Weeks ***", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech *"),
+               "p-value" = c(v1, v2, v3, v4, v5)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = T)
+
+```
+
+
+### SEASONAL dynamics 
+
+#### table: sample count
+```{r}
+# count dry season samples
+n_dry_samples <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack", rain_season == "dry") %>% 
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+# count wet season samples
+n_wet_samples <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack", rain_season == "wet") %>% 
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+
+##  subbasin samples for which DOC and UV surrogate were measured ---
+
+# count samples for both DOC and DOC_eq
+n_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
+                !is.na(DOCeq_ppm)) %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+#count wet samples
+n_wet_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "wet") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+# count dry samples 
+n_dry_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "dry") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+
+# count wet = "first flush" samples 
+n_ff_DOCCDOM <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab",
+                !is.na(DOCeq_ppm),
+                rain_seasons == "first flush") %>%
+  group_by(site) %>% 
+  summarise(samples = n()) %>% 
+  ungroup() %>% 
+  summarise(total = sum(samples)) %>% 
+  pull(total)
+```
+
+#### plot: subbasin Box seasonal DOC
+```{r}
+
+sixfilter$rain_season <- fct_recode(sixfilter$rain_season, 
+             'Dry season' = "dry", 
+             'Wet season' = "wet") # new = old
+
+# Boxplot with jitter scatter (DOC by season)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~rain_season, ncol = 2, nrow = 1) +  
+  labs(x = "", y = "DOC (mg/L)")
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png", width = 6, height = 3.5, units = "in")
+
+```
+
+#### plot: subbasin Ridge seasonal DOC
+```{r}
+# density ridge plots (facet wrap by season)
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
+  facet_wrap(~rain_season, ncol = 1) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  labs(y = "",  
+       #caption = glue::glue("Density distribution of DOC concentration by season (dry: n = {n_dry_samples}, wet: n = {n_wet_samples})"),
+       x = "DOC (mg/L)") +
+  theme(legend.position = "none") 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
+
+```
+
+#### plot: [1:1] NPOC/CDOM scatter 
+```{r}
+# scatterplot of DOC vs absorb-DOC by season
+synopticfilter %>% 
+  filter(!is.na(rain_seasons)) %>% 
+  dplyr::filter(sample_type == "Rack" | 
+                  sample_type == "Grab" & sample == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8)+
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  theme_bw()+
+  ylim(0, 20) + 
+  xlim(0, 20)+
+  labs(y = "DOC estimate (ppm eqv.)",
+       #caption = glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques (n = {n_DOCCDOM}: wet = {n_wet_DOCCDOM}, first flush = {n_ff_DOCCDOM}, dry = {n_dry_DOCCDOM})."), 
+       x = "DOC (ppm)")+
+  guides(fill = guide_legend("Sample season:"),
+         shape = guide_legend("Sample season:"))+
+  theme(text = element_text(size = 12),
+        legend.position = "top")
+
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png",
+       height = 7, width = 7, units = "in") 
+
+```
+additional text for caption: 
+"Seasonal separation suggestes that characteristics of wet-season samples \n caused positive bias in absorbance-based DOC estimates, while dry-season sample \n characteristics lead to negative bias in DOC estimates based on UV-Vis absorption "
+
+#### ?plot: subbasin NPOC/CDOM
+```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
+# six primary sites: DOC vs CDOM
+sixfilter %>% 
+  filter(sample_type == "Rack" | 
+           sample_type == "Grab") %>%
+  ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm, fill = rain_seasons)) +
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 2.5, alpha = 0.8)+
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
+  geom_abline(slope = 1, intercept = 0, linetype = 2)+
+  theme_bw()+
+  facet_wrap(~site, nrow = 3, ncol = 2) +
+  ylim(0, 20) + 
+  xlim(0, 20)+
+  labs(x = "DOC (ppm)",
+       y = "DOC estimate (ppm eqv.)",
+       caption = 
+         glue::glue("Plot of dissolved organic carbon concentrations measured as NPOC and estimated \n via UV-Vis spectroscopy, where the dotted line indicates best-fit (1:1) of equivalent  \n measurements by both techniques"))+
+  guides(fill = guide_legend("Sample season:"),
+         shape = guide_legend("Sample season:"))+
+  theme(text = element_text(size = 12),
+        legend.position = "top")
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_subbasin-DOC-surrogate.png") 
+```
+
+##### WET table R.G. count
+Rack and Grab sample wetseason sample count summary
+```{r, wet-summary-table}
+# how many of each sample_type are there at the 6 main sites?
+a <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                rain_season == "Wet season") %>%
+  group_by(site, sample_type) %>%   
+  summarise(number_of_samples = n()) %>% 
+  ungroup()
+
+b <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab",
+                rain_season == "Wet season") %>% 
+  group_by(sample_type) %>% 
+  summarise(site = "TOTAL", 
+            number_of_samples = n()) %>% 
+  select(site, sample_type, number_of_samples)
+
+c <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack",
+                rain_season == "Wet season") %>% 
+  group_by(sample_type) %>% 
+  summarise(site = "TOTAL", 
+            number_of_samples = n()) %>% 
+  select(site, sample_type, number_of_samples)
+
+# bind & save to outputs
+bind_rows(a, b, c) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv")
+
+# Grab samples
+wet_n_installGrabSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab",
+                rain_season == "Wet season") %>% 
+  summarise(number_of_samples = n()) %>% 
+  pull(number_of_samples)
+
+# Rack samples
+wet_n_installRackSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack",
+                rain_season == "Wet season") %>% 
+  summarise(number_of_samples = n()) %>% 
+  pull(number_of_samples) 
+
+```
+
+##### plot: wet G/R subbasin boxplot
+```{r, DOC-space-time-boxplot}
+# Boxplot with jitter scatter 
+# site vs DOC
+# facet wrap by sample type
+sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                rain_season == "Wet season") %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        text = element_text(size = 12)) +
+  facet_wrap(~sample_type, ncol = 2, nrow = 1) +  
+  labs(#caption = (glue::glue("DOC concentration by sample type and site during wet season \n Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")), 
+       x = "", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png") 
+
+```
+
+
+##### table: G/R DOC means+sd min/max
+```{r, summaryDOC-table}
+# DOC summary table -- Grab vs Rack
+sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
+                rain_season == "Wet season") %>% 
+  group_by(site, sample_type) %>% 
+  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup() %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
+
+```
+
+##### plot: rack DOC by event
+```{r, rackDOC}
+# rising limb
+sixfilter %>% 
+  filter(sample_type == "Rack") %>%
+  filter(event_ID != "NA") %>% 
+  group_by(site, event_ID) %>% 
+  mutate(RisingLimb = NumberXtract(sample),
+         RisingLimb = factor(RisingLimb, levels = c(1:9))) %>%
+  ggplot(aes(x = DateTime_sampled, y = RisingLimb))+
+  geom_point(aes(size = NPOC_ppm, colour = event_ID))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        text = element_text(size = 12),
+        legend.position = "left")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  labs(y = "Sampling Rack Position", x = "", size = "DOC (ppm)", colour = "Rain Event")+
+  facet_wrap(~site, ncol = 1,
+             strip.position = "right",
+             scales = "free_y")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
+       height = 8, width = 6, unit ="in")
+
+```
+
+
+## SPECTRAL Indices
+
+### plot: SUVA vs NPOC
+```{r, spectral-plots, echo = FALSE}
+# SUVA vs NPOC by season
+sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = NPOC_ppm, y = SUVA)) +
+  geom_jitter(aes(fill = rain_seasons), size = 3.5, shape = 21, alpha = 0.8) +
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  ylim(0.2, 4.5) +
+  labs(y = expression(paste("SUVA "[254])),
+       x = "DOC (mg/L)")+
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 12)) +
+  guides(fill = guide_legend("Sample season:", override.aes = list(size = 3.5)))
+
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png") 
+
+```
+
+### plot: E2:E3
+```{r}
+# E2:E3
+sampleresults %>% 
+  dplyr::filter(analysis == "DOC", 
+                sample_type == "Grab" | sample_type == "Rack",
+                E2E3 < 15) %>% 
+  ggplot(aes(x = NPOC_ppm, y = E2E3 )) +
+  geom_jitter(aes(fill = rain_seasons), alpha = 0.8, size = 3.5, shape = 21) +
+  scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]], 
+                               "first flush" = cbPalette[["grey"]]))+
+  theme_bw() +
+  theme(legend.position = "top")  
+```
+
+#### questionable
+```{r, seasonal-plots, include=FALSE}
+# Boxplot with jitter scatter 
+synopticfilter %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  #scale_fill_brewer(palette="Accent") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90)) +
+  facet_wrap(~rain_season, ncol = 2) +  
+  labs(caption = "DOC concentrations in the Leech and two main tribs to the Sooke Reservoir", 
+       x = "", y = "DOC (mg/L)")
+
+
+# --- DOC facet wrap scatter plots ---
+# I don't think these are good graphics
+# Scatter main sites including sooke tribs
+sampleresults %>% 
+  dplyr::filter(site == "Weeks" |
+                  site == "LeechHead" |
+                  site == "ChrisCrk" |
+                  site == "CraggCrk" |
+                  site == "WestLeech"| 
+                  site == "Tunnel" |
+                  site == "Rithet" |
+                  site == "Judge-crk", 
+                analysis == "DOC", 
+                sample_type == "Grab" & sample == "Grab") %>% 
+  mutate(site = factor(site, 
+                       levels = c("Weeks-out", "Chris-crk", "Leech-head", "Cragg-crk", "West-Leech", "Tunnel", "Rithet", "Judge-crk"))) %>% 
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm, fill = sample_type)) +
+  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21, size = 3) +
+  theme_bw() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(caption = "DOC concentrations", x = "", y = "DOC (mg/L, as NPOC)") +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "none") +
+  facet_wrap(~site, ncol = 2, nrow = 4)
+# this is not a useful plot
+
+```
+
+
+### Nitrate & DOC
+```{r}
+# nitrate and DOC
+synopticfilter %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "top",
+        text = element_text(size = 12)) +
+  labs(x = "DOC (mg/L)", y = "nitrate (mg/L)", fill = "Sample type:")+
+  stat_poly_eq(formula = y ~ x, 
+               aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+               parse = TRUE, rr.digits = 4)
+
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png") 
+
+```
+
+#### Nitrate & DOC_eq
+```{r}
+# nitrate and DOC
+synopticfilter %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = DOCeq_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 3.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "bottom",
+        text = element_text(size = 12)) +
+  labs(x = "DOC eqiv. (estimated mg/L)", y = "nitrate (mg/L)", fill = "Sample type:",
+       caption = "Estimated DOC and nitrate concentrations (via spectrophotometry)")+
+  stat_poly_eq(formula = y ~ x, 
+               aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+               parse = TRUE, rr.digits = 4)
+
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png") 
+
+```
+
+### METALS 
+
+#### plot: ug/L metals+DOC in solution
+```{r}
+# filter out the parameters with insufficient data
+# plot DOC against metals concentrations 
+
+# ug/L
+metalslab %>% 
+  filter(metal_parameters == "Total Aluminum (Al)"|
+           metal_parameters == "Total Barium (Ba)"|
+           metal_parameters == "Total Copper (Cu)"|
+           metal_parameters == "Total Iron (Fe)"|
+           metal_parameters == "Total Mercury (Hg)"|
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"
+  ) %>%
+  mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
+                                   levels = c("Total Mercury (Hg)",
+                                              "Total Iron (Fe)",
+                                              "Total Manganese (Mn)",
+                                              "Total Aluminum (Al)",
+                                              "Total Barium (Ba)",
+                                              "Total Copper (Cu)",
+                                              "Total Arsenic (As)",
+                                              "Total Strontium (Sr)",
+                                              "Total Silicon (Si)"
+                                              ))) %>% 
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free") +
+  theme_bw() +
+  theme(text = element_text(size = 12)) +
+  labs(y = "metals concentrations (μg/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
+## to get equations include these lines:
+#stat_poly_eq(formula = y ~ x, 
+#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+#              parse = TRUE, rr.digits = 4) #+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
+
+```
+
+#### plot: mg/L metals+DOC in solution
+```{r}
+# mg/L
+metalslab %>% 
+  filter(metal_parameters == "Total Magnesium (Mg)"|
+           metal_parameters == "Total Calcium (Ca)" |
+           metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)") %>%
+  # order as you want to see them in plots
+  mutate(metal_parameters = factor(metal_parameters, 
+                                   levels = c("Total Magnesium (Mg)",
+                                              "Total Potassium (K)",
+                                              "Total Hardness (CaCO3)",
+                                              "Total Calcium (Ca)",
+                                              "Total Sodium (Na)"
+                                              ))) %>%
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free", ncol = 3) +
+  theme_bw() +
+  labs(y = "metals concentrations (mg/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
+## to get equations include these lines:
+#stat_poly_eq(formula = y ~ x, 
+#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+#              parse = TRUE, rr.digits = 4) #+
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
+```
+
+#### table: correlation metals/DOC 
+```{r}
+# make a summary table of Metals regression
+metalslab %>% 
+  filter(metal_parameters == "Total Aluminum (Al)"|
+           metal_parameters == "Total Barium (Ba)"|
+           metal_parameters == "Total Copper (Cu)"|
+           metal_parameters == "Total Iron (Fe)"|
+           metal_parameters == "Total Mercury (Hg)"|
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"|
+           metal_parameters == "Total Magnesium (Mg)"|
+           metal_parameters == "Total Calcium (Ca)" |
+           metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)"
+  ) %>%
+  group_by(metal_parameters) %>% 
+  filter(!is.na(metals_values)) %>% 
+  summarise(unit = first(UNITS), 
+            count = n(), 
+            slope = coefficients(lm(formula = metals_values ~ NPOC_ppm))[2],
+            yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
+            r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
+  dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
+
+```
+
+# TREATABILITY
+```{r, message = FALSE}
+
+# add date, timing, update site names
+treatdat_UW <- treatdat_UW %>% 
+  filter(source == "02") %>%   ## turns out, everything was included in second report
+  mutate(day = substr(Sample_ID, 1, 2),
+         site = substr(Sample_ID, 20, 22)) %>% 
+  mutate(Date = case_when(
+    day == "12" ~ as_date("2019-11-12"),
+    day == "18" ~ as_date("2020-02-18"))) %>% 
+  mutate(Collection = case_when(
+    day == "12" ~ "Nov 2019",
+    day == "18" ~ "Feb 2020")) %>% 
+  mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
+  mutate(site = case_when(
+    site == "DCP" ~ "Deception-res",
+    site == "TUN" ~ "Tunnel",
+    site == "JDG" ~ "Judge",
+    site == "RTH" ~ "Rithet")) %>% 
+  mutate(site = factor(site))
+
+# isolate and join to my UBC lab results for treatability samples
+treatdat <- sampleresults %>% 
+  filter(sample == "Treatability") %>% 
+  full_join(treatdat_UW, by = c("Date", "site")) %>% 
+  mutate(site = factor(site))
+
+# pivot long
+treatdat_long <- treatdat_UW %>%
+  filter(source == "02") %>% 
+  select(-c(source, Sample_ID, pH, Turbidity_NTU, Zeta_Potential_mV, TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date)) %>%
+  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:TCAA),
+                      values_to = "DBPfp_ugL") %>% 
+  mutate(DBP = factor(DBP, levels = c(
+    "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
+```
+
+## plot; DOC/UV254 + DBP-FPs
+```{r}
   
-## plot
-stage_samples_pks %>% 
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+  ## stage
-  geom_point(aes(y = peak, shape = sample_type), na.rm = TRUE)+ ## samples 
-  # scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
-  facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
-  labs(y = "River stage (cm)", x = "", shape = "Sample Type")+
-  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
-  theme_bw()
+# plot DOC
+a <- treatdat_long %>% 
+  ggplot(aes(x = DOC_ppm, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "top")+
+  labs(x = "DOC (ppm)", 
+       y = "DBP-FPs (ppb)",
+       colour = "Sampling site:")+
+  guides(shape = FALSE,
+         colour = guide_legend(nrow = 2))
 
+# plot UV-254
+b <- treatdat_long %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 3.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "top")+
+  labs(x = "UV254 (abs/cm)", 
+       y = "",
+       shape = "Collection:")+
+  guides(colour = FALSE,
+         shape = guide_legend(nrow = 2))
 
-#+
-  theme(axis.text.x = element_text(angle = 60, hjust=1), text = element_text(size=12), legend.position = "top")+
-  # add vertical lines for events
-  geom_vline(xintercept = event_bysite$start, 
-             linetype = "dashed", colour = "red", size = 0.7)
-  # add vertical lines for trip
-  geom_vline(xintercept = trip_bysite$start, 
-             linetype = "solid", colour = "red", size = 0.6)
-  
+# join side by side
+cowplot::plot_grid(a, b, ncol = 2, align = "h") 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
+         width = 7, height = 9, units = "in")
 ```
 
 
