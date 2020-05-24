@@ -100,7 +100,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Re
          event_ID = factor(event_ID, levels = c(1:18)))
 
 # Wrangled Hobo TidibiT logger data with rain events and trip IDs
-Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
+Hobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
                     col_names = TRUE) %>% 
   mutate(location = factor(location),
          site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
@@ -110,7 +110,7 @@ Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_tri
   rename(TidbiT_location = "location")
 
 # subbasin_Hobos
-subbasin_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", 
+subbasin_dailyHobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", 
                         col_names = TRUE) %>% 
   mutate(trip = factor(trip),
          event_ID = factor(event_ID), 
@@ -744,7 +744,7 @@ Malahat_testMSc_Wx <- bind_rows(
 
 
 
-## WIP -- STAGE: River Stage 
+## STAGE: River Stage 
 
 ### plot: normalized stage 
 
@@ -1016,23 +1016,22 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 
 ```
 
-## TEMP: Hobo TidbiTs
+# TEMP: Hobo TidbiTs
 
-### plot: Hobo temp
-```
-#{r}
+## plot: subbasin temps
+```{r}
 Hobo %>% 
   mutate(date = as_date(DateTime)) %>%
-  group_by(site, location, date) %>% 
+  group_by(site, TidbiT_location, date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
   ggplot(aes(x = date, y = T_daily))+
-  geom_line(aes(colour = location), size = 1.5)+
-  scale_color_manual(values = c("water" = forWater_colours2[["SkyBlue"]], 
-                                "air" = forWater_colours2[["MyOrange"]]))+
+  geom_line(aes(colour = site), size = 1.25)+
+  scale_color_brewer(palette = "Dark2")+ 
   theme_bw()+
   geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
   geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  facet_wrap(~site, ncol = 1,
+  facet_wrap(~TidbiT_location, ncol = 1,
+             scales = "free_y",
              strip.position = "right")+
   labs(x = "", y = "Mean Daily Temperature (°C)",
        colour = "Temperature measurement:")+
@@ -1040,28 +1039,58 @@ Hobo %>%
         text = element_text(size = 12))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   scale_x_date(date_labels = "%Y %b %d",
-                   date_breaks = "1.5 months",
-                   date_minor_breaks = "1 months")
+                   date_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Hobo-TidbiTs_daily-temps.png", 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png", 
        width = 6, height = 7, units = "in")
 ```
 
-### table: Hobo temp
-```
-#{r}
-Hobo %>%
+## table: Hobo temp VS mean LWSA
+```{r}
+# join the air temp from subbasins with the mean LWSA temperature data to compare
+Hobo_WxLWSA <- LWSA_meanWx %>%
+  select(c(DateTime, Temp_mean, TMin_mean, TMax_mean)) %>% 
+  right_join((Hobo %>% filter(TidbiT_location == "air")), by = "DateTime") %>% 
+  rename(LWSA_Tmean = "Temp_mean", LWSA_Tmin = "TMin_mean", LWSA_Tmax = "TMax_mean", Hobo_Temp = Temp_C) %>% 
+  select(c(site, Date, DateTime, rain_season, trip, Hobo_Temp, LWSA_Tmean, LWSA_Tmin, LWSA_Tmax))
+
+# compare
+Hobo_WxLWSA %>% 
+  mutate(Date = as_date(DateTime)) %>%
+  group_by(site, Date) %>% 
+  summarise(Hobo_Tdaily = mean(Hobo_Temp),
+            FWx_Tdaily = mean(LWSA_Tmean)) %>% 
+  ggplot(aes(x = Date))+
+  geom_line(aes(y = Hobo_Tdaily, colour = "Sub-basin TidbiTs"), size = 0.8)+
+  geom_line(aes(y = FWx_Tdaily, colour = "CRD FWx"), size = 0.8)+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  facet_wrap(~site, ncol = 1,
+             scales = "free_y",
+             strip.position = "right")+
+  labs(x = "", y = "Daily mean air temperature (°C)",
+       colour = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "1 months")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png", 
+       width = 6, height = 7, units = "in")
+
+# old bad eyes
+Hobo_WxLWSA %>%
   mutate(month = lubridate::month(DateTime, label = TRUE),
          year = lubridate::year(DateTime)) %>% 
-  group_by(site, location, year, month) %>% 
+  group_by(site, TidbiT_location, year, month) %>% 
   summarise(T_mean = mean(Temp_C),
-            T_sd = sd(Temp_C)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Hobo-TidbiTs_monthly-site_summary.csv")
+            T_sd = sd(Temp_C)) 
 ```
 
-### WIP!! Hobo with subbasin stage_sample results
-```
-#{r}
+## Hobo with subbasin stage_sample results
+```{r}
 a <- Hobo %>% 
   mutate(hr_DateTime = round_date(DateTime)) %>% 
   group_by(site, location, hr_DateTime) %>% 
