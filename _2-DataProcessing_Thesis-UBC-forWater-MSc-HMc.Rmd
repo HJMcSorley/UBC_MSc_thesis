@@ -26,6 +26,7 @@ library(knitr)      # tidy tables
 library(viridis)    # nice colours for plots gradient fills
 library(cowplot)    # add-on to ggplot for layout (nice grid)
 library(gghighlight)# plot highlighting
+library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
 library(car)        # stats: Companion to Applied Regression
@@ -1084,10 +1085,13 @@ Hobo_Fwx %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 # ---
 
+# isolate
+Hobo_WxLWSA <- Hobo_WxLWSA %>%
+  filter(Date > "2019-08-23", Date < "2020-02-18") %>% 
+  rename(Hobo = "Hobo_Temp", FWx = "LWSA_Tmean")
+
 # pivot longer
 Hobo_Fwx <- Hobo_WxLWSA %>%
-  filter(Date > "2019-08-23", Date < "2020-02-18") %>% 
-  rename(Hobo = "Hobo_Temp", FWx = "LWSA_Tmean") %>% 
   select(-c(LWSA_Tmin, LWSA_Tmax)) %>% 
   group_by(site) %>% 
   pivot_longer(cols = c("Hobo", "FWx"),
@@ -1150,7 +1154,7 @@ Hobo_Fwx %>%
              strip.position = "right")
              
 # density ridges
-Hobo_Fwx %>% 
+ridge_plot_HOBOFWx <- Hobo_Fwx %>% 
   ggplot(aes(x = Temp_C, y = fct_rev(site)))+
   ggridges::geom_density_ridges(aes(fill = data_source), alpha = 0.6) +
   scale_fill_brewer(palette="Accent") +
@@ -1164,7 +1168,7 @@ Hobo_Fwx %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
        width = 4, height = 4, units = "in")
-  
+
 ```
 
 ### FWx-Hobo Wilcoxon tests
@@ -1209,6 +1213,22 @@ Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv", col_names = TRUE)
 
 ```
+
+#### Relate subbasins to FWx
+
+```{r}
+# 1:1 scatter of temperatures
+Hobo_WxLWSA %>% 
+  ggplot()+
+  geom_point(aes(x = FWx, y = Hobo), alpha = 0.6)+
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~ site)
+
+# save
+
+```
+
 
 ## Hobo with subbasin stage_sample results
 ```{r}
