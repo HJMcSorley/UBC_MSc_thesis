@@ -1172,7 +1172,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.p
 ```
 
 ### FWx-Hobo Wilcoxon tests
-
 ```{r}
 # Wilcoxon tests (not normally distributed)
 # null hypothesis: there is no difference between the means
@@ -1182,7 +1181,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.p
 
 # tests
 # note -- this could probably be a function for tidiness
-
 test <- Hobo_Fwx$Temp_C
 stn <- Hobo_Fwx$data_source
 site <- Hobo_Fwx$site
@@ -1215,17 +1213,26 @@ Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>%
 ```
 
 #### Relate subbasins to FWx
+# YOU ARE HERE
+
+use linear regression to fill in temperature estimates at each subbasin 
 
 ```{r}
 # 1:1 scatter of temperatures
 Hobo_WxLWSA %>% 
-  ggplot()+
-  geom_point(aes(x = FWx, y = Hobo), alpha = 0.6)+
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.5)+
   theme_bw()+
-  theme(legend.position = "top")+
-  facet_wrap(~ site)
+  facet_wrap(~ site)+
+  labs(y = "Subbasin temperature (°C)", x = "Mean LWSA temperature (°C)") +
+  theme(text = element_text(size = 12))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+## to get equations include this line:
+  stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4) 
 
 # save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_scatter_lm.png", 
+       width = 5, height = 4, units = "in")
 
 ```
 
