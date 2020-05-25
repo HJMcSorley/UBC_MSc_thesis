@@ -6,9 +6,10 @@ tables: true
 ```{r, results-setup, include = FALSE, package.startup.message = FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
-library(tidyverse) # keep it tidy
-library(readr)     # read in delimited files
-library(knitr)     # for nice tables
+library(tidyverse)  # keep it tidy
+library(readr)      # read in delimited files
+library(knitr)      # for nice tables
+library(gridExtra)  # for plot & table layout options
 ```
 
 # Results

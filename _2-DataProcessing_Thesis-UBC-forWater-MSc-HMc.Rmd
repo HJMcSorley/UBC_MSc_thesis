@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-ou
 ```
 
 ## Packages
-```{r, processing-packages, package.startup.message = FALSE}
+```{r, package.startup.message = FALSE}
 
 # load packages
 library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
@@ -30,7 +30,6 @@ library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
 library(car)        # stats: Companion to Applied Regression
 library(randomForest)
-
 
 ```
 
@@ -1050,25 +1049,64 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png",
 # join the air temp from subbasins with the mean LWSA temperature data to compare
 Hobo_WxLWSA <- LWSA_meanWx %>%
   select(c(DateTime, Temp_mean, TMin_mean, TMax_mean)) %>% 
-  right_join((Hobo %>% filter(TidbiT_location == "air")), by = "DateTime") %>% 
+  right_join(
+    (Hobo %>% filter(TidbiT_location == "air") %>%  group_by(site) ), by = "DateTime") %>% 
   rename(LWSA_Tmean = "Temp_mean", LWSA_Tmin = "TMin_mean", LWSA_Tmax = "TMax_mean", Hobo_Temp = Temp_C) %>% 
-  select(c(site, Date, DateTime, rain_season, trip, Hobo_Temp, LWSA_Tmean, LWSA_Tmin, LWSA_Tmax))
+  select(c(site, Date, DateTime, rain_season, trip, Hobo_Temp, LWSA_Tmean, LWSA_Tmin, LWSA_Tmax)) %>% 
+  distinct()
+# temp on the half hour and min/max on the hour
+
+# ---
+# find and isolate overlapping ranges
+Hobo_Fwx %>% 
+  group_by(site) %>% 
+  summarize(count = n(),
+            earliest = first(Date),
+            latest = last(Date)) %>% 
+  arrange(count)
+
+# check
+Hobo_Fwx %>% 
+  group_by(site, data_source, Date) %>% 
+  summarise(Tdaily = mean(Temp_C)) %>% 
+  filter(data_source == "FWx") %>% 
+  ggplot(aes(x = Date))+
+  geom_line(aes(y = Tdaily, colour = site), size = 0.8)+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  #facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(x = "", y = "Daily mean air temperature (°C)",
+       colour = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  scale_x_date(date_labels = "%Y %b %d",
+                   date_breaks = "1 months")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# ---
+
+# pivot longer
+Hobo_Fwx <- Hobo_WxLWSA %>%
+  filter(Date > "2019-08-23", Date < "2020-02-18") %>% 
+  rename(Hobo = "Hobo_Temp", FWx = "LWSA_Tmean") %>% 
+  select(-c(LWSA_Tmin, LWSA_Tmax)) %>% 
+  group_by(site) %>% 
+  pivot_longer(cols = c("Hobo", "FWx"),
+               names_to = "data_source",
+               values_to = "Temp_C") %>% 
+  mutate(data_source = factor(data_source))
 
 # compare
-Hobo_WxLWSA %>% 
-  mutate(Date = as_date(DateTime)) %>%
-  group_by(site, Date) %>% 
-  summarise(Hobo_Tdaily = mean(Hobo_Temp),
-            FWx_Tdaily = mean(LWSA_Tmean)) %>% 
+Hobo_Fwx %>% 
+  group_by(site, data_source, Date) %>% 
+  summarise(Tdaily = mean(Temp_C)) %>% 
   ggplot(aes(x = Date))+
-  geom_line(aes(y = Hobo_Tdaily, colour = "Sub-basin TidbiTs"), size = 0.8)+
-  geom_line(aes(y = FWx_Tdaily, colour = "CRD FWx"), size = 0.8)+
+  geom_line(aes(y = Tdaily, colour = data_source), size = 0.8)+
   scale_color_brewer(palette = "Dark2")+ 
   theme_bw()+
   facet_wrap(~site, ncol = 1,
              scales = "free_y",
              strip.position = "right")+
-  labs(x = "", y = "Daily mean air temperature (°C)",
+  labs(x = "", y = "Air temperature (°C)",
        colour = "Data origin:")+
   theme(legend.position = "top", 
         text = element_text(size = 12))+
@@ -1080,17 +1118,107 @@ Hobo_WxLWSA %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png", 
        width = 6, height = 7, units = "in")
 
-# old bad eyes
-Hobo_WxLWSA %>%
-  mutate(month = lubridate::month(DateTime, label = TRUE),
-         year = lubridate::year(DateTime)) %>% 
-  group_by(site, TidbiT_location, year, month) %>% 
-  summarise(T_mean = mean(Temp_C),
-            T_sd = sd(Temp_C)) 
+```
+
+### FWx-Hobo normality tests
+
+```{r}
+# make a comparison between subbasin hobos and the LWSA FWx data
+# Test temps for normality
+
+# density by weather station source
+# these should be the same 
+## -- they came from the same source & are limited to the same date range
+Hobo_Fwx %>% 
+  ggplot(aes(Temp_C))+
+  geom_density(aes(colour = site))+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~ data_source)
+
+# density by TidbiT site -- not normal
+Hobo_Fwx %>% 
+  ggplot(aes(Temp_C))+
+  geom_density(aes(colour = data_source))+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~ site,
+             nrow = 6,
+             scales = "free_y",
+             strip.position = "right")
+             
+# density ridges
+Hobo_Fwx %>% 
+  ggplot(aes(x = Temp_C, y = fct_rev(site)))+
+  ggridges::geom_density_ridges(aes(fill = data_source), alpha = 0.6) +
+  scale_fill_brewer(palette="Accent") +
+  theme_bw()+
+  theme(legend.position = "top")+
+  labs(x = "Air temperature (°C)",
+       y = "",
+       fill = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
+       width = 4, height = 4, units = "in")
+  
+```
+
+### FWx-Hobo Wilcoxon tests
+
+```{r}
+# Wilcoxon tests (not normally distributed)
+# null hypothesis: there is no difference between the means
+# alternative hypothesis: the difference between means is significant 
+# p-value > 0.05 --> cannot reject null hypothesis
+# p-value < 0.05 --> reject the null hypothesis 
+
+# tests
+# note -- this could probably be a function for tidiness
+
+test <- Hobo_Fwx$Temp_C
+stn <- Hobo_Fwx$data_source
+site <- Hobo_Fwx$site
+
+# run tests and compile results
+Temp_Wilcoxon_tests <- bind_rows(
+  # 1
+  tidy(wilcox.test(test[stn == "FWx" & site == "Weeks"], test[stn == "Hobo" & site == "Weeks"])) %>% 
+    mutate(site = "Weeks"),
+  # 2 
+  tidy(wilcox.test(test[stn == "FWx" & site == "ChrisCrk"], test[stn == "Hobo" & site == "ChrisCrk"])) %>% 
+    mutate(site = "ChrisCrk"),
+  # 3
+  tidy(wilcox.test(test[stn == "FWx" & site == "LeechHead"], test[stn == "Hobo" & site == "LeechHead"])) %>% 
+    mutate(site = "LeechHead"),
+  # 4
+  tidy(wilcox.test(test[stn == "FWx" & site == "CraggCrk"], test[stn == "Hobo" & site == "CraggCrk"])) %>% 
+    mutate(site = "CraggCrk"),
+  # 5 
+  tidy(wilcox.test(test[stn == "FWx" & site == "WestLeech"], test[stn == "Hobo" & site == "WestLeech"])) %>% 
+    mutate(site = "WestLeech"),
+  # 6
+  tidy(wilcox.test(test[stn == "FWx" & site == "Tunnel"], test[stn == "Hobo" & site == "Tunnel"])) %>% 
+    mutate(site = "Tunnel"))
+
+Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>% 
+  select(c(site, p.value)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv", col_names = TRUE)
+
 ```
 
 ## Hobo with subbasin stage_sample results
 ```{r}
+
+## Below is old
+
+# use subbasin_dailyHobo
+subbasin_dailyHobo
+
+# --- OLD --- 
 a <- Hobo %>% 
   mutate(hr_DateTime = round_date(DateTime)) %>% 
   group_by(site, location, hr_DateTime) %>% 
