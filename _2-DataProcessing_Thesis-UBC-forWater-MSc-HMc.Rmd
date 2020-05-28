@@ -101,7 +101,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Re
          event_ID = factor(event_ID, levels = c(1:18)))
 
 # Wrangled Hobo TidibiT logger data with rain events and trip IDs
-Hobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
+Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
                     col_names = TRUE) %>% 
   mutate(location = factor(location),
          site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
@@ -1017,25 +1017,39 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 
 ```
 
-# TEMPERATURE 
+# TEMPERATURE (Hobo)
+```{r}
+# update Hobo wet temperatures 
+# most sites were wet by mid-September (2019) 
+# all sites water loggers were wet by Oct 15
+Hobo <- Hobo_df %>% 
+  mutate(Temp_C_fullwet = Temp_C)
+  
+# all sites water loggers were submerged by 2019-10-15  
+Hobo <- within(Hobo, 
+               Temp_C <- ifelse(TidbiT_location == "water" & 
+                                  Date < as_date("2019-10-15"), "NA", Temp_C_fullwet)) 
+
+# Temp_C is numeric, update from character
+Hobo <- Hobo %>% 
+  mutate(Temp_C = as.numeric(Temp_C)) 
+```
 
 ## plot: Hobo air/water temps over time
 ```{r}
 Hobo %>% 
-  mutate(date = as_date(DateTime)) %>%
-  group_by(site, TidbiT_location, date) %>% 
+  group_by(site, TidbiT_location, Date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
-  ggplot(aes(x = date, y = T_daily))+
-  geom_line(aes(colour = site), size = 1.25)+
+  ggplot(aes(x = Date, y = T_daily))+
+  geom_line(aes(colour = site), size = 0.6)+
   scale_color_brewer(palette = "Dark2")+ 
   theme_bw()+
-  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.4)+
   facet_wrap(~TidbiT_location, ncol = 1,
              scales = "free_y",
-             strip.position = "right")+
+             strip.position = "left")+
   labs(x = "", y = "Mean Daily Temperature (°C)",
-       colour = "Temperature measurement:")+
+       colour = "Site:")+
   theme(legend.position = "top", 
         text = element_text(size = 12))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
@@ -1043,12 +1057,31 @@ Hobo %>%
                    date_breaks = "1 months")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png", 
-       width = 6, height = 7, units = "in")
+       width = 6, height = 6, units = "in")
 ```
 
-# YOU ARE HERE
-
-need to use nesting or tidyr::complete() or expand() to get a range of DateTimes for each site prior to when TidbiTs were deployed...
+## plot: Hobo A/W over space
+```{r}
+Hobo %>% 
+  mutate(date = as_date(DateTime)) %>%
+  group_by(site, TidbiT_location, date) %>% 
+  summarise(T_daily = mean(Temp_C)) %>% 
+  ggplot(aes(x = site, y = T_daily, fill = site))+
+  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21)+
+  geom_boxplot(alpha = 0.4)+
+  scale_fill_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  facet_wrap(~TidbiT_location, 
+             ncol = 1,
+             scales = "free_y",
+             strip.position = "left")+
+  labs(x = "", y = "Mean Daily Temperature (°C)")+
+  theme(legend.position = "none", 
+        text = element_text(size = 12))
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_boxplot.png", 
+       width = 5.5, height = 5.5, units = "in")
+```
 
 ## Compare: Hobo / LWSA
 ```{r}
@@ -1066,20 +1099,19 @@ Hobo %>%
 
 # need FWx for each site before Hobo TidbiTs were installed
 # range: start = "2018-10-23" & end = "2019-08-23"
-project_start <- as.POSIXct("2018-10-23 00:00:00", tz = TZ) # first overlapping field day
-Hobo_start <- as.POSIXct("2019-08-24 00:00:00", tz = TZ)  # all TidbiTs deployed
-project_end <- as.POSIXct("2020-02-18 00:00:00", tz = TZ) # last overlapping field day
+project_start <- ymd_hms("2018-10-23 01:00:00", tz = TZ) # first overlapping field day
+Hobo_start <- ymd_hms("2019-08-24 01:00:00", tz = TZ)  # all TidbiTs deployed
+project_end <- ymd_hms("2020-02-18 15:00:00", tz = TZ) # last overlapping field day
 
 # create a dataframe of full DateTimes
 Hobo_FWx_joiner <- 
   # FWx data came in ever 15 minutes (Hobo ever 30 min)
   tidyr::tibble(DateTime = seq(project_start, project_end, by = "15 min")) %>% 
-  mutate(Date = as_date(DateTime)) %>% 
   # and join to wide Hobo air temp data
   full_join(Hobo %>% 
               filter(TidbiT_location == "air",
                      !is.na(site),
-                     Date < "2020-02-18") %>% 
+                     DateTime < project_end) %>% 
               select(site, DateTime, Temp_C) %>% 
               pivot_wider(names_from = site, values_from = Temp_C), 
             by = c("DateTime")) %>% 
@@ -1087,24 +1119,25 @@ Hobo_FWx_joiner <-
   pivot_longer(cols = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"), names_to = "site", values_to = "Temp_C") %>% 
   mutate(site = factor(site, 
                        levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
-  #filter(!is.na(site)) %>% 
   group_by(site) 
 
 # join FWx and Hobo
+# 30 minute temp intervals from start of project to end
 Hobo_WxLWSA_full <- LWSA_meanWx %>%
   select(c(DateTime, Temp_mean)) %>%
-  filter(as_date(DateTime) >= as_date(project_start),
-         as_date(DateTime) >= as_date(project_end)) %>% 
+  filter(DateTime < project_end,
+         DateTime >= project_start) %>% 
   full_join(Hobo_FWx_joiner, by = c("DateTime")) %>% 
   rename(FWx = "Temp_mean", Hobo = "Temp_C") %>%
-  #select(c(site, DateTime, Hobo, FWx)) %>%  # reorganize for viewing
-  dplyr::filter(!is.na(site)) %>%  # drops 15 minute nulls
+  filter(lubridate::minute(DateTime) != 15,
+         lubridate::minute(DateTime) != 45) %>%  # drops 15 minute Hobo nulls
   group_by(site) %>% 
-  distinct() %>% 
-  mutate(Date = as_date(DateTime))
-# temp on the half hour 
+  distinct() %>% # drop duplicate rows
+  mutate(Date = as_date(DateTime)) %>% 
+  select(c(site, Date, DateTime, Hobo, FWx))  # reorganize for viewing
 
-# isolate overlapping date ranges
+
+# isolate overlapping date ranges of Hobo and FWx
 Hobo_WxLWSA <- Hobo_WxLWSA_full %>% 
   filter(DateTime >= Hobo_start) 
 ```
@@ -1118,7 +1151,7 @@ Hobo_WxLWSA %>%
   geom_point(alpha = 0.35)+
   theme_bw()+
   facet_wrap(~ site)+
-  labs(y = "Subbasin temperature (°C)", x = "Mean LWSA temperature (°C)") +
+  labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
   theme(text = element_text(size = 12))+
   stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
 ## to get equations include this line:
@@ -1156,8 +1189,12 @@ Hobo_Fwx %>%
   scale_x_date(date_labels = "%Y %b %d",
                    date_breaks = "1 months")+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# ---
+# perfect :)
 
+```
+
+### air temp over time
+```{r}
 # compare temps from FWx to HOBO at each site
 Hobo_Fwx %>% 
   group_by(site, data_source, Date) %>% 
@@ -1182,9 +1219,50 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.
 
 ```
 
+## ADD TO RESULTS
+### air temp over space
+```{r}
+# set FWx like it's a site
+HoboFWx_sites <- Hobo %>% 
+  filter(TidbiT_location == "air",
+         DateTime < project_end, DateTime >= Hobo_start) %>%
+  select(site, DateTime, Temp_C) %>% 
+  pivot_wider(names_from = site, values_from = Temp_C) %>%
+  
+  left_join(
+    LWSA_meanWx %>% select(c(DateTime, Temp_mean)) %>% filter(DateTime < project_end, DateTime >= Hobo_start),
+            by = c("DateTime")) %>% 
+  rename(FWx = "Temp_mean") %>% 
+  # then, pivot longer again so each site has a full DateTime range
+  pivot_longer(cols = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "FWx"), names_to = "site", values_to = "Temp_C") %>% 
+  mutate(site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "FWx"))) 
+
+# boxplot
+# compare temps from FWx to HOBO at each site
+HoboFWx_sites %>% 
+  mutate(date = as_date(DateTime)) %>%
+  group_by(site, date) %>% 
+  summarise(T_daily = mean(Temp_C)) %>% 
+  ggplot(aes(x = site, y = T_daily, fill = site))+
+  geom_jitter(alpha = 0.6, shape = 21)+
+  geom_boxplot(alpha = 0.4)+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw() +
+  labs(x = "", y = "Mean Daily Air temperature (°C)",
+       colour = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png", 
+       width = 6, height = 7, units = "in")
+
+```
+
 ### Stats: FWx-Hobo differences 
 
-#### Normality tests
+#### Normality tests -- ADD TO APPENDIX
 ```{r}
 # make a comparison between subbasin hobos and the LWSA FWx data
 # Test temps for normality
@@ -1199,6 +1277,9 @@ Hobo_Fwx %>%
   theme_bw()+
   theme(legend.position = "top")+
   facet_wrap(~ data_source)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_DensityNormalityCheck-subbasins.png", 
+       width = 4, height = 4, units = "in")
 
 # density ridges by TidbiT site
 Hobo_Fwx %>% 
@@ -1212,13 +1293,12 @@ Hobo_Fwx %>%
        fill = "Data origin:")+
   theme(legend.position = "top", 
         text = element_text(size = 12))
-
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
        width = 4, height = 4, units = "in")
 
 ```
-
+# YOU ARE HERE
 #### Wilcoxon tests
 ```{r}
 # Wilcoxon tests (not normally distributed)

@@ -16,11 +16,11 @@ library(knitr)      # for nice tables
 
 The primary objectives of this project was to characterize the range of hydrochemical dynamics and synchrony during rainfall response among sub-basins ranging in size from 9.6 to 37 km^2^.  To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during rainfall-induced hydrologic surges -- samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. 
 
-## Weather
+## Weather: Temperature and Precipitation
 
-### CRD F-Wx stations
+### CRD Weather Stations
 
-The Capital Regional District (CRD) provided data from two fire-weather stations they operate within the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation and temperatures were representative of conditions across the Leech watershed. Figure \@ref(fig:meanWxLWSA) shows average precipitation and air temperature over 2018 and 2019 with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
+The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations in the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation were representative of conditions across the Leech watershed. Mean FWx temperatures were referenced and compared to air temperatures measured at each research site (section XXXXX). Average precipitation and air temperature are shown in Figure \@ref(fig:meanWxLWSA), with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
 
 \    
 
@@ -40,9 +40,34 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 
 \  
 
-### Sub-basin Temperatures
+### Research Sites Temperatures
 
-Temperature were recorded at 30 minute intervals using TidbiT loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) at the top and bottom of each sub-basin vertical rack installation. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature. Air temperatures at each of the sub-basin vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)).
+Temperature were recorded at 30 minute intervals using TidbiT loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) at the top and bottom of each sub-basin vertical rack installation. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature. (Figure \@ref(fig:TidbiTairwaterLine) & Figure \@ref(fig:TidbiTairwaterBox)). 
+
+```{r TidbiTairwaterLine, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTairwaterLine} *Temperatures recorded in air and water on vertical racks at each research site.*"
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png")
+```
+
+\  
+
+```{r TidbiTairwaterBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTairwaterBox} *Temperatures recorded in air and water on vertical racks at each research site.*"
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_boxplot.png")
+```
+
+
+
+#### Comparison to LWSA FWx station data
+
+Hobo TidbiTs were installed for the second half of the research project (2019-08-24). Air temperatures at each site were compared to LWSA FWx for the overlapping period (Figure \@ref(fig:TidbiTFWxline)). 
+
+```{r TidbiTFWxline, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTFWxline} *Air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png")
+```
+
+Two-sided Wilcoxon rank sum test were employed to compare each site to LWSA FWx temperatures (). Air temperatures at each of the sub-basin vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)).
 
 
 ```{r TidbiTFWxridges, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
