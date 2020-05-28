@@ -1413,7 +1413,7 @@ Hobo <- Hobo_dat %>%
   filter(!is.na(Temp_C)) %>%   ## NA values occurred on the day loggers were removed from field
   filter(Temp_C < 35.0) %>% 
   mutate(DateTime = lubridate::mdy_hms(DateTime, tz = TZ),
-         location = stringr::str_sub(source, -3, -1),
+         location = stringr::str_sub(source, -3, -1),  # last three characters (wet/dry)
          location = factor(location),
          site = substr(source, 1, 3), # first three characters
          site = case_when(

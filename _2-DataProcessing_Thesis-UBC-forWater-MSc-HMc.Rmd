@@ -1053,26 +1053,7 @@ need to use nesting or tidyr::complete() or expand() to get a range of DateTimes
 ## Compare: Hobo / LWSA
 ```{r}
 
-# join the air temp from subbasins with the mean LWSA temperature data to compare
-Hobo_WxLWSA_full <- LWSA_meanWx %>%
-  select(c(DateTime, Temp_mean)) %>% 
-  mutate(Date = as_date(DateTime)) %>% 
-  filter(Date >= "2018-10-23") %>% 
-  full_join(Hobo %>% filter(TidbiT_location == "air") %>%  group_by(site), 
-            by = "DateTime") %>% 
-  rename(LWSA_Tmean = "Temp_mean", Hobo_Temp = "Temp_C") %>%
-  mutate(Date = as_date(DateTime)) %>% 
-  select(c(site, Date, DateTime, Hobo_Temp, LWSA_Tmean)) %>% 
-  distinct() %>% 
-  rename(Hobo = "Hobo_Temp", FWx = "LWSA_Tmean")
-# temp on the half hour 
-
-# need FWx for each site before Hobo TidbiTs were installed
-Hobo_WxLWSA_full %>% 
-  tidyr::expand(., nesting(site), Hobo, FWx, DateTime)
-
-
-# --- find and isolate overlapping ranges
+# find overlapping ranges
 Hobo %>% 
   group_by(site) %>% 
   summarize(count = n(),
@@ -1080,12 +1061,52 @@ Hobo %>%
             latest = last(Date)) %>% 
   arrange(count)
 
-# ---
+# join the air temp from subbasins with the mean LWSA temperature data to compare
+# augment Hobo df to include full range of DateTime to match to FWx df
+
+# need FWx for each site before Hobo TidbiTs were installed
+# range: start = "2018-10-23" & end = "2019-08-23"
+project_start <- as.POSIXct("2018-10-23 00:00:00", tz = TZ) # first overlapping field day
+Hobo_start <- as.POSIXct("2019-08-24 00:00:00", tz = TZ)  # all TidbiTs deployed
+project_end <- as.POSIXct("2020-02-18 00:00:00", tz = TZ) # last overlapping field day
+
+# create a dataframe of full DateTimes
+Hobo_FWx_joiner <- 
+  # FWx data came in ever 15 minutes (Hobo ever 30 min)
+  tidyr::tibble(DateTime = seq(project_start, project_end, by = "15 min")) %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  # and join to wide Hobo air temp data
+  full_join(Hobo %>% 
+              filter(TidbiT_location == "air",
+                     !is.na(site),
+                     Date < "2020-02-18") %>% 
+              select(site, DateTime, Temp_C) %>% 
+              pivot_wider(names_from = site, values_from = Temp_C), 
+            by = c("DateTime")) %>% 
+  # then, pivot longer again so each site has a full DateTime range
+  pivot_longer(cols = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"), names_to = "site", values_to = "Temp_C") %>% 
+  mutate(site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
+  #filter(!is.na(site)) %>% 
+  group_by(site) 
+
+# join FWx and Hobo
+Hobo_WxLWSA_full <- LWSA_meanWx %>%
+  select(c(DateTime, Temp_mean)) %>%
+  filter(as_date(DateTime) >= as_date(project_start),
+         as_date(DateTime) >= as_date(project_end)) %>% 
+  full_join(Hobo_FWx_joiner, by = c("DateTime")) %>% 
+  rename(FWx = "Temp_mean", Hobo = "Temp_C") %>%
+  #select(c(site, DateTime, Hobo, FWx)) %>%  # reorganize for viewing
+  dplyr::filter(!is.na(site)) %>%  # drops 15 minute nulls
+  group_by(site) %>% 
+  distinct() %>% 
+  mutate(Date = as_date(DateTime))
+# temp on the half hour 
+
 # isolate overlapping date ranges
 Hobo_WxLWSA <- Hobo_WxLWSA_full %>% 
-  filter(!is.na(site),
-         Date > "2019-08-23", Date < "2020-02-18") 
-
+  filter(DateTime >= Hobo_start) 
 ```
 
 ### plot: [1:1] FWx vs HOBO
@@ -1225,6 +1246,7 @@ Temp_Wilcoxon_tests <- bind_rows(
   tidy(wilcox.test(test[stn == "FWx" & site == "Tunnel"], test[stn == "Hobo" & site == "Tunnel"])) %>% 
     mutate(site = "Tunnel"))
 
+# summarize p-values
 Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>% 
   select(c(site, p.value)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv", col_names = TRUE)
@@ -1237,8 +1259,9 @@ Relate subbasins to FWx & use linear regression to estimate temperature for each
 ```{r}
 # lm(y ~ x) == lm(dependent ~ independent) 
 # save summary object
+# use wide dataframe (Hobo_WxLWSA) rather than long(Hobo_Fwx)
 sites_lm <- Hobo_WxLWSA %>% 
-  filter(Date > "2019-08-23", Date < "2020-02-18") %>% # overlapping range
+  filter(Date > "2019-08-23") %>% # overlapping range
   group_by(site) %>% 
   summarise(slope = coefficients(lm(formula = Hobo ~ FWx))[2],
             yint_DOC = coefficients(lm(formula = Hobo ~ FWx))[1],
