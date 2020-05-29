@@ -1025,14 +1025,19 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 Hobo <- Hobo_df %>% 
   mutate(Temp_C_fullwet = Temp_C)
   
-# all sites water loggers were submerged by 2019-10-15  
+# Cragg Creek
 Hobo <- within(Hobo, 
-               Temp_C <- ifelse(TidbiT_location == "water" & 
-                                  Date < as_date("2019-10-15"), "NA", Temp_C_fullwet)) 
+               Temp_C <- ifelse(TidbiT_location == "water" & site == "CraggCrk" &
+                                  Date < as_date("2019-09-15"), "NA", Temp_C_fullwet)) 
+# Tunnel  
+Hobo <- within(Hobo, 
+               Temp_C <- ifelse(TidbiT_location == "water" & site == "Tunnel" & 
+                                  Date < as_date("2019-10-15"), "NA", Temp_C_fullwet))
 
 # Temp_C is numeric, update from character
 Hobo <- Hobo %>% 
   mutate(Temp_C = as.numeric(Temp_C)) 
+
 ```
 
 ## plot: Hobo air/water temps over time
@@ -1056,12 +1061,22 @@ Hobo %>%
   scale_x_date(date_labels = "%Y %b %d",
                    date_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png", 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png", 
        width = 6, height = 6, units = "in")
 ```
 
 ## plot: Hobo A/W over space
 ```{r}
+# all sites water loggers were submerged by 2019-10-15  
+Hobo <- within(Hobo, 
+              Temp_C <- ifelse(TidbiT_location == "water" & 
+                                Date < as_date("2019-10-15"), "NA", Temp_C_fullwet)) 
+
+# Temp_C is numeric, update from character
+Hobo <- Hobo %>% 
+  mutate(Temp_C = as.numeric(Temp_C)) 
+
+## Boxplot
 Hobo %>% 
   mutate(date = as_date(DateTime)) %>%
   group_by(site, TidbiT_location, date) %>% 
@@ -1079,8 +1094,8 @@ Hobo %>%
   theme(legend.position = "none", 
         text = element_text(size = 12))
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_boxplot.png", 
-       width = 5.5, height = 5.5, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png", 
+       width = 5.5, height = 5.5, units = "in") 
 ```
 
 ## Compare: Hobo / LWSA
@@ -1219,7 +1234,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.
 
 ```
 
-## ADD TO RESULTS
 ### air temp over space
 ```{r}
 # set FWx like it's a site
@@ -1262,7 +1276,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png",
 
 ### Stats: FWx-Hobo differences 
 
-#### Normality tests -- ADD TO APPENDIX
+#### Normality tests (ADD TO APPENDIX)
 ```{r}
 # make a comparison between subbasin hobos and the LWSA FWx data
 # Test temps for normality
@@ -1298,7 +1312,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.p
        width = 4, height = 4, units = "in")
 
 ```
-# YOU ARE HERE
+
 #### Wilcoxon tests
 ```{r}
 # Wilcoxon tests (not normally distributed)
@@ -1362,23 +1376,26 @@ Hobo_FWx_filled <- Hobo_WxLWSA_full %>%
 
 # isolate overlapping date range & summarize percent error
 Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>% 
-  filter(Date > "2019-08-23", Date < "2020-02-18") %>% 
+  filter(Date > as_date(Hobo_start), Date < as_date(project_end)) %>% 
   group_by(site) %>% 
   mutate(error = ((Hobo - Predicted)/Hobo)*100) %>%  # positive error = regression under-estimated subbasin temp
   group_by(site) %>% 
   summarise(error_mean = mean(error, na.rm = TRUE),
-            Hobo_mean = mean(Hobo, na.rm = TRUE),
-            sd_Hobo = sd(Hobo, na.rm = TRUE), 
-            Predicted_mean = mean(Predicted, na.rm = TRUE),
-            sd_Predicted = sd(Predicted, na.rm = TRUE), 
+            #Hobo_mean = mean(Hobo, na.rm = TRUE),
+            #sd_Hobo = sd(Hobo, na.rm = TRUE), 
+            Hobo_median = median(Hobo, na.rm = TRUE),
+            Predicted_median = median(Predicted, na.rm = TRUE),
+            #Predicted_mean = mean(Predicted, na.rm = TRUE),
+            #sd_Predicted = sd(Predicted, na.rm = TRUE), 
             min_Hobo = min(Hobo, na.rm = TRUE),
             min_Predicted = min(Predicted, na.rm = TRUE),
             max_Hobo = max(Hobo, na.rm = TRUE),
-            max_Predicted = max(Predicted, na.rm = TRUE)) %>% 
+            max_Predicted = max(Predicted, na.rm = TRUE))
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE)
 
 ```
 
+# YOU ARE HERE
 #### Visualize overlapping estimates
 ```{r}
 
@@ -1393,25 +1410,26 @@ HoboFWx_filled_L <- Hobo_FWx_filled %>%
 # visualize
 # compare
 HoboFWx_filled_L %>% 
-  filter(Temp_source != "FWx") %>% 
+  #filter(Temp_source != "FWx") %>% 
   group_by(site, Temp_source, Date) %>% 
   summarise(Tdaily = mean(Temp_C)) %>% 
   ggplot(aes(x = Date))+
   geom_line(aes(y = Tdaily, colour = Temp_source), size = 0.5)+
   scale_color_brewer(palette = "Dark2")+ 
   theme_bw()+
-  facet_wrap(~site, ncol = 3,
+  facet_wrap(~site, ncol = 1,
              scales = "free_y",
-             strip.position = "top")+
+             strip.position = "right")+
   labs(x = "", y = "Air temperature (°C)",
        colour = "Temp source:")+
   theme(legend.position = "top", 
         text = element_text(size = 12))+
   scale_x_date(date_labels = "%Y %b %d", date_breaks = "2 months")+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx-predicted_lm.png", 
-       width = 6, height = 5, units = "in")
+       width = 5.5, height = 7, units = "in")
 
 ```
 

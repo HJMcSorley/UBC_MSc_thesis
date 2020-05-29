@@ -42,33 +42,39 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 
 ### Research Sites Temperatures
 
-Temperature were recorded at 30 minute intervals using TidbiT loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) at the top and bottom of each sub-basin vertical rack installation. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature. (Figure \@ref(fig:TidbiTairwaterLine) & Figure \@ref(fig:TidbiTairwaterBox)). 
+At each research site, temperatures were recorded at 30 minute intervals using TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) attached to the top and bottom of each vertical rack installation. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine). 
+
 
 ```{r TidbiTairwaterLine, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTairwaterLine} *Temperatures recorded in air and water on vertical racks at each research site.*"
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png")
 ```
+
+\  
+
+While loggers were installed in both positions (air and water) on each rack at the same time, not all water temperature loggers were submerged until mid-October. Figure \@ref(fig:TidbiTairwaterBox) shows the distributions of air and water temperatures at each site, where water temperature was limited to the period when all sites water temperature loggers were submerged. Median water temperatures increased from the headwaters of Leech River to the point of diversion (Leech-Head Cragg-Crk < West-Leech < Tunnel).  
 
 \  
 
 ```{r TidbiTairwaterBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTairwaterBox} *Temperatures recorded in air and water on vertical racks at each research site.*"
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_boxplot.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png")
 ```
 
+\  
 
+#### Air Temperature Comparison
 
-#### Comparison to LWSA FWx station data
-
-Hobo TidbiTs were installed for the second half of the research project (2019-08-24). Air temperatures at each site were compared to LWSA FWx for the overlapping period (Figure \@ref(fig:TidbiTFWxline)). 
+Air temperatures recorded at each site were compared to LWSA FWx for the overlapping period, from (August 24, 2019 to February 20, 2020; Figure \@ref(fig:TidbiTFWxline)). 
 
 ```{r TidbiTFWxline, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTFWxline} *Air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png")
 ```
 
-Two-sided Wilcoxon rank sum test were employed to compare each site to LWSA FWx temperatures (). Air temperatures at each of the sub-basin vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)).
+Two-sided Wilcoxon rank sum test were employed to compare air temperatures at each site to LWSA FWx temperatures. Air temperatures at each of the sub-basin vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)). Headwater sites (Weeks, Chris Creek and Leech Head) and Cragg Creek generally recorded lower air temperatures compared to CRD weather stations, while temperatures recorded at West Leech and Tunnel sites were similar but slightly higher than LWSA mean temperatures.
 
+\  
 
 ```{r TidbiTFWxridges, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTFWxridges} *Density distribution of air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
@@ -76,16 +82,57 @@ fig_cap = "\\label{fig:TidbiTFWxridges} *Density distribution of air temperature
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png")
 ```
 
+\  
 
 ```{r TidbiTFWxPVALUES}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv", col_names = TRUE) %>% 
   mutate(p.value = format(p.value, digits = 2)) %>% 
-  knitr::kable(caption = "*Summary of Wilcoxon test results comparing air temperature at each subbasin to mean LWSA temperature from CRD FWx stations*")
+  knitr::kable(caption = "*Summary of Wilcoxon test results comparing air temperature at each subbasin to mean LWSA temperature from CRD FWx stations*",
+               col.names = c("Site", "p-Value"))
 ```
 
 \  
 
-Headwater sites (Weeks, Chris Creek and Leech Head) and Cragg Creek generally recorded lower air temperatures compared to CRD weather stations, while temperatures recorded at West Leech and Tunnel sites were similar but slightly higher than LWSA mean temperatures.
+##### Linear Regression 
+
+```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
+```
+
+\  
+
+Based on the period of overlapping FWx and TidbiT air temperature data, linear regression was performed to estimate research site temperatures prior to Hobo TidbiT deployment (Figure \@ref(fig:HoboFWxLinearReg). Table \@ref(tab:TidbiTestimateErrors) summarizes the average percent error of estimated air
+
+\  
+
+```{r TidbiTestimateErrors}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE) %>% 
+  #mutate(p.value = format(p.value, digits = 2)) %>% 
+  knitr::kable(digits = c(0,1,1,1,1,1,1,1),
+               caption = "*Summary of predicted air temperature at each site compared to mean LWSA temperature from CRD FWx stations for the same time period*",
+               col.names = c("Site", "Error (%)", 
+                             "Median Temp. (°C)", 
+                             "Estimated Median (°C)",
+                             "Min. Temp (°C)",
+                             "Estimated Min. (°C)",
+                             "Max. Temp (°C)",
+                             "Estimated Max. (°C)"))
+```
+
+\  
+
+estimated air temperatures at each research site were used for quality control data processing of vertical rack samples (Figure \@ref(fig:HoboFWxLinearReg).
+
+"R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv"
+
+```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
+```
+
 
 ### Leech River Responses 
 
