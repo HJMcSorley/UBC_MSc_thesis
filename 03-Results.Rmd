@@ -204,20 +204,17 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Tem
 ```
 
 \  
-
-Results of t-tests are summarized in Table \@ref(tab:HoldTimeTtests). There was a significant change in DOC concentration during hold-time set A, in which DOC-rich "first flush" samples were held for 11 days at average temperature of 7.3°C. Sets B and C did not show significant changes in DOC concentrations. Changes to UV absorbance at 254nm were observed for set C, which was held for 34 days at an average of 4.4°C with a period of sub-zero temperatures. These results suggest that freezing did not alter DOC concentrations but did effect DOM character (reduction in aromaticity). 
+# YOU ARE HERE
+Wilcoxon tests were performed on each hold-time -------Results of t-tests are summarized in Table \@ref(tab:HoldTimeTtests). There was a significant change in DOC concentration during hold-time set A, in which DOC-rich "first flush" samples were held for 11 days at average temperature of 7.3°C. Sets B and C did not show significant changes in DOC concentrations. Changes to UV absorbance at 254nm were observed for set C, which was held for 34 days at an average of 4.4°C with a period of sub-zero temperatures. These results suggest that early-season ("first flush") samples contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable. Freezing did not appear to alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
 
 * TO DO: calculate average temperatures & hold-times for rack samples during each event collection. 
 
 \  
 
 ```{r HoldTimeTtests}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_tTests.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = 
-                 c("Hold-time Set", "Sample season", "Days held", "Mean temp.", 
-              "DOC (mg/L): fresh // held", "p-value (DOC)", "DOC change", 
-              "UV254 (mg/L): fresh // held", "p-value (UV254)", "UV254 change"), 
-               caption = "*Results of t-tests comparing hold-time samples*")
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "*Results of t-tests comparing hold-time samples*")
+
 ```
 
 \  

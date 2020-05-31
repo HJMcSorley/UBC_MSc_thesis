@@ -1373,7 +1373,10 @@ Hobo_FWx_filled <- Hobo_WxLWSA_full %>%
     site == "Tunnel" ~ sites_lm[[6,2]]*FWx + sites_lm[[6,3]]
   )) %>% 
   filter(!is.na(site))
+```
 
+#### table: error for overlap Hobo + estimates
+```{r}
 # isolate overlapping date range & summarize percent error
 Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>% 
   filter(Date > as_date(Hobo_start), Date < as_date(project_end)) %>% 
@@ -1390,15 +1393,15 @@ Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>%
             min_Hobo = min(Hobo, na.rm = TRUE),
             min_Predicted = min(Predicted, na.rm = TRUE),
             max_Hobo = max(Hobo, na.rm = TRUE),
-            max_Predicted = max(Predicted, na.rm = TRUE))
+            max_Predicted = max(Predicted, na.rm = TRUE)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE)
 
 ```
 
-# YOU ARE HERE
-#### Visualize overlapping estimates
+#### plot: lines of estimated earlier +FWx +Hobo temps
 ```{r}
 
+# take the study period data frame with temp estimates at each site
 # pivot longer
 HoboFWx_filled_L <- Hobo_FWx_filled %>%
   group_by(site) %>% 
@@ -1407,10 +1410,8 @@ HoboFWx_filled_L <- Hobo_FWx_filled %>%
                values_to = "Temp_C") %>% 
   mutate(Temp_source = factor(Temp_source))
 
-# visualize
-# compare
+# visualize and compare each site
 HoboFWx_filled_L %>% 
-  #filter(Temp_source != "FWx") %>% 
   group_by(site, Temp_source, Date) %>% 
   summarise(Tdaily = mean(Temp_C)) %>% 
   ggplot(aes(x = Date))+
@@ -1431,25 +1432,8 @@ HoboFWx_filled_L %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx-predicted_lm.png", 
        width = 5.5, height = 7, units = "in")
 
-```
 
-### Estimate earlier subbasin temps
-```{r}
-
-subbasinHoboFWx <- Hobo_WxLWSA_full %>%
-  #filter(Date > "2019-08-23", Date < "2020-02-18") %>%  # for 'Hobo_WxLWSA'
-  pivot_longer(cols = c("Hobo", "FWx"),
-               names_to = "Temp_source",
-               values_to = "Temp_C") %>% 
-  mutate(Temp_source = factor(Temp_source)) %>% 
-  left_join(HoboFWx_filled_L)
-
-```
-
-#### plot: Hobo estimates
-
-```{r}
-
+# line plot of all, not separated by site
 HoboFWx_filled_L %>% 
   group_by(site, Temp_source, Date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
@@ -1457,9 +1441,6 @@ HoboFWx_filled_L %>%
   geom_line(aes(colour = Temp_source))+
   scale_color_brewer(palette = "Set2")+ 
   theme_bw()+
-  #geom_hline(yintercept = 0, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  #geom_hline(yintercept = 7, linetype = "dashed", colour = "darkgrey", size = 0.7)+
-  #facet_wrap(~TidbiT_location, ncol = 1, scales = "free_y", strip.position = "right")+
   labs(x = "", y = "Mean Daily Temperature (°C)",
        colour = "Temperature:")+
   theme(legend.position = "top", 
@@ -1467,51 +1448,8 @@ HoboFWx_filled_L %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   scale_x_date(date_labels = "%Y %b %d",
                    date_breaks = "1 months")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_daily-temps.png", 
-       width = 6, height = 7, units = "in")
-```
-
-
-
-# SAMPLES
-
-## augment dataframes
-```{r, mutate}
-# create a "first-flush category in rain_season(s)
-sampleresults <- sampleresults %>% 
-  select(-c(ID, DateTime)) %>% 
-  mutate(rain_seasons = case_when(
-    event_ID %in% 1:8 ~ "wet",   
-    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
-    event_ID == 9 ~ "first flush",
-    event_ID %in% 10:18 ~ "wet")) %>% 
-  mutate(rain_season = as.character(rain_season))
-
-# fill in any gaps and save as factors
-sampleresults <- within(sampleresults, 
-                        rain_seasons <- ifelse(
-                          is.na(rain_seasons), rain_season, rain_seasons)) %>% 
-  mutate(rain_season = factor(rain_season),
-         rain_seasons = factor(rain_seasons))
-
-# further group sites
-sampleresults <- sampleresults %>% 
-  mutate(site_type = case_when(
-    site == "Weeks" ~ "subbasin",   
-    site == "ChrisCrk" ~ "subbasin",
-    site == "LeechHead"  ~ "subbasin",
-    site == "CraggCrk" ~ "subbasin",
-    site == "WestLeech" ~ "subbasin",
-    site == "Tunnel" ~ "subbasin",
-    site == "Lab" ~ "LabQAQC",
-    TRUE ~ "synoptic")) %>% 
-  mutate(site_type = factor(site_type))
 
 ```
-
 
 # QA-QC ANALYSIS 
 ```{r}
@@ -1567,6 +1505,7 @@ a <- HT %>%
   summarise(group = first(group)) %>%
   group_by(HoldTime_set) %>% 
   summarize(lapse = diff.Date(Date))
+
 # mutate lapse to HT df
 HT <- full_join(HT, a, by = "HoldTime_set") %>% 
   mutate(HoldTime_set = factor(HoldTime_set, levels = c("A", "B", "C")), 
@@ -1576,30 +1515,34 @@ HT <- full_join(HT, a, by = "HoldTime_set") %>%
   mutate(HT_set_labels = HoldTime_set,
          HT_group_labels = HoldTime_group)
 
-# add labels for plots
-HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
-HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
 
-```
-
-# UPDATE THIS HOBO
-```
-{R}
-# ---
 # Join Tunnel HOBO TidbiT data with HT data
-# combine Temperature with hold-time
 HT_Hobo <- Hobo %>% 
   filter(site == "Tunnel",
-         location == "air") %>% 
+         TidbiT_location == "air") %>% 
   mutate(Date = as_date(DateTime)) %>% 
-  full_join(HT, by = c("site", "Date")) %>% 
+  full_join(HT, by = c("site", "Date", "DateTime", "trip", "event_ID", "rain_season")) %>% 
   mutate(site = factor(site),
          group = factor(group, levels = c("AG", "AR", "BG", "BR", "CG", "CR")))
+
+# summarize Hobo HT 
+Hobo_summ <- HT_Hobo %>% 
+  filter(!is.na(group)) %>% 
+  group_by(HoldTime_set) %>% 
+  summarise(lapse = first(lapse),
+            median_T = median(Temp_C),
+            mean_T = mean(Temp_C),
+            sd_T = sd(Temp_C))
 
 ```
 
 ### HT plots
 ```{r}
+
+# create labels for plots
+HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
+HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
+
 # plot sets
 a <- HT %>% 
   ggplot(aes(x = HT_group_labels, y = NPOC_ppm, fill = HT_group_labels))+
@@ -1642,10 +1585,13 @@ cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6))
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HT-exp_stat-boxplots.png")
 
+```
 
-# ---
-# Visual Tests NPOC for normality 
-# density
+### HT tests: Wilcoxon
+```{r}
+
+# density distribution normality 
+# NPOC
 HT %>% 
   ggplot(aes(NPOC_ppm))+
   geom_density(aes(colour = HoldTime_set))+
@@ -1657,9 +1603,6 @@ HT %>%
 # QQ plot
 ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
                  color = "HoldTime_set")
-# A = not normal
-# B = not normal
-# C = not normal
 
 # Tests UV254 abs for normality 
 HT %>% 
@@ -1673,9 +1616,6 @@ HT %>%
 # QQ plot
 ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
                  color = "HoldTime_set")
-# A = not normal
-# B = not normal
-# C = not normal
 
 # Tests DOC estimate abs for normality 
 HT %>% 
@@ -1689,19 +1629,12 @@ HT %>%
 # QQ plot
 ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
                  color = "HoldTime_set")
-
-```
-
-### HT tests: Wilcoxon
-```{r}
+# ---
 # Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
 # alternative hypothesis: the difference between means is significant 
 # p-value > 0.05 --> cannot reject null hypothesis
 # p-value < 0.05 --> reject the null hypothesis 
-
-# tests
-# note -- this could probably be a function for tidiness
 
 # run tests and compile results
 HT_Wilcoxon_tests <- bind_rows(
@@ -1715,7 +1648,6 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"])) %>% 
     mutate(Set = "C", Analysis = "NPOC_ppm"),
-  
   ## Est. DOC ---
   # set A
   #tidy(wilcox.test(HT$DOCeq_ppm[HT$group == "AG"], HT$DOCeq_ppm[HT$group == "AR"])) %>% 
@@ -1726,7 +1658,6 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   #tidy(wilcox.test(HT$DOCeq_ppm[HT$group == "CG"], HT$DOCeq_ppm[HT$group == "CR"])) %>% 
   #  mutate(Set = "C", Analysis = "DOCeq_ppm"),
-  
   ## UV-254 ---
   # set A
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"])) %>% 
@@ -1749,54 +1680,67 @@ HT_Wilcoxon_tests <- bind_rows(
 # cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
 
 ```
-# UPDATE THIS HOBO
 
 #### table: results summary
-```
-#{r}
+```{r}
 # summarize
 HT_summ <- HT %>% 
   group_by(group) %>% 
-  summarise(lapse = first(lapse),
+  summarise(set = first(HoldTime_set),
+            lapse = first(lapse),
             count = n(),
             mean_DOC = mean(NPOC_ppm),
             sd_DOC = sd(NPOC_ppm),
             RSD_DOC = (sd_DOC/mean_DOC)*100,
             mean_UV254 = mean(SAC254_Abs.m),
-            sd_UV254 = sd(SAC254_Abs.m)) %>% 
-  # save
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_F-H-summary.csv")
+            sd_UV254 = sd(SAC254_Abs.m)) 
+# save results
+HT_summ %>% 
+  select(-set) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_sample-summary.csv")
 
-# summarize Hobo HT 
-Hobo_summ <- HT_Hobo %>% 
-  filter(!is.na(group)) %>% 
-  group_by(HoldTime_set) %>% 
-  summarise(lapse = first(lapse),
-            mean_T = mean(Temp_C),
-            sd_T = sd(Temp_C))
+# summarize percent change for each set
+# vector
+HTDOCresult <- HT_summ$mean_DOC
+HTUVresult <- HT_summ$mean_UV254
+# summarize
+change <- 
+  tibble(set = c("A", "B", "C"),
+         percent_change_DOC = c(
+           round((((HTDOCresult[2]-HTDOCresult[1])/HTDOCresult[1])*100),0),
+           round((((HTDOCresult[4]-HTDOCresult[3])/HTDOCresult[3])*100),0),
+           round((((HTDOCresult[6]-HTDOCresult[5])/HTDOCresult[5])*100),0)),
+         percent_change_UV254 = c(
+           round((((HTUVresult[2]-HTUVresult[1])/HTUVresult[1])*100),0),
+           round((((HTUVresult[4]-HTUVresult[3])/HTUVresult[3])*100),0),
+           round((((HTUVresult[6]-HTUVresult[5])/HTUVresult[5])*100),0)))
 
 # join statistical results with Hobo results
 HT_tests_summary <- HT_Wilcoxon_tests %>% 
   pivot_wider(names_from = Analysis, values_from = c("p.value", "sig.diff")) %>% 
   full_join(., Hobo_summ,
             by = c("Set" = "HoldTime_set")) %>% 
-  mutate('temp range' = paste(round(mean_T, 2), "±", round(sd_T, 2))) %>% 
+  mutate(temp_range = paste0(round(mean_T, 1), "°C ± ", round(sd_T, 1), "°C"),
+         temp_median = paste0(median_T, "°C")) %>% 
+  full_join(change, by = c("Set" = "set")) %>% 
   select(Set, "Days held" = lapse, 
-         'temp range', 
-         "DOC sig.diff" = sig.diff_NPOC_ppm,  # new = old
-         "DOC p-value" = p.value_NPOC_ppm, 
-         "UV 254 sig.diff" = sig.diff_SAC254_Abs.m, 
-         "UV 254 p-value" = p.value_SAC254_Abs.m) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_stat-tests.csv")
+         "Temp range" = temp_range, 
+       "Median Temp." = temp_median,
+       "DOC change (%)" = percent_change_DOC, # rename: new = old
+       "sig.diff (DOC)" = sig.diff_NPOC_ppm,  
+       "p-value (DOC)" = p.value_NPOC_ppm,
+       "UV 254 change (%)" = percent_change_UV254,
+       "sig.diff (UV 254)" = sig.diff_SAC254_Abs.m, 
+       "p-value (UV 254)" = p.value_SAC254_Abs.m) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv")
 
 ```
 
+# YOU ARE HERE
 
-### plot: Hobo HT
-```
-#{r}
+### plot: HT megaplot
+```{r}
 # pull & set values for plot
-
 # set dates
 HT_range <- HT %>% 
   group_by(HoldTime_set) %>% 
@@ -1839,6 +1783,17 @@ C_temp <- HT_Hobo %>%
   pull()
 
 ## ---------------
+# pivot long
+HT_Hobo_L <- HT_Hobo %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(daily_mean_T = mean(Temp_C)) %>% 
+  full_join(HT_Hobo) %>% 
+  pivot_longer(cols = c(daily_mean_T, Temp_C),
+               values_to = "degrees_C",
+               names_to = "Temp") %>% 
+  mutate(Temp = factor(Temp, levels = c("Temp_C", "daily_mean_T")))
+  
 # plot it  
 HT_Hobo_L %>% 
   ggplot(aes(x = Date, y = degrees_C))+
@@ -1854,7 +1809,7 @@ HT_Hobo_L %>%
            x = first(HT_Hobo_L$Date)+1, y = 3.5)+
   # vertical lines for HT sample dates
   geom_vline(xintercept = c(HT_dates$date_fresh, HT_dates$date_held), 
-             linetype = "dashed", colour = "black", size = 0.8) +
+             linetype = "dashed", colour = "black", size = 0.75) +
   annotate("text", label = c("Hold-time set:\n", paste(HT_dates$HoldTime_set, "\n")), ## set 
            x = c(HT_dates$date_fresh[1]-15, 
                  HT_dates$date_held[1]-HT_dates$half_lapse[1],
@@ -1876,8 +1831,7 @@ HT_Hobo_L %>%
   scale_x_date(date_breaks = "1 months")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png", 
-       width = 7, height = 7 , units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png", width = 7, height = 7 , units = "in")
 
 ```
 
@@ -1951,6 +1905,45 @@ error_spectrolyser <- b %>% pull(error_percent)
 
 # average percent error from both methods:
 error_overall <- (error_shimadzu + error_spectrolyser)/2
+
+```
+
+
+# SAMPLES
+
+## augment dataframes
+```{r, mutate}
+# create a "first-flush category in rain_season(s)
+sampleresults <- sampleresults %>% 
+  select(-c(ID, DateTime)) %>% 
+  mutate(rain_seasons = case_when(
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    event_ID == 9 ~ "first flush",
+    event_ID %in% 10:18 ~ "wet")) %>% 
+  mutate(rain_season = as.character(rain_season))
+
+# fill in any gaps and save as factors
+sampleresults <- within(sampleresults, 
+                        rain_seasons <- ifelse(
+                          is.na(rain_seasons), rain_season, rain_seasons)) %>% 
+  mutate(rain_season = factor(rain_season),
+         rain_seasons = factor(rain_seasons))
+
+# further group sites
+sampleresults <- sampleresults %>% 
+  mutate(site_type = case_when(
+    site == "Weeks" ~ "subbasin",   
+    site == "ChrisCrk" ~ "subbasin",
+    site == "LeechHead"  ~ "subbasin",
+    site == "CraggCrk" ~ "subbasin",
+    site == "WestLeech" ~ "subbasin",
+    site == "Tunnel" ~ "subbasin",
+    site == "Lab" ~ "LabQAQC",
+    TRUE ~ "synoptic")) %>% 
+  mutate(site_type = factor(site_type))
 
 ```
 
