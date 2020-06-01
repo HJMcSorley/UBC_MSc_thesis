@@ -1769,7 +1769,7 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
 
 ### plot HT megaplot
 ```{r}
-## ---------------
+
 # pivot long
 HT_Hobo_L <- HT_Hobo %>% 
   mutate(Date = as_date(DateTime)) %>% 
@@ -1782,7 +1782,7 @@ HT_Hobo_L <- HT_Hobo %>%
   mutate(Temp = factor(Temp, levels = c("Temp_C", "daily_mean_T")))
   
 # plot it  
-HT_Hobo_L %>% 
+HT_air_plot <- HT_Hobo_L %>% 
   ggplot(aes(x = Date, y = degrees_C))+
   geom_line(aes(colour = Temp, size = Temp))+
   scale_colour_manual(values = c(forWater_colours2[["SkyBlue"]], ## 30 minute 
@@ -1792,13 +1792,13 @@ HT_Hobo_L %>%
   guides(colour = guide_legend("Temperature:"), size = guide_legend("Temperature:"))+
   # horizontal lines for lab refrigerator range (0-7 C)
   geom_hline(yintercept = c(0, 7), linetype = "solid", colour = "red")+
-  annotate("text", label = "fridge range", angle = 90, colour = "red",
+  annotate("text", label = "fridge\n range", angle = 90, colour = "red",
            x = first(HT_Hobo_L$Date)+1, y = 3.5)+
   # vertical lines for HT sample dates
   geom_vline(xintercept = c(HT_dates$date_fresh, HT_dates$date_held), 
              linetype = "dashed", colour = "black", size = 0.75) +
   annotate("text", label = c("Hold-time set:\n", paste(HT_dates$HoldTime_set, "\n")), ## set 
-           x = c(HT_dates$date_fresh[1]-15, 
+           x = c(HT_dates$date_fresh[1]-18, 
                  HT_dates$date_held[1]-HT_dates$half_lapse[1],
                  HT_dates$date_held[2]-HT_dates$half_lapse[2],
                  HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
@@ -1813,34 +1813,34 @@ HT_Hobo_L %>%
   labs(y = "Air Temperature (°C)",
        #caption = glue::glue("Mean temperatures during vertical rack hold-time experiments: {A_temp} (set A), {B_temp} (set B), {C_temp} (set C)."),
        x = "") +
-  theme(legend.position = "top", 
+  theme(legend.position = "bottom", 
         text = element_text(size = 12)) +
   scale_x_date(date_breaks = "1 months")
-
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp.png", width = 6.5, height = 6, units = "in")
 
 # --- 
 # plot rain for the same period
-LWSA_meanWx %>% 
-  filter(DateTime >= first(HT_Hobo_L$DateTime))
-  
+HT_rain_plot <- LWSA_meanWx %>% 
+  filter(DateTime >= first(HT_Hobo_L$DateTime),
+         DateTime <= last(HT_Hobo_L$DateTime)) %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   group_by(date) %>% 
   dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(colour = "#09A4D2") +
+  geom_col(fill = forWater_colours1[["DarkGrey"]]) +
   scale_y_reverse() +
-  labs(x = "", y = "Rain\n(mm/day)") +
+  labs(x = "", y = "Rain (mm/day)") +
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
-  scale_x_date(date_breaks = "4 months", date_minor_breaks = "1 months", labels = NULL)+
-  gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) 
-# ---
-
+  scale_x_date(labels = NULL, 
+               date_breaks = "1 months")
+# stack and save
+cowplot::plot_grid(HT_rain_plot, HT_air_plot, align = "v", ncol = 1, rel_heights = c(1,3.5))
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png", width = 7, height = 7 , units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_withRain.png", width = 7, height = 7, units = "in")
 
 ```
 
@@ -1921,7 +1921,10 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 # SAMPLES
 
 ## augment dataframes
+
+### Categories
 ```{r, mutate}
+
 # create a "first-flush category in rain_season(s)
 sampleresults <- sampleresults %>% 
   select(-c(ID, DateTime)) %>% 
@@ -1956,9 +1959,20 @@ sampleresults <- sampleresults %>%
 
 ```
 
-# RIVER SAMPLES
+### QA-QC flags
+```{r}
+# HT: flag samples with HoldTime_days >= 30 
+# FFHT: flag samples with HoldTime_days >=7 days if rain_seasons == "first flush"
 
-## subset df + sample counts
+sampleresults <- sampleresults %>% 
+  mutate(QAQC_flag = case_when(
+    rain_seasons == "first flush" & HoldTime_days >= 7 ~ "FFHT",
+    HoldTime_days >= 30 ~ "HT",
+    TRUE ~ "OK"))
+  
+```
+
+### subset df + sample counts
 ```{r, subsetting-campaign}
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -1968,6 +1982,7 @@ sampleresults <- sampleresults %>%
 n_SynopticGrabs <- sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab") %>%
+  filter(sample_type != "QA-QC") %>%
   group_by(site = forcats::fct_explicit_na(site)) %>% 
   summarise(grab_sample_count = n()) %>% 
   filter(grab_sample_count > 2) %>% 
@@ -1979,6 +1994,7 @@ n_SynopticGrabs <- sampleresults %>%
 
 # create a subset dataframe for the synoptically sampled sites for tidier calling
 synopticfilter <- sampleresults %>% 
+  filter(sample_type != "QA-QC") %>% 
   filter(# subbasin sites 
     site == "Weeks"|
       site == "ChrisCrk"|
@@ -2015,6 +2031,7 @@ synopticfilter$site <- synopticfilter$site %>%
 sixfilter <- sampleresults %>% 
   filter(site_type == "subbasin",
          analysis == "DOC") %>% 
+  filter(sample_type != "QA-QC") %>%
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
 
@@ -2030,6 +2047,8 @@ sixfilter <- sixfilter %>%
   mutate(subbasin_type = factor(subbasin_type))
 
 ```
+
+# RIVER SAMPLES
 
 ### table: all samples count summary
 ```{r, summary-table}
@@ -2077,7 +2096,6 @@ synopticfilter %>%
   ungroup() 
 
 
-# ----------------------------------
 # make a summary table:
 tibble::tibble(
   "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
@@ -2093,13 +2111,15 @@ tibble::tibble(
 
 ### table: DOC synoptic grabs by site Mean/Min/Max  
 ```{r, Grab-synoptic-table}
+
 # synoptic grab samples DOC concs by site
 a <- synopticfilter %>%
   filter(sample_type == "Grab") %>% 
   group_by(site) %>% 
   summarize(count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = round((DOCsd/DOCmean)*100, 0),
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T))  
@@ -2110,63 +2130,55 @@ b <- synopticfilter %>%
   summarize(site = "total summary",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = round((DOCsd/DOCmean)*100, 0),
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) 
 
 # tag totals summary onto site summary
 rbind(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_summary.csv", 
             col_names = T)
 ```
 
-### table: DOC all sites, by sample_type Mean/Min/Max 
+### table: DOC subbasin sites, Mean/Min/Max 
 ```{r, all-samples-together}
+
 # synoptic samples DOC concs by site (Grab + Rack)
-a <- synopticfilter %>%
+a <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site, sample_type) %>% 
+  group_by(site) %>% 
   summarize(count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = round((DOCsd/DOCmean)*100, 0),
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup()
 
 # grouped summary
-b <- synopticfilter %>%
+b <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(sample_type) %>% 
-  summarize(site = "summary",
+  summarize(site = "Summary (total)",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = round((DOCsd/DOCmean)*100, 0),
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, sample_type, count, DOCmean, DOCsd, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  select(site, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
   ungroup()
 
-# full summary
-c <- synopticfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "total",
-            sample_type = "all_G&R",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T))
-
 # tag totals summary onto site summary
-rbind(a, b, c) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_all-summary.csv", col_names = T)
+rbind(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary.csv", col_names = T)
 
 ```
 
+# YOU ARE HERE!
 ## SYNOPTIC
 
 ### plot: synoptic box, all sites
