@@ -158,7 +158,13 @@ Following the installation of a vertical sampling rack, the field protocol was t
 #### A-3.1.5    Method QA/QC: rising limb sampler quality assurance and quality control 
 The methods of passive sampling by vertical racks involve a couple of potential quality control challenges and assumptions. The two key challenges with these methods are the assumption of discrete sample collection, and sample stability during the elapsed time between collection and analysis. These issues were addressed experimentally and are discussed here. 
 
+# Hold-Time Sample Results
 
+```{r HoldTimesAnslysis}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_sample-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "*Results of sample analysese for hold-time sample sets*")
+
+```
 
 #### A-3.2    Development of a modified siphon sampler designed for passive water collection on the falling limb of hydrograph 
 ##### A-3.2.1   Theory

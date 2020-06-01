@@ -187,37 +187,55 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv", c
 
 \  
 
-### Quality Control 
+### Data Handling & Quality Control 
 
-UBC-based laboratory analysis of samples resulted in an overall accuracy of 3.7% based on analysis of 20 calibration verification standards.
+UBC-based laboratory analysis of samples resulted in an overall accuracy of 3.7% based on analysis of 20 calibration verification standards. 
 
 #### Vertical Rack Hold-Time Experiments
 
-Hold-time experiments were conducted to assess sample stability on the vertical racks, Figure \@ref(fig:HoldTimePlot) summarizes air temperature and timing of hold-time sets.
+Hold-time experiments were conducted at the Tunnel site to assess stability of river water samples held in siphon bottles on the vertical rack. Figure \@ref(fig:HoldTimeAirPlot) summarizes air temperature and timing of the three hold-time sets.
 
 \  
 
-```{r HoldTimePlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoldTime_plot} *Plot of air temperature during vertical rack hold-time experiments. Red horizontal lines indicate the 0-7°C range of a typical laboratory refrigerator and dashed vertical lines separate the three sets of hold-time samples.*"
+```{r HoldTimeAirPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoldTimeAirPlot} *Plot of air temperature during vertical rack hold-time experiments. Red horizontal lines indicate the 0-7°C range of a typical laboratory refrigerator and dashed vertical lines separate the three sets of hold-time samples from collection of grab samples to retrieval of held samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png")
 ```
 
 \  
-# YOU ARE HERE
-Wilcoxon tests were performed on each hold-time -------Results of t-tests are summarized in Table \@ref(tab:HoldTimeTtests). There was a significant change in DOC concentration during hold-time set A, in which DOC-rich "first flush" samples were held for 11 days at average temperature of 7.3°C. Sets B and C did not show significant changes in DOC concentrations. Changes to UV absorbance at 254nm were observed for set C, which was held for 34 days at an average of 4.4°C with a period of sub-zero temperatures. These results suggest that early-season ("first flush") samples contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable. Freezing did not appear to alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
 
-* TO DO: calculate average temperatures & hold-times for rack samples during each event collection. 
+Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon tests (a.k.a 'Mann-Whitney' tests). Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
 
 \  
 
+```{r HoldTimeBoxPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoldTimeBoxPlot} *Sample DOC concentrations and UV absorbance at 254nm contrasting  hold-time samples from collection of grab samples to retrieval of held samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
+```
+
+\ 
+
 ```{r HoldTimeTtests}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Results of t-tests comparing hold-time samples*")
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
+  knitr::kable(caption = "*Results comparing hold-time sample sets*")
 
 ```
 
 \  
+
+While there was no change in UV absorbance for samples from hold-time set-A, there was a significant change in DOC concentration (p-value = 0.008). Samples collected for hold-time set-A were DOC-rich "first flush" samples, the Rack samples were held for 11 days at average temperature of 7°C (slightly above laboratory refrigerator temperatures). For set-A, mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples.  
+
+Set-B had a hold-time of 20 days with average air temperature at 6°C and there was no significant changes in either DOC concentration or UV~254~ (<10% change). 
+
+Set-C included samples held for 34 days at an average of 4.4°C (with a period of sub-zero temperatures). While set-C did not show significant changes in DOC concentration (23% reduction), there were significant changes to UV absorbance at 254-nm (34% decrease in absorbance). Set-C held samples had a greater variability in UV-254 compared to fresh sample counterparts. 
+
+These results suggest that early-season ("first flush") samples may contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when kept at approximately refrigerator temperature. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
+
+#### QA-QC Flags for data
+
+..... talk about flagging data based on HT experiments
 
 ### DOC association with other water quality parameters
  

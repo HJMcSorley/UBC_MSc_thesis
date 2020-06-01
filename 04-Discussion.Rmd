@@ -13,6 +13,6 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 # Discussion
 
-
+Across the Leech Water Supply Area (LWSA), the timing of changes in temperature, river response and DOC concentrations and character were synchornized in the five nested catchments and Leech River Tunnel site (future point of diversion, or mouth of the WSA), however the mean values and magnitude of these changes differed between sites. 
 
 
