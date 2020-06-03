@@ -205,7 +205,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Tem
 
 \  
 
-Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon tests (a.k.a 'Mann-Whitney' tests). Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
+Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon (a.k.a 'Mann-Whitney' tests)^[The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.]. Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
 
 \  
 
@@ -233,9 +233,174 @@ Set-C included samples held for 34 days at an average of 4.4°C (with a period o
 
 These results suggest that early-season ("first flush") samples may contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when kept at approximately refrigerator temperature. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
 
-#### QA-QC Flags for data
+#### QA-QC Flags for Data
 
-..... talk about flagging data based on HT experiments
+Based on results of the hold-time experiments, sample analyses results files were updated to include QA-QC data flags. Flags were added for vertical rack samples that remained on the racks for 30 days or longer, and for early-wet-season Rack samples that were held for 7 days or more. These QA-QC flags were used to filter data for subsequent analyses.  
+
+### Nested sub-catchments of the LWSA
+
+Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling at multiple sites. Sampling for the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Maximum DOC samples were captured by vertical racks at each of the sites except at the head of Leech River (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
+
+\  
+
+Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations across each of the six sites. Highest DOC concentrations occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the watershed which includes Weeks Lake and surrounding wetlands. Lowest DOC was recorded at Leech River Tunnel site (*'Tunnel'*, site 6). 
+
+\  
+
+```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon concentrations across the Leech watershed over sixteen months (366 samples).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
+```
+
+\  
+
+The Tunnel site is the effective outlet of the Leech water supply area (LWSA), as the Leech River Tunnel will be the point of diversion for future inter-basin transfer. Runoff from each of the five nested catchments are effectively integrated at the Tunnel site. Similarly, Weeks Main and Chris Creek sites (*'Weeks'* & *'ChrisCrk'*) are integrated at the Leech-Head site. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins. 
+
+\  
+
+```{r subbasinDOCtunnelint}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = TRUE) %>% 
+  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
+               digits = c(0, 0, 0, 1, 1, 0, 1, 1, 1),
+               caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type. Relative standard deviation (RSD) reflects the absolute standard deviation (sd) relative to mean DOC at each site.*")
+```
+
+\  
+
+Across the LWSA, each site displayed a range of DOC concentrations (relative standard deviations ranged from 24% to 41%). Examining RSD values is a good indicator of variance relative to the mean, and Levene's test confirmed that DOC variance was significantly different between the six sites (p-value = 8.2^-10^).  
+............. useful??
+
+Sample results from each nested catchment were compared to those of the Tunnel. 
+
+To determine if DOC variance was equal between sub-basins and the outlet (Tunnel), Levene's test was used to check for homogeneity of variance (homoscedasticity); the results are summarized in Table \@ref(tab:Levenes). There was significant difference between the Tunnel and Weeks Main Creek (p < 0.001). Variance in DOC was also significantly different between the Tunnel and West Leech River (*'WestLeech'*, site 5), which is a mainstem river that drains the west side of the watershed (p < 0.05). Variance at Cragg Creek (site 4) was different (p < 0.10), while variances at Chris Creek and the Head of Leech River (below the confluence of Weeks and Chris Crk) were not found to differ significantly from the Tunnel site. 
+
+\  
+
+```{r Levenes}
+
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(5),
+               caption = "*Results of Levene's test comparing nested catchments to the outlet. Significance stars: p < 0.01 (3 stars); p < 0.05 (2 stars); p < 0.1 (1 star)*")
+```
+
+\  
+
+WHAT DOES THIS MEAN THO?
+to answer the question of whether sub-basins had equal or different variances in DOC relative to the Tunnel, Levene's test was used. 
+
+Variance in DOC was not the same between West Leech River and the Tunnel.  
+
+This just means that the assumption of equal variances is not valid across the LWSA.
+
+......... not sure
+
+### Temporal patterns 
+
+Over time, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
+
+\  
+
+```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
+```
+
+\  
+
+### Seasonal trends
+
+Overall, DOC concentrations were higher through the wet season compared to the dry season (Figure \@ref(fig:DOCseasonal) & Figure \@ref(fig:seasonalSubbasinRidge)). Sample results across the LWSA catchments are summarized by season in Table \@ref(tab:SeasonalSubbasinData).
+
+\  
+
+```{r DOCseasonal, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry season (n = 53) and wet season (n = 314).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png")
+```
+
+\  
+
+```{r seasonalSubbasinRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalSubbasinRidge} *Density distribution of dissolved organic carbon concentrations at six sites over sixteen months across the Leech water supply area, where sample results are grouped by dry season (n = 53) and wet season (n = 314).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
+```
+
+\  
+
+```{r SeasonalSubbasinData}
+a <- read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = TRUE) 
+a$rain_season <- fct_recode(a$rain_season,
+                       "Dry" = "Dry season", "Wet" = "Wet season") 
+a %>% 
+  knitr::kable(col.names = c("Site", "Season", "Sample count", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (±%)"),
+               digits = c(1, 1, 0, 1, 1, 0),
+               caption = "Seasonal summary of samples collected across LWSA subbasin sites")
+```
+
+\  
+
+#### Stormflow representation
+
+During the wet season, rain events are the dominant hydrologic forcing. Table \@ref(tab:wetSeasonSubbainsSamples) summarizes the number of samples collected across the LWSA sub-basin sites by sample type. 
+
+\  
+
+```{r wetSeasonSubbainsSamples}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv", 
+         col_names = TRUE) %>%
+  knitr::kable(col.names = c("Site", "Sample type", "Count"),
+               caption = "*Summary of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
+```
+
+\  
+
+Stormflow samples collected during stream rise via vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox) & \@ref(fig:subbasinSampletypeRidge)). Results of wet-season sample analysis are summarized in Table \@ref(tab:wetSeasonSubbainDOC).
+
+\  
+
+```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
+```
+
+\  
+
+```{r subbasinSampletypeRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinSampletypeRidge} *Density distribution of dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
+```
+
+\  
+
+```{r wetSeasonSubbainDOC}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", 
+         col_names = TRUE) %>%
+  knitr::kable(col.names = c("Site", "Sample type", "DOC mean (mg/L)", 
+                             "std.dev. (± mg/L)", "RSD (±%)", "min DOC", "max DOC"),
+               digits = c(1, 1, 1, 1, 0, 2, 2),
+               caption = "*Results of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
+```
+
+\  
+
+### Rising limb -- hydrologic versus supply controls on export
+
+Figure \@ref(fig:RisingLimbPlot) shows rising limb sample DOC concentrations across rain events at the LWSA sub-basins. While there was a typically some increase in DOC with increasing river stage, seasonality appeared to have a greater influence on DOC concentrations than river rise (highest DOC early in the wet season). 
+
+```{r RisingLimbPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:RisingLimbPlot} *DOC concentration trends in rising limb samples categorized by rain events*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png")
+```
+
+
+
 
 ### DOC association with other water quality parameters
  
@@ -386,157 +551,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUV
 ```
 
 \  
-
-## Leech watershed and nested sub-catchments
-
-Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. These vertical racks collected samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. Table \@ref(tab:subbasinSampleCounts) summarizes the number of samples collected manually (Grab samples) and via siphon bottles on the vertical racks (Rack samples) at each of the six monitoring sites. Figure \@ref(fig:subbasinDOCbox) shows the range of DOC concentrations at each of the six sites.
-
-\  
-
-```{r subbasinSampleCounts}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Sample counts at the six LWSA monitoring sites*",
-               col.names = c("Site", "Sample type", "Count"))
-```
-
-\  
-
-```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon concentrations across the Leech watershed over sixteen months (367 samples).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
-```
-
-\  
-
-The Leech River Tunnel site (*'Tunnel'*) is the effective outlet of the water supply area, as the tunnel will act as the point of diversion in future inter-basin transfer. Each of the five monitored sub catchments are effectively integrated at the tunnel site. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites. 
-
-\  
-
-```{r subbasinDOCtunnelint}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-tunnelIntegration.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "sub-basin type", "sample count", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (±%)", "min DOC", "median DOC", "max DOC"),
-               digits = c(1, 1, 0, 1, 1, 0, 2, 2, 2),
-               caption = "*Summary of DOC samples collected across the LWSA sub-basins*")
-```
-
-\  
-
-Sample results from each nested sub-basin were compared to those of the Tunnel site to determine if there were significant differences between variances. Levene's test was used to test for homogeneity of variance (homoscedasticity), and the results are summarized in Table \@ref(tab:Levenes). There was significant difference between the Tunnel (site 6) and Weeks (site 1), which is a headwater creek that drains Weeks Lake and it's surrounding wetlands in the northwest of the watershed (p < 0.001). Variance in DOC was also significantly different between the Tunnel and West Leech (site 5), which is a mainstem river that drains the west side of the watershed (p < 0.05). Variance at Cragg Creek (site 4) was different (p < 0.10), while variances at Chris Creek and the Head of Leech River (below the confluence of Weeks and Chris Crk) were not found to differ significantly from the Tunnel site. 
-
-\  
-
-```{r Levenes}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Results of Levene's test compairing nested catchments to the outlet*")
-```
-
-\  
-
-### Temporal patterns 
-
-Over time, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
-
-\  
-
-```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
-```
-
-\  
-
-### Seasonal trends
-
-Overall, DOC concentrations were higher through the wet season compared to the dry season (Figure \@ref(fig:DOCseasonal) & Figure \@ref(fig:seasonalSubbasinRidge)). Sample results across the LWSA catchments are summarized by season in Table \@ref(tab:SeasonalSubbasinData).
-
-\  
-
-```{r DOCseasonal, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry season (n = 53) and wet season (n = 314).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png")
-```
-
-\  
-
-```{r seasonalSubbasinRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalSubbasinRidge} *Density distribution of dissolved organic carbon concentrations at six sites over sixteen months across the Leech water supply area, where sample results are grouped by dry season (n = 53) and wet season (n = 314).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
-```
-
-\  
-
-```{r SeasonalSubbasinData}
-a <- read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = TRUE) 
-a$rain_season <- fct_recode(a$rain_season,
-                       "Dry" = "Dry season", "Wet" = "Wet season") 
-a %>% 
-  knitr::kable(col.names = c("Site", "Season", "Sample count", "mean DOC (mg/L)", "std.dev. (± mg/L)", "RSD (±%)"),
-               digits = c(1, 1, 0, 1, 1, 0),
-               caption = "Seasonal summary of samples collected across LWSA subbasin sites")
-```
-
-\  
-
-#### Stormflow representation
-
-During the wet season, rain events are the dominant hydrologic forcing. Table \@ref(tab:wetSeasonSubbainsSamples) summarizes the number of samples collected across the LWSA sub-basin sites by sample type. 
-
-\  
-
-```{r wetSeasonSubbainsSamples}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv", 
-         col_names = TRUE) %>%
-  knitr::kable(col.names = c("Site", "Sample type", "Count"),
-               caption = "*Summary of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
-```
-
-\  
-
-Stormflow samples collected during stream rise via vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox) & \@ref(fig:subbasinSampletypeRidge)). Results of wet-season sample analysis are summarized in Table \@ref(tab:wetSeasonSubbainDOC).
-
-\  
-
-```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
-```
-
-\  
-
-```{r subbasinSampletypeRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinSampletypeRidge} *Density distribution of dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
-```
-
-\  
-
-```{r wetSeasonSubbainDOC}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", 
-         col_names = TRUE) %>%
-  knitr::kable(col.names = c("Site", "Sample type", "DOC mean (mg/L)", 
-                             "std.dev. (± mg/L)", "RSD (±%)", "min DOC", "max DOC"),
-               digits = c(1, 1, 1, 1, 0, 2, 2),
-               caption = "*Results of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
-```
-
-\  
-
-### Rising limb -- hydrologic versus supply controls on export
-
-Figure \@ref(fig:RisingLimbPlot) shows rising limb sample DOC concentrations across rain events at the LWSA sub-basins. While there was a typically some increase in DOC with increasing river stage, seasonality appeared to have a greater influence on DOC concentrations than river rise (highest DOC early in the wet season). 
-
-```{r RisingLimbPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:RisingLimbPlot} *DOC concentration trends in rising limb samples categorized by rain events*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png")
-```
-
 
 
 ## Random Forests
