@@ -1,6 +1,5 @@
 ---
-output:
-  word_document: default
+output: bookdown::word_document2
 ---
 
 ```{r discussion-setup, include=FALSE}

@@ -31,6 +31,7 @@ library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
 library(car)        # stats: Companion to Applied Regression
+library(synchrony)  # stats for autocorrelated & non-independent data :)
 library(randomForest)
 
 ```
@@ -90,7 +91,7 @@ TZ <- "Etc/GMT+8"
 # including DateTime of Rack sample collection
 sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv",
                           col_names = TRUE) %>%   
-  mutate(trip = factor(trip, levels = c(0:23)),
+  mutate(trip = factor(trip),
          sample_type = factor(sample_type),
          sample = factor(sample),
          analysis = factor(analysis),
@@ -99,6 +100,7 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Re
          pseudoSUVA = pseudo254/NPOC_ppm,
          site = factor(site),
          event_ID = factor(event_ID, levels = c(1:18)))
+
 
 # Wrangled Hobo TidibiT logger data with rain events and trip IDs
 Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
@@ -559,8 +561,9 @@ malahat_data %>%
 
 ```
 
-### plots: Malahat Wx
+
 ```
+### plots: Malahat Wx
 #{r, malahat-plots}
 # plots
 # plot malahat rain and highlight my study period
@@ -596,9 +599,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 
 ```
 
-### lag-years: Wilcoxon's rank sum test
+
 
 ```
+### lag-years: Wilcoxon's rank sum test
 #{r}
 # check for normality
 # The central limit theorem:
@@ -846,7 +850,8 @@ BF_QF_Odyssey <- odyssey_data %>%
 ```
 
 #### WORK HERE!!!! find peaks(notworking)
-```{r}
+```
+#{r}
 # determine the rate of stage rise for each event at each site
 # odyssey_data
 
@@ -2293,8 +2298,7 @@ cowplot::plot_grid(site_subbasin_box, site_mainstem_box, ncol = 1, rel_widths = 
 
 ```
 
-# YOU ARE HERE
-##### inferential/inductive stats
+##### ?inferential/inductive stats
 
 Levene's test: An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
 
@@ -2381,10 +2385,6 @@ max_DOC <- sixfilter %>%
   group_by(year, site) %>% 
   slice(which.max(NPOC_ppm)) 
 
-car::leveneTest(trip ~ site, data = max_DOC) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
 # isolate data related to max UV-254 at each site
 max_UV254 <- sixfilter %>%
   mutate(year = lubridate::year(DateTime_sampled)) %>% 
@@ -2395,7 +2395,9 @@ max_UV254 <- sixfilter %>%
 
 ```
 
-### ??*plot: DOC ~ time subbasin geom_smooth -- site & subbasin type
+# Synchrony
+
+## *plot: DOC ~ time subbasin geom_smooth -- site & subbasin type
 ```{r DOC_overtime-by-site}
 
 # change colour order for clarity
@@ -2439,6 +2441,76 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess
 # Rack samples: n_installRackSamples
 
 ```
+
+## synchrony tests
+```{r}
+
+# reshape sixfilter data to wide flat file matrix
+## sites as columns, timestep as rows
+# values should be abundance
+six_wide_NPOC <- sixfilter %>% 
+  select(c(DateTime_sampled, site, NPOC_ppm)) %>% 
+  pivot_wider(names_from = site,
+              values_from = NPOC_ppm) %>% 
+  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
+  arrange(DateTime_sampled) 
+  
+# synchrony tests
+# community-wide & significance via Monte Carlo randomizations
+# 1 == perfect synchrony
+six_wide_NPOC_matrix <- six_wide_NPOC %>% select(-DateTime_sampled) %>% as.matrix()
+  
+summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
+
+# synchrony tests
+# Determine the proportion of concurrent local extrema (Peaks)
+# 1
+six_wide_NPOC_Weeks <- six_wide_NPOC %>% select(c(DateTime_sampled, Weeks)) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
+  as.matrix()
+# 2
+six_wide_NPOC_Chris <- six_wide_NPOC %>% select(c(DateTime_sampled, ChrisCrk)) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
+  as.matrix()
+# 3
+six_wide_NPOC_Head <- six_wide_NPOC %>% select(c(DateTime_sampled, LeechHead)) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
+  as.matrix()
+# 4
+six_wide_NPOC_Cragg <- six_wide_NPOC %>% select(c(DateTime_sampled, CraggCrk)) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
+  as.matrix()
+# 5
+six_wide_NPOC_West <- six_wide_NPOC %>% select(c(DateTime_sampled, WestLeech)) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
+  as.matrix()
+# 6
+six_wide_NPOC_Tunnel <- six_wide_NPOC %>% select(c(DateTime_sampled, Tunnel))%>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
+  as.matrix()
+
+# tests by site (number)
+peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris)
+peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head)
+peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head)
+peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg)
+peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West)
+peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel)
+peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West)
+peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel)
+peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel)
+
+  
+```
+
+
+
 
 ### sample method
 

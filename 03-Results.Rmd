@@ -125,14 +125,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
 
 estimated air temperatures at each research site were used for quality control data processing of vertical rack samples (Figure \@ref(fig:HoboFWxLinearReg).
 
-"R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv"
-
-```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
-```
-
 
 ### Leech River Responses 
 
@@ -160,17 +152,16 @@ Rain events were defined using the USGS Rainmaker package in R with 15-minute ra
 
 ```{r Events}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
-  knitr::kable(col.names = c("Event ID", "Rain (mm)", "Start", "End"),
+  knitr::kable(col.names = c("Storm number", "Event ID", "Start", "End", "Rain (mm)"),
                caption = "*Rain events defined based on precipitation intensity*")
 ```
 
 \  
 
 ```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:EventsPlot} *Plot of precipitation and stream rise at six sites, with sample points and storm events shown as points and vertical lines (respectively).*"
+fig_cap = "\\label{fig:EventsPlot} *Plot of Precipitation and stream rise at six sites showing rain events and sample collection at six sites across the LWSA, including sample points and rain events as vertical lines.*" 
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png",
-                        caption = "*Rain events and sample collection at six sub-basin sites across the LWSA.*")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png")
 ```
 \  
 
@@ -200,7 +191,7 @@ Hold-time experiments were conducted at the Tunnel site to assess stability of r
 ```{r HoldTimeAirPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoldTimeAirPlot} *Plot of air temperature during vertical rack hold-time experiments. Red horizontal lines indicate the 0-7°C range of a typical laboratory refrigerator and dashed vertical lines separate the three sets of hold-time samples from collection of grab samples to retrieval of held samples.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_air-Temp.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp.png")
 ```
 
 \  
@@ -502,7 +493,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_
 
 \  
 
-```{r synopticDOCdata}
+```
+#{r synopticDOCdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic_grab-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(1, 0, 1, 1, 2, 2, 2), 
                caption = "*Summary of dissolved organic carbon across thirteen synoptically sampled river sites*")
@@ -556,9 +548,4 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUV
 ## Random Forests
 
 * in progress
-
-
-```{r, include = FALSE}
-# empty
-```
 
