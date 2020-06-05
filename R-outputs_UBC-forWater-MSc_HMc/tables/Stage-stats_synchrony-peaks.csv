@@ -1,0 +1,10 @@
+Comparison Group,Site Comparison,Proportion of common peaks,p-value
+headwaters,Weeks & ChrisCrk,0.1786664220856645,0.005994005994005994
+headwaters,LeechHead & Weeks,0.18010435953543175,9.99000999000999e-4
+headwaters,LeechHead & ChrisCrk,0.22243730011782528,0.01098901098901099
+mainstems,LeechHead & CraggCrk,0.23128900194761318,0.002997002997002997
+mainstems,LeechHead & WestLeech,0.23067140452590237,9.99000999000999e-4
+mainstems,CraggCrk & WestLeech,0.25434823265382456,0.001998001998001998
+mainstem to outlet,LeechHead & Tunnel,0.2206278404309039,0.002997002997002997
+mainstem to outlet,CraggCrk & Tunnel,0.21372073611828768,0.014985014985014986
+mainstem to outlet,WestLeech & Tunnel,0.21215634935477837,0.002997002997002997

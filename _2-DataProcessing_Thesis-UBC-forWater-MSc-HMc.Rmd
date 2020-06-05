@@ -753,15 +753,22 @@ Malahat_testMSc_Wx <- bind_rows(
 
 ## STAGE: River Stage 
 
+```{r}
+# min-max normalized stage data 
+# (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
+odyssey_norm <- odyssey_data %>%
+  group_by(source) %>% 
+  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
+  ungroup()
+```
+
 ### plot: normalized stage 
 
 The stage was normalized (min-max norm) to compare relative rises
 ```{r, stage-line-plots}
 
 # plot stage, lines over time
-odyssey_data %>%
-  group_by(source) %>% 
-  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
+odyssey_norm %>%
   ggplot(aes(x = DateTime, y = norm_stg))+
   geom_line(colour = "#0072B2") +
   #viridis::scale_colour_viridis(discrete = TRUE) +
@@ -781,9 +788,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_subbasins.png
 ```{r, ridgey}
 
 # plot stage, density ridges -- could be cool -- fix aesthetics 
-odyssey_data %>%
-  group_by(source) %>% 
-  dplyr::mutate(norm_stg = (stage_cm-min(stage_cm))/(max(stage_cm)-min(stage_cm))) %>% 
+odyssey_norm %>%
   ggplot(aes(x = norm_stg, y = fct_rev(source)))+
   ggridges::geom_density_ridges(aes(fill = source), alpha = 0.6) +
   scale_fill_brewer(palette="Set2") +
@@ -797,56 +802,155 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 
 ```
 
-
-#### trash- EcoHydRology baseflow separation 
+### Synchrony tests
 ```{r}
-# note: don't call the 'EcoHydRology' package into the library if you're using it
-## access it's functions with "::" only because it masks tidyverse functions and makes workflow annoying if it's loaded into the workspace.
 
-# separate stage into base and quick (no flow data available)
-# separate each site, base R style (ugh)
-BF_QF_Weeks <- odyssey_data %>% 
-  filter(source == "Weeks")  
-BF_QF_Weeks <- EcoHydRology::BaseflowSeparation(BF_QF_Weeks$corr_stage_cm) %>% 
-  mutate(site = "Weeks")
+# reshape sixfilter data to wide flat file matrix
+## sites as columns, timestep as rows
+six_wide_stage <- odyssey_data %>%
+  group_by(source) %>% 
+  filter(Date >= "2018-12-06", Date <= "2020-01-31") %>% # overlapping date ranges
+  select(c(DateTime, source, stage_cm)) %>% 
+  distinct(DateTime, .keep_all = TRUE) %>%   # keep only unique time stamps
+  ungroup() %>% 
+  pivot_wider(names_from = source,
+              values_from = stage_cm) %>% 
+  unnest(cols = c(Weeks, ChrisCrk, LeechHead, CraggCrk, WestLeech, Tunnel)) %>% 
+  arrange(DateTime) %>% 
+  mutate(timestep = row_number(DateTime))
+  
+# synchrony tests
+# community-wide & significance via Monte Carlo randomizations
+# 1 == perfect synchrony
 
-BF_QF_Chris <- odyssey_data %>% 
-  filter(source == "ChrisCrk")  
-BF_QF_Chris <- EcoHydRology::BaseflowSeparation(BF_QF_Chris$corr_stage_cm) %>% 
-  mutate(site = "ChrisCrk")
+# Determine the proportion of concurrent local extrema (Peaks)
+# 1
+six_wide_stage_Weeks <- six_wide_stage %>% 
+  select(c(timestep, Weeks)) %>% 
+  filter(!is.na(Weeks)) %>% 
+  as.matrix()
 
-BF_QF_Head <- odyssey_data %>% 
-  filter(source == "LeechHead")  
-BF_QF_Head <- EcoHydRology::BaseflowSeparation(BF_QF_Head$corr_stage_cm) %>% 
-  mutate(site = "LeechHead")
+# 2
+six_wide_stage_Chris <- six_wide_stage %>% 
+  select(c(timestep, ChrisCrk)) %>% 
+  filter(!is.na(ChrisCrk)) %>% 
+  as.matrix()
 
-BF_QF_Cragg <- odyssey_data %>% 
-  filter(source == "CraggCrk")  
-BF_QF_Cragg <- EcoHydRology::BaseflowSeparation(BF_QF_Cragg$corr_stage_cm) %>% 
-  mutate(site = "CraggCrk")
+# 3
+six_wide_stage_Head <- six_wide_stage %>% 
+  select(c(timestep, LeechHead)) %>% 
+  filter(!is.na(LeechHead)) %>% 
+  as.matrix()
 
-BF_QF_West <- odyssey_data %>% 
-  filter(source == "WestLeech")  
-BF_QF_West <- EcoHydRology::BaseflowSeparation(BF_QF_West$corr_stage_cm) %>% 
-  mutate(site = "WestLeech")
+# 4
+six_wide_stage_Cragg <- six_wide_stage %>% 
+  select(c(timestep, CraggCrk)) %>% 
+  filter(!is.na(CraggCrk)) %>% 
+  as.matrix()
 
-BF_QF_Tunnel <- odyssey_data %>% 
-  filter(source == "Tunnel")  
-BF_QF_Tunnel <- EcoHydRology::BaseflowSeparation(BF_QF_Tunnel$corr_stage_cm) %>% 
-  mutate(site = "Tunnel")
+# 5
+six_wide_stage_West <- six_wide_stage %>% 
+  select(c(timestep, WestLeech)) %>%
+  filter(!is.na(WestLeech)) %>% 
+  as.matrix()
 
-# combine all 
-BF_QF <- bind_rows(BF_QF_Weeks, BF_QF_Chris, BF_QF_Head, BF_QF_Cragg, BF_QF_West, BF_QF_Tunnel) %>%
-  mutate(site = factor(site, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
-  mutate(row = row_number(bt))
+# 6
+six_wide_stage_Tunnel <- six_wide_stage %>% 
+  select(c(timestep, Tunnel)) %>%
+  filter(!is.na(Tunnel)) %>% 
+  as.matrix()
+```
 
-# join to stage data for datetime
-BF_QF_Odyssey <- odyssey_data %>%
-  mutate(row = row_number(corr_stage_cm)) %>% 
-  mutate(site = factor(source, 
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel"))) %>% 
-  full_join(BF_QF, by = c("site", "row"))
+```
+### tests by site (number) (RAM intensive with nrands -- hash out after use)
+# note, I check p-value difference with nrands = 10000 and they were similar enough that I think this is fine.
+# there is no difference between results of type 1 or 2 (?)
+peaks_1to2 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Chris, type = 2, nrands = 1000)
+peaks_1to3 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Head, type = 2, nrands = 1000)
+peaks_2to3 <- synchrony::peaks(six_wide_stage_Chris, six_wide_stage_Head, type = 2, nrands = 1000)
+peaks_3to4 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Cragg, type = 2, nrands = 1000)
+peaks_3to5 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_West, type = 2, nrands = 1000)
+peaks_4to5 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_West, type = 2, nrands = 1000)
+peaks_3to6 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Tunnel, type = 2, nrands = 1000)
+peaks_4to6 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_Tunnel, type = 2, nrands = 1000)
+peaks_5to6 <- synchrony::peaks(six_wide_stage_West, six_wide_stage_Tunnel, type = 2, nrands = 1000)
+
+# combine
+synch_PeaksSumm_stage <- tibble(
+       "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+       "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
+                             "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                             "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
+       "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs),
+       "p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Stage-stats_synchrony-peaks.csv", col_names = T)
+
+# where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
+```
+
+```{r}
+# min-max normalized stage data 
+# (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
+stage_samples_norm <- stage_samples %>%
+  group_by(site) %>% 
+  dplyr::mutate(norm_stg = (corr_stage_cm - min(corr_stage_cm))/(max(corr_stage_cm) - min(corr_stage_cm))) %>% 
+  ungroup()
+
+# plot stage vs DOC
+d <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = NPOC_ppm))+
+  theme_bw()+
+  geom_point(aes(fill = site), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = site))+
+  scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  #scale_x_discrete(position = "top") +
+  facet_wrap(~site, scales = "free_x", ncol = 1)+
+  theme(legend.position = "none", text = element_text(size=11),
+        strip.background = element_blank(), strip.text = element_blank())+
+  labs(y = "Normalized Stage", x = "DOC (mg/L)")
+  
+# plot stage vs UV254
+u <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = SAC254_Abs.m))+
+  theme_bw()+
+  geom_point(aes(fill = site), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = site))+
+  scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  #scale_x_discrete(position = "top") +
+  facet_wrap(~site, scales = "free_x", ncol = 1)+
+  theme(legend.position = "none", text = element_text(size=11),
+        strip.background = element_blank(), strip.text = element_blank())+
+  labs(y = "", x = "Abs. at 254nm")
+
+# plot stage vs UV254
+s <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = SUVA))+
+  theme_bw()+
+  geom_point(aes(fill = site), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = site))+
+  scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  #scale_x_discrete(position = "top") +
+  facet_wrap(~site, scales = "free_x", ncol = 1, strip.position = "right")+
+  theme(legend.position = "none", text = element_text(size=11))+
+  labs(y = "", x = expression(paste("SUVA " [254])))
+
+# group
+cowplot::plot_grid(d,u,s, ncol = 3)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
+       width = 6, height = 8, units = "in")
+
+
+
+# try this
+stage_samples_norm %>% 
+  ggplot(aes(x = norm_stg, y = SUVA))+
+  geom_point()+
+  geom_density_2d()
+
 
 ```
 
@@ -2367,7 +2471,7 @@ Levenes_summary <- tibble::tibble(
   
 ```
 
-
+# HERE
 ## ??Slice: DOC subbasin MAX DOC and UV254 
 ```{r}
 
@@ -2389,7 +2493,6 @@ max_UV254 <- sixfilter %>%
 
 ```
 
-# YOU ARE HERE remove NAs
 ### Synchrony tests
 ```{r}
 
@@ -2468,6 +2571,20 @@ synch_PeaksSumm <- tibble(
                              "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
        "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
+
+
+## Synchrony
+# tests by site (number)
+synch_1to2 <- synchrony::meancorr(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2)
+synch_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2)
+synch_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2)
+synch_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2)
+synch_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2)
+synch_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2)
+synch_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2)
+synch_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2)
+synch_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2)
+
 ```
 
 ## Temporal trends 
