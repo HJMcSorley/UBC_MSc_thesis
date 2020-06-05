@@ -26,6 +26,7 @@ library(knitr)      # tidy tables
 library(RColorBrewer) # Brewer palette for plots
 library(viridis)    # nice colours for plots gradient fills
 library(cowplot)    # add-on to ggplot for layout (nice grid)
+library(directlabels) # add labels to ggplots
 library(gghighlight)# plot highlighting
 library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
@@ -1859,9 +1860,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_withRain.png", w
 ```
 
 ## LAB 
-
-### blanks
 ```{r}
+
+### blanks --------
 # check lab blanks
 # this is a difficult measure of precision because the RO water is not the most reliably stable
 calver %>% 
@@ -1874,10 +1875,7 @@ calver %>%
             sd_DOC = sd(NPOC_ppm, na.rm = T),
             RSD = (sd_DOC/DOC_mean)*100)
   
-```
-
-### cal vers
-```{r}
+### cal vers -------
 # percent error calculated as 'measured' minus 'actual'
 # negative error indicates the method was under-estimating DOC concentration 
 # positive error indicates the method was over-estimating DOC concentration
@@ -1932,11 +1930,11 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 ```
 
 
-# SAMPLES
 
-## augment dataframes
 
-### Categories
+# SAMPLES: augment dataframes
+
+## Categorize
 ```{r, mutate}
 
 # create a "first-flush category in rain_season(s)
@@ -1973,7 +1971,7 @@ sampleresults <- sampleresults %>%
 
 ```
 
-### QA-QC flags
+## QA-QC flags
 ```{r}
 # HT: flag samples with HoldTime_days >= 30 
 # FFHT: flag samples with HoldTime_days >=7 days if rain_seasons == "first flush"
@@ -1986,8 +1984,18 @@ sampleresults <- sampleresults %>%
   
 ```
 
-### subset df + sample counts
+## subset dfs + sample counts
 ```{r, subsetting-campaign}
+
+# create a subset dataframe for the six install sites for tidier calling
+sixfilter <- sampleresults %>% 
+  filter(site_type == "subbasin",
+         analysis == "DOC") %>% 
+  filter(sample_type != "QA-QC") %>%
+  mutate(site = factor(site, levels = 
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+
+
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
 
@@ -2039,33 +2047,9 @@ synopticfilter$site <- synopticfilter$site %>%
                   #"West-Jordan" = "W.Jordan-Trib",
                   #"Deception-crk" = "Deception-Gluch",
                   "Rithet" = "Rithet-crk"))
-# ---
 
-# create a subset dataframe for the six install sites for tidier calling
-sixfilter <- sampleresults %>% 
-  filter(site_type == "subbasin",
-         analysis == "DOC") %>% 
-  filter(sample_type != "QA-QC") %>%
-  mutate(site = factor(site, levels = 
-                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
-
-# further categorize site_type
-sixfilter <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "headwater",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "mainstem")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
-
-```
-
-# RIVER SAMPLES
-
-## all samples count summary
-```{r, summary-table}
+# ------
+# sample counts
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
@@ -2123,9 +2107,36 @@ tibble::tibble(
 
 ```
 
-## SUBBASINS
+### subbasin_types
+```{r}
 
-### unused table: DOC subbasin sites, Mean/Min/Max 
+# further categorize site_type
+sixfilter <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "headwater",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "mainstem")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
+# further categorize subbasin_types
+sixfilter_sub <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "mainstem",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "outlet")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
+```
+
+# SUBBASINS
+
+## unused table: DOC subbasin sites, Mean/Min/Max 
 ```{r, all-samples-together}
 
 # grouped-summary (site and sample-type and all)
@@ -2184,24 +2195,14 @@ Q2: is the variance greater within each site or among all sites?
 Ha: there is greater variance within each site compared to the variance among all sites 
 Ho: the variance within each site is not greater than variance among all sites 
 
-### *table: descriptive stats summary
+### *DOC mean/min/max (descriptive stats summary)
 ```{r}
 # calculate range of DOC within each site and between each site for subbasins
 # this code was copied -- needs to be modified and updated
 
-# separate Tunnel from mainstems in subbasin_type
-a <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "headwater",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "outlet")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
 
 # subbasin samples DOC concs (Grab + Rack)
-b <- a %>%
+a <- sixfilter_sub %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site) %>% 
   summarize(subbasin_type = first(subbasin_type),
@@ -2215,11 +2216,11 @@ b <- a %>%
   ungroup()
 
 # grouped by headwaters / mainstem / outlet
-c <- a %>%
+b <- sixfilter_sub %>%
   filter(sample_type == "Grab" | sample_type == "Rack",
          subbasin_type != "outlet") %>% 
   group_by(subbasin_type) %>% 
-  summarize(site = "~ summary ~",
+  summarize(site = "SUMMARY",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T),
@@ -2231,10 +2232,10 @@ c <- a %>%
   ungroup()
 
 # nested catchment summary
-d <- a %>%
+c <- sixfilter_sub %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   filter(subbasin_type != "outlet") %>% 
-summarize(site = "~ summary ~",
+summarize(site = "SUMMARY",
             subbasin_type = "all nested catchments",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
@@ -2246,18 +2247,15 @@ summarize(site = "~ summary ~",
   ungroup()
 
 # combine 
-rbind(b, c) %>%
+rbind(a,b) %>%
   write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = T)
 
-```
-
-#### *plot: subbasin_type boxplot
-```{r, subbasin-DOCspace}
+# ###########################
 # Boxplots with jitter scatter
 
 # DOC by site (all sites) 
 # grab and rack combined 
-site_subbasin_box <- a %>% 
+site_subbasin_box <- sixfilter_sub %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
@@ -2270,40 +2268,17 @@ site_subbasin_box <- a %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 
-
-# --- drop two headwater creeks -- not sure this is useful...
-
-# change colour order for clarity (drop 1 and 2)
-# check colours with > brewer.pal(n = 6, name = "Set2")
-mainstemcolours <- c(brewer.pal(n = 6, name = "Set2")[[3]],
-                      brewer.pal(n = 6, name = "Set2")[[4]], 
-                      brewer.pal(n = 6, name = "Set2")[[5]], 
-                      brewer.pal(n = 6, name = "Set2")[[6]])
-# plot
-site_mainstem_box <- a %>% 
-  filter(site != "Weeks", site != "ChrisCrk") %>% 
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_colour_manual(values = mainstemcolours, aesthetics = "fill") +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  labs(x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_mainstem_boxplots.png")
-
-# stack
-cowplot::plot_grid(site_subbasin_box, site_mainstem_box, ncol = 1, rel_widths = c(2,1))
-
 ```
 
-##### ?inferential/inductive stats
+## Levene's test for homoscedasticity:
 
-Levene's test: An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
+
+If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
 
 Ha: at least two subbasins have different variances 
 Ho: the variances are equal (there is no difference in the range observed among each site 
+
 ```{r}
 # check for normality
 sixfilter %>% 
@@ -2315,66 +2290,85 @@ sixfilter %>%
              nrow = 3,
              scales = "free_y")
 # Weeks is nearly normal, the others are not
+
 # car::leveneTest(response ~ independent variable)
-car::leveneTest(NPOC_ppm ~ site, data = sixfilter) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first() 
-# p-value is << 0.001 -- reject the null hypothesis of homogeneous variance and conclude there is significant difference between site variances.
+car::leveneTest(NPOC_ppm ~ site, data = sixfilter)
+# --> reject Ho, variance is not homogeneous across the LWSA 
 
-# piece-wise compare to tunnel:
+# find out where:
 
-# 1 - 6 -- Reject that the variances are equal
-v1 <- sixfilter %>%
+# headwaters
+# 1-2
+WC <- sixfilter %>%
   filter(site == "Weeks" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 2 - 6 -- Reject that the variances are equal
-v2 <- sixfilter %>%
+           site == "ChrisCrk") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 1-3
+H1 <- sixfilter %>%
+  filter(site == "Weeks" |
+           site == "LeechHead") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 2-3  
+H2 <- sixfilter %>%
   filter(site == "ChrisCrk" |
-           site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
+           site == "LeechHead") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
 
-# 3 - 6 -- Reject that the variances are equal 
-v3 <- sixfilter %>%
+# mainstems
+# 3-4   
+H4 <- sixfilter %>%
+  filter(site == "CraggCrk" |
+           site == "LeechHead") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 3-5 
+H5 <- sixfilter %>%
+  filter(site == "WestLeech" |
+           site == "LeechHead") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 4-5
+C5 <- sixfilter %>%
+  filter(site == "WestLeech" |
+           site == "CraggCrk") %>% 
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+
+# mainstems and outlet
+# 3-6
+H6 <- sixfilter %>%
   filter(site == "LeechHead" |
            site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 4 - 6 -- Reject that the variances are equal 
-v4 <- sixfilter %>%
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 4-6 
+C6 <- sixfilter %>%
   filter(site == "CraggCrk" |
            site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
-
-# 5 - 6 -- the variances are equal with 98%  
-v5 <- sixfilter %>%
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 5-6   
+W6 <- sixfilter %>%
   filter(site == "WestLeech" |
            site == "Tunnel") %>% 
-  car::leveneTest(NPOC_ppm ~ site, data = .) %>% 
-  pull("Pr(>F)"[[1]]) %>% 
-  first()
+  car::leveneTest(NPOC_ppm ~ site, data = .) %>% tidy() %>% pull("p.value") %>% first()
 
-# write a table
-tibble::tibble("sub-basin site compared to outlet" = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech"),
-               p.value = c(v1, v2, v3, v4, v5)) %>% 
-  mutate(sig.diff = case_when(p.value < 0.01 ~ "***",
-                                p.value < 0.05 ~ "**",
-                                p.value < 0.1 ~ "*",
-                                p.value > 0.1 ~ "NA")) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = T)
 
+# write a summary table
+Levenes_summary <- tibble::tibble(
+  "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+  "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk",
+                        "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                        "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"), 
+  p.value = c(WC, H1, H2, 
+              H4, H5, C5, 
+              H6, C6, W6)) %>% 
+  mutate("Significance" = # (confidence level: ***99%, **95%, *90%)
+           case_when(p.value < 0.01 ~ "***",
+                     p.value < 0.05 ~ "**",
+                     p.value < 0.1 ~ "*",
+                     p.value > 0.1 ~ "homoscedastic")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = T)
+  
 ```
 
-#### ??Slice: DOC subbasin MAX DOC and UV254 
+
+## ??Slice: DOC subbasin MAX DOC and UV254 
 ```{r}
 
 # isolate data related to max DOC at each site
@@ -2395,54 +2389,8 @@ max_UV254 <- sixfilter %>%
 
 ```
 
-# Synchrony
-
-## *plot: DOC ~ time subbasin geom_smooth -- site & subbasin type
-```{r DOC_overtime-by-site}
-
-# change colour order for clarity
-# check colours with > brewer.pal(n = 6, name = "Dark2")
-# new order = [1,4,2,5,3,6]
-timetrendcolours <- c(brewer.pal(n = 6, name = "Dark2")[[1]],
-                      brewer.pal(n = 6, name = "Dark2")[[4]], 
-                      brewer.pal(n = 6, name = "Dark2")[[2]], 
-                      brewer.pal(n = 6, name = "Dark2")[[5]], 
-                      brewer.pal(n = 6, name = "Dark2")[[3]], 
-                      brewer.pal(n = 6, name = "Dark2")[[6]])
-  
-# at each of the six sites (DOC over time)
-sixfilter %>%
-  # change site order for clarity in legend (1,4,2,5,3,6)
-  mutate(site = factor(site, levels = c("Weeks", "CraggCrk", "ChrisCrk", "WestLeech", "LeechHead", "Tunnel"))) %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
-  geom_point(aes(fill = site), size = 2, shape = 21, alpha = 0.4)+
-  geom_smooth(aes(group = site, colour = site, linetype = site), se = FALSE)+
-  scale_colour_manual(values = timetrendcolours, aesthetics = c("colour", "fill"))+
-  scale_linetype_manual(values=c(4,4,3,3,1,1)) + 
-  labs(y = "DOC (mg/L)", fill = "Sample type:", x = "") +
-  theme_bw() +
-  guides(fill = guide_legend("Site:"),
-         colour = guide_legend("Site:"),
-         linetype = guide_legend("Site:"))+
-  facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-        legend.position = "top",
-        text = element_text(size = 12))+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
-#, width = 4, height = 6, units = "in") 
-
-# samples: n_installGrabSamples+n_installRackSamples  
-# Grab samples: n_installGrabSamples 
-# Rack samples: n_installRackSamples
-
-```
-
-## synchrony tests
+# YOU ARE HERE remove NAs
+### Synchrony tests
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -2453,7 +2401,8 @@ six_wide_NPOC <- sixfilter %>%
   pivot_wider(names_from = site,
               values_from = NPOC_ppm) %>% 
   unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
-  arrange(DateTime_sampled) 
+  arrange(DateTime_sampled) %>% 
+  mutate(timestep = row_number(DateTime_sampled))
   
 # synchrony tests
 # community-wide & significance via Monte Carlo randomizations
@@ -2465,56 +2414,128 @@ summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
 # synchrony tests
 # Determine the proportion of concurrent local extrema (Peaks)
 # 1
-six_wide_NPOC_Weeks <- six_wide_NPOC %>% select(c(DateTime_sampled, Weeks)) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_Weeks <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
+  filter(!is.na(NPOC_Weeks)) %>% 
   as.matrix()
+
 # 2
-six_wide_NPOC_Chris <- six_wide_NPOC %>% select(c(DateTime_sampled, ChrisCrk)) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_Chris <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
+  filter(!is.na(NPOC_ChrisCrk)) %>% 
   as.matrix()
+
 # 3
-six_wide_NPOC_Head <- six_wide_NPOC %>% select(c(DateTime_sampled, LeechHead)) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_Head <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
+  filter(!is.na(NPOC_LeechHead)) %>% 
   as.matrix()
+
 # 4
-six_wide_NPOC_Cragg <- six_wide_NPOC %>% select(c(DateTime_sampled, CraggCrk)) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_Cragg <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
+  filter(!is.na(NPOC_CraggCrk)) %>% 
   as.matrix()
+
 # 5
-six_wide_NPOC_West <- six_wide_NPOC %>% select(c(DateTime_sampled, WestLeech)) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_West <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
+  filter(!is.na(NPOC_WestLeech)) %>% 
   as.matrix()
+
 # 6
-six_wide_NPOC_Tunnel <- six_wide_NPOC %>% select(c(DateTime_sampled, Tunnel))%>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
+six_wide_NPOC_Tunnel <- six_wide_NPOC %>% 
   select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
+  filter(!is.na(NPOC_Tunnel)) %>% 
   as.matrix()
 
 # tests by site (number)
-peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris)
-peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head)
-peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head)
-peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg)
-peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West)
-peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel)
-peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West)
-peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel)
-peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel)
+peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2)
+peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2)
+peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2)
+peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2)
+peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2)
+peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2)
+peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2)
+peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2)
+peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2)
 
-  
+# combine
+synch_PeaksSumm <- tibble(
+       "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+       "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
+                             "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                             "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
+       "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
 ```
 
+## Temporal trends 
 
+### *plot: DOC~time subbasin geom_smooth -- site & subbasin type
+```{r DOC_overtime-by-site}
 
+# brewer.pal(n = 6, name = "PuOr") # orange to purple (2 orange for headwaters)
+# brewer.pal(n = 6, name = "PRGn") # purple to green (1 purple for tunnel + 3 green for mainstems)
+timetrendcolours1 <- c(brewer.pal(n = 11, name = "PiYG")[3], brewer.pal(n = 11, name = "PiYG")[2], # orange
+                       brewer.pal(n = 11, name = "RdBu")[8], brewer.pal(n = 11, name = "RdBu")[9], brewer.pal(n = 11, name = "RdYlBu")[10], # three blue for mainstem
+                       brewer.pal(n = 8, name = "Set2")[6]) # purple for tunnel
 
-### sample method
+# at all of the six sites (DOC over time)
+sixfilter_sub %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  theme_bw() +
+  geom_smooth(aes(group = site, 
+                  colour = site, 
+                  linetype = subbasin_type), se = FALSE)+ 
+  scale_colour_manual(values = timetrendcolours1)+
+  scale_linetype_manual(values = c(3, 1, 2))+
+  labs(y = "DOC (mg/L)", fill = "Sample type:", x = "") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        text = element_text(size = 11), 
+        legend.position = "top", legend.box="vertical")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  guides(colour = guide_legend("Site:"),
+         linetype = guide_legend("Basin type:", override.aes = list(colour = "black")))
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png", 
+       width = 6, height = 5, units = "in") 
+# ---
+### this one seems more clear:
+# at each of the six sites (DOC over time)
+sixfilter_sub %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = DateTime_sampled, y = NPOC_ppm)) +
+  theme_bw() +
+  geom_jitter(aes(fill = site), size = 2, shape = 21, alpha = 0.4)+
+  geom_smooth(aes(group = site, colour = site), linetype = 1, se = FALSE)+ 
+  scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  labs(y = "DOC (mg/L)", fill = "Sample type:", x = "") +
+  guides(fill = guide_legend("Site:"),
+         colour = guide_legend("Site:"))+
+  facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = "top",
+        text = element_text(size = 12))+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", 
+       width = 6, height = 6, units = "in") 
 
-#### plot: G/R subbasin ridgeplot 
+# samples: n_installGrabSamples+n_installRackSamples  
+# Grab samples: n_installGrabSamples 
+# Rack samples: n_installRackSamples
+
+```
+
+## Sample Method
+
+### plot: G/R subbasin ridgeplot 
 ```{r, sample_type-ridgeplots}
 
 # density ridge 
@@ -2536,7 +2557,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
 
 ```
 
-#### table: subbasin DOC means+sd
+### table: subbasin DOC means+sd
 ```{r, summaryDOC-table}
 
 # DOC summary table, Grabs and Racks combined
@@ -2564,7 +2585,7 @@ bind_rows(a, b) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
 ```
 
-#### table: subbasin Rack DOC trends by event & site
+### table: subbasin Rack DOC trends by event & site
 ```{r}
 # calculate trend with linear model
 DOC_rack-trends_lm <- sixfilter %>% 
@@ -2584,9 +2605,9 @@ DOC_rack-trends_lm <- sixfilter %>%
 
 ```
 
-## SYNOPTIC
+# SYNOPTIC
 
-### table: DOC synoptic grabs by site Mean/Min/Max  
+## table: DOC synoptic grabs by site Mean/Min/Max  
 ```{r, Grab-synoptic-table}
 
 # synoptic grab samples DOC concs by site
@@ -2619,7 +2640,7 @@ rbind(a, b) %>%
             col_names = T)
 ```
 
-### plot: synoptic box, all sites
+## plot: synoptic box, all sites
 ```{r, synoptic-all-sites}
 
 # all sites
@@ -2639,7 +2660,7 @@ synopticfilter %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
 ```
 
-### plot: synoptic ridge, all sites
+## plot: synoptic ridge, all sites
 ```{r, synoptic-all-sites}
 
 # all sites

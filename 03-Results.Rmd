@@ -196,7 +196,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp
 
 \  
 
-Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon (a.k.a 'Mann-Whitney' tests)^[The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.]. Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
+Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon (a.k.a 'Mann-Whitney' tests)[^The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.]. Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
 
 \  
 
@@ -253,38 +253,34 @@ The Tunnel site is the effective outlet of the Leech water supply area (LWSA), a
 ```{r subbasinDOCtunnelint}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = TRUE) %>% 
   knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
-               digits = c(0, 0, 0, 1, 1, 0, 1, 1, 1),
+               digits = c(0, 0, 0, 0, 0, 0, 2, 2, 2),
                caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type. Relative standard deviation (RSD) reflects the absolute standard deviation (sd) relative to mean DOC at each site.*")
 ```
 
 \  
 
-Across the LWSA, each site displayed a range of DOC concentrations (relative standard deviations ranged from 24% to 41%). Examining RSD values is a good indicator of variance relative to the mean, and Levene's test confirmed that DOC variance was significantly different between the six sites (p-value = 8.2^-10^).  
-............. useful??
+Which was greater, the variability of DOC concentrations within each site or between sites?
 
-Sample results from each nested catchment were compared to those of the Tunnel. 
+Relative standard deviation (RSD) indicates how values range around the mean within a group. Across the LWSA headwater sites (site 1-3), RSD of DOC at each headwater site ranged from 24% to 41%, while the .
 
-To determine if DOC variance was equal between sub-basins and the outlet (Tunnel), Levene's test was used to check for homogeneity of variance (homoscedasticity); the results are summarized in Table \@ref(tab:Levenes). There was significant difference between the Tunnel and Weeks Main Creek (p < 0.001). Variance in DOC was also significantly different between the Tunnel and West Leech River (*'WestLeech'*, site 5), which is a mainstem river that drains the west side of the watershed (p < 0.05). Variance at Cragg Creek (site 4) was different (p < 0.10), while variances at Chris Creek and the Head of Leech River (below the confluence of Weeks and Chris Crk) were not found to differ significantly from the Tunnel site. 
+Results of Levene's test [^Levene's test is used to check for homogeneity of variance, homoscedasticity.] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^).  
+
+To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for each site. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. 
+
+Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site 5) and Weeks Main Creek (*'Weeks'*, site 1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
 
 \  
 
 ```{r Levenes}
 
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-subbasin_variance-LeveneTest.csv", col_names = TRUE) %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-variance-LeveneTests.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(5),
-               caption = "*Results of Levene's test comparing nested catchments to the outlet. Significance stars: p < 0.01 (3 stars); p < 0.05 (2 stars); p < 0.1 (1 star)*")
+               caption = "*Results of Levene's test comparing DOC variance between sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
 ```
 
 \  
 
-WHAT DOES THIS MEAN THO?
-to answer the question of whether sub-basins had equal or different variances in DOC relative to the Tunnel, Levene's test was used. 
 
-Variance in DOC was not the same between West Leech River and the Tunnel.  
-
-This just means that the assumption of equal variances is not valid across the LWSA.
-
-......... not sure
 
 ### Temporal patterns 
 
