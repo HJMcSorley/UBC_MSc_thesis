@@ -53,7 +53,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2y
 
 
 
-# Appendix A -- old
+# Appendix A -- old sections are numbered new additions are not (** UPDATE **)
+
+###	1.4.1 		The forWater Network 
+
+The forWater NSERC Network for source water protection strategies is a transdisciplinary, cross-Canada, applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, so forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatment demands of forested source water. 
+
+\  
 
 
 ## A-1    Greater Victoria Regional Water Supply System

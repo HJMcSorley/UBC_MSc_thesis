@@ -888,6 +888,7 @@ synch_PeaksSumm_stage <- tibble(
 # where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
 ```
 
+# YOU ARE HERE
 ```{r}
 # min-max normalized stage data 
 # (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
@@ -943,18 +944,9 @@ cowplot::plot_grid(d,u,s, ncol = 3)
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
        width = 6, height = 8, units = "in")
 
-
-
-# try this
-stage_samples_norm %>% 
-  ggplot(aes(x = norm_stg, y = SUVA))+
-  geom_point()+
-  geom_density_2d()
-
-
 ```
 
-#### WORK HERE!!!! find peaks(notworking)
+#### !!!! find peaks(not working)
 ```
 #{r}
 # determine the rate of stage rise for each event at each site

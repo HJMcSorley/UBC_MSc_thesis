@@ -3,33 +3,27 @@ output: bookdown::word_document2
 ---
 
 ```{r methods-setup, include=FALSE}
-
 knitr::opts_chunk$set(echo=FALSE, warning = FALSE)
-
 ```
 
 ```{r methods-packages, package.startup.message=FALSE}
-
 # load packages
-library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats, lubridate
+library(tidyverse)  # dplyr + readr
 library(knitr)      # tidy tables
-library(viridis)    # nice colours for plots gradient fills
-library(cowplot)    # add-on to ggplot
-library(gghighlight)# plot highlighting
-
 ```
 
 #	2	Methods
 
 ##	2.1 	Study Site: Leech River Watershed
 
-The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure \@ref(fig:GVWSA) shows the Leech and Sooke Water Supply areas with elevation.  
+The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure \@ref(fig:GVWSAoverview) shows the Leech and Sooke Water Supply areas with elevation.  
 
 \  
 
-```{r GVWSA, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "*The Leech and Sooke Water Supply Areas (Greater Victoria, CRD)*"
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/GVWSA_map-3.png")
+```{r GVWSAoverview, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "*Overview of the Leech and Sooke Water Supply Areas (Greater Victoria, CRD), located on southeastern Vancouver Island, British Columbia, Canada. Bottom image of Canada and inset of Vancouver Island were screenshots from the app 'Windy' (Prague, Czechia, EU); top map of the water supply areas was generated in QGIS (version 3.12.1 - Bucuresti)*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview.png")
 ```
 
 \  
@@ -65,30 +59,30 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 
 ###	2.1.2		Synoptic sampling sites 
 
-Fifteen sites were sampled synoptically from October 2018 to February 2020. Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites as well as the two weather stations.
+Thirteen sites were selected for synoptic water sampling and water quality analysis. Sampling was conducted from October 2018 to February 2020. Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites.
 
 \  
 
 ```{r sampleSitesMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:sampleSitesMap} *Sample sites across the Greater Victoria Water Supply Areas*"
+fig_cap = "\\label{fig:sampleSitesMap} *Synoptic sampling sites across the Greater Victoria Water Supply Areas (made with QGIS, version 3.12.1 - Bucuresti).*"
 
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Sample-Sites_Wx_map.png")
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_synoptic-sampling.png")
 ```
 
 \  
 
 Synoptic sampling involved collecting grab samples in triple-rinsed acid-washed 250 mL amber HDPE bottles. Samples were capped with minimal headspace and transported on ice. Synoptic samples were collected bi-weekly to monthly. Results from synoptic sampling help to inform spatiotemporal patterns in water quality.   			
 
-###	2.1.3 		Subbasin monitoring sites 
+###	2.1.3 		Research (monitoring) sites 
 
-Six sites were selected across the Leech Water Supply Area which represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. Figure \@ref(fig:subbasinMap) shows a map of the sub-basin monitoring sites. The sub-basin sites represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwaters), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel).	
+Across the Leech Water Supply Area, six of the synoptic sampling sites were selected for more intensive monitoring. The sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment.Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites which represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwater streams), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel.	
 
 \  
 
 ```{r subbasinMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinMap} *Subbasin monitoring sites in the Leech Water Supply Area*"
+fig_cap = "\\label{fig:subbasinMap} *Research sites in the Leech Water Supply Area. Sites are named and numbered, where the number indicates the sequence of vertical rack installations as well as the relative progression from headwaters to the mouth (Tunnel site). Each research basin (outlined by a thin black line) was delineated using the sampling site as the outlet (made with QGIS, version 3.12.1 - Bucuresti).*"
 
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/sub-basins.jpg")
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasin-sampling_with-numbers.png")
 ```
 
 \  
