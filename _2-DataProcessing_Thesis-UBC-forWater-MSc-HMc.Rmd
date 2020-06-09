@@ -1002,29 +1002,72 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
 ```
 
 # YOU ARE HERE
-### find peaks(not working)
+### find peaks
+
+new plan: 
+
+* identify the max DOC/SaC254/SUVA for each site & event sampled
+* find the corresponding sample stage for max[]
+* identify the max sample-stage for each site & event sampled
+* count the number of samples collected in that event 
+* was the max[] stage the same as the max sample-stage? i.e. did the highest bottle collect the max[]?
+* in case of sampling multiple stage peaks or falling limb, also look at timestep for sample-stage
+
 ```{r}
 # determine the rate of stage rise for each event at each site
 # odyssey_data
 
-# --
-# isolate peaks
-stage_samples_pks <- stage_samples_norm %>% 
+# note: Tunnel was not installed & recording until "2018-12-06 19:30:00"
+# to check for synchrony, all timesteps should be of equal length
+
+# summarize max and min with timesteps for each site
+stepped_stg_samples <- stage_samples_norm %>% 
+  filter(DateTime >= "2018-12-06 19:30:00", DateTime <= "2020-02-01 02:30:00") %>%  # tunnel logger life
   select(c(site, event_ID, corr_stage_cm, norm_stg, DateTime, NPOC_ppm, SAC254_Abs.m, SUVA)) %>% 
   filter(!is.na(event_ID)) %>% 
-  group_by(site, event_ID) %>%
-  mutate(timestep = row_number(DateTime)) %>% 
+  group_by(site) %>%
+  mutate(timestep = row_number(DateTime)) %>%  # each site gets timesteps
+  ungroup() 
+
+# find peak for stage
+pks_stage_DOC <- stepped_stg_samples %>% 
+  filter(!is.na(NPOC_ppm)) %>%
+  group_by(site, event_ID) %>% 
   summarise(DateTime_peak_stage = DateTime[which.max(corr_stage_cm)],
-            peak_stage = max(corr_stage_cm),
-            DateTime_peak_DOC = DateTime[which.max(NPOC_ppm)],
-            peak_DOC = max(NPOC_ppm),
-            DateTime_peak_SAC254 = DateTime[which.max(SAC254_Abs.m)],
-            peak_SAC254 = max(SAC254_Abs.m)) %>% 
-  full_join(odyssey_data,  
-            by = c("site" = "source", "event_ID", "DateTime")) %>% 
-  select(-c(stage_cm, Date)) %>% 
-  full_join(stage_samples, by = c("site", "event_ID", "DateTime", "interval", "corr_stage_cm"))
+            timestep_peak_stage = timestep[which.max(corr_stage_cm)],
+            peak_stage = max(corr_stage_cm))
+            
+# isolate & find peaks for NPOC and keep the same timesteps
+pks_DOC <- stepped_stg_samples %>% 
+  filter(!is.na(NPOC_ppm)) %>% 
+  group_by(site, event_ID) %>% 
+  summarise(DateTime_peak_DOC = DateTime[which.max(NPOC_ppm)],
+            timestep_peak_DOC = timestep[which.max(NPOC_ppm)],
+            peak_DOC = max(NPOC_ppm))
+       
+# isolate & find peaks for SAC254 and keep the same timesteps  
+pks_SAC254 <- stepped_stg_samples %>% 
+  filter(!is.na(SAC254_Abs.m)) %>%
+  group_by(site, event_ID) %>%
+  summarise(DateTime_peak_SAC254 = DateTime[which.max(SAC254_Abs.m)],
+            timestep_peak_SAC254 = timestep[which.max(SAC254_Abs.m)],
+            peak_SAC254 = max(SAC254_Abs.m)) 
+
+# isolate & find peaks for SUVA254 and keep the same timesteps  
+pks_SUVA <- stepped_stg_samples %>% 
+  filter(!is.na(SUVA)) %>%
+  group_by(site, event_ID) %>% 
+  summarise(DateTime_peak_SUVA = DateTime[which.max(SUVA)],
+            timestep_peak_SUVA = timestep[which.max(SUVA)],
+            peak_SUVA = max(SUVA)) 
   
+ 
+# now - compare these group summaries to see if the timesteps were the same between groups
+
+
+```
+
+```
 ## plot
 stage_samples_pks %>% 
   ggplot(aes(x = DateTime))+
