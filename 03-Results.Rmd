@@ -20,7 +20,7 @@ The primary objectives of this project were to characterize the range of hydroch
 
 ### CRD Weather Stations
 
-The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations in the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation were representative of conditions across the Leech watershed. Mean FWx temperatures were referenced and compared to air temperatures measured at each research site (section XXXXX). Average precipitation and air temperature are shown in Figure \@ref(fig:meanWxLWSA), with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
+The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations in the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation, temperature and snow depth were representative of conditions across the Leech watershed. Average precipitation and air temperature are shown in Figure \@ref(fig:meanWxLWSA), with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
 
 \    
 
@@ -38,6 +38,44 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
                caption = "*Average of weather data from CRD stations in Leech water supply area in 2018 and 2019*")
 ```
 
+\  
+
+#### Rain events 
+
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 that were classified as major events. Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of at least 14 hours. Table \@ref(tab:Events) summarizes the eighteen major rain events that occurred during the study period (2018-10-23 to 2020-02-20).
+
+\  
+
+```{r Events}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
+  knitr::kable(digits = c(0,0,0,1,1,1),
+               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
+```
+
+\  
+
+Major rain events' minimum and maximum values of depth, duration and intensity were identified for each calender year included in the study period (Table \@ref(tab:MinMaxEvents)). The maximum intensity event of 2020, on January 30, generated incredible flows across the Leech watershed (not unlike the rest of Vancouver Island and most of the south coast of BC). Streamflow at Cragg crk (site-4) and the Leech Tunnel (site-6) over-topped the (2m+) vertical racks and ripped the level-loggers out of their stilling wells [^1]. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers.  
+
+[^1]:Following this major event, changes to the stream-bed morphology were evident at Leech-head (site-3) in the form of gravel and cobble deposition, and there was evidence of substantial coarse woody debris transport at Chris crk (site-2).    
+
+
+```{r MinMaxEvents}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events_min-max.csv") %>% 
+  knitr::kable(digits = c(0,1,1,1,1,2,1),
+               caption = "*Minimum and maximum rain event values *")
+```
+
+\  
+
+Figure \@ref(fig:EventsPlot) shows stream level at each monitored sub-basin along with events and samples collected. Eight of these events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year.
+
+\  
+
+```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:EventsPlot} *Plot of Precipitation and stream rise at six sites showing rain events and sample collection at six sites across the LWSA, including sample points and rain events as vertical lines.*" 
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png")
+```
 \  
 
 ### Research Sites Temperatures
@@ -64,6 +102,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-l
 \  
 
 #### Air Temperature Comparison
+
+Mean FWx temperatures were referenced and compared to air temperatures measured at each research site.
 
 Air temperatures recorded at each site were compared to LWSA FWx for the overlapping period, from (August 24, 2019 to February 20, 2020; Figure \@ref(fig:TidbiTFWxline)). 
 
@@ -144,27 +184,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 \  
  
-### Rain events 
-
-Rain events were defined using the USGS Rainmaker package in R with 15-minute rain measurements (average of the two CRD LWSA stations). Major events were defined by cumulative precipitation in excess of 50 mm, and separated by a period of 14 hours between events. Table \@ref(tab:Events) summarizes the eighteen rain events which occurred during the study period, and Figure \@ref(fig:EventsPlot) shows stream level at each monitored sub-basin along with events and samples collected. Eight of these events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year.
-
-\  
-
-```{r Events}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
-  knitr::kable(col.names = c("Storm number", "Event ID", "Start", "End", "Rain (mm)"),
-               caption = "*Rain events defined based on precipitation intensity*")
-```
-
-\  
-
-```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:EventsPlot} *Plot of Precipitation and stream rise at six sites showing rain events and sample collection at six sites across the LWSA, including sample points and rain events as vertical lines.*" 
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_rain-events_plot.png")
-```
-\  
-
 ### Data Handling & Quality Control 
 
 UBC-based laboratory analysis of samples resulted in an overall accuracy of 3.7% based on analysis of 20 calibration verification standards. 

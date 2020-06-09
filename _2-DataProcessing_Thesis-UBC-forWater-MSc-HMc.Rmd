@@ -200,9 +200,7 @@ treatdat_UW <-
 
 # WEATHER - FWx
 
-## 2 stns: CC+MG
-
-### plots: rain/snow/temp
+## CC+MG plots: rain/snow/temp
 At Chris Creek and Martin's Gulch FWx stations
 ```{r, FWx-plots}
 
@@ -282,7 +280,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png",
 ```
 
 
-### table: annual precip, max snow, mean temp 
+## table: annual precip, max snow, mean temp 
 
 FWx means
 ```{r, FWx-table}
@@ -313,7 +311,7 @@ precip_data %>%
 ```
 
 
-## Mean Wx LWSA 
+### Mean Wx LWSA 
 
 Arithmetic means from ChrisCrk and MartinsGulch.
 *Too few stations to do Theissen polygons (2 point polygon = straight line) or isohyetal lines.*
@@ -344,7 +342,7 @@ LWSA_meanWx %>%
 ```
 
 
-### plots
+#### plot mean FWx 
 ```{r, mean-Wx_plot}
 # mean precip plot
 mean_rainplot <- LWSA_meanWx %>% 
@@ -359,9 +357,14 @@ mean_rainplot <- LWSA_meanWx %>%
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
-  scale_x_date(date_breaks = "4 months", date_minor_breaks = "1 months", labels = NULL)+
+  scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL)+
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) 
+                           unhighlighted_params = list(colour = "#3B3838")) +
+  geom_vline(xintercept = as_date("2018-10-23"), 
+             colour = brewer.pal(8, "Dark2")[4],
+             linetype = "dashed", size = 0.75) +
+  annotate("text", label = "Project start", angle = 90, colour = brewer.pal(8, "Dark2")[8],
+           x = as_date("2018-10-23")-20, y = 170)
 
 # plot LWSA snow
 mean_snowplot <- LWSA_meanWx %>% 
@@ -375,9 +378,12 @@ mean_snowplot <- LWSA_meanWx %>%
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
-  scale_x_date(date_breaks = "4 months", date_minor_breaks = "1 months", labels = NULL)+  
+  scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL)+ 
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) 
+                           unhighlighted_params = list(colour = "#3B3838")) +
+   geom_vline(xintercept = as_date("2018-10-23"), 
+             colour = brewer.pal(8, "Dark2")[4],
+             linetype = "dashed", size = 0.75)
 
 # plot LWSA temperature
 mean_tempplot <- LWSA_meanWx %>% 
@@ -391,25 +397,29 @@ mean_tempplot <- LWSA_meanWx %>%
              linetype = "dotted") +
   labs(x = "", y = 'Daily air temp\n(°C)') +
   theme_bw()+
-  theme(text = element_text(size = 11)) +
-  scale_x_date(date_breaks = "4 months", date_minor_breaks = "1 months")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        text = element_text(size = 11),
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months")+
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) 
+                           unhighlighted_params = list(colour = "#3B3838"))+
+   geom_vline(xintercept = as_date("2018-10-23"), 
+             colour = brewer.pal(8, "Dark2")[4],
+             linetype = "dashed", size = 0.75)
 
 # LWSA Wx -- stack precip and temp with cowplot
 cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, 
-                   ncol = 1, align = "vh", greedy = FALSE,
-                   rel_heights = c(1,1,1))
+                   ncol = 1,# align = "vh", greedy = FALSE,
+                   rel_heights = c(3,3,4))
 
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", 
        width = 6, 
-       height = 5, 
+       height = 6, 
        units = "in")
 ```
 
-### table: mean Wx
+#### table: mean Wx
 
 ```{r, table_mean-FWx_summary}
 # mean weather summary
@@ -451,7 +461,7 @@ precip_data %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
-#### questionable objects
+##### questionable objects
 ```{r, Wx-Stn_summaries}
 # I want to know precip totals over the study period
 # by month and by season
@@ -507,18 +517,58 @@ rn_wateryr <- LWSA_meanWx %>%
 ```
 
 ## RAIN EVENTS
-
 ### table of Events
 ```{r}
-events %>% 
-  mutate('Start date' = format(as.POSIXct(StartDate), "%Y-%m-%d %H:%M"), 
-         'End date' = format(as.POSIXct(EndDate), "%Y-%m-%d %H:%M")) %>% 
-  select(stormnum, ID, 'Start date', 'End date', rain) %>% 
-  dplyr::rename('Storm number' = stormnum,
-                'Major event no.' = ID,
-                'Rain (mm)' = rain) %>% 
+majEvents_summary <- events %>%
+  mutate(duration_hrs = difftime(EndDate, StartDate, units = "hours"),
+         duration_days = as.numeric(round(difftime(EndDate, StartDate, units = "days"), 1)),
+         hours = as.numeric(NumberXtract(duration_hrs)),
+         intensity = rain/hours,
+         startDate = as_date(StartDate),
+         endDate = as_date(EndDate)) %>% 
+  mutate(ID = as_factor(ID))
+
+# make a table
+majEvents_summary %>% 
+  select('Storm number' = stormnum,
+         'Major event no.' = ID,
+         'Start Date' = startDate,
+         'Duration' = duration_days,
+         'Rainfall (mm)' = rain,
+         'Intensity (mm/hr)' = intensity) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
+
+# summarize all  
+events_summary <- majEvents_summary %>% 
+  mutate(year = year(StartDate)) %>% 
+  group_by(year) %>% 
+  summarise(duration_min_days = min(duration_days),
+            duration_max_days = max(duration_days),
+            rain_min_mm = min(rain),
+            rain_max_mm = max(rain),
+            intensity_min_mmhr = min(intensity),
+            intensity_max_mmhr = max(intensity),
+            ID_duration_min = ID[which(duration_days == duration_min_days)],
+            ID_duration_max = ID[which(duration_days == duration_max_days)],
+            ID_rain_min = ID[which(rain == rain_min_mm)],
+            ID_rain_max = ID[which(rain == rain_max_mm)],
+            ID_intensity_min = ID[which(intensity == intensity_min_mmhr)],
+            ID_intensity_max = ID[which(intensity == intensity_max_mmhr)])
+
+# make a table
+events_summary %>% 
+  select(year, 
+         'min. duration (days)' = duration_min_days,
+         'max. duration (days)' = duration_max_days,
+         'min rain (mm)' = rain_min_mm, 
+         'max rain (mm)' = rain_max_mm, 
+         'min intensity (mm/hr)' = intensity_min_mmhr,
+         'max intensity (mm/hr)' = intensity_max_mmhr) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events_min-max.csv",
+            col_names = TRUE) 
+
+
 ```
 
 ## Malahat Wx
@@ -653,9 +703,11 @@ Malahat_test_lagyear %>%
   
 ```
 
-#### Wx pre & during MSc
+
 ```
 #{r}
+#### Wx pre & during MSc
+
 # group
 malahat_test_data <- malahat_data %>% 
   filter(!is.na(Value),
@@ -670,9 +722,10 @@ pre_MSc <- malahat_test_data %>% filter(set == "pre")
 MSc <- malahat_test_data %>% filter(set == "MSc")
 ```
 
-##### plots
+
 ```
 #{r}
+##### plots
 # plot sets
 malahat_test_data %>% 
   ggplot(aes(x = set, y = Value, fill = set))+
@@ -705,9 +758,11 @@ MSc %>%
 
 ```
 
-##### tests
+
 ```
 #{r}
+
+##### tests
 # t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
 # ggpubr::ggqqplot() to check for normality
 ## if points fall approximately along the reference line, assume normality
@@ -747,9 +802,6 @@ Malahat_testMSc_Wx <- bind_rows(
 # if the p-value is less than the significance level critical value, reject the null hypothesis 
 
 ```
-
-
-
 
 ## STAGE: River Stage 
 
@@ -888,7 +940,10 @@ synch_PeaksSumm_stage <- tibble(
 # where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
 ```
 
-# YOU ARE HERE
+
+## Normalized stage + samples
+
+### plot density of stage + sample results 
 ```{r}
 # min-max normalized stage data 
 # (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
@@ -946,31 +1001,25 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
 
 ```
 
-#### !!!! find peaks(not working)
-```
-#{r}
+# YOU ARE HERE
+### find peaks(not working)
+```{r}
 # determine the rate of stage rise for each event at each site
 # odyssey_data
 
-# pull dates for trip
-trip_bysite <- stage_samples %>%
-  group_by(trip) %>% 
-  summarise(start = first(DateTime),
-            end = last(DateTime))
-# pull dates for trip and event
-event_bysite <- stage_samples %>%
-  group_by(event_ID) %>% 
-  summarise(start = first(DateTime),
-            end = last(DateTime))
 # --
 # isolate peaks
-stage_samples_pks <- stage_samples %>% 
-  select(c(site, event_ID, corr_stage_cm, DateTime)) %>% 
+stage_samples_pks <- stage_samples_norm %>% 
+  select(c(site, event_ID, corr_stage_cm, norm_stg, DateTime, NPOC_ppm, SAC254_Abs.m, SUVA)) %>% 
   filter(!is.na(event_ID)) %>% 
   group_by(site, event_ID) %>%
-  summarise(DateTime_peak = DateTime[which.max(corr_stage_cm)],
-            peak = max(corr_stage_cm),
-            DateTime = DateTime_peak) %>% 
+  mutate(timestep = row_number(DateTime)) %>% 
+  summarise(DateTime_peak_stage = DateTime[which.max(corr_stage_cm)],
+            peak_stage = max(corr_stage_cm),
+            DateTime_peak_DOC = DateTime[which.max(NPOC_ppm)],
+            peak_DOC = max(NPOC_ppm),
+            DateTime_peak_SAC254 = DateTime[which.max(SAC254_Abs.m)],
+            peak_SAC254 = max(SAC254_Abs.m)) %>% 
   full_join(odyssey_data,  
             by = c("site" = "source", "event_ID", "DateTime")) %>% 
   select(-c(stage_cm, Date)) %>% 

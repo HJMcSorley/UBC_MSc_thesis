@@ -27,7 +27,7 @@ Geospatial data were collected from GeoGratis (Government of Canada Geospatial D
 ```{r GVWSAoverview, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "*Overview of the Leech and Sooke Water Supply Areas (Greater Victoria, CRD), located on southeastern Vancouver Island, British Columbia, Canada. Bottom image of Canada and inset of Vancouver Island were screenshots from the app 'Windy' (Prague, Czechia, EU); top map of the water supply areas was generated in QGIS (version 3.12.1 - Bucuresti)*"
 
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview.png")
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview_colour.png")
 ```
 
 \  
@@ -137,8 +137,8 @@ Table \@ref(tab:subbasinTable) includes watershed characteristic data for each s
 \  
 
 ```{r subbasinTable}
-read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Watershed characteristics summary for monitoring sites*")
+read_csv("R-inputs_UBC-forWater-MSc_HMc/study-sites_basin-characteristics.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "*Watershed characteristics summary for study sites*")
 ```
 
 \  
