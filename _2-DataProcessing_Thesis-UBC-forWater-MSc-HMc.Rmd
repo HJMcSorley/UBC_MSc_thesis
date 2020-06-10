@@ -939,9 +939,64 @@ synch_PeaksSumm_stage <- tibble(
 
 # where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
 ```
+#### peak stage by event & site
+
+Don't really know what to do with this...
+```{r}
+# isolate max for each site by year
+max_stage <- stage_samples %>%
+  filter(!is.na(DateTime)) %>% 
+  mutate(year = lubridate::year(DateTime)) %>% 
+  select(c(site, year, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
+  group_by(site, year) %>% 
+  slice(which.max(corr_stage_cm))
 
 
-## Normalized stage + samples
+
+# determine the rate of stage rise for each event at each site
+# odyssey_data
+
+# note: Tunnel was not installed & recording until "2018-12-06 19:30:00"
+# to check for synchrony, all timesteps should be of equal length
+
+# summarize max and min with timesteps for each site
+stepped_normStage <- odyssey_norm %>% 
+  mutate(Date = as_date(DateTime)) %>% # add a Date 
+  mutate(rain_season = case_when( # some are seasons missing, fix that:
+    Date < "2018-10-27" ~ "wet",
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-20", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-12") ~ "dry",
+    event_ID %in% 9:18 ~ "wet")) %>% 
+  # isolate span of Tunnel logger life
+  filter(DateTime >= "2018-12-06 19:30:00", DateTime <= "2020-02-01 02:30:00") %>%  
+  select(c(site = source, event_ID, corr_stage_cm, norm_stg, DateTime)) %>% 
+  #filter(!is.na(event_ID)) %>% 
+  group_by(site) %>%
+  mutate(timestep = row_number(DateTime)) %>%  # each site gets timesteps
+  ungroup() 
+
+
+# find peak for stage
+pks_stage <- stepped_normStage %>% 
+  group_by(site, event_ID) %>%
+  summarise(DateTime_peak_stage = DateTime[which.max(norm_stg)],
+            timestep_peak_stage = timestep[which.max(norm_stg)],
+            peak_stage = max(norm_stg))
+# reshape to wide (for visual inspection)
+pks_stage_wide <- pks_stage %>%
+  filter(!is.na(event_ID)) %>% 
+  select(-c(DateTime_peak_stage, peak_stage)) %>% 
+  pivot_wider(names_from = site,
+              values_from = c(timestep_peak_stage)) %>% 
+  mutate(LHtoT = Tunnel - LeechHead,
+         CtoT = Tunnel - CraggCrk,
+         WtoT = Tunnel - WestLeech)
+
+```
+
+## Stage (norm) & samples
 
 ### plot density of stage + sample results 
 ```{r}
@@ -950,7 +1005,15 @@ synch_PeaksSumm_stage <- tibble(
 stage_samples_norm <- stage_samples %>%
   group_by(site) %>% 
   dplyr::mutate(norm_stg = (corr_stage_cm - min(corr_stage_cm))/(max(corr_stage_cm) - min(corr_stage_cm))) %>% 
-  ungroup()
+  ungroup() %>% 
+  # some are seasons missing, fix that:
+  mutate(rain_season = case_when(
+    Date < "2018-10-27" ~ "wet",
+    event_ID %in% 1:8 ~ "wet",   
+    Date %within% interval("2019-01-20", "2019-03-01") ~ "wet",
+    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
+    Date %within% interval("2019-05-01", "2019-09-12") ~ "dry",
+    event_ID %in% 9:18 ~ "wet")) 
 
 # plot stage vs DOC
 d <- stage_samples_norm %>% 
@@ -960,11 +1023,11 @@ d <- stage_samples_norm %>%
   geom_density_2d(aes(colour = site))+
   scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
   scale_y_continuous(breaks = c(0.5, 1))+
-  #scale_x_discrete(position = "top") +
   facet_wrap(~site, scales = "free_x", ncol = 1)+
   theme(legend.position = "none", text = element_text(size=11),
         strip.background = element_blank(), strip.text = element_blank())+
   labs(y = "Normalized Stage", x = "DOC (mg/L)")
+
   
 # plot stage vs UV254
 u <- stage_samples_norm %>% 
@@ -1001,107 +1064,61 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
 
 ```
 
-# YOU ARE HERE
-### find peaks
-
-new plan: 
-
-* identify the max DOC/SaC254/SUVA for each site & event sampled
-* find the corresponding sample stage for max[]
-* identify the max sample-stage for each site & event sampled
-* count the number of samples collected in that event 
-* was the max[] stage the same as the max sample-stage? i.e. did the highest bottle collect the max[]?
-* in case of sampling multiple stage peaks or falling limb, also look at timestep for sample-stage
-
-```{r}
-# determine the rate of stage rise for each event at each site
-# odyssey_data
-
-# note: Tunnel was not installed & recording until "2018-12-06 19:30:00"
-# to check for synchrony, all timesteps should be of equal length
-
-# summarize max and min with timesteps for each site
-stepped_stg_samples <- stage_samples_norm %>% 
-  filter(DateTime >= "2018-12-06 19:30:00", DateTime <= "2020-02-01 02:30:00") %>%  # tunnel logger life
-  select(c(site, event_ID, corr_stage_cm, norm_stg, DateTime, NPOC_ppm, SAC254_Abs.m, SUVA)) %>% 
-  filter(!is.na(event_ID)) %>% 
-  group_by(site) %>%
-  mutate(timestep = row_number(DateTime)) %>%  # each site gets timesteps
-  ungroup() 
-
-# find peak for stage
-pks_stage_DOC <- stepped_stg_samples %>% 
-  filter(!is.na(NPOC_ppm)) %>%
-  group_by(site, event_ID) %>% 
-  summarise(DateTime_peak_stage = DateTime[which.max(corr_stage_cm)],
-            timestep_peak_stage = timestep[which.max(corr_stage_cm)],
-            peak_stage = max(corr_stage_cm))
-            
-# isolate & find peaks for NPOC and keep the same timesteps
-pks_DOC <- stepped_stg_samples %>% 
-  filter(!is.na(NPOC_ppm)) %>% 
-  group_by(site, event_ID) %>% 
-  summarise(DateTime_peak_DOC = DateTime[which.max(NPOC_ppm)],
-            timestep_peak_DOC = timestep[which.max(NPOC_ppm)],
-            peak_DOC = max(NPOC_ppm))
-       
-# isolate & find peaks for SAC254 and keep the same timesteps  
-pks_SAC254 <- stepped_stg_samples %>% 
-  filter(!is.na(SAC254_Abs.m)) %>%
-  group_by(site, event_ID) %>%
-  summarise(DateTime_peak_SAC254 = DateTime[which.max(SAC254_Abs.m)],
-            timestep_peak_SAC254 = timestep[which.max(SAC254_Abs.m)],
-            peak_SAC254 = max(SAC254_Abs.m)) 
-
-# isolate & find peaks for SUVA254 and keep the same timesteps  
-pks_SUVA <- stepped_stg_samples %>% 
-  filter(!is.na(SUVA)) %>%
-  group_by(site, event_ID) %>% 
-  summarise(DateTime_peak_SUVA = DateTime[which.max(SUVA)],
-            timestep_peak_SUVA = timestep[which.max(SUVA)],
-            peak_SUVA = max(SUVA)) 
-  
- 
-# now - compare these group summaries to see if the timesteps were the same between groups
-
-
 ```
+# check with seasons
 
+# with seasons
+d2 <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = NPOC_ppm))+
+  theme_bw()+
+  geom_point(aes(fill = rain_season), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = rain_season))+
+  scale_colour_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]]),
+                      aesthetics = c("fill", "colour"))+
+  #scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  facet_wrap(~site, scales = "free_x", ncol = 1)+
+  theme(legend.position = "none", text = element_text(size=11),
+        strip.background = element_blank(), strip.text = element_blank())+
+  labs(y = "Normalized Stage", x = "DOC (mg/L)")
+
+# seasons
+u2 <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = SAC254_Abs.m))+
+  theme_bw()+
+  geom_point(aes(fill = rain_season), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = rain_season))+
+  scale_colour_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]]),
+                      aesthetics = c("fill", "colour"))+
+  #scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  #scale_x_discrete(position = "top") +
+  facet_wrap(~site, scales = "free_x", ncol = 1)+
+  theme(legend.position = "none", text = element_text(size=11),
+        strip.background = element_blank(), strip.text = element_blank())+
+  labs(y = "", x = "Abs. at 254nm")  
+
+# season
+s2 <- stage_samples_norm %>% 
+  ggplot(aes(y = norm_stg, x = SUVA))+
+  theme_bw()+
+  geom_point(aes(fill = rain_season), shape = 21, na.rm = TRUE, alpha = 0.8)+
+  geom_density_2d(aes(colour = rain_season))+
+  scale_colour_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+                               "dry" = forWater_colours2[["MyOrange"]]),
+                      aesthetics = c("fill", "colour"))+
+  #scale_colour_brewer(palette = "Dark2", aesthetics = c("fill", "colour"))+
+  scale_y_continuous(breaks = c(0.5, 1))+
+  #scale_x_discrete(position = "top") +
+  facet_wrap(~site, scales = "free_x", ncol = 1, strip.position = "right")+
+  theme(legend.position = "none", text = element_text(size=11))+
+  labs(y = "", x = expression(paste("SUVA " [254])))
+
+cowplot::plot_grid(d2,u2,s2, ncol = 3)
+# nope
 ```
-## plot
-stage_samples_pks %>% 
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+  ## stage
-  geom_point(aes(y = peak, shape = sample_type), na.rm = TRUE)+ ## samples 
-  # scale_shape_manual(values = c("Grab" = 16, "Rack" = 17), na.translate = FALSE)+
-  facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
-  labs(y = "River stage (cm)", x = "", shape = "Sample Type")+
-  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
-  theme_bw()
-
-
-#+
-  theme(axis.text.x = element_text(angle = 60, hjust=1), text = element_text(size=12), legend.position = "top")+
-  # add vertical lines for events
-  geom_vline(xintercept = event_bysite$start, 
-             linetype = "dashed", colour = "red", size = 0.7)
-  # add vertical lines for trip
-  geom_vline(xintercept = trip_bysite$start, 
-             linetype = "solid", colour = "red", size = 0.6)
-  
-```
-
-##### isolate max for each site
-```{r}
-# isolate data related to max stage at each site
-max_stage <- stage_samples %>%
-  filter(!is.na(DateTime)) %>% 
-  mutate(year = lubridate::year(DateTime)) %>% 
-  select(c(site, year, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
-  group_by(site, year) %>% 
-  slice(which.max(corr_stage_cm))
-```
-
 
 ## Wx MEGAPLOT: FWx+RiverStage
 Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
@@ -1205,6 +1222,7 @@ stage_plot <- odyssey_data %>%
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 # save plot
 # ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Stage-plot_subbasins.png")
+
 
 # mega-plot!! 
 # stack snow, temp, precip and stage with cowplot::plot_grid
@@ -2555,27 +2573,6 @@ Levenes_summary <- tibble::tibble(
   
 ```
 
-# HERE
-## ??Slice: DOC subbasin MAX DOC and UV254 
-```{r}
-
-# isolate data related to max DOC at each site
-max_DOC <- sixfilter %>%
-  mutate(year = lubridate::year(DateTime_sampled)) %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  select(c(site, year, trip, DateTime_sampled, sample, NPOC_ppm, SAC254_Abs.m, corr_stage_cm,  event_ID, rain_seasons, HoldTime_days, QAQC_flag)) %>% 
-  group_by(year, site) %>% 
-  slice(which.max(NPOC_ppm)) 
-
-# isolate data related to max UV-254 at each site
-max_UV254 <- sixfilter %>%
-  mutate(year = lubridate::year(DateTime_sampled)) %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  select(c(site, year, trip, DateTime_sampled, sample, NPOC_ppm, SAC254_Abs.m, corr_stage_cm,  event_ID, rain_seasons, HoldTime_days, QAQC_flag)) %>% 
-  group_by(site, year) %>% 
-  slice(which.max(SAC254_Abs.m))
-
-```
 
 ### Synchrony tests
 ```{r}
@@ -2656,19 +2653,6 @@ synch_PeaksSumm <- tibble(
        "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
 
-
-## Synchrony
-# tests by site (number)
-synch_1to2 <- synchrony::meancorr(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2)
-synch_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2)
-synch_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2)
-synch_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2)
-synch_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2)
-synch_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2)
-synch_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2)
-synch_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2)
-synch_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2)
-
 ```
 
 ## Temporal trends 
@@ -2733,6 +2717,122 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 # Rack samples: n_installRackSamples
 
 ```
+
+
+## Slice: DOC subbasin MAX DOC and UV254 
+not sure what to do with this...
+```{r}
+
+# isolate data related to max DOC at each site
+max_DOC <- sixfilter %>%
+  mutate(year = lubridate::year(DateTime_sampled)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  select(c(site, year, trip, DateTime_sampled, sample, NPOC_ppm, SAC254_Abs.m, corr_stage_cm,  event_ID, rain_seasons, HoldTime_days, QAQC_flag)) %>% 
+  group_by(year, site) %>% 
+  slice(which.max(NPOC_ppm)) 
+
+# isolate data related to max UV-254 at each site
+max_UV254 <- sixfilter %>%
+  mutate(year = lubridate::year(DateTime_sampled)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  select(c(site, year, trip, DateTime_sampled, sample, NPOC_ppm, SAC254_Abs.m, corr_stage_cm,  event_ID, rain_seasons, HoldTime_days, QAQC_flag)) %>% 
+  group_by(site, year) %>% 
+  slice(which.max(SAC254_Abs.m))
+
+```
+
+# YOU ARE HERE
+
+## stage DOC and rack levels
+
+```{r}
+# plot stage with sample dots
+
+# first extract trip start datetimes
+trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
+trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct()
+event_starts <- as.POSIXct(events$StartDate)
+  
+# stage at each of the subbasins
+stage_sample_plot <- stage_samples %>% 
+  filter(DateTime >= "2018-10-24 00:00:00") %>% 
+  ggplot(aes(x = DateTime))+
+  geom_vline(xintercept = c(trip_starts), size = 0.7, 
+             colour = forWater_colours2["MyOrange"])+ 
+  geom_vline(xintercept = c(event_starts), size = 0.7, linetype = "twodash", 
+             colour = forWater_colours1["AccentBlue"])+ 
+  geom_line(aes(y = corr_stage_cm), size = 0.7)+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type), fill = "white", na.rm = TRUE)+
+  scale_shape_manual(breaks = c("Grab", "Rack"),
+                     values = c("Grab" = 24, "Rack" = 21))+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        legend.position = "top")+
+  guides(shape = guide_legend("Sample Type:"))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png")
+
+```
+
+
+# YOU ARE HERE
+
+* group by site and event ID
+* identify max DOC
+* find corresponding sample stage for max DOC
+* count number of bottles (levels) that were collected on that event surge
+
+
+oh no... there's something fucky going on for trip 22-23... why are rack samples on the falling limbs?
+```{r}
+         
+# select trips/events that were well represented by samples for each site
+
+# DOC peaks 
+pks_DOC <- sixfilter %>% 
+  filter(trip == 4 | trip == 5 | trip == 17 | trip == 18 | trip == 19 | trip == 23) %>%  # 18 + 23 were falling limb, 4 is good for all eaxcept Tunnel & 19 is a gooder for all
+  group_by(site, trip) %>% 
+  summarise(#peak_DOC = max(NPOC_ppm),
+            #DateTime_peak_DOC = DateTime_sampled[which.max(NPOC_ppm)],
+            peak_DOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
+            peak_DOC_sample = sample[which.max(NPOC_ppm)],
+            peak_DOC_event_ID = event_ID[which.max(NPOC_ppm)],
+            #DateTime_peak_stage = DateTime_sampled[first(which.max(sampleStage_cm))],
+            peak_sampleStage = max(sampleStage_cm),
+            peak_stage_sample = sample[first(which.max(sampleStage_cm))],
+            peak_stage_event_ID = event_ID[first(which.max(sampleStage_cm))],
+            n_bottles = n(),
+            first_sample = first(sample),
+            last_sample = last(sample) )
+       
+# isolate & find peaks for SAC254 and keep the same timesteps  
+pks_SAC254 <- stepped_stg_samples %>% 
+  filter(!is.na(SAC254_Abs.m)) %>%
+  group_by(site, event_ID) %>%
+  summarise(DateTime_peak_SAC254 = DateTime[which.max(SAC254_Abs.m)],
+            timestep_peak_SAC254 = timestep[which.max(SAC254_Abs.m)],
+            peak_SAC254 = max(SAC254_Abs.m)) 
+
+# isolate & find peaks for SUVA254 and keep the same timesteps  
+pks_SUVA <- stepped_stg_samples %>% 
+  filter(!is.na(SUVA)) %>%
+  group_by(site, event_ID) %>% 
+  summarise(DateTime_peak_SUVA = DateTime[which.max(SUVA)],
+            timestep_peak_SUVA = timestep[which.max(SUVA)],
+            peak_SUVA = max(SUVA)) 
+  
+ 
+# now - compare these group summaries to see if the timesteps were the same between groups
+
+```
+
 
 ## Sample Method
 
