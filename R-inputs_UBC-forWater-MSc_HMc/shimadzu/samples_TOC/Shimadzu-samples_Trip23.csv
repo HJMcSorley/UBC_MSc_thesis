@@ -1,31 +1,31 @@
 # 2020-02-22,,,,,,,
 # Leech samples collected Feb 17-20 (trip23),,,,,,,
-,,,,,,,
+# some rack samples were full on trip 22 but couldn't be colelcted due to high water,,,,,,,
 "# Results file: ""2020-02-22_Leech_trip-23_001""",,,,,,,
 vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
-1,Leech-head,Grab,Grab,2020-02-20 10:00,109,DOC,23
-2,Leech-head,Rack,L1,,129,DOC,23
-3,Leech-head,Rack,L2,,137,DOC,23
-4,Leech-head,Rack,L3,,155,DOC,23
-5,Leech-head,Rack,L4,,165,DOC,23
-6,Leech-head,Rack,L6,,195,DOC,23
+1,Leech-head,Grab,Grab,2020-02-20 10:00,,DOC,23
+2,Leech-head,Rack,L1,,134,DOC,23
+3,Leech-head,Rack,L2,,145,DOC,23
+4,Leech-head,Rack,L3,,160,DOC,23
+5,Leech-head,Rack,L4,,170,DOC,23
+6,Leech-head,Rack,L6,,200,DOC,23
 7,Weeks-out,Grab,Grab,2020-02-20 11:45,51.5,DOC,23
-8,Weeks-out,Rack,L1,,59,DOC,23
-9,Weeks-out,Rack,L2,,68,DOC,23
-10,Weeks-out,Rack,L3,,85,DOC,23
-11,Weeks-out,Rack,L4,,97,DOC,23
+8,Weeks-out,Rack,L1,,74,DOC,23
+9,Weeks-out,Rack,L2,,83,DOC,23
+10,Weeks-out,Rack,L3,,100,DOC,23
+11,Weeks-out,Rack,L4,,115,DOC,23
 12,Weeks-out,Grab,Grab,2020-01-09 11:35,,DOC,23
 13,Tunnel,Grab,Treatability,2020-02-18 11:00,20,DOC,23
 14,Tunnel,Grab,Grab,2020-02-19 11:00,19,DOC,23
 15,Tunnel,Rack,L1,,41,DOC,23
 16,Tunnel,Rack,L2,,57,DOC,23
-17,Tunnel,Rack,L3,,70,DOC,23
-18,Tunnel,Rack,L4,,87,DOC,23
-19,Tunnel,Rack,L5,,103,DOC,23
-20,Tunnel,Rack,L6,,117,DOC,23
+17,Tunnel,Rack,L3,,75,DOC,23
+18,Tunnel,Rack,L4,,103,DOC,23
+19,Tunnel,Rack,L5,,125,DOC,23
+20,Tunnel,Rack,L6,,150,DOC,23
 21,Tunnel,Grab,Grab,2020-01-30 12:30,110,DOC,23
 22,West-Leech,Grab,Grab,2020-02-19 10:00,30,DOC,23
-23,West-Leech,Rack,L1,,28,DOC,23
+23,West-Leech,Rack,L1,,31,DOC,23
 24,West-Leech,Rack,L2,,41,DOC,23
 25,West-Leech,Rack,L3,,52,DOC,23
 26,West-Leech,Rack,L4,,67,DOC,23
@@ -49,8 +49,8 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 44,Cragg-crk,Rack,L1,,75,DOC,23
 45,Cragg-crk,Rack,L2,,91,DOC,23
 46,Cragg-crk,Rack,L3,,124,DOC,23
-47,Cragg-crk,FL_Rack,FL1,,106,DOC,23
-48,Cragg-crk,FL_Rack,FL2,,83,DOC,23
+47,Cragg-crk,Rack,FL1,,106,DOC,23
+48,Cragg-crk,Rack,FL2,,83,DOC,23
 49,Cragg-crk,Grab,Grab,2020-01-09 9:58,,DOC,23
 50,Cragg-crk,Grab,Grab,2020-01-10 12:03,,DOC,23
 51,Cragg-crk,Grab,Grab,2020-01-30 13:30,,DOC,23

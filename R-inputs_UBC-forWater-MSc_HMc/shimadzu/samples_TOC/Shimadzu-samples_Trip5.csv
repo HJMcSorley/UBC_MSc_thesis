@@ -27,10 +27,10 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 15,Tunnel,Rack,L8,,138,DOC,5
 16,Tunnel,Rack,L9,,156,DOC,5
 17,Tunnel,Grab,Grab,2019-01-07 12:10,58,DOC,5
-18,Leech-head,Rack,L1,,124,DOC,5
-19,Leech-head,Rack,L2,,139,DOC,5
-20,Leech-head,Rack,L3,,155,DOC,5
-21,Leech-head,Rack,L4,,171,DOC,5
+18,Leech-head,Rack,L1,,115,DOC,5
+19,Leech-head,Rack,L2,,130,DOC,5
+20,Leech-head,Rack,L3,,160,DOC,5
+21,Leech-head,Rack,L4,,178,DOC,5
 22,Leech-head,Grab,Grab,2019-01-07 14:15,,DOC,5
 23,Weeks-out,Rack,L1,,50,DOC,5
 24,Weeks-out,Rack,L2,,65,DOC,5

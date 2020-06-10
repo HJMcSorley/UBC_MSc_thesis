@@ -23,17 +23,17 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 18,Leech-head,Rack,L3,,133,TOC,4
 19,Leech-head,Rack,L4,,140,TOC,4
 20,Leech-head,Rack,L5,,150,TOC,4
-21,Leech-head,Rack,L6,,162,TOC,4
-22,Leech-head,Rack,L7,,171,TOC,4
+21,Leech-head,Rack,L6,,172,TOC,4
+22,Leech-head,Rack,L7,,180,TOC,4
 1,Leech-head,Grab,Grab,2018-12-07 10:30,109,TOC,4
-2,Cragg-crk,Rack,L1,,53,TOC,4
-3,Cragg-crk,Rack,L2,,62,TOC,4
-4,Cragg-crk,Rack,L3,,73,TOC,4
-5,Cragg-crk,Rack,L4,,84,TOC,4
-6,Cragg-crk,Rack,L5,,96,TOC,4
-7,Cragg-crk,Rack,L6,,110,TOC,4
+2,Cragg-crk,Rack,L1,,45,TOC,4
+3,Cragg-crk,Rack,L2,,53,TOC,4
+4,Cragg-crk,Rack,L3,,62,TOC,4
+5,Cragg-crk,Rack,L4,,73,TOC,4
+6,Cragg-crk,Rack,L5,,100,TOC,4
+7,Cragg-crk,Rack,L6,,112,TOC,4
 8,Cragg-crk,Grab,Grab,2018-12-07 8:45,29,TOC,4
-9,West-Leech,Rack,L1,,45,TOC,4
+9,West-Leech,Rack,L1,,36,TOC,4
 10,West-Leech,Rack,L2,,55,TOC,4
 11,West-Leech,Rack,L3,,66,TOC,4
 12,West-Leech,Rack,L4,,75,TOC,4
@@ -57,10 +57,10 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 30,Weeks-out,Rack,L7,,105,DOC,4
 31,Weeks-out,Grab,Grab,2018-12-07 12:15,50,DOC,4
 32,Chris-crk,Rack,L1,,25,DOC,4
-33,Chris-crk,Rack,L2,,32,DOC,4
-34,Chris-crk,Rack,L3,,40,DOC,4
-35,Chris-crk,Rack,L4,,48,DOC,4
-36,Chris-crk,Rack,L5,,55,DOC,4
+33,Chris-crk,Rack,L2,,29,DOC,4
+34,Chris-crk,Rack,L3,,35,DOC,4
+35,Chris-crk,Rack,L4,,41,DOC,4
+36,Chris-crk,Rack,L5,,49,DOC,4
 37,Chris-crk,Rack,L6,,63,DOC,4
 38,Chris-crk,Rack,L7,,71,DOC,4
 39,Leech-head,Rack,L1,,122,DOC,4
@@ -68,17 +68,17 @@ vial,site,sample-type,sample,date-time_sampled,fill-stage,analysis,trip
 41,Leech-head,Rack,L3,,133,DOC,4
 42,Leech-head,Rack,L4,,140,DOC,4
 43,Leech-head,Rack,L5,,150,DOC,4
-44,Leech-head,Rack,L6,,162,DOC,4
-45,Leech-head,Rack,L7,,171,DOC,4
+44,Leech-head,Rack,L6,,172,DOC,4
+45,Leech-head,Rack,L7,,180,DOC,4
 46,Leech-head,Grab,Grab,2018-12-07 10:30,109,DOC,4
-47,Cragg-crk,Rack,L1,,53,DOC,4
-48,Cragg-crk,Rack,L2,,62,DOC,4
-49,Cragg-crk,Rack,L3,,73,DOC,4
-50,Cragg-crk,Rack,L4,,84,DOC,4
-51,Cragg-crk,Rack,L5,,96,DOC,4
-52,Cragg-crk,Rack,L6,,110,DOC,4
+47,Cragg-crk,Rack,L1,,45,DOC,4
+48,Cragg-crk,Rack,L2,,53,DOC,4
+49,Cragg-crk,Rack,L3,,62,DOC,4
+50,Cragg-crk,Rack,L4,,73,DOC,4
+51,Cragg-crk,Rack,L5,,100,DOC,4
+52,Cragg-crk,Rack,L6,,112,DOC,4
 53,Cragg-crk,Grab,Grab,2018-12-07 8:45,29,DOC,4
-54,West-Leech,Rack,L1,,45,DOC,4
+54,West-Leech,Rack,L1,,34,DOC,4
 55,West-Leech,Rack,L2,,55,DOC,4
 56,West-Leech,Rack,L3,,66,DOC,4
 57,West-Leech,Rack,L4,,75,DOC,4
