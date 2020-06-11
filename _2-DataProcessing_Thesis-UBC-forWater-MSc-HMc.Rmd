@@ -87,21 +87,7 @@ TZ <- "Etc/GMT+8"
 #Results of data wrangling (01) were saved as .csv files for tidy loading. 
 # read all compiled data files & format
 
-# results df
-# compiled sample analyses results (wide)
-# including DateTime of Rack sample collection
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv",
-                          col_names = TRUE) %>%   
-  mutate(trip = factor(trip),
-         sample_type = factor(sample_type),
-         sample = factor(sample),
-         analysis = factor(analysis),
-         two_seasons = factor(two_seasons),
-         rain_season = factor(rain_season),
-         pseudoSUVA = pseudo254/NPOC_ppm,
-         site = factor(site),
-         event_ID = factor(event_ID, levels = c(1:18)))
-
+# --- field data:
 
 # Wrangled Hobo TidibiT logger data with rain events and trip IDs
 Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", 
@@ -115,8 +101,7 @@ Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_tri
   rename(TidbiT_location = "location")
 
 # subbasin_Hobos -- I DON'T THINK I USE THIS...
-subbasin_dailyHobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", 
-                        col_names = TRUE) %>% 
+subbasin_dailyHobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", col_names = TRUE) %>% 
   mutate(trip = factor(trip),
          event_ID = factor(event_ID), 
          rain_season = factor(rain_season),
@@ -128,19 +113,15 @@ subbasin_dailyHobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_datafram
 
 # odyssey_data df
 # stage data compiled with interval/trip
-odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv",
-                         col_names = TRUE) %>% 
-  mutate(source = factor(source,
-                         levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
+odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv", col_names = TRUE) %>% 
+  mutate(source = factor(source, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          interval = factor(interval),
          event_ID = factor(event_ID),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ))
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", 
-                        col_names = TRUE,
-                        col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>%
+precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", col_names = TRUE, col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>%
   mutate(StationName = factor(StationName),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
          event_ID = factor(event_ID),
@@ -148,16 +129,37 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-
 
 # LWSA mean precip data (FWx-mean-LWSA df)
 # 2018-2020 weather station data compiled and formatted
-LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", 
-                        col_names = TRUE,
-                        col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
+LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE, col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
   mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
 
 
+# rain events defined with Rainmaker::RMevents()
+# mean 15-minute rainfall record from Chris Crk and Martin's gulch FWx stns
+# inter-event period = 14 hrs, threshold for major event = 50mm 
+events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEvents.csv", 
+                   col_names = TRUE) %>% 
+  mutate(ID = factor(ID, levels = c(1:18)))
+
+# --- sample data:
+
+# results df
+# compiled sample analyses results (wide)
+# including DateTime of Rack sample collection
+sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv",
+                          col_names = TRUE) %>%   
+  mutate(site = factor(site),
+         trip = factor(trip),
+         sample_type = factor(sample_type),
+         sample = factor(sample),
+         analysis = factor(analysis),
+         two_seasons = factor(two_seasons),
+         rain_season = factor(rain_season),
+         pseudoSUVA = pseudo254/NPOC_ppm,
+         event_ID = factor(event_ID))
+
 # metalslab df
 # metals sample analyses results with OC (long)
-metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals-DOCgrab-sample_results-long.csv",
-                      col_names = TRUE) %>% 
+metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals-DOCgrab-sample_results-long.csv", col_names = TRUE) %>% 
   mutate(Trip = factor(Trip),
          site = factor(site), 
          sample_type = factor(sample_type),
@@ -168,33 +170,30 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals
 
 # stage_samples
 # subbasin sample results with stage, timestamps, and precip event ID
-stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/subbasins_matched-chemohydro-samples.csv",
-                          col_names = TRUE) %>% 
-  select(-c(stage_cm, ID, fillStage_cm)) %>% 
-  mutate(trip = factor(trip, levels = c(1:23)),
-         interval = factor(interval, levels = c(1:23)),
-         site = factor(site,
-                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
+stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/subbasins_matched-chemohydro-samples.csv", col_names = TRUE) %>% 
+  select(-c(stage_cm)) %>% 
+  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
+         interval = factor(interval), # stage chunk that corresponds to field trip
+         trip = factor(trip),  # field trip
          sample_type = factor(sample_type),
          sample = factor(sample),
          analysis = factor(analysis),
-         two_seasons = factor(two_seasons),
-         event_ID = factor(event_ID, levels = c(1:18)),
-         DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
-         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ))
+         two_seasons = factor(two_seasons),  # season estimated by month
+         rain_season = factor(rain_season),  # season assigned by rain events
+         event_ID = factor(event_ID),  # rain events defined by precip >50mm & 14hrs btwn events
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ), # continuous stage
+         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ)) # sample collection
 
-# rain events
-events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEvents.csv", 
-                   col_names = TRUE) %>% 
-  mutate(ID = factor(ID, levels = c(1:18)))
-
-# Treatability data from U.Waterloo
+# Treatability data from U.Waterloo (Fariba Amiri)
 treatdat_UW <- 
   list.files("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", pattern = "*.csv") %>% 
   set_names(str_extract(., "([0-9]{2,}+)")) %>%
   purrr::map_dfr(~ read_csv(
     file.path("R-inputs_UBC-forWater-MSc_HMc/Treatability-results_UW/", .), 
     col_names = TRUE, skip = 15), .id = "source") 
+
+# Character data from U.Alberta (Julia Orlova)
+NOMcharacter_UA <- read_csv("R-inputs_UBC-forWater-MSc_HMc/NOM-character-results_UofA/Orlova-J_UofA-results_PM_Hannah_Nov2019-Feb2020.csv", col_names = TRUE)
 
 ```
 
@@ -1289,6 +1288,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png",
 
 ## plot: Hobo A/W over space
 ```{r}
+# update the water temperature logger time frames to be equal
 # all sites water loggers were submerged by 2019-10-15  
 Hobo <- within(Hobo, 
               Temp_C <- ifelse(TidbiT_location == "water" & 
@@ -1402,6 +1402,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png",
 
 #### visual checks
 ```{r}
+# take dataframe with both FWx and Hobo data
 # pivot longer
 Hobo_Fwx <- Hobo_WxLWSA %>%
   group_by(site) %>% 
@@ -1463,12 +1464,11 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.
 HoboFWx_sites <- Hobo %>% 
   filter(TidbiT_location == "air",
          DateTime < project_end, DateTime >= Hobo_start) %>%
-  select(site, DateTime, Temp_C) %>% 
+  select(site, DateTime, Temp_C, rain_season) %>% 
   pivot_wider(names_from = site, values_from = Temp_C) %>%
-  
+
   left_join(
-    LWSA_meanWx %>% select(c(DateTime, Temp_mean)) %>% filter(DateTime < project_end, DateTime >= Hobo_start),
-            by = c("DateTime")) %>% 
+    LWSA_meanWx %>% select(c(DateTime, Temp_mean)) %>% filter(DateTime < project_end, DateTime >= Hobo_start), by = c("DateTime")) %>% 
   rename(FWx = "Temp_mean") %>% 
   # then, pivot longer again so each site has a full DateTime range
   pivot_longer(cols = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "FWx"), names_to = "site", values_to = "Temp_C") %>% 
@@ -1479,7 +1479,7 @@ HoboFWx_sites <- Hobo %>%
 # compare temps from FWx to HOBO at each site
 HoboFWx_sites %>% 
   mutate(date = as_date(DateTime)) %>%
-  group_by(site, date) %>% 
+  group_by(site, date, rain_season) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
   ggplot(aes(x = site, y = T_daily, fill = site))+
   geom_jitter(alpha = 0.6, shape = 21)+
@@ -1488,7 +1488,7 @@ HoboFWx_sites %>%
   theme_bw() +
   labs(x = "", y = "Mean Daily Air temperature (°C)",
        colour = "Data origin:")+
-  theme(legend.position = "top", 
+  theme(legend.position = "none", 
         text = element_text(size = 12))
 
 # save
@@ -1542,12 +1542,14 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.p
 
 # null hypothesis: there is no difference between the means
 # p-value > 0.05 --> cannot reject null hypothesis (accept that there is no sig.diff)
+# p-value < 0.05 --> reject the null hypothesis
 
 # tests
 test <- Hobo_Fwx$Temp_C
 stn <- Hobo_Fwx$data_source
 site <- Hobo_Fwx$site
 
+# compare temperatures from FWx versus Hobo on-site loggers
 # run tests and compile results
 Temp_Wilcoxon_tests <- bind_rows(
   tidy(wilcox.test(test[stn == "FWx" & site == "Weeks"], test[stn == "Hobo" & site == "Weeks"])) %>% 
@@ -1588,7 +1590,7 @@ sites_lm <- Hobo_WxLWSA %>%
 Hobo_FWx_filled <- Hobo_WxLWSA_full %>% 
   group_by(site) %>% 
   mutate(Predicted = case_when(# y = m*x + b
-    site == "Weeks" ~ sites_lm[[1,2]]*FWx + sites_lm[[1,3]], 
+    site == "Weeks" ~ sites_lm[[1,2]]*FWx + sites_lm[[1,3]], # [[row, column]]
     site == "ChrisCrk" ~ sites_lm[[2,2]]*FWx + sites_lm[[2,3]], 
     site == "LeechHead" ~ sites_lm[[3,2]]*FWx + sites_lm[[3,3]], 
     site == "CraggCrk" ~ sites_lm[[4,2]]*FWx + sites_lm[[4,3]], 
@@ -1672,6 +1674,7 @@ HoboFWx_filled_L %>%
   scale_x_date(date_labels = "%Y %b %d",
                    date_breaks = "1 months")
 
+
 ```
 
 # QA-QC ANALYSIS 
@@ -1706,7 +1709,7 @@ calver <- QAQC %>%
 HT <- QAQC %>% 
   filter(site == "Tunnel",
          !is.na(NPOC_ppm)) %>% 
-  select(-c(sampleStage_cm, fillStage_cm, corr_stage_cm)) %>% 
+  select(-c(sampleStage_cm, corr_stage_cm)) %>% 
   mutate(HoldTime_set = substr(sample, 10, 10),
          HoldTime_rep = substr(sample, 11, 12),
          HoldTime_group = case_when(
@@ -2145,7 +2148,7 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 # create a "first-flush category in rain_season(s)
 sampleresults <- sampleresults %>% 
-  select(-c(ID, DateTime)) %>% 
+  select(-c(DateTime)) %>% 
   mutate(rain_seasons = case_when(
     event_ID %in% 1:8 ~ "wet",   
     Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
@@ -2175,12 +2178,14 @@ sampleresults <- sampleresults %>%
     TRUE ~ "synoptic")) %>% 
   mutate(site_type = factor(site_type))
 
+  
 ```
 
 ## QA-QC flags
 ```{r}
 # HT: flag samples with HoldTime_days >= 30 
 # FFHT: flag samples with HoldTime_days >=7 days if rain_seasons == "first flush"
+# OK: hold time was less than 30 days
 
 sampleresults <- sampleresults %>% 
   mutate(QAQC_flag = case_when(
@@ -2200,6 +2205,17 @@ sixfilter <- sampleresults %>%
   filter(sample_type != "QA-QC") %>%
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+
+# add air temperatures: 
+## 1. replace missing Hobo values with predicted values 
+## 2. summarize mean daily air temps
+## 3. join mean daily air temps with sample results by date sampled
+sixfilter <- within(Hobo_FWx_filled, 
+                   Hobo <- ifelse(is.na(Hobo), Predicted, Hobo)) %>% 
+  group_by(site, Date) %>% 
+  summarise(Tmean_airDaily = mean(Hobo)) %>% 
+  select(site, Date, Tmean_airDaily) %>% 
+  right_join(sixfilter, by = c("site", "Date")) 
 
 
 # primary synoptic sampling sites (n > 1)
@@ -2717,7 +2733,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 # Rack samples: n_installRackSamples
 
 ```
-
+# YOU ARE HERE
 
 ## Slice: DOC subbasin MAX DOC and UV254 
 not sure what to do with this...
@@ -2741,7 +2757,7 @@ max_UV254 <- sixfilter %>%
 
 ```
 
-# YOU ARE HERE
+
 
 ## stage DOC and rack levels
 

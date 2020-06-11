@@ -1096,7 +1096,9 @@ stage_sample_plot <-
         legend.position = "bottom")
 
 
-# use Rainmaker to deliniate storms
+# use Rainmaker to delineate storms
+# inter-event period = 14 hrs, threshold for major event = 50mm 
+# mean 15-minute rainfall record from Chris Crk and Martin's gulch FWx stns
 Wx_CC_storms <- wx_mean %>% 
   filter(DateTime >= "2018-10-23") %>% 
   as.data.frame() %>% 
@@ -1558,8 +1560,7 @@ Hobo_RacknGrab <- Hobo_Trip %>%
 
 # YES!
 
-# --- when I do this, only rack samples result!??? 
-# now, summarize the temperature for each sample based on it's hold-time
+# now, summarize the temperature for each Rack sample based on it's hold-time
 subbasin_Hobos <- Hobo_RacknGrab %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   group_by(site, location, sample_type, sample, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm) %>% 
