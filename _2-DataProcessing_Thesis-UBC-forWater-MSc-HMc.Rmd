@@ -138,7 +138,10 @@ LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-
 # inter-event period = 14 hrs, threshold for major event = 50mm 
 events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEvents.csv", 
                    col_names = TRUE) %>% 
-  mutate(ID = factor(ID, levels = c(1:18)))
+  mutate(ID = factor(ID),
+         StartDate = ymd_hms(StartDate, tz = TZ),
+         EndDate = ymd_hms(EndDate, tz = TZ))
+
 
 # --- sample data:
 
@@ -1361,7 +1364,7 @@ Hobo_FWx_joiner <-
 # join FWx and Hobo
 # 30 minute temp intervals from start of project to end
 Hobo_WxLWSA_full <- LWSA_meanWx %>%
-  select(c(DateTime, Temp_mean)) %>%
+  select(c(DateTime, Temp_mean, rain_season)) %>%
   filter(DateTime < project_end,
          DateTime >= project_start) %>% 
   full_join(Hobo_FWx_joiner, by = c("DateTime")) %>% 
@@ -1371,7 +1374,7 @@ Hobo_WxLWSA_full <- LWSA_meanWx %>%
   group_by(site) %>% 
   distinct() %>% # drop duplicate rows
   mutate(Date = as_date(DateTime)) %>% 
-  select(c(site, Date, DateTime, Hobo, FWx))  # reorganize for viewing
+  select(c(site, Date, DateTime, Hobo, FWx, rain_season))  # reorganize for viewing
 
 
 # isolate overlapping date ranges of Hobo and FWx
@@ -1382,20 +1385,57 @@ Hobo_WxLWSA <- Hobo_WxLWSA_full %>%
 ### plot: [1:1] FWx vs HOBO
 ```{r}
 
-## plot: 1:1 scatter of temperatures
-Hobo_WxLWSA %>% 
+## plot: 1:1 scatter of temperatures -- dry season
+adry <- Hobo_WxLWSA %>% 
+  filter(rain_season == "dry") %>% 
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.35)+
+  theme_bw()+
+  facet_wrap(~ site)+
+  labs(y = "Site temperature (°C)", x = "")+
+  #labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
+  theme(text = element_text(size = 10))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+## to get equations include this line:
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
+
+## plot: 1:1 scatter of temperatures -- wet season
+awet <- Hobo_WxLWSA %>% 
+  filter(rain_season == "wet") %>% 
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.35)+
+  theme_bw()+
+  facet_wrap(~ site)+
+  labs(y = "", x = "")+
+  #labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
+  theme(text = element_text(size = 10))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+## to get equations include this line:
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
+
+# grid adjacent
+a <- cowplot::plot_grid(adry, awet, nrow = 1)
+  
+## plot: 1:1 scatter of temperatures -- all season
+b <- Hobo_WxLWSA %>% 
   ggplot(aes(x = FWx, y = Hobo))+
   geom_point(alpha = 0.35)+
   theme_bw()+
   facet_wrap(~ site)+
   labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
-  theme(text = element_text(size = 12))+
+  theme(text = element_text(size = 11))+
   stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
 ## to get equations include this line:
-  stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4) 
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
+
+# grid vertical -- I dunno, seems unneccessary
+cowplot::plot_grid(a, b, ncol = 1)
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
+ggsave(plot = b, filename = "R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
        width = 8, height = 6, units = "in")
 
 ```
@@ -1475,6 +1515,25 @@ HoboFWx_sites <- Hobo %>%
   mutate(site = factor(site, 
                        levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "FWx"))) 
 
+# --- this is not better than the plot above
+# compare temps from FWx to HOBO at each site
+HoboFWx_sites %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  group_by(site, Date) %>% 
+  summarise(Tdaily = mean(Temp_C)) %>% 
+  ggplot(aes(x = Date))+
+  geom_line(aes(y = Tdaily, colour = site), size = 0.8)+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  labs(x = "", y = "Air temperature (°C)",
+       colour = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  scale_x_date(date_labels = "%Y %b %d", date_breaks = "1 months")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# ---
+
+
 # boxplot
 # compare temps from FWx to HOBO at each site
 HoboFWx_sites %>% 
@@ -1489,7 +1548,7 @@ HoboFWx_sites %>%
   labs(x = "", y = "Mean Daily Air temperature (°C)",
        colour = "Data origin:")+
   theme(legend.position = "none", 
-        text = element_text(size = 12))
+        text = element_text(size = 12)) # + facet_wrap(~rain_season)
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png", 
@@ -2738,22 +2797,33 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 
 ### Stage & DOC 
 
-plot stage at each site with samples collected (stage and time), and add lines for rain events
+#### events
 
 ```{r}
-# plot stage with sample dots
 
 # first extract trip start datetimes
 trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
 trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct()
-event_starts <- as.POSIXct(events$StartDate)
-  
+
+# event times need to be in ten-min intervals to match with stage_sample
+event_starts <- as.POSIXct(round_date(events$StartDate, "10 min"), tz = TZ) 
+event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
+
+```
+
+#### plot stage, event, samples all sites
+plot stage at each site with samples collected (stage and time), and add lines for rain events
+
+```{r}
+# plot stage with sample dots
 # stage at each of the subbasins
-stage_sample_plot <- stage_samples %>% 
+stage_samples %>% 
   ggplot(aes(x = DateTime))+
-  geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
+  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
   geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # start event
+  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # end event
   geom_line(aes(y = corr_stage_cm), size = 0.6)+ #, colour = forWater_colours2["DeepBlue"])+
   theme_bw()+
   geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), na.rm = TRUE)+
@@ -2771,15 +2841,48 @@ stage_sample_plot <- stage_samples %>%
         legend.position = "top")+
   guides(fill = guide_legend("Sample type:"), 
          shape = guide_legend("Sample type:", override.aes = list(size=2.5)))
-
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
        width = 6, height = 7, units = "in")
+
+```
+
+##### second MegaPlot
+```{r}
+# ---
+# again with simple sample points
+stage_sample_plot <- stage_samples %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = forWater_colours2["MyOrange"], na.rm = TRUE)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "", shape = "Sample Type:")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, 
+                   ncol = 1, 
+                   axis = "l", 
+                   align = "v",
+                   rel_heights = c(1,1,1,6))
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
+       width = 8.5,
+       height = 11,
+       units = "in")
 ```
 
 
 #### Slice: DOC subbasin MAX DOC and stage 
-
 ```{r}
 # trips and sampling coverage:
 # 4 was good for all except Tunnel (and 5 was good for Tunnel)
@@ -2820,47 +2923,109 @@ bind_cols(max_DOC, max_stage) %>%
          "DOCmax_stage" = corr_stage_cm, "DOCmax_sample" = sample,
          "max_stage" = corr_stage_cm1, "stageMax_sample" = sample1) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/peaks_DOCvsStage.csv")
-```
 
-##### stage samples narrower plot windows
-# YOU ARE HERE
-repeat this for the other isolated trips and summarize interesting findings
-```{r}
-
-# first, add max_DOC stage to dataframe
+# ---
+# for plots, add max_DOC by trip and event to stage_sample dataframe
+# DOC peaks in stage_sample = peaksSS
 peaksss <- stage_samples %>% 
   filter(!is.na(NPOC_ppm)) %>% 
-  group_by(site, trip) %>% 
+  group_by(site, trip, event_ID) %>% # or by event_ID
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
-  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sample", "sampleStage_cm"))
+  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "event_ID", "sample", "sampleStage_cm")) %>% 
+  arrange(DateTime) %>% 
+  ungroup()
 
-# stage and samples at each site by sampling event
+```
+
+##### stage samples narrower plot windows
+narrow in on specific (well-sampled) events
+```{r}
+
+# trip 4 -- stage and samples at each site by sampling event
 four <- peaksss %>% 
-  filter(interval == 4) %>%
+  filter(interval == 4, site != "Tunnel") %>% # Tunnel wasn't installed yet
   ggplot(aes(x = DateTime))+
-  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
-  #geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ 
+  geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
+  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
   geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
   theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample"), 
-             fill = "grey", shape = 21, size = 2, na.rm = TRUE) +
-  geom_point(aes(y = maxDOC_stage, colour = "peakDOC"), 
-             fill = forWater_colours2["MyOrange"], shape = 24, size = 2, na.rm = TRUE) +  
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
+             shape = 21, size = 2, na.rm = TRUE) +
+  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
+             shape = 24, size = 2, na.rm = TRUE) +  
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", colour = "Sample:")+
+  labs(y = "River Stage (cm)", x = "", caption = "Event 3 - 7")+
   scale_x_datetime(breaks = "1 day")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
         legend.position = "top") +
-  #scale_color_manual(breaks = c("sample", "peakDOC",
-   #                  values = c("black", forWater_colours2["MyOrange"])))+
-  guides(colour = guide_legend("sample:"))
+  scale_color_manual(breaks = c("max DOC", "sample"),
+                    values = c("black", "black"))+ # alphabetical matching
+  guides(colour = guide_legend("key:"),
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
+
+# trip 5 -- stage and samples at each site by sampling event
+five <- peaksss %>% 
+  filter(interval == 5) %>%
+  ggplot(aes(x = DateTime))+
+  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
+  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
+  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
+             shape = 21, size = 2, na.rm = TRUE) +
+  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
+             shape = 24, size = 2, na.rm = TRUE) +  
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+  labs(y = "River Stage (cm)", x = "", caption = "Trip 5, Events 4-7")+
+  scale_x_datetime(breaks = "1 day")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        legend.position = "top") +
+  scale_color_manual(breaks = c("max DOC", "sample"),
+                    values = c("black", "black"))+ # alphabetical matching
+  guides(colour = guide_legend("key:"),
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
+
+# trip 17-21 -- stage and samples at each site by sampling event
+svntn21 <- peaksss %>% 
+  filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) %>%
+  ggplot(aes(x = DateTime))+
+  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
+  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
+  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
+             shape = 21, size = 2, na.rm = TRUE) +
+  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
+             shape = 24, size = 2, na.rm = TRUE) +  
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+  labs(y = "River Stage (cm)", x = "", caption = "Trip 17-21, Events 10-12")+
+  scale_x_datetime(breaks = "3 day")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        legend.position = "top") +
+  scale_color_manual(breaks = c("max DOC", "sample"),
+                    values = c("black", "black"))+ # alphabetical matching
+  guides(colour = guide_legend("key:"),
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
 
-# other trips
-# trip == 5 | trip == 17 | trip == 18 | trip == 19 | trip == 20) %>% 
+
 
 
 

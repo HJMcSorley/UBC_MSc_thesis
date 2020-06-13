@@ -12,13 +12,13 @@ library(knitr)      # for nice tables
 
 ```
 
-# Results
+# 3.0     Results
 
 The primary objectives of this project were to characterize the range of hydrochemical dynamics and synchrony during rainfall response among sub-basins ranging in size from 9.6 to 37 km^2^.  To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during rainfall-induced hydrologic surges -- samples which would have been challenging and dangerous to collect manually at locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. 
 
-## Weather: Temperature and Precipitation
+## 3.1    Weather: temperature and precipitation
 
-### CRD Weather Stations
+### 3.1.1     CRD weather stations
 
 The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations in the Leech water supply area (LWSA). Chris Creek weather station (561m a.s.l) is located in the headwaters of the Leech watershed and Martin's Gulch (512m a.s.l) is located near the future point of diversion (Leech River Tunnel). With two weather stations, there were insufficient data points to estimate sub-basin precipitation via Theissen polygons or isohyetal lines; therefore, arithmetic means were calculated based on data from Chris Creek and Martin's Gulch stations. It was assumed that the arithmetic means of precipitation, temperature and snow depth were representative of conditions across the Leech watershed. Average precipitation and air temperature are shown in Figure \@ref(fig:meanWxLWSA), with the study period highlighted. Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as well as the very wet period of January and February, 2020. 
 
@@ -40,7 +40,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 
 \  
 
-#### Rain events 
+#### 3.1.1.1    Rain events 
 
 LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 that were classified as major events. Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of at least 14 hours. Table \@ref(tab:Events) summarizes the eighteen major rain events that occurred during the study period (2018-10-23 to 2020-02-20).
 
@@ -78,7 +78,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_ra
 ```
 \  
 
-### Research Sites Temperatures
+### 3.1.2   Temperature at vertical racks
 
 At each research site, temperatures were recorded at 30 minute intervals using TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) attached to the top and bottom of each vertical rack installation. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine). 
 
@@ -90,7 +90,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-
 
 \  
 
-While loggers were installed in both positions (air and water) on each rack at the same time, not all water temperature loggers were submerged until mid-October. Figure \@ref(fig:TidbiTairwaterBox) shows the distributions of air and water temperatures at each site, where water temperature was limited to the period when all sites water temperature loggers were submerged. Median water temperatures increased from the headwaters of Leech River to the point of diversion (Leech-Head Cragg-Crk < West-Leech < Tunnel).  
+While loggers were installed in both positions (air and water) on each rack at the same time, it wasn't until mid-October that all sites' water temperature loggers were submerged. Figure \@ref(fig:TidbiTairwaterBox) shows the distributions of air and water temperatures at each site, where water temperature was limited to the period when all sites water temperature loggers were submerged. Median water temperatures increased from the headwaters of Leech River to the point of diversion (Leech-Head Cragg-Crk < West-Leech < Tunnel).  
 
 \  
 
@@ -101,18 +101,29 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-l
 
 \  
 
-#### Air Temperature Comparison
+### 3.1.3   Air temperature comparison
 
-Mean FWx temperatures were referenced and compared to air temperatures measured at each research site.
-
-Air temperatures recorded at each site were compared to LWSA FWx for the overlapping period, from (August 24, 2019 to February 20, 2020; Figure \@ref(fig:TidbiTFWxline)). 
+Air temperatures recorded at each of the six sites were compared to LWSA FWx for the overlapping period (August 24, 2019 to February 20, 2020). Figure \@ref(fig:TidbiTFWxline) OR Figure \@ref(fig:TidbiTFWxbox) shows temperatures at each site compared to mean LWSA weather station air temperature. 
 
 ```{r TidbiTFWxline, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTFWxline} *Air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png")
 ```
 
-Two-sided Wilcoxon rank sum test were employed to compare air temperatures at each site to LWSA FWx temperatures. Air temperatures at each of the sub-basin vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)). Headwater sites (Weeks, Chris Creek and Leech Head) and Cragg Creek generally recorded lower air temperatures compared to CRD weather stations, while temperatures recorded at West Leech and Tunnel sites were similar but slightly higher than LWSA mean temperatures.
+\  
+
+***OR***
+
+\  
+
+```{r TidbiTFWxbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTFWxbox} *Air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png")
+```
+
+\  
+
+Two-sided Wilcoxon rank sum test were employed to compare air temperatures at each site to LWSA FWx temperature. Air temperatures at each of the six vertical racks were different than temperatures recorded by the CRD weather stations (Figure \@ref(fig:TidbiTFWxridges), Table \@ref(tab:TidbiTFWxPVALUES)). Headwater sites (Weeks, Chris Creek and Leech Head) and Cragg Creek generally recorded lower air temperatures compared to CRD weather stations, while temperatures recorded at West Leech and Tunnel sites were similar but slightly higher than LWSA mean temperatures.
 
 \  
 
@@ -131,9 +142,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv"
                col.names = c("Site", "p-Value"))
 ```
 
+Rack temperatures deviated most from the FWx stations during the summer months and had better agreement during the fall and winter (wet season).
+
 \  
 
-##### Linear Regression 
+##### 3.1.3.1     Linear Regression 
 
 ```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
@@ -165,30 +178,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
 
 estimated air temperatures at each research site were used for quality control data processing of vertical rack samples (Figure \@ref(fig:HoboFWxLinearReg).
 
-
-### Leech River Responses 
-
-River stage was continuously recorded at six locations across the LWSA. Figure \@ref(fig:megaplot) shows weather and stream response over the study period. 
-
 \  
  
-```{r megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:megaplot} *Weather and stream rise response at six locations across the Leech water supply area.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png")
-```
-
-\  
- 
-* TO DO: ADD summary of connectivity / synchronisity among subbasins
-
-\  
- 
-### Data Handling & Quality Control 
+## 3.2     Data Handling & Quality Control 
 
 UBC-based laboratory analysis of samples resulted in an overall accuracy of 3.7% based on analysis of 20 calibration verification standards. 
 
-#### Vertical Rack Hold-Time Experiments
+### 3.2.1   Vertical Rack Hold-Time Experiments
 
 Hold-time experiments were conducted at the Tunnel site to assess stability of river water samples held in siphon bottles on the vertical rack. Figure \@ref(fig:HoldTimeAirPlot) summarizes air temperature and timing of the three hold-time sets.
 
@@ -230,13 +226,25 @@ Set-C included samples held for 34 days at an average of 4.4°C (with a period o
 
 These results suggest that early-season ("first flush") samples may contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when kept at approximately refrigerator temperature. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
 
-#### QA-QC Flags for Data
+### 3.2.2   QA-QC Flags for Data
 
 Based on results of the hold-time experiments, sample analyses results files were updated to include QA-QC data flags. Flags were added for vertical rack samples that remained on the racks for 30 days or longer, and for early-wet-season Rack samples that were held for 7 days or more. These QA-QC flags were used to filter data for subsequent analyses.  
 
-### Nested sub-catchments of the LWSA
+## 3.3     Nested sub-catchments of the LWSA
 
-Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling at multiple sites. Sampling for the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Maximum DOC samples were captured by vertical racks at each of the sites except at the head of Leech River (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
+Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation and stream response over the study period, as well as the timing and stage of sample collection. 
+
+\  
+ 
+```{r megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:megaplot} *Weather and stream rise response at six locations across the Leech water supply area.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png")
+```
+
+\ 
+
+Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling at multiple sites. Sampling for the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Maximum DOC samples were captured by vertical racks at each of the sites except at the head of Leech River (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
 
 \  
 
