@@ -1,10 +1,10 @@
-Comparison Group,Site Comparison,Proportion of common DOC peaks
-headwaters,Weeks & ChrisCrk,0.2962962962962963
-headwaters,LeechHead & Weeks,0.21428571428571427
-headwaters,LeechHead & ChrisCrk,0.25
-mainstems,LeechHead & CraggCrk,0.19444444444444445
-mainstems,LeechHead & WestLeech,0.0975609756097561
-mainstems,CraggCrk & WestLeech,0.17073170731707318
-mainstem to outlet,LeechHead & Tunnel,0.1794871794871795
-mainstem to outlet,CraggCrk & Tunnel,0.20512820512820512
-mainstem to outlet,WestLeech & Tunnel,0.1951219512195122
+Comparison Group,Site Comparison,Proportion of common DOC peaks,p-value
+headwaters,Weeks & ChrisCrk,0.2962962962962963,0.15184815184815184
+headwaters,LeechHead & Weeks,0.21428571428571427,0.5024975024975025
+headwaters,LeechHead & ChrisCrk,0.25,0.5964035964035964
+mainstems,LeechHead & CraggCrk,0.19444444444444445,0.8001998001998002
+mainstems,LeechHead & WestLeech,0.0975609756097561,0.997002997002997
+mainstems,CraggCrk & WestLeech,0.17073170731707318,0.932067932067932
+mainstem to outlet,LeechHead & Tunnel,0.1794871794871795,0.8761238761238761
+mainstem to outlet,CraggCrk & Tunnel,0.20512820512820512,0.8041958041958042
+mainstem to outlet,WestLeech & Tunnel,0.1951219512195122,0.7942057942057942

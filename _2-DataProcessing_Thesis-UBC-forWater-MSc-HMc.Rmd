@@ -1135,13 +1135,13 @@ subasin_snow_plot <- LWSA_meanWx %>%
   group_by(date, Snow) %>% 
   dplyr::summarise(daily_meansnow = mean(SnowDep_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
-  filter(date >= "2018-10-24") %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
   ggplot(aes(x = date, y = daily_meansnow)) +
   geom_col(aes(colour = Snow), colour = "grey40") +
   labs(x = "", y = "m /day") +
   theme_bw() +
-  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
-  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  scale_x_date(date_breaks = "2 months",
+                   date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
   facet_wrap(~Snow, ncol = 1, 
              strip.position = "right") +
   theme(text = element_text(size = 12),
@@ -1149,8 +1149,7 @@ subasin_snow_plot <- LWSA_meanWx %>%
         strip.background = element_blank(),
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
-# save plot
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_snow-plot_subbasins.png")
+
 
 # 2 plot 
 # LWSA temp for the same time span
@@ -1160,15 +1159,15 @@ subasin_meantemp_plot <- LWSA_meanWx %>%
   group_by(date, Temp) %>% 
   dplyr::summarise(daily_Tmean = mean(Temp_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
-  filter(date >= "2018-10-24") %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
   ggplot(aes(x = date, y = daily_Tmean)) +
   geom_line(aes(colour = Temp), colour = "#E69F00") +
   geom_hline(yintercept = 0,
              linetype = "dotted") +
   labs(x = "", y = "°C /day") +
   theme_bw() +
-  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
-  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  scale_x_date(date_breaks = "2 months",
+                   date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
   facet_wrap(~Temp, ncol = 1, 
              strip.position = "right") +
   theme(text = element_text(size = 12),
@@ -1176,8 +1175,7 @@ subasin_meantemp_plot <- LWSA_meanWx %>%
         strip.background = element_blank(),
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-# save plot
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_temp-plot_subbasins.png")
+
 
 # 3 plot rainfall
 # mean LWSA rain for study period
@@ -1187,14 +1185,14 @@ subbasin_meanrain_plot <- LWSA_meanWx %>%
   group_by(date, Rain) %>% 
   dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
-  filter(date >= "2018-10-24") %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
   ggplot(aes(x = date, y = daily_rn)) +
   geom_col(aes(colour = Rain), colour = "#0072B2") +
   scale_y_reverse() +
   labs(x = "", y = "mm /day") +
   theme_bw() +
-  #scale_x_date(date_breaks = "1.5 months", date_labels = "%Y-%m")+ # use to check alignment 
-  scale_x_date(date_breaks = "1.5 months", labels = NULL)+  # remove axis labels when you're confident
+  scale_x_date(date_breaks = "2 months",
+                   date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
   facet_wrap(~Rain, ncol = 1, 
              strip.position = "right") +
   theme(text = element_text(size = 12),
@@ -1202,13 +1200,12 @@ subbasin_meanrain_plot <- LWSA_meanWx %>%
         strip.background = element_blank(),
         axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-# save plot
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_rain-plot_subbasins.png")
+
 
 # 4 plot stage
 # stage at each of the subbasins
 stage_plot <- odyssey_data %>% 
-  filter(DateTime >= "2018-10-24 00:00:00") %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%   
   ggplot(aes(x = DateTime, y = corr_stage_cm))+
   geom_line(colour = "#09A4D2")+
   theme_bw()+
@@ -1222,8 +1219,7 @@ stage_plot <- odyssey_data %>%
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-# save plot
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Stage-plot_subbasins.png")
+
 
 
 # mega-plot!! 
@@ -2651,6 +2647,8 @@ Levenes_summary <- tibble::tibble(
 
 
 ### Synchrony tests
+
+#### synchrony::peaks
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -2710,15 +2708,15 @@ six_wide_NPOC_Tunnel <- six_wide_NPOC %>%
   as.matrix()
 
 # tests by site (number)
-peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2)
-peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2)
-peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2)
-peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2)
-peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2)
-peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2)
-peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2)
-peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2)
-peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2)
+peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
+peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
+peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
 
 # combine
 synch_PeaksSumm <- tibble(
@@ -2726,14 +2724,15 @@ synch_PeaksSumm <- tibble(
        "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
                              "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
                              "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
-       "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
+       "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
+       #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) %>% 
+ #write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
 
 ```
 
-## Temporal trends 
 
-### *plot: DOC~time subbasin geom_smooth -- site & subbasin type
+
+#### *plot: DOC~time subbasin geom_smooth -- site & subbasin type
 ```{r DOC_overtime-by-site}
 
 # brewer.pal(n = 6, name = "PuOr") # orange to purple (2 orange for headwaters)
@@ -2852,19 +2851,19 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lin
 # ---
 # again with simple sample points
 stage_sample_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
   ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), size = 0.6)+ 
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
   theme_bw()+
-  geom_point(aes(y = sampleStage_cm), shape = 21, fill = forWater_colours2["MyOrange"], na.rm = TRUE)+
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm)", x = "", shape = "Sample Type:")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
         legend.position = "none")
-
 
 
 # create a second megaplot with sample points included
@@ -2892,8 +2891,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png"
 
 # isolate data related to max DOC at each site
 max_DOC <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack",
-         trip == 4 | trip == 5 | trip == 17 | trip == 18 | trip == 19 | trip == 20,
+  filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
@@ -2904,8 +2902,7 @@ max_DOC <- sixfilter %>%
 
 # isolate data related to max stage at each site (highest bottle on rack, or peak grab) 
 max_stage <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack",
-         trip == 4 | trip == 5 | trip == 17 | trip == 18 | trip == 19 | trip == 20,
+  filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
@@ -2919,6 +2916,7 @@ max_stage <- sixfilter %>%
 bind_cols(max_DOC, max_stage) %>% 
   group_by(site, trip) %>% 
   mutate(same_MAXsample = isTRUE(sample == sample1)) %>% 
+  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20) %>% 
   select(site,  trip,  event_ID, same_MAXsample,
          "DOCmax_stage" = corr_stage_cm, "DOCmax_sample" = sample,
          "max_stage" = corr_stage_cm1, "stageMax_sample" = sample1) %>% 
@@ -2940,6 +2938,7 @@ peaksss <- stage_samples %>%
 ```
 
 ##### stage samples narrower plot windows
+
 narrow in on specific (well-sampled) events
 ```{r}
 
@@ -3098,7 +3097,7 @@ b <- sixfilter %>%
 bind_rows(a, b) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
 ```
-
+# FAIL
 ### table: subbasin Rack DOC trends by event & site
 ```{r}
 # calculate trend with linear model

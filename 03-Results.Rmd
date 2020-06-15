@@ -213,7 +213,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 ```{r HoldTimeTtests}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
   knitr::kable(caption = "*Results comparing hold-time sample sets*")
-
 ```
 
 \  
@@ -232,7 +231,7 @@ Based on results of the hold-time experiments, sample analyses results files wer
 
 ## 3.3     Nested sub-catchments of the LWSA
 
-Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation and stream response over the study period, as well as the timing and stage of sample collection. 
+Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of sample collection. 
 
 \  
  
@@ -244,11 +243,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 \ 
 
-Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling at multiple sites. Sampling for the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Maximum DOC samples were captured by vertical racks at each of the sites except at the head of Leech River (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
+Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling, particularly across multiple sites. Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites with the exception of Leech River head (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
 
-\  
-
-Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations across each of the six sites. Highest DOC concentrations occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the watershed which includes Weeks Lake and surrounding wetlands. Lowest DOC was recorded at Leech River Tunnel site (*'Tunnel'*, site 6). 
+### 3.3.1     DOC concentrations & variance
+  
+Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest DOC concentrations occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the watershed which includes Weeks Lake and surrounding wetlands. Lowest DOC was recorded at Leech River Tunnel site (*'Tunnel'*, site 6). 
 
 \  
 
@@ -260,7 +259,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_box
 
 \  
 
-The Tunnel site is the effective outlet of the Leech water supply area (LWSA), as the Leech River Tunnel will be the point of diversion for future inter-basin transfer. Runoff from each of the five nested catchments are effectively integrated at the Tunnel site. Similarly, Weeks Main and Chris Creek sites (*'Weeks'* & *'ChrisCrk'*) are integrated at the Leech-Head site. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins. 
+The Tunnel site is the outlet of the Leech water supply area (LWSA), as the Leech River Tunnel will be the point of diversion for future inter-basin transfer. Runoff from each of the five nested catchments are effectively integrated at the Tunnel site. Similarly, Weeks Main and Chris Creek sites (*'Weeks'* & *'ChrisCrk'*) are integrated at the Leech-Head site. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins. 
 
 \  
 
@@ -273,30 +272,26 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryInt
 
 \  
 
-Which was greater, the variability of DOC concentrations within each site or between sites?
+** needs a better frame: 
+  Which was greater, the variability of DOC concentrations within each site or between sites?
 
-Relative standard deviation (RSD) indicates how values range around the mean within a group. Across the LWSA headwater sites (site 1-3), RSD of DOC at each headwater site ranged from 24% to 41%, while the .
+Relative standard deviation (RSD) indicates how values range around the mean within a group. Across the LWSA DOC at each site ranged from 24% to 41% RSD. Among the headwater sites (sites 1 & 2) DOC had a 52% RSD, compared to 36% among mainstem rivers. This means that the variance observed between headwater sites was greater than the variance thant occured at each site, whereas RSD among mainstem rivers was close to the average observed at each of those sites.    
 
-Results of Levene's test [^Levene's test is used to check for homogeneity of variance, homoscedasticity.] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^).  
+Results of Levene's test[^1] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^). To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for pairs of sites. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
 
-To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for each site. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. 
-
-Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site 5) and Weeks Main Creek (*'Weeks'*, site 1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
+[^1]:Levene's test is used to check for homogeneity of variance (homoscedasticity).
 
 \  
 
 ```{r Levenes}
-
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-variance-LeveneTests.csv", col_names = TRUE) %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(5),
                caption = "*Results of Levene's test comparing DOC variance between sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
 ```
 
 \  
 
-
-
-### Temporal patterns 
+### 3.3.2     Temporal patterns 
 
 Over time, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
 
@@ -309,6 +304,19 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-typ
 ```
 
 \  
+
+To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common minima and maxima time-stamped DOC values between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings, where proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites, and significance was based on Monte Carlo randomizations (type 2 with 999 randomizations without replacement).
+
+```{r synchDOCpeaks}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,3,3),
+               caption = "*Results of Synchrony tests comparing maxima and minima DOC concentrations between sites.*")
+```
+
+# YOU ARE HERE
+
+
+
 
 ### Seasonal trends
 
