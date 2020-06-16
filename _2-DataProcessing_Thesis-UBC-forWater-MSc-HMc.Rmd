@@ -1734,7 +1734,7 @@ HoboFWx_filled_L %>%
 
 # QA-QC ANALYSIS 
 ```{r}
-QAQC <- sampleresults %>% 
+QAQC <- sampleresults_df %>% 
   filter(sample_type == "QA-QC") %>% 
   select(-c(DateTime))
 
@@ -3067,10 +3067,12 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png"
 
 # isolate data related to max DOC at each site
 max_DOC_df <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
+  filter(#Date >= "2018-12-06", Date <= "2020-01-31", # overlapping date ranges
+         sample_type == "Grab" | sample_type == "Rack", 
+         site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
   group_by(site, trip) %>% 
   slice(which.max(NPOC_ppm)) %>%  # subsets the data set for max values of DOC :) 
   rename(max_DOC = NPOC_ppm,
@@ -3080,39 +3082,84 @@ max_DOC_df <- sixfilter %>%
 
 # isolate data related to max stage at each site (highest bottle on rack, or peak grab) 
 max_stage_df <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
+  filter(sample_type == "Grab" | sample_type == "Rack", 
+         site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
   group_by(site, trip) %>% 
-  slice(which.max(corr_stage_cm)) %>%  # subsets the data set for max values of DOC :) 
-  rename(max_stage = corr_stage_cm,
+  slice(which.max(sampleStage_cm)) %>%  # subsets the data set for max values of DOC :) 
+  rename(max_stage = sampleStage_cm,
          max_stage_sample = sample) %>% 
   arrange(trip) %>% 
   ungroup()
 
 # combine and create a comparison column
-right_join(max_DOC_df, max_stage_df, 
+maxDOCstage_df <- right_join(max_DOC_df, max_stage_df, 
           by = c("site", "trip", "event_ID", "DateTime_sampled", "HoldTime_days", "QAQC_flag", "Tmean_airDaily")) %>% 
   group_by(site, trip) %>% 
-  mutate(same_MAXsample = isTRUE(max_stage_sample == max_DOC_sample),
-         same_MAXsample_DOC = isTRUE(max_DOC == NPOC_ppm),
-         same_MAXsample_stage = isTRUE(max_stage == corr_stage_cm)) %>% 
-  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20) %>% 
+  mutate(same_MAXsample = (max_stage_sample == max_DOC_sample),
+         same_MAXsample_DOC = (max_DOC == NPOC_ppm),
+         same_MAXsample_stage = (max_stage == sampleStage_cm)) %>% 
   select(site,  trip,  event_ID, same_MAXsample, same_MAXsample_DOC, same_MAXsample_stage) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/peaks_DOCvsStage.csv")
+  ungroup()
+
+# calculate the percent of samples for which peak-DOC-sample coincided with peak-stage-sample
+maxDOCstage_df %>% 
+  #group_by(trip) %>% 
+  summarise(n = n(),
+            count = length(same_MAXsample),
+            count_true = length(same_MAXsample[TRUE]),
+            count_false = length(same_MAXsample[FALSE]))
+
+# trash --- ^^^^
+
+
+
+
+
+
+# I'm not sure slice is working the way I want it to
+
+
+# try summarising
+coincident_peaks <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack", 
+         site_type == "subbasin",
+         sample != "Algae", # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK") %>% # remove samples with extended hold-time  
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  group_by(site, trip) %>% 
+  summarise(max_stage = max(sampleStage_cm),
+            sample_max_stage = as.character(sample[first(which.max(sampleStage_cm))]),
+            npoc_max_stage = NPOC_ppm[first(which.max(sampleStage_cm))],
+            #eventID_max_stage = as.character(event_ID[first(which.max(sampleStage_cm))]),
+            max_DOC = max(NPOC_ppm),
+            sample_max_DOC = as.character(sample[first(which.max(NPOC_ppm))]),
+            stage_max_DOC = sampleStage_cm[which.max(NPOC_ppm)],
+            #eventID_max_DOC = as.character(event_ID[first(which.max(NPOC_ppm))]) 
+            ) %>% 
+  mutate(coincident_sample = (sample_max_stage == sample_max_DOC),
+         coincident_DOC = (npoc_max_stage == max_DOC),
+         coincident_stage = (max_stage == stage_max_DOC)) %>% 
+  ungroup()
+
+# subset for narrower window
+coincident_peaks %>% 
+  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow_peaks_DOCvsStage.csv")
+
 
 ```
 
 #### plot peak-DOC w/ stage-samples 
-
 narrow in on specific (well-sampled) events
 ```{r}
 # for plots, add max_DOC by trip and event to stage_sample dataframe
 # DOC peaks in stage_sample = peaksSS
 peaksss <- stage_samples %>% 
   filter(!is.na(NPOC_ppm)) %>% 
-  filter(QAQC_flag == "ok")
+  filter(QAQC_flag == "OK") %>% 
   group_by(site, trip, event_ID) %>% # or by event_ID
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
@@ -3124,7 +3171,7 @@ peaksss <- stage_samples %>%
 # ---- 
 # trip 4 -- stage and samples at each site by sampling event
 tripfour <- peaksss %>% 
-  filter(interval == 4, site != "Tunnel") %>% # Tunnel wasn't installed yet
+  filter(interval == "4", site != "Tunnel") %>% # Tunnel wasn't installed yet
   ggplot(aes(x = DateTime))+
   geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
   geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
@@ -3151,7 +3198,7 @@ tripfour <- peaksss %>%
 
 # trip 5 -- stage and samples at each site by sampling event
 tripfive <- peaksss %>% 
-  filter(interval == 5) %>%
+  filter(interval == "5") %>%
   ggplot(aes(x = DateTime))+
   #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
   geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
@@ -3193,7 +3240,7 @@ peaksss %>%
   # geom_text(aes(x = DateTime, y = sampleStage_cm, label = round(NPOC_ppm, 2)), na.rm = TRUE) +
   scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Trip 17-21, Events 9-12")+
+  labs(y = "River Stage (cm)", x = "", caption = "Events 9-12")+
   scale_x_datetime(breaks = "3 day")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
@@ -3202,25 +3249,30 @@ peaksss %>%
                     values = c("black", "black"))+ # alphabetical matching
   guides(colour = guide_legend("key:"),
          fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
-
 # save 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events10-12_peakDOC-stage.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png",
        width = 6.5, height = 6.5, units = "in")
 
 # --- 
 # big plot with lines showing subbset
 # assign lines
+narrow_trips_start <- peaksss %>% 
+  filter(interval == 17) %>%  
+  summarise(event = first(event_ID),
+            start = first(DateTime)) %>% pull()
 
-# ? events$StartDate[10], events$StartDate[11]
-
-narrow_trips <- trip_df %>% filter(!is.na(trip)) %>% 
-  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>% 
-  summarise(start = as.POSIXct(.[[1,2]], tz = TZ), end = as.POSIXct(.[[5,3]], tz = TZ))
+narrow_trips_end <- peaksss %>% 
+  filter(interval == 21) %>%  
+  summarise(event = last(event_ID),
+            end = last(DateTime)) %>% pull()
 
 # big plot with lines
 stage_sample_plot +
-  geom_vline(xintercept = narrow_trips$start, size = 0.7)+
-  geom_vline(xintercept = narrow_trips$end, size = 0.7)
+  geom_vline(xintercept = narrow_trips_start, size = 0.7)+
+  geom_vline(xintercept = narrow_trips_end, size = 0.7)
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-samples-with_narrow_events_9-12.png",
+       width = 6.5, height = 7, units = "in")
 
 ```
 
