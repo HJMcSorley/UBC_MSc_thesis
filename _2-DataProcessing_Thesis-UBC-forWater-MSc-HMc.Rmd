@@ -97,7 +97,7 @@ Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_tri
          trip = factor(trip), 
          event_ID = factor(event_ID), 
          rain_season = factor(rain_season),
-         DateTime = ymd_hms(DateTime)) %>% 
+         DateTime = lubridate::ymd_hms(DateTime, tz = TZ)) %>% 
   rename(TidbiT_location = "location")
 
 # subbasin_Hobos -- I DON'T THINK I USE THIS...
@@ -148,9 +148,11 @@ events <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Wx-RainEv
 # results df
 # compiled sample analyses results (wide)
 # including DateTime of Rack sample collection
-sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv",
-                          col_names = TRUE) %>%   
-  mutate(site = factor(site),
+sampleresults_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Results_complete.csv", col_names = TRUE) %>%   
+  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ), 
+         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ),
+         collection = lubridate::ymd_hms(collection, tz = TZ),
+         site = factor(site),
          trip = factor(trip),
          sample_type = factor(sample_type),
          sample = factor(sample),
@@ -163,7 +165,8 @@ sampleresults <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Re
 # metalslab df
 # metals sample analyses results with OC (long)
 metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals-DOCgrab-sample_results-long.csv", col_names = TRUE) %>% 
-  mutate(Trip = factor(Trip),
+  mutate(dt_sampled = lubridate::ymd_hms(dt_sampled, tz = TZ),
+         Trip = factor(Trip),
          site = factor(site), 
          sample_type = factor(sample_type),
          sample = factor(sample),
@@ -519,25 +522,25 @@ rn_wateryr <- LWSA_meanWx %>%
 ```
 
 ## RAIN EVENTS
-### table of Events
 ```{r}
 majEvents_summary <- events %>%
-  mutate(duration_hrs = difftime(EndDate, StartDate, units = "hours"),
-         duration_days = as.numeric(round(difftime(EndDate, StartDate, units = "days"), 1)),
-         hours = as.numeric(NumberXtract(duration_hrs)),
-         intensity = rain/hours,
+  mutate(duration = difftime(EndDate, StartDate, units = "hours"),
+         duration_days = as.numeric(difftime(EndDate, StartDate, units = "days")),
+         duration_hours = as.numeric(NumberXtract(duration)),
+         intensity_mmhr = rain/duration_hours,
          startDate = as_date(StartDate),
          endDate = as_date(EndDate)) %>% 
   mutate(ID = as_factor(ID))
 
 # make a table
 majEvents_summary %>% 
+  mutate(duration_days = round(as.numeric(duration_days), 1)) %>% 
   select('Storm number' = stormnum,
          'Major event no.' = ID,
          'Start Date' = startDate,
-         'Duration' = duration_days,
+         'Duration (days)' = duration_days,
          'Rainfall (mm)' = rain,
-         'Intensity (mm/hr)' = intensity) %>%
+         'Intensity (mm/hr)' = intensity_mmhr) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
 
@@ -549,14 +552,14 @@ events_summary <- majEvents_summary %>%
             duration_max_days = max(duration_days),
             rain_min_mm = min(rain),
             rain_max_mm = max(rain),
-            intensity_min_mmhr = min(intensity),
-            intensity_max_mmhr = max(intensity),
+            intensity_min_mmhr = min(intensity_mmhr),
+            intensity_max_mmhr = max(intensity_mmhr),
             ID_duration_min = ID[which(duration_days == duration_min_days)],
             ID_duration_max = ID[which(duration_days == duration_max_days)],
             ID_rain_min = ID[which(rain == rain_min_mm)],
             ID_rain_max = ID[which(rain == rain_max_mm)],
-            ID_intensity_min = ID[which(intensity == intensity_min_mmhr)],
-            ID_intensity_max = ID[which(intensity == intensity_max_mmhr)])
+            ID_intensity_min = ID[which(intensity_mmhr == intensity_min_mmhr)],
+            ID_intensity_max = ID[which(intensity_mmhr == intensity_max_mmhr)])
 
 # make a table
 events_summary %>% 
@@ -567,9 +570,8 @@ events_summary %>%
          'max rain (mm)' = rain_max_mm, 
          'min intensity (mm/hr)' = intensity_min_mmhr,
          'max intensity (mm/hr)' = intensity_max_mmhr) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events_min-max.csv",
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv",
             col_names = TRUE) 
-
 
 ```
 
@@ -952,8 +954,6 @@ max_stage <- stage_samples %>%
   select(c(site, year, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
   group_by(site, year) %>% 
   slice(which.max(corr_stage_cm))
-
-
 
 # determine the rate of stage rise for each event at each site
 # odyssey_data
@@ -1910,26 +1910,27 @@ ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 # p-value < 0.05 --> reject the null hypothesis 
 
 # run tests and compile results
+# paired (before and after)
 HT_Wilcoxon_tests <- bind_rows(
   ## NPOC ---
   # set A
-  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"])) %>% 
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "NPOC_ppm"),
   # set B 
-  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "BG"], HT$NPOC_ppm[HT$group == "BR"])) %>% 
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "BG"], HT$NPOC_ppm[HT$group == "BR"], paired = TRUE)) %>% 
     mutate(Set = "B", Analysis = "NPOC_ppm"),
   # set C
-  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"])) %>% 
+  tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "NPOC_ppm"),
   ## UV-254 ---
   # set A
-  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"])) %>% 
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "SAC254_Abs.m"),
   # set B
-  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "BG"], HT$SAC254_Abs.m[HT$group == "BR"])) %>% 
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "BG"], HT$SAC254_Abs.m[HT$group == "BR"], paired = TRUE)) %>% 
     mutate(Set = "B", Analysis = "SAC254_Abs.m"),
   # set C
-  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"])) %>% 
+  tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "SAC254_Abs.m")) %>% 
   select(Analysis, Set, p.value) %>% 
   # pull values of interest to summarize
@@ -2202,7 +2203,7 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 ```{r, mutate}
 
 # create a "first-flush category in rain_season(s)
-sampleresults <- sampleresults %>% 
+sampleresults <- sampleresults_df %>% 
   select(-c(DateTime)) %>% 
   mutate(rain_seasons = case_when(
     event_ID %in% 1:8 ~ "wet",   
@@ -2231,7 +2232,8 @@ sampleresults <- sampleresults %>%
     site == "Tunnel" ~ "subbasin",
     site == "Lab" ~ "LabQAQC",
     TRUE ~ "synoptic")) %>% 
-  mutate(site_type = factor(site_type))
+  mutate(site_type = factor(site_type),
+         DateTime_sampled = as.POSIXct(DateTime_sampled, tz = TZ))
 
   
 ```
@@ -2245,9 +2247,10 @@ sampleresults <- sampleresults %>%
 sampleresults <- sampleresults %>% 
   mutate(QAQC_flag = case_when(
     rain_seasons == "first flush" & HoldTime_days >= 7 ~ "FFHT",
+    HoldTime_days <= 20 ~ "OK",
     HoldTime_days >= 30 ~ "HT",
     TRUE ~ "OK"))
-  
+
 ```
 
 ## subset dfs + sample counts
@@ -2259,7 +2262,8 @@ sixfilter <- sampleresults %>%
          analysis == "DOC") %>% 
   filter(sample_type != "QA-QC") %>%
   mutate(site = factor(site, levels = 
-                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")))
+                         c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")),
+         QAQC_flag = factor(QAQC_flag))
 
 # add air temperatures: 
 ## 1. replace missing Hobo values with predicted values 
@@ -2272,7 +2276,6 @@ sixfilter <- within(Hobo_FWx_filled,
   select(site, Date, Tmean_airDaily) %>% 
   right_join(sixfilter, by = c("site", "Date")) %>% 
   ungroup()
-
 
 # primary synoptic sampling sites (n > 1)
 # 15 sites total
@@ -2409,6 +2412,13 @@ sixfilter_sub <- sixfilter %>%
     site == "WestLeech" ~ "mainstem",
     site == "Tunnel" ~ "outlet")) %>% 
   mutate(subbasin_type = factor(subbasin_type))
+
+# update stage_samples df also
+stage_samples <- left_join(stage_samples, sixfilter) %>% 
+  mutate(trip = factor(trip),
+         sample_type = factor(sample_type),
+         event_ID = factor(event_ID),
+         rain_season = factor(rain_season))
 
 ```
 
@@ -2648,7 +2658,172 @@ Levenes_summary <- tibble::tibble(
 
 ### Synchrony tests
 
-#### synchrony::peaks
+#### synchrony::peaks WET
+```{r}
+
+# reshape sixfilter data to wide flat file matrix
+## sites as columns, timestep as rows
+# values should be abundance
+six_wide_NPOC_wet <- sixfilter %>% 
+  filter(rain_season == "wet") %>% 
+  select(c(DateTime_sampled, site, NPOC_ppm)) %>% 
+  pivot_wider(names_from = site,
+              values_from = NPOC_ppm) %>% 
+  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
+  arrange(DateTime_sampled) %>% 
+  mutate(timestep = row_number(DateTime_sampled))
+  
+# synchrony tests
+# community-wide & significance via Monte Carlo randomizations
+# 1 == perfect synchrony
+six_wide_NPOC_matrix <- six_wide_NPOC_wet %>% select(-DateTime_sampled) %>% as.matrix()
+  
+summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
+
+# synchrony tests
+# Determine the proportion of concurrent local extrema (Peaks)
+# 1
+six_wide_NPOC_Weeks <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
+  filter(!is.na(NPOC_Weeks)) %>% 
+  as.matrix()
+
+# 2
+six_wide_NPOC_Chris <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
+  filter(!is.na(NPOC_ChrisCrk)) %>% 
+  as.matrix()
+
+# 3
+six_wide_NPOC_Head <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
+  filter(!is.na(NPOC_LeechHead)) %>% 
+  as.matrix()
+
+# 4
+six_wide_NPOC_Cragg <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
+  filter(!is.na(NPOC_CraggCrk)) %>% 
+  as.matrix()
+
+# 5
+six_wide_NPOC_West <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
+  filter(!is.na(NPOC_WestLeech)) %>% 
+  as.matrix()
+
+# 6
+six_wide_NPOC_Tunnel <- six_wide_NPOC_wet %>% 
+  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
+  filter(!is.na(NPOC_Tunnel)) %>% 
+  as.matrix()
+
+# tests by site (number)
+peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
+peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
+peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+
+# combine
+synch_PeaksSumm_wet <- tibble(
+       "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+       "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
+                             "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                             "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
+       "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
+       #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
+
+```
+
+#### synchrony::peaks DRY
+```{r}
+
+# reshape sixfilter data to wide flat file matrix
+## sites as columns, timestep as rows
+# values should be abundance
+six_wide_NPOC_dry <- sixfilter %>% 
+  filter(rain_season == "dry") %>% 
+  select(c(DateTime_sampled, site, NPOC_ppm, rain_season)) %>% 
+  pivot_wider(names_from = site,
+              values_from = NPOC_ppm) %>% 
+  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
+  arrange(DateTime_sampled) %>% 
+  mutate(timestep = row_number(DateTime_sampled)) %>% 
+  select(-rain_season)
+  
+# synchrony tests
+# community-wide & significance via Monte Carlo randomizations
+# 1 == perfect synchrony
+six_wide_NPOC_matrix <- six_wide_NPOC_dry %>% select(-DateTime_sampled) %>% as.matrix()
+  
+summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
+
+# synchrony tests
+# Determine the proportion of concurrent local extrema (Peaks)
+# 1
+six_wide_NPOC_Weeks <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
+  filter(!is.na(NPOC_Weeks)) %>% 
+  as.matrix()
+
+# 2
+six_wide_NPOC_Chris <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
+  filter(!is.na(NPOC_ChrisCrk)) %>% 
+  as.matrix()
+
+# 3
+six_wide_NPOC_Head <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
+  filter(!is.na(NPOC_LeechHead)) %>% 
+  as.matrix()
+
+# 4
+six_wide_NPOC_Cragg <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
+  filter(!is.na(NPOC_CraggCrk)) %>% 
+  as.matrix()
+
+# 5
+six_wide_NPOC_West <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
+  filter(!is.na(NPOC_WestLeech)) %>% 
+  as.matrix()
+
+# 6
+six_wide_NPOC_Tunnel <- six_wide_NPOC_dry %>% 
+  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
+  filter(!is.na(NPOC_Tunnel)) %>% 
+  as.matrix()
+
+# tests by site (number)
+peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
+peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
+peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
+peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
+peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
+
+# combine
+synch_PeaksSumm_dry <- tibble(
+       "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+       "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
+                             "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                             "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
+       "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
+       #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
+
+```
+
+#### synchrony::peaks all
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -2719,20 +2894,26 @@ peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type =
 peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
 
 # combine
-synch_PeaksSumm <- tibble(
+synch_PeaksSumm_all <- tibble(
        "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
        "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
                              "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
                              "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
        "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
-       #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) %>% 
- #write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = T)
+       #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
+
+# ---
+# join wet, dry and all
+full_join(
+  synch_PeaksSumm_dry %>% rename(`Dry season common peak proportion` = `Proportion of common DOC peaks`),
+  synch_PeaksSumm_wet %>% rename(`Wet season common peak proportion` = `Proportion of common DOC peaks`)) %>% 
+  full_join(synch_PeaksSumm_all%>% rename(`Proportion of total common DOC peaks` = `Proportion of common DOC peaks`)) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.csv", col_names = T)
 
 ```
 
 
-
 #### *plot: DOC~time subbasin geom_smooth -- site & subbasin type
+
 ```{r DOC_overtime-by-site}
 
 # brewer.pal(n = 6, name = "PuOr") # orange to purple (2 orange for headwaters)
@@ -2802,10 +2983,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 
 # first extract trip start datetimes
 trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
-trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct()
+trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct(tz = TZ)
 
 # event times need to be in ten-min intervals to match with stage_sample
-event_starts <- as.POSIXct(round_date(events$StartDate, "10 min"), tz = TZ) 
+event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
 event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
 
 ```
@@ -2848,8 +3029,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lin
 
 ##### second MegaPlot
 ```{r}
-# ---
-# again with simple sample points
+
+# Wx megaplot, with simple sample points
 stage_sample_plot <- stage_samples %>% 
   filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
   ggplot(aes(x = DateTime))+
@@ -2868,16 +3049,11 @@ stage_sample_plot <- stage_samples %>%
 
 # create a second megaplot with sample points included
 # stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, 
-                   ncol = 1, 
-                   axis = "l", 
-                   align = "v",
-                   rel_heights = c(1,1,1,6))
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6))
+
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-       width = 8.5,
-       height = 11,
-       units = "in")
+       width = 8.5, height = 11, units = "in")
 ```
 
 
@@ -2890,43 +3066,53 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png"
 ## *note that trip 18 had a major fall algae bloom in Cragg Crk (remove sample = Algae)
 
 # isolate data related to max DOC at each site
-max_DOC <- sixfilter %>%
+max_DOC_df <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
   group_by(site, trip) %>% 
   slice(which.max(NPOC_ppm)) %>%  # subsets the data set for max values of DOC :) 
+  rename(max_DOC = NPOC_ppm,
+         max_DOC_sample = sample) %>% 
   arrange(trip) %>% 
   ungroup()
 
 # isolate data related to max stage at each site (highest bottle on rack, or peak grab) 
-max_stage <- sixfilter %>%
+max_stage_df <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack", site_type == "subbasin",
          sample != "Algae", # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK") %>% # remove samples with extended hold-time  
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, corr_stage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
   group_by(site, trip) %>% 
   slice(which.max(corr_stage_cm)) %>%  # subsets the data set for max values of DOC :) 
+  rename(max_stage = corr_stage_cm,
+         max_stage_sample = sample) %>% 
   arrange(trip) %>% 
   ungroup()
 
-# column bind and create a comparison column
-# compare: DateTime_sampled, sample
-bind_cols(max_DOC, max_stage) %>% 
+# combine and create a comparison column
+right_join(max_DOC_df, max_stage_df, 
+          by = c("site", "trip", "event_ID", "DateTime_sampled", "HoldTime_days", "QAQC_flag", "Tmean_airDaily")) %>% 
   group_by(site, trip) %>% 
-  mutate(same_MAXsample = isTRUE(sample == sample1)) %>% 
+  mutate(same_MAXsample = isTRUE(max_stage_sample == max_DOC_sample),
+         same_MAXsample_DOC = isTRUE(max_DOC == NPOC_ppm),
+         same_MAXsample_stage = isTRUE(max_stage == corr_stage_cm)) %>% 
   filter(trip == 17 | trip == 18 | trip == 19 | trip == 20) %>% 
-  select(site,  trip,  event_ID, same_MAXsample,
-         "DOCmax_stage" = corr_stage_cm, "DOCmax_sample" = sample,
-         "max_stage" = corr_stage_cm1, "stageMax_sample" = sample1) %>% 
+  select(site,  trip,  event_ID, same_MAXsample, same_MAXsample_DOC, same_MAXsample_stage) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/peaks_DOCvsStage.csv")
 
-# ---
+```
+
+#### plot peak-DOC w/ stage-samples 
+
+narrow in on specific (well-sampled) events
+```{r}
 # for plots, add max_DOC by trip and event to stage_sample dataframe
 # DOC peaks in stage_sample = peaksSS
 peaksss <- stage_samples %>% 
   filter(!is.na(NPOC_ppm)) %>% 
+  filter(QAQC_flag == "ok")
   group_by(site, trip, event_ID) %>% # or by event_ID
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
@@ -2935,15 +3121,9 @@ peaksss <- stage_samples %>%
   arrange(DateTime) %>% 
   ungroup()
 
-```
-
-##### stage samples narrower plot windows
-
-narrow in on specific (well-sampled) events
-```{r}
-
+# ---- 
 # trip 4 -- stage and samples at each site by sampling event
-four <- peaksss %>% 
+tripfour <- peaksss %>% 
   filter(interval == 4, site != "Tunnel") %>% # Tunnel wasn't installed yet
   ggplot(aes(x = DateTime))+
   geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
@@ -2970,7 +3150,7 @@ four <- peaksss %>%
          fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
 # trip 5 -- stage and samples at each site by sampling event
-five <- peaksss %>% 
+tripfive <- peaksss %>% 
   filter(interval == 5) %>%
   ggplot(aes(x = DateTime))+
   #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
@@ -2996,24 +3176,24 @@ five <- peaksss %>%
   guides(colour = guide_legend("key:"),
          fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
+# -----
 # trip 17-21 -- stage and samples at each site by sampling event
-svntn21 <- peaksss %>% 
+peaksss %>% 
   filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) %>%
   ggplot(aes(x = DateTime))+
-  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
-  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
-             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
+  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+
+  #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
+  #geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
   geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
   theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), 
              shape = 21, size = 2, na.rm = TRUE) +
   geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
-             shape = 24, size = 2, na.rm = TRUE) +  
+             shape = 24, size = 2, na.rm = TRUE) +
+  # geom_text(aes(x = DateTime, y = sampleStage_cm, label = round(NPOC_ppm, 2)), na.rm = TRUE) +
   scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Trip 17-21, Events 10-12")+
+  labs(y = "River Stage (cm)", x = "", caption = "Trip 17-21, Events 9-12")+
   scale_x_datetime(breaks = "3 day")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
@@ -3023,14 +3203,29 @@ svntn21 <- peaksss %>%
   guides(colour = guide_legend("key:"),
          fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events10-12_peakDOC-stage.png",
+       width = 6.5, height = 6.5, units = "in")
 
+# --- 
+# big plot with lines showing subbset
+# assign lines
 
+# ? events$StartDate[10], events$StartDate[11]
 
+narrow_trips <- trip_df %>% filter(!is.na(trip)) %>% 
+  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>% 
+  summarise(start = as.POSIXct(.[[1,2]], tz = TZ), end = as.POSIXct(.[[5,3]], tz = TZ))
 
+# big plot with lines
+stage_sample_plot +
+  geom_vline(xintercept = narrow_trips$start, size = 0.7)+
+  geom_vline(xintercept = narrow_trips$end, size = 0.7)
 
+```
 
-
-# --- do something similiar for UV absorbance at 254 nm --- 
+```
+# ? do something similiar for UV absorbance at 254 nm ? 
 # isolate data related to max UV-254 at each site 
 # incomplete dataset (not all samples analyzed by spectrophotometry) 
 max_UV254 <- sixfilter %>%
@@ -3042,6 +3237,187 @@ max_UV254 <- sixfilter %>%
   group_by(site, trip) %>% 
   slice(which.max(SAC254_Abs.m)) %>%  # subsets the data set for max values of DOC :) 
   arrange(trip)
+```
+
+##### test: how did these events compare
+```{r}
+
+# were trips 17-21 results representative of most events?
+# compare samples from these results to others
+# use statistics -- Wilcoxon tests by parameter and site
+
+# stage
+narrow_stage <- stage_samples %>% 
+  filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) 
+
+rest_stage <- stage_samples %>% 
+  filter(rain_season == "wet", # remove summer baseflow
+         interval != 17, interval != 18, interval != 19, interval != 20, interval != 21) 
+
+# sample results
+narrow_results <- sixfilter %>% 
+  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) 
+
+rest_results <- sixfilter %>% 
+  filter(trip != 17, trip != 18, trip != 19, trip != 20, trip != 21) 
+
+
+# density distribution normality 
+# stage of the isolated events
+narrow_stage %>% 
+  ggplot(aes(corr_stage_cm))+
+  geom_density(aes(colour = site))+
+  theme_bw()+
+  theme(legend.position = "top") 
+# stage of the rest
+rest_stage %>% 
+  ggplot(aes(corr_stage_cm))+
+  geom_density(aes(colour = site))+
+  theme_bw()+
+  theme(legend.position = "top") 
+
+# DOC of the isolated events
+narrow_results %>% 
+  ggplot(aes(NPOC_ppm))+
+  geom_density(aes(colour = site))+
+  theme_bw()+
+  theme(legend.position = "top") 
+# stage of the rest
+rest_results %>% 
+  ggplot(aes(NPOC_ppm))+
+  geom_density(aes(colour = site))+
+  theme_bw()+
+  theme(legend.position = "top") 
+
+
+# run tests and compile results
+subbset_Wilcoxon_tests <- bind_rows(
+  ## stage ---
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Weeks"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "Weeks"])) %>% 
+    mutate(site = "Weeks", Analysis = "stage"),
+  
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "ChrisCrk"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "ChrisCrk"])) %>% 
+    mutate(site = "ChrisCrk", Analysis = "stage"),
+  
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "LeechHead"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "LeechHead"])) %>% 
+    mutate(site = "LeechHead", Analysis = "stage"),
+  
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "CraggCrk"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "CraggCrk"])) %>% 
+    mutate(site = "CraggCrk", Analysis = "stage"),
+  
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "WestLeech"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "WestLeech"])) %>% 
+    mutate(site = "WestLeech", Analysis = "stage"),
+  
+  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Tunnel"],
+                   rest_stage$corr_stage_cm[rest_stage$site == "Tunnel"])) %>% 
+    mutate(site = "Tunnel", Analysis = "stage"),
+
+  ## NPOC ---
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Weeks"],
+                   rest_results$NPOC_ppm[rest_results$site == "Weeks"])) %>% 
+    mutate(site = "Weeks", Analysis = "NPOC_ppm"),
+  
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "ChrisCrk"],
+                   rest_results$NPOC_ppm[rest_results$site == "ChrisCrk"])) %>% 
+    mutate(site = "ChrisCrk", Analysis = "NPOC_ppm"),
+  
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "LeechHead"],
+                   rest_results$NPOC_ppm[rest_results$site == "LeechHead"])) %>% 
+    mutate(site = "LeechHead", Analysis = "NPOC_ppm"),
+  
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "CraggCrk"],
+                   rest_results$NPOC_ppm[rest_results$site == "CraggCrk"])) %>% 
+    mutate(site = "CraggCrk", Analysis = "NPOC_ppm"),
+  
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "WestLeech"],
+                   rest_results$NPOC_ppm[rest_results$site == "WestLeech"])) %>% 
+    mutate(site = "WestLeech", Analysis = "NPOC_ppm"),
+  
+  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Tunnel"],
+                   rest_results$NPOC_ppm[rest_results$site == "Tunnel"])) %>% 
+    mutate(site = "Tunnel", Analysis = "NPOC_ppm"),
+  
+  ## UV-254 ---
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Weeks"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "Weeks"])) %>% 
+    mutate(site = "Weeks", Analysis = "SAC254_Abs.m"),
+  
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "ChrisCrk"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "ChrisCrk"])) %>% 
+    mutate(site = "ChrisCrk", Analysis = "SAC254_Abs.m"),
+  
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "LeechHead"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "LeechHead"])) %>% 
+    mutate(site = "LeechHead", Analysis = "SAC254_Abs.m"),
+  
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "CraggCrk"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "CraggCrk"])) %>% 
+    mutate(site = "CraggCrk", Analysis = "SAC254_Abs.m"),
+  
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "WestLeech"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "WestLeech"])) %>% 
+    mutate(site = "WestLeech", Analysis = "SAC254_Abs.m"),
+  
+  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Tunnel"],
+                   rest_results$SAC254_Abs.m[rest_results$site == "Tunnel"])) %>% 
+    mutate(site = "Tunnel", Analysis = "SAC254_Abs.m")) %>% 
+  
+  select(Parameter = "Analysis", site, p.value) %>% 
+  
+  # pull p-values to summarize
+  mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
+                                p.value < 0.05 ~ "**",# CL = 95%
+                                p.value > 0.05 ~ "NA")) # not significantly different (means are equal)
+# check it out
+subbset_Wilcoxon_tests
+
+# also
+# compare storm intensity and duration
+narrow_events_summary <- majEvents_summary %>% 
+  filter(ID == 10 | ID == 11 | ID == 12) %>% 
+  select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
+
+rest_events_summary <- majEvents_summary %>% 
+  filter(ID != 10, ID != 11, ID != 12) %>% 
+  select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
+  
+# compare with tests & summarize results
+subbset_Wilcoxon_tests_rain <- bind_rows(
+  tidy(wilcox.test(narrow_events_summary$rain, rest_events_summary$rain)) %>% 
+    mutate(Parameter = "Rain (mm)"),
+  tidy(wilcox.test(narrow_events_summary$duration_days, rest_events_summary$duration_days)) %>% 
+     mutate(Parameter = "Duration (days)"),
+  tidy(wilcox.test(narrow_events_summary$intensity_mmhr, rest_events_summary$intensity_mmhr)) %>% 
+    mutate(Parameter = "Intensity (mm/hr)")) %>% 
+  select(Parameter, p.value) %>% 
+  mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
+                                p.value < 0.05 ~ "**",# CL = 95%
+                                p.value > 0.05 ~ "NA"))  # means are equal 
+
+# compare hold-time days
+narrow_results %>% 
+  group_by(site, trip) %>% 
+  summarise(HT_mean = mean(HoldTime_days, na.rm = T),
+            HT_min = min(HoldTime_days, na.rm = T),
+            HT_max = max(HoldTime_days, na.rm = T))
+
+# make a summary table
+
+# stage and UV 254 are not comparable but DOC is
+narrow_wilcox_DOC <- subbset_Wilcoxon_tests %>% 
+  filter(Parameter == "NPOC_ppm") %>% 
+  mutate(Parameter = "DOC (mg/L)")
+# join with rain summary
+full_join(narrow_wilcox_DOC, (subbset_Wilcoxon_tests_rain %>%
+                                filter(Parameter != "Duration (days)") %>% 
+                                mutate(site = "LWSA"))) %>% 
+  select(c(site, Parameter, p.value)) %>%
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv")
 
 ```
 

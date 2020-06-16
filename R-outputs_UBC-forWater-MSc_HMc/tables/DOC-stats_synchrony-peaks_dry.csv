@@ -1,0 +1,10 @@
+Comparison Group,Site Comparison,Proportion of common DOC peaks
+headwaters,Weeks & ChrisCrk,0.5
+headwaters,LeechHead & Weeks,0
+headwaters,LeechHead & ChrisCrk,0.25
+mainstems,LeechHead & CraggCrk,0.75
+mainstems,LeechHead & WestLeech,0.75
+mainstems,CraggCrk & WestLeech,0.5
+mainstem to outlet,LeechHead & Tunnel,0
+mainstem to outlet,CraggCrk & Tunnel,0
+mainstem to outlet,WestLeech & Tunnel,0

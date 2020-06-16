@@ -1,4 +1,4 @@
-Storm number,Major event no.,Start Date,Duration,Rainfall (mm),Intensity (mm/hr)
+Storm number,Major event no.,Start Date,Duration (days),Rainfall (mm),Intensity (mm/hr)
 2,1,2018-10-27,6.1,124.435,0.8436271186440678
 3,2,2018-11-03,0.9,54.805,2.409010989010989
 15,3,2018-11-25,3.6,156.055,1.8305571847507331

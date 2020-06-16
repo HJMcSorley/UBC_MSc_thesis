@@ -60,7 +60,7 @@ Major rain events' minimum and maximum values of depth, duration and intensity w
 
 
 ```{r MinMaxEvents}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events_min-max.csv") %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %>% 
   knitr::kable(digits = c(0,1,1,1,1,2,1),
                caption = "*Minimum and maximum rain event values *")
 ```
@@ -198,7 +198,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp
 
 \  
 
-Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using Wilcoxon (a.k.a 'Mann-Whitney' tests)[^The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.]. Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
+Each hold-time set included ten replicate samples (collected at the same time in the same way from the same location); in each hold-time set, five samples were returned to the lab for analysis of DOC concentration and UV absorbance and five were placed on the vertical rack, capped with siphon lids (to simulate rack samples), and collected at a later date for analysis. Results of sample analyses for DOC and UV-254 absorbance of the fresh and held samples of each set (Figure \@ref(fig:HoldTimeBoxPlot)) were compared using two-sided paired Wilcoxon signed rank tests (a.k.a 'Mann-Whitney' test) [^1]. Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held relative to their grab sample counterparts, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results. 
+
+[^1]:The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.
 
 \  
 
@@ -217,17 +219,17 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", c
 
 \  
 
-While there was no change in UV absorbance for samples from hold-time set-A, there was a significant change in DOC concentration (p-value = 0.008). Samples collected for hold-time set-A were DOC-rich "first flush" samples, the Rack samples were held for 11 days at average temperature of 7°C (slightly above laboratory refrigerator temperatures). For set-A, mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples.  
+While there was no change in UV absorbance for samples from hold-time set-A, there was a significant (at 90% confidence level) change in DOC concentration (p-value = 0.063). Samples collected for hold-time set-A were DOC-rich "first flush" samples, the Rack samples were held for 11 days at average temperature of 7°C (slightly above laboratory refrigerator temperatures). For set-A, mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples.  
 
 Set-B had a hold-time of 20 days with average air temperature at 6°C and there was no significant changes in either DOC concentration or UV~254~ (<10% change). 
 
-Set-C included samples held for 34 days at an average of 4.4°C (with a period of sub-zero temperatures). While set-C did not show significant changes in DOC concentration (23% reduction), there were significant changes to UV absorbance at 254-nm (34% decrease in absorbance). Set-C held samples had a greater variability in UV-254 compared to fresh sample counterparts. 
+Set-C included samples held for 34 days at an average of 4.4°C, including a period of sub-zero temperatures. While set-C did not show significant changes in DOC concentration (23% reduction), there were significant changes to UV absorbance at 254-nm (34% decrease in absorbance). Set-C held samples had a greater variability in UV-254 compared to fresh sample counterparts. 
 
-These results suggest that early-season ("first flush") samples may contain labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when kept at approximately refrigerator temperature. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
+These results suggest that early-season ("first flush") samples may contain more labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when kept at approximately refrigerator temperature. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. 
 
 ### 3.2.2   QA-QC Flags for Data
 
-Based on results of the hold-time experiments, sample analyses results files were updated to include QA-QC data flags. Flags were added for vertical rack samples that remained on the racks for 30 days or longer, and for early-wet-season Rack samples that were held for 7 days or more. These QA-QC flags were used to filter data for subsequent analyses.  
+Based on results of the hold-time experiments, results of sample analyses were updated to include QA-QC data flags. Vertical rack samples that remained on the racks for fewer than 20 days were flagged as acceptable ("OK") whereas samples that were either held for 20 days or longer or were identified as early-wet-season ("first-flush") that were held for 7 days or longer were flagged as exceeding an acceptable hold-time. These QA-QC flags were used to filter data for subsequent analyses.  
 
 ## 3.3     Nested sub-catchments of the LWSA
 
@@ -300,20 +302,37 @@ Over time, DOC concentrations followed similar trends across each of the six LWS
 ```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-types-overtime_loess.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png")
 ```
 
 \  
 
-To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common minima and maxima time-stamped DOC values between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings, where proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites, and significance was based on Monte Carlo randomizations (type 2 with 999 randomizations without replacement).
+To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common time-stamped DOC extrema (minima and maxima) between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings of these synchrony tests where a proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites (and zero indicates none).
+
+\  
 
 ```{r synchDOCpeaks}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks.csv", col_names = TRUE) %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0,0,3,3),
                caption = "*Results of Synchrony tests comparing maxima and minima DOC concentrations between sites.*")
 ```
 
-# YOU ARE HERE
+\  
+
+There was relatively high temporal synchrony in DOC peaks among the mainstem rivers during the dry season, albeit there were fewer samples collected during the dry season so there were fewer values to compare. Over the entire study period and across wet seasons, there was a low proportion of temporal synchrony for DOC peaks across the LWSA.
+
+To better understand how the timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis. The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there was no significant difference between DOC concentrations or rain events for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)).
+
+\  
+
+```{r subbsetWilcox}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,4),
+               caption = "*Results of Wilcoxon tests comparing results from the subset of samples from rain events 10-12 to other sampled rain events.*")
+```
+
+
+
 
 
 
