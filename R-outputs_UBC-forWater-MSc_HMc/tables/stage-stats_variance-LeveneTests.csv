@@ -1,0 +1,10 @@
+Comparison Group,Site Comparison,p.value,Significance
+headwaters,Weeks & ChrisCrk,0,***
+headwaters,LeechHead & Weeks,3.0062006984237e-111,***
+headwaters,LeechHead & ChrisCrk,0,***
+mainstems,LeechHead & CraggCrk,2.3165848783564616e-228,***
+mainstems,LeechHead & WestLeech,5.7016091563748554e-300,***
+mainstems,CraggCrk & WestLeech,0,***
+mainstem to outlet,LeechHead & Tunnel,0,***
+mainstem to outlet,CraggCrk & Tunnel,1.3984961530557566e-306,***
+mainstem to outlet,WestLeech & Tunnel,0,***

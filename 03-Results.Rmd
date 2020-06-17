@@ -295,6 +295,9 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.c
 
 ### 3.3.2     Temporal patterns 
 
+Fluctuations in stage were synchronized across the LWSA, and it was confirmed that river response was concordant among the six sites (Kendall's W = 0.9721, Spearman's ranked correlation = 0.9666, p-value <0.001 (based on 999 randomizations)). While rainfall generated synchrony in stream rise, how did aqueous DOC concentration vary over time? 
+
+
 Over time, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
 
 \  
@@ -319,7 +322,15 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.cs
 
 \  
 
-There was relatively high temporal synchrony in DOC peaks among the mainstem rivers during the dry season, albeit there were fewer samples collected during the dry season so there were fewer values to compare. Over the entire study period and across wet seasons, there was a low proportion of temporal synchrony for DOC peaks across the LWSA.
+Among the three mainstem rivers during the dry season there was relatively high temporal synchrony for peaks of DOC, albeit there were fewer samples collected during the dry season so there were fewer values to compare relative to the wet season. Over the entire study period and across wet seasons, there was a low proportion of temporal synchrony for DOC peaks across the LWSA.
+
+
+\  
+
+Because vertical racks collect samples at set stages rather than specific times, it's possible that examining temporal synchrony doesn't tell the story I think it does. 
+
+--- manual doc and peak stage analysis
+
 
 To better understand how the timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis. The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there was no significant difference between DOC concentrations or rain events for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)).
 

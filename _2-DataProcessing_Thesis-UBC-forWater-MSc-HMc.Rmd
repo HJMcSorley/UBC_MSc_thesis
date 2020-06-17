@@ -861,90 +861,194 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 ### Synchrony tests
 ```{r}
 
-# reshape sixfilter data to wide flat file matrix
+# reshape odyssey data to wide flat file matrix
 ## sites as columns, timestep as rows
+# note: Tunnel was not installed & recording until "2018-12-06 19:30:00"
+# to check for synchrony, all timesteps should be of equal length with no NAs
 six_wide_stage <- odyssey_data %>%
   group_by(source) %>% 
+  filter(rain_season == "wet") %>%  # remove baseflow
   filter(Date >= "2018-12-06", Date <= "2020-01-31") %>% # overlapping date ranges
-  select(c(DateTime, source, stage_cm)) %>% 
-  distinct(DateTime, .keep_all = TRUE) %>%   # keep only unique time stamps
+  mutate(DateTimeRound = lubridate::round_date(DateTime, unit = "10 mins")) %>% # round to remove NAs
+  select(c(DateTimeRound, source, stage_cm)) %>% 
+  distinct(DateTimeRound, .keep_all = TRUE) %>%   # keep only unique time stamps
   ungroup() %>% 
   pivot_wider(names_from = source,
               values_from = stage_cm) %>% 
   unnest(cols = c(Weeks, ChrisCrk, LeechHead, CraggCrk, WestLeech, Tunnel)) %>% 
-  arrange(DateTime) %>% 
-  mutate(timestep = row_number(DateTime))
+  arrange(DateTimeRound) %>% 
+  mutate(timestep = row_number(DateTimeRound))
   
 # synchrony tests
 # community-wide & significance via Monte Carlo randomizations
 # 1 == perfect synchrony
 
+## concordance (Kendall's W) [0:1]
+# isolate sites only (drop time and timestep now that it's sorted)
+dat <- six_wide_stage %>% select(-c(DateTimeRound, timestep))
+stage_synch_kendall.w <- synchrony::kendall.w(data = dat) #, nrands = 999, type = 2)
+stage_synch_kendall.w_1 <- synchrony::kendall.w(data = dat) #, nrands = 999, type = 1)
+# results are the same for type 1 and type 2:
+## Kendall's W (uncorrected for ties): 0.9721
+## Kendall's W (corrected for ties): 0.9721
+## Spearman's ranked correlation: 0.9666
+## Kendall's W p-value (one-tailed test [greater]): 0.001
+
+
+## PEAKS
 # Determine the proportion of concurrent local extrema (Peaks)
-# 1
+# isolate time series matrix for each site where col 1 is timestep and col 2 is stage
+# site 1
 six_wide_stage_Weeks <- six_wide_stage %>% 
   select(c(timestep, Weeks)) %>% 
-  filter(!is.na(Weeks)) %>% 
   as.matrix()
-
-# 2
+# site 2
 six_wide_stage_Chris <- six_wide_stage %>% 
   select(c(timestep, ChrisCrk)) %>% 
-  filter(!is.na(ChrisCrk)) %>% 
   as.matrix()
-
-# 3
+# site 3
 six_wide_stage_Head <- six_wide_stage %>% 
   select(c(timestep, LeechHead)) %>% 
-  filter(!is.na(LeechHead)) %>% 
   as.matrix()
-
-# 4
+# site 4
 six_wide_stage_Cragg <- six_wide_stage %>% 
   select(c(timestep, CraggCrk)) %>% 
-  filter(!is.na(CraggCrk)) %>% 
   as.matrix()
-
-# 5
+# site 5
 six_wide_stage_West <- six_wide_stage %>% 
   select(c(timestep, WestLeech)) %>%
-  filter(!is.na(WestLeech)) %>% 
   as.matrix()
-
-# 6
+# site 6
 six_wide_stage_Tunnel <- six_wide_stage %>% 
   select(c(timestep, Tunnel)) %>%
-  filter(!is.na(Tunnel)) %>% 
   as.matrix()
-```
 
-```
 ### tests by site (number) (RAM intensive with nrands -- hash out after use)
-# note, I check p-value difference with nrands = 10000 and they were similar enough that I think this is fine.
-# there is no difference between results of type 1 or 2 (?)
-peaks_1to2 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Chris, type = 2, nrands = 1000)
-peaks_1to3 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Head, type = 2, nrands = 1000)
-peaks_2to3 <- synchrony::peaks(six_wide_stage_Chris, six_wide_stage_Head, type = 2, nrands = 1000)
-peaks_3to4 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Cragg, type = 2, nrands = 1000)
-peaks_3to5 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_West, type = 2, nrands = 1000)
-peaks_4to5 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_West, type = 2, nrands = 1000)
-peaks_3to6 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Tunnel, type = 2, nrands = 1000)
-peaks_4to6 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_Tunnel, type = 2, nrands = 1000)
-peaks_5to6 <- synchrony::peaks(six_wide_stage_West, six_wide_stage_Tunnel, type = 2, nrands = 1000)
+# note, check p-value difference with nrands = 10000 and it's similar enough that I think 999 is fine.
+peaks_1to2 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Chris, type = 2) #, nrands = 999)
+peaks_1to3 <- synchrony::peaks(six_wide_stage_Weeks, six_wide_stage_Head, type = 2) #, nrands = 999)
+peaks_2to3 <- synchrony::peaks(six_wide_stage_Chris, six_wide_stage_Head, type = 2) #, nrands = 999)
+peaks_3to4 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Cragg, type = 2) #, nrands = 999)
+peaks_3to5 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_West, type = 2) #, nrands = 999)
+peaks_4to5 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_West, type = 2) #, nrands = 999)
+peaks_3to6 <- synchrony::peaks(six_wide_stage_Head, six_wide_stage_Tunnel, type = 2) #, nrands = 999)
+peaks_4to6 <- synchrony::peaks(six_wide_stage_Cragg, six_wide_stage_Tunnel, type = 2) #, nrands = 999)
+peaks_5to6 <- synchrony::peaks(six_wide_stage_West, six_wide_stage_Tunnel, type = 2) #, nrands = 999)
 
 # combine
-synch_PeaksSumm_stage <- tibble(
+synch_PeaksSumm_stage <- tibble(      
        "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
        "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
                              "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
                              "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
-       "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs),
-       "p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Stage-stats_synchrony-peaks.csv", col_names = T)
+       "Proportion of common peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/stage-stats_synchrony-peaks_wet-season.csv", col_names = T)
 
 # where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
 ```
-#### peak stage by event & site
 
+## Levene's test for homoscedasticity in stage:
+
+An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
+
+If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+Ha: at least two subbasins have different variances 
+Ho: the variances are equal (there is no difference in the range observed among each site 
+
+```{r}
+# check for normality
+dat <- odyssey_data %>%
+  group_by(source) %>% 
+  filter(rain_season == "wet") %>%  # remove baseflow
+  filter(Date >= "2018-12-06", Date <= "2020-01-31") %>%  # overlapping date ranges
+  ungroup()
+
+# check for normality
+dat %>% 
+  ggplot(aes(corr_stage_cm))+
+  geom_density(aes(colour = source))+
+  theme_bw()+
+  theme(legend.position = "none")+
+  facet_wrap(~source, nrow = 3, scales = "free_y")
+
+# car::leveneTest(response ~ independent variable)
+car::leveneTest(corr_stage_cm ~ source, data = dat) %>% tidy() %>% pull("p.value") %>% first()
+# --> reject Ho, variance is not homogeneous across the LWSA 
+
+# find out where:
+
+# headwaters
+# 1-2
+WC <- dat %>%
+  filter(source == "Weeks" |
+           source == "ChrisCrk") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 1-3
+H1 <- dat %>%
+  filter(source == "Weeks" |
+           source == "LeechHead") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 2-3  
+H2 <- dat %>%
+  filter(source == "ChrisCrk" |
+           source == "LeechHead") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+
+# mainstems
+# 3-4   
+H4 <- dat %>%
+  filter(source == "CraggCrk" |
+           source == "LeechHead") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 3-5 
+H5 <- dat %>%
+  filter(source == "WestLeech" |
+           source == "LeechHead") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 4-5
+C5 <- dat %>%
+  filter(source == "WestLeech" |
+           source == "CraggCrk") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+
+# mainstems and outlet
+# 3-6
+H6 <- dat %>%
+  filter(source == "LeechHead" |
+           source == "Tunnel") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 4-6 
+C6 <- dat %>%
+  filter(source == "CraggCrk" |
+           source == "Tunnel") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+# 5-6   
+W6 <- dat %>%
+  filter(source == "WestLeech" |
+           source == "Tunnel") %>% 
+  car::leveneTest(corr_stage_cm ~ source, data = .) %>% tidy() %>% pull("p.value") %>% first()
+
+
+# write a summary table
+Levenes_summary_stage <- tibble::tibble(
+  "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
+  "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk",
+                        "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
+                        "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"), 
+  p.value = c(WC, H1, H2, 
+              H4, H5, C5, 
+              H6, C6, W6)) %>% 
+  mutate("Significance" = # (confidence level: ***99%, **95%, *90%)
+           case_when(p.value < 0.01 ~ "***",
+                     p.value < 0.05 ~ "**",
+                     p.value < 0.1 ~ "*",
+                     p.value > 0.1 ~ "homoscedastic")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/stage-stats_variance-LeveneTests.csv", col_names = T)
+  
+```
+
+#### trash? peak stage by event & site
 Don't really know what to do with this...
 ```{r}
 # isolate max for each site by year
@@ -1124,7 +1228,6 @@ cowplot::plot_grid(d2,u2,s2, ncol = 3)
 
 ## Wx MEGAPLOT: FWx+RiverStage
 Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
-
 ```{r, Wx-stage-megas-plots}
 
 # 1 plot snow
@@ -1236,6 +1339,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
        units = "in")
 
 ```
+
+
 
 # TEMPERATURE (Hobo)
 ```{r}
@@ -2558,7 +2663,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 
 ```
 
-## Levene's test for homoscedasticity:
+## Levene's test for homoscedasticity in DOC:
 
 An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
 
@@ -2638,7 +2743,7 @@ W6 <- sixfilter %>%
 
 
 # write a summary table
-Levenes_summary <- tibble::tibble(
+Levenes_summary_DOC <- tibble::tibble(
   "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
   "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk",
                         "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
@@ -2658,7 +2763,7 @@ Levenes_summary <- tibble::tibble(
 
 ### Synchrony tests
 
-#### synchrony::peaks WET
+#### trash -- synchrony::peaks WET
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -2740,7 +2845,7 @@ synch_PeaksSumm_wet <- tibble(
 
 ```
 
-#### synchrony::peaks DRY
+#### trash -- synchrony::peaks DRY
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -2823,7 +2928,7 @@ synch_PeaksSumm_dry <- tibble(
 
 ```
 
-#### synchrony::peaks all
+#### trash -- synchrony::peaks all
 ```{r}
 
 # reshape sixfilter data to wide flat file matrix
@@ -3057,98 +3162,106 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png"
 ```
 
 
-#### Slice: DOC subbasin MAX DOC and stage 
+#### synchrony within sites: of peak DOC & stage 
 ```{r}
-# trips and sampling coverage:
-# 4 was good for all except Tunnel (and 5 was good for Tunnel)
-# 17 & 18* collected racks for all and 2 grabs on falling limb (18)
-# 19 & 20 " "
-## *note that trip 18 had a major fall algae bloom in Cragg Crk (remove sample = Algae)
 
-# isolate data related to max DOC at each site
-max_DOC_df <- sixfilter %>%
-  filter(#Date >= "2018-12-06", Date <= "2020-01-31", # overlapping date ranges
+# summarize data for coinciding maxima of DOC and stage at each site
+coincident_peaks <- sixfilter %>%
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
          sample_type == "Grab" | sample_type == "Rack", 
-         site_type == "subbasin",
-         sample != "Algae", # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK") %>% # remove samples with extended hold-time  
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK") %>%  # remove samples with extended hold-time  
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  mutate(sample = as.character(sample),
+         event_ID = as.numeric(event_ID)) %>% 
   group_by(site, trip) %>% 
-  slice(which.max(NPOC_ppm)) %>%  # subsets the data set for max values of DOC :) 
-  rename(max_DOC = NPOC_ppm,
-         max_DOC_sample = sample) %>% 
-  arrange(trip) %>% 
+  summarise(max_stage = max(sampleStage_cm), # maximum stage sampled
+            # sample associated with max stage that was sampled:
+            sample_max_stage = sample[last(which.max(sampleStage_cm))],
+            # DOC associated with max stage that was sampled:
+            npoc_max_stage = NPOC_ppm[last(which.max(sampleStage_cm))],
+            # eventID 
+            eventID_max_stage = event_ID[first(which.max(sampleStage_cm))],
+            max_DOC = max(NPOC_ppm),  # maximum DOC sampled
+            # sample associated with max DOC that was sampled:
+            sample_max_DOC = (sample[last(which.max(NPOC_ppm))]),
+            # stage associated with max DOC that was sampled:
+            stage_max_DOC = sampleStage_cm[last(which.max(NPOC_ppm))] ) %>% 
+  mutate(
+    # TRUE if the sample ID for peak stage matched with the sample-ID of peak DOC:
+    coincident_sample = (sample_max_stage == sample_max_DOC), 
+    # TRUE if the [DOC] for peak stage matched with the peak [DOC] sampled:
+    coincident_DOC = (npoc_max_stage == max_DOC),
+    # TRUE if the maximum stage sampled matched with the stage associated with max [DOC]:
+    coincident_stage = (max_stage == stage_max_DOC)) %>% 
   ungroup()
 
-# isolate data related to max stage at each site (highest bottle on rack, or peak grab) 
-max_stage_df <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", 
-         site_type == "subbasin",
-         sample != "Algae", # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK") %>% # remove samples with extended hold-time  
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
-  group_by(site, trip) %>% 
-  slice(which.max(sampleStage_cm)) %>%  # subsets the data set for max values of DOC :) 
-  rename(max_stage = sampleStage_cm,
-         max_stage_sample = sample) %>% 
-  arrange(trip) %>% 
-  ungroup()
-
-# combine and create a comparison column
-maxDOCstage_df <- right_join(max_DOC_df, max_stage_df, 
-          by = c("site", "trip", "event_ID", "DateTime_sampled", "HoldTime_days", "QAQC_flag", "Tmean_airDaily")) %>% 
-  group_by(site, trip) %>% 
-  mutate(same_MAXsample = (max_stage_sample == max_DOC_sample),
-         same_MAXsample_DOC = (max_DOC == NPOC_ppm),
-         same_MAXsample_stage = (max_stage == sampleStage_cm)) %>% 
-  select(site,  trip,  event_ID, same_MAXsample, same_MAXsample_DOC, same_MAXsample_stage) %>% 
-  ungroup()
 
 # calculate the percent of samples for which peak-DOC-sample coincided with peak-stage-sample
-maxDOCstage_df %>% 
-  #group_by(trip) %>% 
-  summarise(n = n(),
-            count = length(same_MAXsample),
-            count_true = length(same_MAXsample[TRUE]),
-            count_false = length(same_MAXsample[FALSE]))
+# for each site
+coincident_proportion_sites <- coincident_peaks %>% 
+  group_by(site) %>% 
+  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
+            sample_match_true = length(which(coincident_sample == TRUE)),
+            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
+            npoc_match_true = length(which(coincident_DOC == TRUE)),
+            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
+            stage_match_true = length(which(coincident_stage==TRUE))) %>% 
+  group_by(site) %>% 
+  # calculate the proportion of common peaks
+  summarise(common_sample = (sample_match_true/sample_count),
+            common_npoc = (npoc_match_true/npoc_count),
+            common_stage = (stage_match_true/stage_count))
+### key:
+# common sample = sample ID associated with peak-stage matched with the sample ID of peak-DOC
+# common_npoc = sample DOC concentration associated with max.stage sampled corresponds to the maximum DOC measured for that event
+# common_stage = peak stage sampled corresponds to the stage associate with peak DOC
 
-# trash --- ^^^^
+# overall -- not grouped by site
+coincident_proportion_all <- coincident_peaks %>% 
+  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
+            sample_match_true = length(which(coincident_sample == TRUE)),
+            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
+            npoc_match_true = length(which(coincident_DOC == TRUE)),
+            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
+            stage_match_true = length(which(coincident_stage==TRUE))) %>% 
+  summarise(common_sample = (sample_match_true/sample_count),
+            common_npoc = (npoc_match_true/npoc_count),
+            common_stage = (stage_match_true/stage_count))
 
 
+# subset for narrower window of well-sampled rain events
+# trips 17-18* & 19-20 collected racks for all and 2 grabs on falling limb
+## *note that trip 18 had a major fall algae bloom in Cragg Crk (remove sample = Algae)
+## note that trip 21 exists only for CraggCrk and was actually a rain event that occured on trip 20 between first and second visit to site 4 
+# trips: 17-21 --> event_ID: 10-12
 
+# by site
+coincident_proportion_narrow_sites <- coincident_peaks %>% 
+  #filter(event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
+  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>%
+  group_by(site) %>% 
+  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
+            sample_match_true = length(which(coincident_sample == TRUE)),
+            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
+            npoc_match_true = length(which(coincident_DOC == TRUE)),
+            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
+            stage_match_true = length(which(coincident_stage==TRUE))) %>%
+  group_by(site) %>%
+  summarise(common_sample = (sample_match_true/sample_count),
+            common_npoc = (npoc_match_true/npoc_count),
+            common_stage = (stage_match_true/stage_count))
+# all sites together
+coincident_proportion_narrow_all <- coincident_proportion_narrow_sites %>% 
+  summarise(common_sample = mean(common_sample),
+            common_npoc = mean(common_npoc),
+            common_stage = mean(common_stage))
 
-
-
-# I'm not sure slice is working the way I want it to
-
-
-# try summarising
-coincident_peaks <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack", 
-         site_type == "subbasin",
-         sample != "Algae", # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK") %>% # remove samples with extended hold-time  
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
-  group_by(site, trip) %>% 
-  summarise(max_stage = max(sampleStage_cm),
-            sample_max_stage = as.character(sample[first(which.max(sampleStage_cm))]),
-            npoc_max_stage = NPOC_ppm[first(which.max(sampleStage_cm))],
-            #eventID_max_stage = as.character(event_ID[first(which.max(sampleStage_cm))]),
-            max_DOC = max(NPOC_ppm),
-            sample_max_DOC = as.character(sample[first(which.max(NPOC_ppm))]),
-            stage_max_DOC = sampleStage_cm[which.max(NPOC_ppm)],
-            #eventID_max_DOC = as.character(event_ID[first(which.max(NPOC_ppm))]) 
-            ) %>% 
-  mutate(coincident_sample = (sample_max_stage == sample_max_DOC),
-         coincident_DOC = (npoc_max_stage == max_DOC),
-         coincident_stage = (max_stage == stage_max_DOC)) %>% 
-  ungroup()
-
-# subset for narrower window
-coincident_peaks %>% 
-  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow_peaks_DOCvsStage.csv")
-
+# check
+coincident_proportion_sites
+coincident_proportion_all
+coincident_proportion_narrow_sites
+coincident_proportion_narrow_all
 
 ```
 
@@ -3473,6 +3586,7 @@ full_join(narrow_wilcox_DOC, (subbset_Wilcoxon_tests_rain %>%
 
 ```
 
+# you are here -- just finished the above
 
 ## Sample Method
 
