@@ -2763,8 +2763,10 @@ Levenes_summary_DOC <- tibble::tibble(
 
 ### Synchrony tests
 
-#### trash -- synchrony::peaks WET
+#### trash 
 ```{r}
+
+# -- synchrony::peaks WET
 
 # reshape sixfilter data to wide flat file matrix
 ## sites as columns, timestep as rows
@@ -2843,11 +2845,9 @@ synch_PeaksSumm_wet <- tibble(
        "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
        #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
 
-```
 
-#### trash -- synchrony::peaks DRY
-```{r}
 
+# DRY SEASON --- 
 # reshape sixfilter data to wide flat file matrix
 ## sites as columns, timestep as rows
 # values should be abundance
@@ -2926,10 +2926,8 @@ synch_PeaksSumm_dry <- tibble(
        "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
        #"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
 
-```
 
 #### trash -- synchrony::peaks all
-```{r}
 
 # reshape sixfilter data to wide flat file matrix
 ## sites as columns, timestep as rows
@@ -3012,12 +3010,13 @@ synch_PeaksSumm_all <- tibble(
 full_join(
   synch_PeaksSumm_dry %>% rename(`Dry season common peak proportion` = `Proportion of common DOC peaks`),
   synch_PeaksSumm_wet %>% rename(`Wet season common peak proportion` = `Proportion of common DOC peaks`)) %>% 
-  full_join(synch_PeaksSumm_all%>% rename(`Proportion of total common DOC peaks` = `Proportion of common DOC peaks`)) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.csv", col_names = T)
+  full_join(synch_PeaksSumm_all%>% rename(`Proportion of total common DOC peaks` = `Proportion of common DOC peaks`)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.csv", col_names = T)
 
 ```
 
 
-#### *plot: DOC~time subbasin geom_smooth -- site & subbasin type
+#### temporal plot: DOC~time subbasin geom_smooth -- site & subbasin type
 
 ```{r DOC_overtime-by-site}
 
@@ -3045,9 +3044,9 @@ sixfilter_sub %>%
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   guides(colour = guide_legend("Site:"),
-         linetype = guide_legend("Basin type:", override.aes = list(colour = "black")))
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png", 
+         linetype = guide_legend("Basin type:", override.aes = list(colour = "black"))) %>% 
+  # save
+  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png", 
        width = 6, height = 5, units = "in") 
 # ---
 ### this one seems more clear:
@@ -3068,9 +3067,9 @@ sixfilter_sub %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
-                   date_minor_breaks = "1 months")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", 
+                   date_minor_breaks = "1 months") %>% 
+  # save
+  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", 
        width = 6, height = 6, units = "in") 
 
 # samples: n_installGrabSamples+n_installRackSamples  
@@ -3080,7 +3079,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 ```
 
 
-### Stage & DOC 
+### synchrony: Stage & DOC 
 
 #### events
 
@@ -3125,9 +3124,9 @@ stage_samples %>%
         axis.text.x = element_text(angle = 60, hjust = 1),
         legend.position = "top")+
   guides(fill = guide_legend("Sample type:"), 
-         shape = guide_legend("Sample type:", override.aes = list(size=2.5)))
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
+         shape = guide_legend("Sample type:", override.aes = list(size=2.5))) %>% 
+  #save
+  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
        width = 6, height = 7, units = "in")
 
 ```
@@ -3154,39 +3153,40 @@ stage_sample_plot <- stage_samples %>%
 
 # create a second megaplot with sample points included
 # stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6))
-
-# save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-       width = 8.5, height = 11, units = "in")
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) %>% 
+  # save megaplot
+  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
+         width = 8.5, height = 11, units = "in")
 ```
 
 
-#### synchrony within sites: of peak DOC & stage 
-```{r}
+### synchrony: DOC-stage extrema
 
+#### peak DOC & stage 
+```{r}
 # summarize data for coinciding maxima of DOC and stage at each site
 coincident_peaks <- sixfilter %>%
   filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
          sample_type == "Grab" | sample_type == "Rack", 
          sample != "Algae",      # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK") %>%  # remove samples with extended hold-time  
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+         NPOC_ppm != 0) %>%  # drop NAs
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
-  mutate(sample = as.character(sample),
-         event_ID = as.numeric(event_ID)) %>% 
-  group_by(site, trip) %>% 
+  mutate(sample = as.character(sample)) %>% 
+  group_by(site, trip, event_ID) %>% 
   summarise(max_stage = max(sampleStage_cm), # maximum stage sampled
             # sample associated with max stage that was sampled:
             sample_max_stage = sample[last(which.max(sampleStage_cm))],
             # DOC associated with max stage that was sampled:
             npoc_max_stage = NPOC_ppm[last(which.max(sampleStage_cm))],
             # eventID 
-            eventID_max_stage = event_ID[first(which.max(sampleStage_cm))],
             max_DOC = max(NPOC_ppm),  # maximum DOC sampled
             # sample associated with max DOC that was sampled:
             sample_max_DOC = (sample[last(which.max(NPOC_ppm))]),
             # stage associated with max DOC that was sampled:
-            stage_max_DOC = sampleStage_cm[last(which.max(NPOC_ppm))] ) %>% 
+            stage_max_DOC = sampleStage_cm[last(which.max(NPOC_ppm))]) %>% 
   mutate(
     # TRUE if the sample ID for peak stage matched with the sample-ID of peak DOC:
     coincident_sample = (sample_max_stage == sample_max_DOC), 
@@ -3195,7 +3195,6 @@ coincident_peaks <- sixfilter %>%
     # TRUE if the maximum stage sampled matched with the stage associated with max [DOC]:
     coincident_stage = (max_stage == stage_max_DOC)) %>% 
   ungroup()
-
 
 # calculate the percent of samples for which peak-DOC-sample coincided with peak-stage-sample
 # for each site
@@ -3212,10 +3211,6 @@ coincident_proportion_sites <- coincident_peaks %>%
   summarise(common_sample = (sample_match_true/sample_count),
             common_npoc = (npoc_match_true/npoc_count),
             common_stage = (stage_match_true/stage_count))
-### key:
-# common sample = sample ID associated with peak-stage matched with the sample ID of peak-DOC
-# common_npoc = sample DOC concentration associated with max.stage sampled corresponds to the maximum DOC measured for that event
-# common_stage = peak stage sampled corresponds to the stage associate with peak DOC
 
 # overall -- not grouped by site
 coincident_proportion_all <- coincident_peaks %>% 
@@ -3225,18 +3220,114 @@ coincident_proportion_all <- coincident_peaks %>%
             npoc_match_true = length(which(coincident_DOC == TRUE)),
             stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
             stage_match_true = length(which(coincident_stage==TRUE))) %>% 
+  summarise(site = "all sites",
+            common_sample = (sample_match_true/sample_count),
+            common_npoc = (npoc_match_true/npoc_count),
+            common_stage = (stage_match_true/stage_count))
+### key:
+# common sample = sample ID associated with peak-stage matched with the sample ID of peak-DOC
+# common_npoc = sample DOC concentration associated with max.stage sampled corresponds to the maximum DOC measured for that event
+# common_stage = peak stage sampled corresponds to the stage associate with peak DOC
+
+# combine as a tibble (merge with minima and write as csv (next chunk))
+maxima_tibble <- bind_rows(coincident_proportion_sites, coincident_proportion_all) %>%
+  select(c(site, common_npoc)) %>% 
+  rename("Site" = "site", 
+         "Proportion of common maxima" = "common_npoc")
+
+```
+
+#### valley DOC & stage 
+```{r}
+# summarize data for coinciding minima of DOC and stage at each site
+coincident_valleys <- sixfilter %>%
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+         NPOC_ppm != 0) %>%  # drop NAs
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  mutate(sample = as.character(sample)) %>% 
+  group_by(site, trip, event_ID) %>% 
+  summarise(min_stage = min(sampleStage_cm), # minimum stage sampled
+            # sample associated with min stage that was sampled:
+            sample_min_stage = sample[first(which.min(sampleStage_cm))],
+            # DOC associated with min stage that was sampled:
+            npoc_min_stage = NPOC_ppm[first(which.min(sampleStage_cm))],
+            # eventID 
+            min_DOC = min(NPOC_ppm),  # minimum DOC sampled
+            # sample associated with min DOC that was sampled:
+            sample_min_DOC = (sample[first(which.min(NPOC_ppm))]),
+            # stage associated with min DOC that was sampled:
+            stage_min_DOC = sampleStage_cm[first(which.min(NPOC_ppm))]) %>% 
+  mutate(
+    # TRUE if the sample ID for peak stage matched with the sample-ID of peak DOC:
+    coincident_sample = (sample_min_stage == sample_min_DOC), 
+    # TRUE if the [DOC] for peak stage matched with the peak [DOC] sampled:
+    coincident_DOC = (npoc_min_stage == min_DOC),
+    # TRUE if the maximum stage sampled matched with the stage associated with max [DOC]:
+    coincident_stage = (min_stage == stage_min_DOC)) %>% 
+  ungroup()
+
+# calculate the percent of samples for which peak-DOC-sample coincided with peak-stage-sample
+# for each site
+coincident_valley_proportion_sites <- coincident_valleys %>% 
+  group_by(site) %>% 
+  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
+            sample_match_true = length(which(coincident_sample == TRUE)),
+            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
+            npoc_match_true = length(which(coincident_DOC == TRUE)),
+            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
+            stage_match_true = length(which(coincident_stage==TRUE))) %>% 
+  group_by(site) %>% 
+  # calculate the proportion of common peaks
   summarise(common_sample = (sample_match_true/sample_count),
             common_npoc = (npoc_match_true/npoc_count),
             common_stage = (stage_match_true/stage_count))
 
+# overall -- not grouped by site
+coincident_valley_proportion_all <- coincident_valleys %>% 
+  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
+            sample_match_true = length(which(coincident_sample == TRUE)),
+            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
+            npoc_match_true = length(which(coincident_DOC == TRUE)),
+            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
+            stage_match_true = length(which(coincident_stage==TRUE))) %>% 
+  summarise(site = "all sites",
+            common_sample = (sample_match_true/sample_count),
+            common_npoc = (npoc_match_true/npoc_count),
+            common_stage = (stage_match_true/stage_count))
+# woops -- in trip 20 there were two grab samples collected at Chris Crk which resulted in 'common_sample' differing from 'common_npoc' and 'common_stage', which did agree
 
-# subset for narrower window of well-sampled rain events
+### key:
+# common sample = sample ID associated with min-stage matched with the sample ID of min-DOC
+# common_npoc = sample DOC concentration associated with min.stage sampled corresponds to the minimum DOC measured for that event
+# common_stage = min. stage sampled corresponds to the stage associate with min. DOC
+
+# combine as a table
+minima_tibble <- bind_rows(coincident_valley_proportion_sites, 
+                           coincident_valley_proportion_all) %>%
+  select(c(site, common_npoc)) %>% 
+  rename("Site" = "site", 
+         "Proportion of common minima" = "common_npoc")
+
+# join with maxima and write a csv
+full_join(maxima_tibble, minima_tibble) %>%
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = T)
+
+```
+
+##### ?run the same tests on narrower sample group
+```{r}
+# subset for narrower window of well-sampled rain events -- not very useful?
 # trips 17-18* & 19-20 collected racks for all and 2 grabs on falling limb
 ## *note that trip 18 had a major fall algae bloom in Cragg Crk (remove sample = Algae)
 ## note that trip 21 exists only for CraggCrk and was actually a rain event that occured on trip 20 between first and second visit to site 4 
 # trips: 17-21 --> event_ID: 10-12
 
-# by site
+# narrow window by site
 coincident_proportion_narrow_sites <- coincident_peaks %>% 
   #filter(event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
   filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>%
@@ -3256,10 +3347,7 @@ coincident_proportion_narrow_all <- coincident_proportion_narrow_sites %>%
   summarise(common_sample = mean(common_sample),
             common_npoc = mean(common_npoc),
             common_stage = mean(common_stage))
-
-# check
-coincident_proportion_sites
-coincident_proportion_all
+# check them out (not very interesting)
 coincident_proportion_narrow_sites
 coincident_proportion_narrow_all
 
@@ -3270,16 +3358,36 @@ narrow in on specific (well-sampled) events
 ```{r}
 # for plots, add max_DOC by trip and event to stage_sample dataframe
 # DOC peaks in stage_sample = peaksSS
-peaksss <- stage_samples %>% 
-  filter(!is.na(NPOC_ppm)) %>% 
-  filter(QAQC_flag == "OK") %>% 
+peaksss1 <- stage_samples %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
   group_by(site, trip, event_ID) %>% # or by event_ID
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
-  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "event_ID", "sample", "sampleStage_cm")) %>% 
+  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
   arrange(DateTime) %>% 
   ungroup()
+
+peaksss <- stage_samples %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
+  group_by(site, trip, event_ID) %>% # or by event_ID
+  summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
+            sample = sample[which.min(NPOC_ppm)],
+            sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
+  full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
+  arrange(DateTime) %>% 
+  ungroup()
+
 
 # ---- 
 # trip 4 -- stage and samples at each site by sampling event
@@ -3309,33 +3417,6 @@ tripfour <- peaksss %>%
   guides(colour = guide_legend("key:"),
          fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
-# trip 5 -- stage and samples at each site by sampling event
-tripfive <- peaksss %>% 
-  filter(interval == "5") %>%
-  ggplot(aes(x = DateTime))+
-  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["MyOrange"])+ 
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
-  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
-             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
-  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
-             shape = 21, size = 2, na.rm = TRUE) +
-  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
-             shape = 24, size = 2, na.rm = TRUE) +  
-  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Trip 5, Events 4-7")+
-  scale_x_datetime(breaks = "1 day")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.position = "top") +
-  scale_color_manual(breaks = c("max DOC", "sample"),
-                    values = c("black", "black"))+ # alphabetical matching
-  guides(colour = guide_legend("key:"),
-         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
-
 # -----
 # trip 17-21 -- stage and samples at each site by sampling event
 peaksss %>% 
@@ -3350,18 +3431,22 @@ peaksss %>%
              shape = 21, size = 2, na.rm = TRUE) +
   geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
              shape = 24, size = 2, na.rm = TRUE) +
+  geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), 
+             shape = 22, size = 2, na.rm = TRUE) +
   # geom_text(aes(x = DateTime, y = sampleStage_cm, label = round(NPOC_ppm, 2)), na.rm = TRUE) +
-  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], 
+                               forWater_colours2["Green"], 
+                               "grey")) + # manual matches alphabetically (max, min, sample)
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
   labs(y = "River Stage (cm)", x = "", caption = "Events 9-12")+
   scale_x_datetime(breaks = "3 day")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
         legend.position = "top") +
-  scale_color_manual(breaks = c("max DOC", "sample"),
-                    values = c("black", "black"))+ # alphabetical matching
+  scale_color_manual(breaks = c("max DOC", "min DOC", "sample"),
+                    values = c("black", "black", "black"))+ # alphabetical matching
   guides(colour = guide_legend("key:"),
-         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png",
        width = 6.5, height = 6.5, units = "in")
@@ -3389,22 +3474,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-samples-with_narrow_events_
 
 ```
 
-```
-# ? do something similiar for UV absorbance at 254 nm ? 
-# isolate data related to max UV-254 at each site 
-# incomplete dataset (not all samples analyzed by spectrophotometry) 
-max_UV254 <- sixfilter %>%
-  filter(sample_type == "Grab" | sample_type == "Rack",
-         trip == 4 | trip == 5 | trip == 17 | trip == 18 | trip == 19 | trip == 20,
-         sample != "Algae", # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK") %>% # remove samples with extended hold-time  
-  select(c(site, trip, event_ID, DateTime_sampled, sample, SAC254_Abs.m, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
-  group_by(site, trip) %>% 
-  slice(which.max(SAC254_Abs.m)) %>%  # subsets the data set for max values of DOC :) 
-  arrange(trip)
-```
 
-##### test: how did these events compare
+##### representation test
+
+how did events 17-21 compare to other sampled events, is this subset representative?
 ```{r}
 
 # were trips 17-21 results representative of most events?
@@ -3456,6 +3529,12 @@ rest_results %>%
 
 
 # run tests and compile results
+# ---
+# Wilcoxon tests (not normally distributed + small sample size)
+# null hypothesis: there is no difference between the means
+# alternative hypothesis: the difference between means is significant 
+# p-value > 0.05 --> cannot reject null hypothesis
+# p-value < 0.05 --> reject the null hypothesis 
 subbset_Wilcoxon_tests <- bind_rows(
   ## stage ---
   tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Weeks"],
@@ -3564,13 +3643,6 @@ subbset_Wilcoxon_tests_rain <- bind_rows(
                                 p.value < 0.05 ~ "**",# CL = 95%
                                 p.value > 0.05 ~ "NA"))  # means are equal 
 
-# compare hold-time days
-narrow_results %>% 
-  group_by(site, trip) %>% 
-  summarise(HT_mean = mean(HoldTime_days, na.rm = T),
-            HT_min = min(HoldTime_days, na.rm = T),
-            HT_max = max(HoldTime_days, na.rm = T))
-
 # make a summary table
 
 # stage and UV 254 are not comparable but DOC is
@@ -3583,6 +3655,15 @@ full_join(narrow_wilcox_DOC, (subbset_Wilcoxon_tests_rain %>%
                                 mutate(site = "LWSA"))) %>% 
   select(c(site, Parameter, p.value)) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv")
+
+
+
+# compare hold-time days
+narrow_results %>% 
+  group_by(site, trip) %>% 
+  summarise(HT_mean = mean(HoldTime_days, na.rm = T),
+            HT_min = min(HoldTime_days, na.rm = T),
+            HT_max = max(HoldTime_days, na.rm = T))
 
 ```
 

@@ -205,6 +205,7 @@ Each hold-time set included ten replicate samples (collected at the same time in
 \  
 
 ```{r HoldTimeBoxPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+
 fig_cap = "\\label{fig:HoldTimeBoxPlot} *Sample DOC concentrations and UV absorbance at 254nm contrasting  hold-time samples from collection of grab samples to retrieval of held samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
@@ -305,41 +306,49 @@ Over time, DOC concentrations followed similar trends across each of the six LWS
 ```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
 ```
 
+\ 
+
+__I think I should drop this, because DOC was not recorded continuously or simultaneously__
+
+To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA, temporal synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common time-stamped DOC extrema (minima and maxima) between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings of these synchrony tests, where a proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites (and zero indicates asynchrony).
+ 
+** OR if DateTime was rounded to 30 minute intervals, there might be more of a level playing field? 
+*** nope never mind, I don't think that will work because you'd have to average DOC values or something
+
+### ? spatial Synchrony DOC & stage local extrema
+
+--- manual doc and peak stage analysis 
+-- this is the good stuff:
+
+Did DOC concentrations peak in synchrony with river stage at each site? To determine if local extrema (maxima and minima) DOC concentrations were captured in synchrony with the local extrema of sampled flows (minima and maxima sampled stage), temporal synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify maximum and minimum DOC and peak sample stage and then checked to determine whether extrema of DOC occurred in the sample collected at corresponding stage extrema. Table \@ref(tab:synchDOCstage) summarized the proportion of samples collected at each site for which the same sample corresponded to both DOC and sample stage extrema. 
+
 \  
 
-To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common time-stamped DOC extrema (minima and maxima) between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings of these synchrony tests where a proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites (and zero indicates none).
-
-\  
-
-```{r synchDOCpeaks}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_synchrony-peaks_all.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,0,3,3),
-               caption = "*Results of Synchrony tests comparing maxima and minima DOC concentrations between sites.*")
+```{r synchDOCstage}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,3),
+               caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
 ```
 
-\  
-
-Among the three mainstem rivers during the dry season there was relatively high temporal synchrony for peaks of DOC, albeit there were fewer samples collected during the dry season so there were fewer values to compare relative to the wet season. Over the entire study period and across wet seasons, there was a low proportion of temporal synchrony for DOC peaks across the LWSA.
+\ 
 
 
-\  
-
-Because vertical racks collect samples at set stages rather than specific times, it's possible that examining temporal synchrony doesn't tell the story I think it does. 
-
---- manual doc and peak stage analysis
 
 
-To better understand how the timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis. The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there was no significant difference between DOC concentrations or rain events for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)).
+
+
+
+To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis. The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.  
 
 \  
 
 ```{r subbsetWilcox}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0,0,4),
-               caption = "*Results of Wilcoxon tests comparing results from the subset of samples from rain events 10-12 to other sampled rain events.*")
+               caption = "*p-values from Wilcoxon tests comparing the subset of rain events 10-12 and those samples' DOC results to all other sampled rain events, showing no significant difference between the groups.*")
 ```
 
 
