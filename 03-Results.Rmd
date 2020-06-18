@@ -431,7 +431,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinM
          col_names = TRUE) %>%
   knitr::kable(col.names = c("Site", "Sample type", "DOC mean (mg/L)", 
                              "std.dev. (± mg/L)", "RSD (±%)", "min DOC", "max DOC"),
-               digits = c(1, 1, 1, 1, 0, 2, 2),
+               digits = c(0, 0, 1, 1, 0, 2, 2),
                caption = "*Results of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
 ```
 

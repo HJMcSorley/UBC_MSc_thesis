@@ -10,8 +10,7 @@ This RMD file generates summary tables and figures but is not included in the fi
 
 # Set-up
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
-# save figures to folder 'figures' in the 'R-outputs...' folder
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE)
 ```
 
 ## Packages
@@ -3036,9 +3035,9 @@ sixfilter_sub %>%
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   guides(colour = guide_legend("Site:"),
-         linetype = guide_legend("Basin type:", override.aes = list(colour = "black"))) %>% 
-  # save
-  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png", 
+         linetype = guide_legend("Basin type:", override.aes = list(colour = "black")))  
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type_loess.png", 
          width = 6, height = 5, units = "in") 
 # ---
 ### this one seems more clear:
@@ -3059,9 +3058,9 @@ sixfilter_sub %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
-                   date_minor_breaks = "1 months") %>% 
-  # save
-  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", 
+                   date_minor_breaks = "1 months") 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", 
          width = 6, height = 6, units = "in") 
 
 # samples: n_installGrabSamples+n_installRackSamples  
@@ -3116,9 +3115,9 @@ stage_samples %>%
         axis.text.x = element_text(angle = 60, hjust = 1),
         legend.position = "top")+
   guides(fill = guide_legend("Sample type:"), 
-         shape = guide_legend("Sample type:", override.aes = list(size=2.5))) %>% 
-  #save
-  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
+         shape = guide_legend("Sample type:", override.aes = list(size=2.5)))  
+#save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
          width = 6, height = 7, units = "in")
 
 ```
@@ -3145,9 +3144,10 @@ stage_sample_plot <- stage_samples %>%
 
 # create a second megaplot with sample points included
 # stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) %>% 
-  # save megaplot
-  ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
+
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
          width = 8.5, height = 11, units = "in")
 ```
 
@@ -3665,6 +3665,58 @@ narrow_results %>%
 
 ## Seasonal Sample Method
 
+## seasonal DOC subbasin, Mean/Min/Max 
+```{r, all-samples-together}
+
+# grouped-summary (site and sample-type and all)
+a <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, rain_season) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>%
+  rename(sample_season = "rain_season") %>% 
+  ungroup() %>%
+# for a site summary of each, include this:
+rbind(sixfilter %>%
+        filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+        group_by(site) %>% 
+        summarize(sample_season = "All",
+                  count = n(), 
+                  DOCmean = mean(NPOC_ppm, na.rm = T), 
+                  DOCsd = sd(NPOC_ppm, na.rm = T), 
+                  RSD = round((DOCsd/DOCmean)*100, 0),
+                  DOCmin = min(NPOC_ppm, na.rm = T), 
+                  DOCmedian = median(NPOC_ppm, na.rm = T), 
+                  DOCmax = max(NPOC_ppm, na.rm = T))) %>% 
+  ungroup() %>% 
+  arrange(site)
+
+# un-grouped summary
+b <- sixfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "ALL SITES",
+            sample_season = "SUMMARY",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+  select(site, sample_season, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+  ungroup()
+
+# tag totals summary onto site summary
+rbind(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = T)
+
+```
+
 ### ridgeplot: wet G/R subbasin ridgeplot 
 ```{r, sample_type-ridgeplots}
 
@@ -3806,7 +3858,7 @@ bind_rows(a, b) %>%
 ### ?table: subbasin Rack DOC trends by event & site
 ```{r}
 # calculate trend with linear model
-DOC_rack-trends_lm <- sixfilter %>%
+DOC_rack_trends_lm <- sixfilter %>%
   filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
          sample_type == "Rack", 
          sample != "Algae",      # remove sample containing whole algae (high DOC)
@@ -3913,7 +3965,7 @@ wet_n_installRackSamples <- sixfilter %>%
 # DOC summary table -- Grab vs Rack
 sixfilter %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
-                rain_season == "Wet season") %>% 
+                rain_season == "wet") %>% 
   group_by(site, sample_type) %>% 
   summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
             DOC_sd = sd(NPOC_ppm, na.rm = T),
