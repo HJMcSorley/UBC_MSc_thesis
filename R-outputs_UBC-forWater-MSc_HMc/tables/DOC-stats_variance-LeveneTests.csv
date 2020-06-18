@@ -1,10 +1,10 @@
 Comparison Group,Site Comparison,p.value,Significance
-headwaters,Weeks & ChrisCrk,0.0023080494884092713,***
-headwaters,LeechHead & Weeks,6.755276715524415e-5,***
-headwaters,LeechHead & ChrisCrk,0.1348033056308229,homoscedastic
-mainstems,LeechHead & CraggCrk,0.45350696374647415,homoscedastic
-mainstems,LeechHead & WestLeech,0.01878005366108338,**
+headwaters,Weeks & ChrisCrk,0.006046374892892819,***
+headwaters,LeechHead & Weeks,1.9855403335459395e-4,***
+headwaters,LeechHead & ChrisCrk,0.11395710528240309,homoscedastic
+mainstems,LeechHead & CraggCrk,0.5297377618636715,homoscedastic
+mainstems,LeechHead & WestLeech,0.015362732154147163,**
 mainstems,CraggCrk & WestLeech,5.309772605706872e-4,***
-mainstem to outlet,LeechHead & Tunnel,0.5673723859502451,homoscedastic
-mainstem to outlet,CraggCrk & Tunnel,0.1253698273839239,homoscedastic
-mainstem to outlet,WestLeech & Tunnel,0.02863246873656452,**
+mainstem to outlet,LeechHead & Tunnel,0.44089449078270493,homoscedastic
+mainstem to outlet,CraggCrk & Tunnel,0.10117401219274734,homoscedastic
+mainstem to outlet,WestLeech & Tunnel,0.036053756274885294,**
