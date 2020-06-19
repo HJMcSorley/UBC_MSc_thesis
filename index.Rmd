@@ -8,8 +8,8 @@ output:
     lof: true
     lot: true
     toc: true
-    fig_caption: yes
-    reference_docx: word-styles-document_thesis.docx
+    fig_caption: true
+    reference_docx: UBC-ThesisTemplate_HMc.docx
 bibliography: library.bib 
 link-citations: yes
 ---

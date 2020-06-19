@@ -2,8 +2,8 @@
 output: bookdown::word_document2
 ---
 
-#	1	Introduction
-##	1.1 		Forested source water supplies and drinking water treatment 
+##	Introduction
+###	Forested source water supplies and drinking water treatment 
 	
 Surface water is the primary source of drinking water for over 85% of the Canadian population and in the province of British Columbia, approximately 80% of drinking water originates from forested headwaters [@Pike2010]. Forests offer a variety of ecosystem services (e.g. biodiversity) and also slow and filter runoff, resulting in high quality source water supply [@Dudley2003]. Surface water quality varies over time and space due to climate, weather, and physical characteristics of the watershed (such as topography, land cover and geology), and runoff processes introduce terrestrial material, sediments, nutrients, and organic matter into surface waters [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015; @Matilainen2010]. 
 
@@ -23,7 +23,7 @@ While objectionable aesthetics (i.e., taste, odour, colour) caused by aqueous na
 
 In addition to operational impediments, NOM is partly responsible for unintended chemical contaminants in treated drinking water. When source water is chlorinated, chemical reactions with NOM can form a variety of chlorinated organic compounds which are broadly classified as disinfection byproducts (DBPs) [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet2000]. A number of chlorinated carbonaceous DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their possible or known health affects (i.e., possible genotoxicity or carcinogenicity) [@Richardson2007; @BC2019; @HealthCanada2019].
  
-##	1.2 		Aqueous natural organic matter
+###   Aqueous natural organic matter
 
 Natural organic matter (NOM) concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure influence NOM reactivity, therefore different types of aqueous NOM have different disinfection byproduct formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010].  
 
@@ -40,7 +40,7 @@ Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen an
 In addition to acting as a precursor for DBPs, DOC has been called a master variable due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Zarnetske2018]. NOM is an energy source for aquatic heterotrophic microbes, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes (which, in turn, effect aquatic microbial communities) [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012]. DOC is an important source water quality parameter to monitor. In fact, guidelines in British Columbia specify that source water TOC should remain below 4 mg/L, primarily to reduce the production of trihalomethanes (e.g., chloroform, a common DBP) in treated drinking water [@BC2019]. Aside from DBPs, monitoring source water DOC is important for addressing the other operational issues associated with NOM. Stable source water conditions lead to predictable treatment procedures, while fluctuating source water quality creates treatment challenges. Within a watershed, the characteristics and concentrations of NOM (and therefore DOC) naturally fluctuate over space and through time, creating dynamic treatability conditions [@Li2014; @Yang2015].
 
 
-##	1.3 		Watershed processes and water quality
+###   Watershed processes and water quality
 	
 Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals represent an important link between ecosystem processes, hydrology, and water resources. Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019]. The origins, transport and fate of biogeochemicals in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and concentrations) governs treatment requirements and, with respect to DBPs, dictates the quality of treated water [@Weishaar2003; @Chow2008]. 
 
@@ -74,7 +74,7 @@ Forest management and landscape disturbances can also affect water quality by al
 
 \  
 
-### 1.3.1		Source water quality considerations in the water supply areas of Greater Victoria, BC
+####    Source water quality considerations in the water supply areas of Greater Victoria, BC
 
 The Capital Regional District (CRD), encompassing the southern tip of Vancouver Island (including Victoria) and the southern Gulf Islands,  is committed to the multiple barrier approach to clean drinking water and has taken control of source water protection by purchasing and privatizing the water supply areas for Greater Victoria. Located on southeastern Vancouver Island, British Columbia, Canada, the Greater Victoria Water Supply Area (GVWSA) includes 20,549 hectares (205.49 km^2^) of protected drinking water catchment lands. Currently, Greater Victoria's water supply is sourced from five surface water reservoirs in the Sooke and Goldstream watersheds.  In 2007 and 2010, the CRD purchased and additional 96.28 km^2^ (9,628 hectares) of land which included the majority of the Leech River watershed (a major sub-catchment of the Sooke River watershed). In anticipation of future water demands, this area was designated as a supplemental water supply for Greater Victoria, and is known as the the Leech Water Supply Area (LWSA). In the future (possibly by 2050), water from the LWSA will be transferred through a diversion tunnel to supplement Sooke Reservoir, the primary drinking water supply (i.e., inter-basin transfer). Approximately 92% of the Leech River watershed above the point of diversion (Leech Tunnel) is protected as WSA. 
 
@@ -90,6 +90,6 @@ The LWSA was privately managed forest land which was extensively harvested over 
 
 The provincial Drinking Water Protection Act and Drinking Water Protection Regulation frameworks were developed to implement Health Canada's drinking water quality guidelines and set out requirements for drinking water operators & suppliers to ensure the provision of safe drinking water. Treatment of source water from the Greater Victoria Water Supply Area consists only of disinfection: raw water (unfiltered) is treated with ultraviolet light as primary disinfection, chlorination is secondary, and finally ammonia is added to produce chloramine (NH~2~Cl, a long-lasting disinfectant that persists throughout the distribution system). Understanding dynamics and variability of hydrochemistry in the LWSA is needed to anticipate possible treatment challenges that may accompany future inter-basin transfer from the LWSA.   
 
-##	1.4 	Research Objectives
+###   Research Objectives
 
 This research was conducted in partnership with the CRD to contribute to their pursuit of characterizing the Leech Water Supply Area, while contributing to our understanding of "natural" variations in source water quality (primarily with respect to DOM and DOC) across nested catchments in a second growth forested watershed. The objectives of this research were to quantify spatial and temporal patterns in DOC concentrations, and to explore the hydrochemical synchrony of nested catchments across the LWSA. Ideally, results of this research will contribute to baseline understanding for further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. Understanding source water quality, as well as the timing and magnitude of flows, is an essential component to multiple barrier approach to ensuring clean drinking water. 

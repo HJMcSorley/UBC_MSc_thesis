@@ -13,6 +13,7 @@ library(readr)    # read in delimited files
 library(knitr)    # for tidy tables
 ```
 
+#######   Appendix
 
 #### Malahat 5 year weather
 

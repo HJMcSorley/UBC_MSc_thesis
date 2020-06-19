@@ -445,7 +445,7 @@ precip_data %>%
   group_by(year) %>%
   summarise(mean_rain_mm = mean(total_rain_mm, na.rm = TRUE),
             sd_rain_mm = sd(total_rain_mm, na.rm = TRUE),
-            mean_max_snow_m = mean(max_snow_m, na.rm = TRUE),
+            max_snow_m = max(max_snow_m, na.rm = TRUE),
             annual_mean_temp = mean(annual_temp, na.rm = TRUE),
             temp_sd = sd(annual_temp, na.rm = TRUE),
             annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
@@ -455,7 +455,7 @@ precip_data %>%
   ungroup() %>% 
   dplyr::rename("mean annual rain (mm)" = mean_rain_mm,
                 "stdev rain. (±mm)" = sd_rain_mm,
-                "mean snow accum. (m)" = mean_max_snow_m,
+                "max. snow accum. (m)" = max_snow_m,
                 "mean temp. (°C)" = annual_mean_temp, 
                 "st.dev temp. (±°C)" = temp_sd,
                 "min. temp. (°C)" = annual_min_temp2,
@@ -1364,8 +1364,9 @@ Hobo <- Hobo %>%
 
 ```
 
-## plot: Hobo air/water temps over time
+## plot: Hobo air/water temps time & space
 ```{r}
+# ---- over time
 Hobo %>% 
   group_by(site, TidbiT_location, Date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
@@ -1387,10 +1388,9 @@ Hobo %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png", 
        width = 6, height = 6, units = "in")
-```
 
-## plot: Hobo A/W over space
-```{r}
+
+# --- over space
 # update the water temperature logger time frames to be equal
 # all sites water loggers were submerged by 2019-10-15  
 Hobo <- within(Hobo, 
@@ -1423,7 +1423,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png
        width = 5.5, height = 5.5, units = "in") 
 ```
 
-## Compare: Hobo / LWSA
+## Compare Hobo / LWSA
 ```{r}
 
 # find overlapping ranges
@@ -1484,72 +1484,87 @@ Hobo_WxLWSA <- Hobo_WxLWSA_full %>%
 
 ### plot: [1:1] FWx vs HOBO
 ```{r}
-
-## plot: 1:1 scatter of temperatures -- dry season
-adry <- Hobo_WxLWSA %>% 
-  filter(rain_season == "dry") %>% 
+## plot: 1:1 scatter of temperatures -- all data
+HoboFwx_lm <- Hobo_WxLWSA %>% 
   ggplot(aes(x = FWx, y = Hobo))+
   geom_point(alpha = 0.35)+
   theme_bw()+
   facet_wrap(~ site)+
-  labs(y = "Site temperature (°C)", x = "")+
-  #labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
-  theme(text = element_text(size = 10))+
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
-  ## to get equations include this line:
-  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
-  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
-
-## plot: 1:1 scatter of temperatures -- wet season
-awet <- Hobo_WxLWSA %>% 
-  filter(rain_season == "wet") %>% 
-  ggplot(aes(x = FWx, y = Hobo))+
-  geom_point(alpha = 0.35)+
-  theme_bw()+
-  facet_wrap(~ site)+
-  labs(y = "", x = "")+
-  #labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
-  theme(text = element_text(size = 10))+
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
-  ## to get equations include this line:
-  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
-  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
-
-# grid adjacent
-a <- cowplot::plot_grid(adry, awet, nrow = 1)
-
-## plot: 1:1 scatter of temperatures -- all season
-b <- Hobo_WxLWSA %>% 
-  ggplot(aes(x = FWx, y = Hobo))+
-  geom_point(alpha = 0.35)+
-  theme_bw()+
-  facet_wrap(~ site)+
-  labs(y = "Site temperature (°C)", x = "Mean LWSA temperature (°C)") +
+  labs(y = "Site temperature (°C)", x = "FWx temperature (°C)") +
   theme(text = element_text(size = 11))+
   stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
   ## to get equations include this line:
   #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
   stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
 
-# grid vertical -- I dunno, seems unneccessary
-cowplot::plot_grid(a, b, ncol = 1)
+## plot: 1:1 scatter of temperatures -- daily mean only
+HoboFwx_lm_means <- Hobo_WxLWSA %>% 
+  group_by(site, Date) %>% 
+  summarise(Hobo = mean(Hobo),
+            FWx = mean(FWx)) %>% 
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.5)+
+  theme_bw()+
+  facet_wrap(~ site)+
+  labs(y = "Mean daily site temperature (°C)", x = "Mean daily FWx temperature (°C)") +
+  theme(text = element_text(size = 11))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+  ## to get equations include this line:
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
 
+# use daily means to estimate temps -- better overlap and less scatter
+
+# arrange plots for presentation
+cowplot::plot_grid(HoboFwx_lm, HoboFwx_lm_means, ncol = 1,
+                   labels="AUTO")
 # save
-ggsave(plot = b, filename = "R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
-       width = 8, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
+       width = 8, height = 8, units = "in")
 
 ```
 
-#### visual checks
+### density ridge comparison
 ```{r}
-# take dataframe with both FWx and Hobo data
-# pivot longer
+# density ridges by TidbiT site
+Hobo_Fwx %>% 
+  ggplot(aes(x = Temp_C, y = fct_rev(site)))+
+  ggridges::geom_density_ridges(aes(fill = data_source), alpha = 0.6) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw()+
+  labs(x = "Air temperature (°C)",
+       y = "",
+       fill = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
+       width = 4, height = 4, units = "in")
+
+```
+
+#### overlap visual checks
+```{r}
+# take dataframe with both FWx and Hobo data & pivot longer
 Hobo_Fwx <- Hobo_WxLWSA %>%
   group_by(site) %>% 
   pivot_longer(cols = c("Hobo", "FWx"),
                names_to = "data_source",
-               values_to = "Temp_C") %>% 
-  mutate(data_source = factor(data_source))
+               values_to = "Temp_C") %>%  
+  mutate(data_source = factor(data_source)) # temps as factor levels
+
+# do the same but with Daily mean temperaures
+Hobo_Fwx_dm <- Hobo_WxLWSA %>%
+  group_by(site, Date) %>% 
+  summarise(Hobo = mean(Hobo),
+            FWx = mean(FWx)) %>%  # daily mean temperatures
+  ungroup() %>% 
+  group_by(site) %>% 
+  pivot_longer(cols = c("Hobo", "FWx"),
+               names_to = "data_source",
+               values_to = "Tdaily") %>%  
+  mutate(data_source = factor(data_source)) # temps as factor levels
+
 
 # check daily temp overlap
 Hobo_Fwx %>% 
@@ -1570,14 +1585,28 @@ Hobo_Fwx %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 # perfect :)
 
+# check daily temp overlap
+Hobo_Fwx_dm %>% 
+  filter(data_source == "FWx") %>% 
+  ggplot(aes(x = Date))+
+  geom_line(aes(y = Tdaily, colour = site), size = 0.8)+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  labs(x = "", y = "Daily mean air temperature (°C)",
+       colour = "Data origin:")+
+  theme(legend.position = "top", 
+        text = element_text(size = 12))+
+  scale_x_date(date_labels = "%Y %b %d",
+               date_breaks = "1 months")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
-### air temp over time
+### trash plots: air temp over time & space
 ```{r}
 # compare temps from FWx to HOBO at each site
-Hobo_Fwx %>% 
-  group_by(site, data_source, Date) %>% 
-  summarise(Tdaily = mean(Temp_C)) %>% 
+# line plot
+Hobo_Fwx_dm %>% 
   ggplot(aes(x = Date))+
   geom_line(aes(y = Tdaily, colour = data_source), size = 0.8)+
   scale_color_brewer(palette = "Dark2")+ 
@@ -1596,18 +1625,13 @@ Hobo_Fwx %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png", 
        width = 6, height = 7, units = "in")
 
-```
-
-### air temp over space
-```{r}
-# set FWx like it's a site
+# set FWx like it's a site to plot as a box adjacent to the other sites
 HoboFWx_sites <- Hobo %>% 
   filter(TidbiT_location == "air",
          DateTime < project_end, DateTime >= Hobo_start) %>%
   select(site, DateTime, Temp_C, rain_season) %>% 
   pivot_wider(names_from = site, values_from = Temp_C) %>%
-  
-  left_join(
+  left_join( # only keep dates for Hobo
     LWSA_meanWx %>% select(c(DateTime, Temp_mean)) %>% filter(DateTime < project_end, DateTime >= Hobo_start), by = c("DateTime")) %>% 
   rename(FWx = "Temp_mean") %>% 
   # then, pivot longer again so each site has a full DateTime range
@@ -1615,30 +1639,11 @@ HoboFWx_sites <- Hobo %>%
   mutate(site = factor(site, 
                        levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel", "FWx"))) 
 
-# --- this is not better than the plot above
-# compare temps from FWx to HOBO at each site
-HoboFWx_sites %>% 
-  mutate(Date = as_date(DateTime)) %>% 
-  group_by(site, Date) %>% 
-  summarise(Tdaily = mean(Temp_C)) %>% 
-  ggplot(aes(x = Date))+
-  geom_line(aes(y = Tdaily, colour = site), size = 0.8)+
-  scale_color_brewer(palette = "Dark2")+ 
-  theme_bw()+
-  labs(x = "", y = "Air temperature (°C)",
-       colour = "Data origin:")+
-  theme(legend.position = "top", 
-        text = element_text(size = 12))+
-  scale_x_date(date_labels = "%Y %b %d", date_breaks = "1 months")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# ---
-
-
 # boxplot
 # compare temps from FWx to HOBO at each site
-HoboFWx_sites %>% 
+a <- HoboFWx_sites %>% 
   mutate(date = as_date(DateTime)) %>%
-  group_by(site, date, rain_season) %>% 
+  group_by(site, date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
   ggplot(aes(x = site, y = T_daily, fill = site))+
   geom_jitter(alpha = 0.6, shape = 21)+
@@ -1648,11 +1653,10 @@ HoboFWx_sites %>%
   labs(x = "", y = "Mean Daily Air temperature (°C)",
        colour = "Data origin:")+
   theme(legend.position = "none", 
-        text = element_text(size = 12)) # + facet_wrap(~rain_season)
-
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 45, hjust = 1))
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png", 
-       width = 6, height = 7, units = "in")
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png", width = 5, height = 5, units = "in")
 
 ```
 
@@ -1666,6 +1670,15 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_box-air-by-site.png",
 # density by weather station source
 # these should be the same 
 ## -- they came from the same source & are limited to the same date range
+Hobo_Fwx_dm %>% 
+  ggplot(aes(Tdaily))+
+  geom_density(aes(colour = site))+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~ data_source)
+
+# check with full data set also
 Hobo_Fwx %>% 
   ggplot(aes(Temp_C))+
   geom_density(aes(colour = site))+
@@ -1673,25 +1686,6 @@ Hobo_Fwx %>%
   theme_bw()+
   theme(legend.position = "top")+
   facet_wrap(~ data_source)
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_DensityNormalityCheck-subbasins.png", 
-       width = 4, height = 4, units = "in")
-
-# density ridges by TidbiT site
-Hobo_Fwx %>% 
-  ggplot(aes(x = Temp_C, y = fct_rev(site)))+
-  ggridges::geom_density_ridges(aes(fill = data_source), alpha = 0.6) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw()+
-  theme(legend.position = "top")+
-  labs(x = "Air temperature (°C)",
-       y = "",
-       fill = "Data origin:")+
-  theme(legend.position = "top", 
-        text = element_text(size = 12))
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
-       width = 4, height = 4, units = "in")
 
 ```
 
@@ -1704,9 +1698,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.p
 # p-value < 0.05 --> reject the null hypothesis
 
 # tests
-test <- Hobo_Fwx$Temp_C
-stn <- Hobo_Fwx$data_source
-site <- Hobo_Fwx$site
+test <- Hobo_Fwx_dm$Tdaily
+stn <- Hobo_Fwx_dm$data_source
+site <- Hobo_Fwx_dm$site
 
 # compare temperatures from FWx versus Hobo on-site loggers
 # run tests and compile results
@@ -1727,7 +1721,7 @@ Temp_Wilcoxon_tests <- bind_rows(
 # summarize p-values
 Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>% 
   select(c(site, p.value)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_Wilcoxon-pvalues.csv", col_names = TRUE)
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalues.csv", col_names = TRUE)
 
 ```
 
@@ -1739,7 +1733,8 @@ Relate subbasins to FWx & use linear regression to estimate temperature for each
 # save summary object
 # use wide dataframe (Hobo_WxLWSA) rather than long(Hobo_Fwx)
 sites_lm <- Hobo_WxLWSA %>% 
-  filter(Date > "2019-08-23") %>% # overlapping range
+  filter(rain_season == "wet") %>% # more even temps once rain started
+  filter(Date > "2019-08-23") %>% # insure overlapping range
   group_by(site) %>% 
   summarise(slope = coefficients(lm(formula = Hobo ~ FWx))[2],
             yint_DOC = coefficients(lm(formula = Hobo ~ FWx))[1],
@@ -1755,6 +1750,42 @@ Hobo_FWx_filled <- Hobo_WxLWSA_full %>%
     site == "CraggCrk" ~ sites_lm[[4,2]]*FWx + sites_lm[[4,3]], 
     site == "WestLeech" ~ sites_lm[[5,2]]*FWx + sites_lm[[5,3]], 
     site == "Tunnel" ~ sites_lm[[6,2]]*FWx + sites_lm[[6,3]]
+  )) %>% 
+  filter(!is.na(site))
+
+
+
+
+# ---- same but for daily means
+# lm(y ~ x) == lm(dependent ~ independent) 
+# save summary object
+# use wide dataframe (Hobo_WxLWSA) rather than long(Hobo_Fwx)
+sites_lm_Tdaily <- Hobo_WxLWSA %>% 
+  filter(rain_season == "wet") %>% # more even temps once rain started
+  filter(Date > "2019-08-23") %>% # insure overlapping range
+  group_by(site, Date) %>% 
+  summarise(Hobo = mean(Hobo),
+            FWx = mean(FWx)) %>%
+  ungroup() %>% 
+  group_by(site) %>% 
+  summarise(slope = coefficients(lm(formula = Hobo ~ FWx))[2],
+            yint_DOC = coefficients(lm(formula = Hobo ~ FWx))[1],
+            r_sq = summary(lm(formula = Hobo ~ FWx))$r.squared) 
+
+# use linear regression to calculate earlier temperatures
+Hobo_FWx_Tdaily_filled <- Hobo_WxLWSA_full %>% 
+  group_by(site, Date) %>% 
+  summarise(Hobo = mean(Hobo),
+            FWx = mean(FWx)) %>%
+  ungroup() %>% 
+  group_by(site) %>% 
+  mutate(Predicted = case_when(# y = m*x + b
+    site == "Weeks" ~ sites_lm_Tdaily[[1,2]]*FWx + sites_lm_Tdaily[[1,3]], # [[row, column]]
+    site == "ChrisCrk" ~ sites_lm_Tdaily[[2,2]]*FWx + sites_lm_Tdaily[[2,3]], 
+    site == "LeechHead" ~ sites_lm_Tdaily[[3,2]]*FWx + sites_lm_Tdaily[[3,3]], 
+    site == "CraggCrk" ~ sites_lm_Tdaily[[4,2]]*FWx + sites_lm_Tdaily[[4,3]], 
+    site == "WestLeech" ~ sites_lm_Tdaily[[5,2]]*FWx + sites_lm_Tdaily[[5,3]], 
+    site == "Tunnel" ~ sites_lm_Tdaily[[6,2]]*FWx + sites_lm_Tdaily[[6,3]]
   )) %>% 
   filter(!is.na(site))
 ```
@@ -1777,6 +1808,25 @@ Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>%
             min_Hobo = min(Hobo, na.rm = TRUE),
             min_Predicted = min(Predicted, na.rm = TRUE),
             max_Hobo = max(Hobo, na.rm = TRUE),
+            max_Predicted = max(Predicted, na.rm = TRUE))
+
+# ---- do the same but for the daily mean regression
+# isolate overlapping date range & summarize percent error
+Hobo_overlapPredictionErrors_Tdaily <- Hobo_FWx_Tdaily_filled %>% 
+  filter(Date > as_date(Hobo_start), Date < as_date(project_end)) %>% 
+  group_by(site) %>% 
+  mutate(error = ((Hobo - Predicted)/Hobo)*100) %>%  # positive error = regression over-estimated subbasin temp
+  group_by(site) %>% 
+  summarise(error_mean = mean(error, na.rm = TRUE),
+            #Hobo_mean = mean(Hobo, na.rm = TRUE),
+            #sd_Hobo = sd(Hobo, na.rm = TRUE), 
+            Hobo_median = median(Hobo, na.rm = TRUE),
+            Predicted_median = median(Predicted, na.rm = TRUE),
+            #Predicted_mean = mean(Predicted, na.rm = TRUE),
+            #sd_Predicted = sd(Predicted, na.rm = TRUE), 
+            min_Hobo = min(Hobo, na.rm = TRUE),
+            min_Predicted = min(Predicted, na.rm = TRUE),
+            max_Hobo = max(Hobo, na.rm = TRUE),
             max_Predicted = max(Predicted, na.rm = TRUE)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE)
 
@@ -1787,7 +1837,7 @@ Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>%
 
 # take the study period data frame with temp estimates at each site
 # pivot longer
-HoboFWx_filled_L <- Hobo_FWx_filled %>%
+HoboFWx_filled_L <- Hobo_FWx_Tdaily_filled %>% 
   group_by(site) %>% 
   pivot_longer(cols = c("Hobo", "FWx", "Predicted"),
                names_to = "Temp_source",
@@ -2069,7 +2119,6 @@ HT_summ %>%
 
 ```
 
-
 #### table: HT summary
 ```{r}
 # summarize percent change (DOC & UV254) for each set
@@ -2231,7 +2280,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_withRain.png", w
 ## LAB 
 ```{r}
 
-### blanks --------
+### blanks 
 # check lab blanks
 # this is a difficult measure of precision because the RO water is not the most reliably stable
 calver %>% 
@@ -2244,7 +2293,7 @@ calver %>%
             sd_DOC = sd(NPOC_ppm, na.rm = T),
             RSD = (sd_DOC/DOC_mean)*100)
 
-### cal vers -------
+### cal vers 
 # percent error calculated as 'measured' minus 'actual'
 # negative error indicates the method was under-estimating DOC concentration 
 # positive error indicates the method was over-estimating DOC concentration
@@ -2299,8 +2348,6 @@ error_overall <- (error_shimadzu + error_spectrolyser)/2
 ```
 
 
-
-
 # SAMPLES: augment dataframes
 
 ## Categorize
@@ -2311,12 +2358,17 @@ sampleresults <- sampleresults_df %>%
   select(-c(DateTime)) %>% 
   mutate(rain_seasons = case_when(
     event_ID %in% 1:8 ~ "wet",   
-    Date %within% interval("2019-01-21", "2019-03-01") ~ "wet",
-    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-    Date %within% interval("2019-05-01", "2019-09-11") ~ "dry",
+    Date %within% interval("2019-01-20", "2019-03-15") ~ "wet",
+    Date %within% interval("2019-03-15", "2019-05-01") ~ "wet", # snow
+    Date %within% interval("2019-05-01", "2019-09-13") ~ "dry",
     event_ID == 9 ~ "first flush",
     event_ID %in% 10:18 ~ "wet")) %>% 
-  mutate(rain_season = as.character(rain_season))
+  mutate(rain_season = as.character(rain_season)) %>% 
+  mutate(sample_type = case_when( # these were late F/P, thus not typical grab samples
+    sample == "FP0531" ~ "QA-QC",
+    sample == "FP0603" ~ "QA-QC",
+    TRUE ~ as.character(sample_type))) %>% 
+  mutate(sample_type = factor(sample_type))
 
 # fill in any gaps and save as factors
 sampleresults <- within(sampleresults, 
@@ -2351,7 +2403,8 @@ sampleresults <- sampleresults %>%
 sampleresults <- sampleresults %>% 
   mutate(QAQC_flag = case_when(
     rain_seasons == "first flush" & HoldTime_days >= 7 ~ "FFHT",
-    HoldTime_days <= 20 ~ "OK",
+    HoldTime_days < 0 ~ "OK",
+    between(HoldTime_days, 0, 20) ~ "OK",
     HoldTime_days >= 30 ~ "HT",
     TRUE ~ "OK"))
 
@@ -2363,8 +2416,8 @@ sampleresults <- sampleresults %>%
 # create a subset dataframe for the six install sites for tidier calling
 sixfilter <- sampleresults %>% 
   filter(site_type == "subbasin",
-         analysis == "DOC") %>% 
-  filter(sample_type != "QA-QC") %>%
+         analysis == "DOC",
+         sample_type != "QA-QC") %>%
   mutate(site = factor(site, levels = 
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")),
          QAQC_flag = factor(QAQC_flag))
@@ -2373,35 +2426,21 @@ sixfilter <- sampleresults %>%
 ## 1. replace missing Hobo values with predicted values 
 ## 2. summarize mean daily air temps
 ## 3. join mean daily air temps with sample results by date sampled
-sixfilter <- within(Hobo_FWx_filled, 
+sixfilter <- within(Hobo_FWx_Tdaily_filled, 
                     Hobo <- ifelse(is.na(Hobo), Predicted, Hobo)) %>% 
-  group_by(site, Date) %>% 
-  summarise(Tmean_airDaily = mean(Hobo)) %>% 
-  select(site, Date, Tmean_airDaily) %>% 
+  select(site, Date, Hobo_Tmean_airDaily = "Hobo") %>% 
+  group_by(site) %>% 
   right_join(sixfilter, by = c("site", "Date")) %>% 
   ungroup()
 
-# primary synoptic sampling sites (n > 1)
+# now, six filter data has air temperatures estimated before and measured after 2019-08-24
+
+# primary synoptic sampling sites (n > 2)
 # 15 sites total
-
-# how many synoptic samples were grabbed?
-# save value as object to implant in text
-n_SynopticGrabs <- sampleresults %>% 
-  dplyr::filter(analysis == "DOC", 
-                sample_type == "Grab") %>%
-  filter(sample_type != "QA-QC") %>%
-  group_by(site = forcats::fct_explicit_na(site)) %>% 
-  summarise(grab_sample_count = n()) %>% 
-  filter(grab_sample_count > 2) %>% 
-  mutate(what = "synoptic grab count") %>% 
-  ungroup() %>%  # drop the following code to see samples by sites
-  group_by(what) %>% 
-  summarise(total = sum(grab_sample_count)) %>% 
-  pull(total)
-
 # create a subset dataframe for the synoptically sampled sites for tidier calling
-synopticfilter <- sampleresults %>% 
-  filter(sample_type != "QA-QC") %>% 
+synopticfilter <- sampleresults %>%
+  filter(analysis == "DOC", 
+         sample_type != "QA-QC") %>% 
   filter(# subbasin sites 
     site == "Weeks"|
       site == "ChrisCrk"|
@@ -2418,9 +2457,7 @@ synopticfilter <- sampleresults %>%
       site == "Boneyard"|
       #site == "Deception-crk"|  ## only two samples
       #site == "West-Jordan"| ## only two samples
-      site == "Deception-res",
-    analysis == "DOC"
-  ) %>% 
+      site == "Deception-res") %>% 
   mutate(site = factor(site, # order as you want to see them in plots
                        levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
 # rename funky names
@@ -2434,61 +2471,67 @@ synopticfilter$site <- synopticfilter$site %>%
                   "Rithet" = "Rithet-crk"))
 
 # ------
-# sample counts
+# sample counts -- all samples
+
+# how many synoptic samples were grabbed?
+n_SynopticGrabs <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab") %>%
+  #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% 
+  #ungroup() %>%  
+  pull()
+
+# how many grab samples were grabbed (<2 per site)?
+n_Grabs <- sampleresults %>% 
+  dplyr::filter(sample_type == "Grab", analysis == "DOC") %>%
+  summarise(grab_sample_count = n()) %>% 
+  pull()
+
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  group_by(site, sample_type) %>%   
+  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK" | sample_type == "Grab") %>%
   summarise(number_of_samples = n()) %>% 
-  ungroup()
-# save to outputs
-write_csv(n_subbbasinSamples, "R-outputs_UBC-forWater-MSc_HMc/tables/summary_subbasins-SampleCount.csv", na = "NA") 
-
-# how many of each type total?
-# save values as objects to implant in text
+  pull()
 
 # Grab samples
 n_installGrabSamples <- sixfilter %>% 
   dplyr::filter(sample_type == "Grab") %>% 
-  summarise(number_of_samples = n()) %>% 
-  summarize(total = sum(number_of_samples)) %>% 
-  pull(total)
+  summarise(number_of_samples = n()) %>% pull()
 
-# Rack samples
-n_installRackSamples <- sixfilter %>% 
+# Rack samples -- all including flags
+n_installRackSamples_total <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack") %>% 
-  summarise(number_of_samples = n()) %>% 
-  summarize(total = sum(number_of_samples)) %>% 
-  pull(total) 
+  summarise(number_of_samples = n()) %>% pull() 
+
+# Rack samples -- QA-QC OK
+n_installRackSamples_OK <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+
 
 # How many samples were collected overall
 n_totalSamples <- sampleresults %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK" | sample_type == "Grab",
                 analysis == "DOC") %>%
-  #group_by(sample_type) %>% 
   summarise(sample_count = n()) %>% 
-  ungroup() %>% 
-  pull(sample_count)
+  pull()
 
-
-# 15 synoptic sites (including the install sites)
-synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab") %>%
-  group_by(site = forcats::fct_explicit_na(site)) %>% 
-  summarise(grab_sample_count = n()) %>% 
-  ungroup() 
-
+# Rack samples
+n_installRackSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
+  summarise(number_of_samples = n()) %>% pull() #---
 
 # make a summary table:
 tibble::tibble(
-  "synoptic samples outside of subbasin sites" = n_SynopticGrabs-n_installGrabSamples,
-  "opportunistic grab samples" = n_totalSamples-(n_SynopticGrabs+n_installRackSamples),
-  "sub-basin synoptic grab samples" = n_installGrabSamples,
-  "sub-basin rack samples" = n_installRackSamples,
+  "synoptic Grab samples outside of monitoring sites" = n_SynopticGrabs - n_installGrabSamples,
+  "opportunistic Grab samples" = (n_Grabs)-(n_SynopticGrabs),
+  "monitoring sites synoptic Grab samples" = n_installGrabSamples,
+  "monitoring sites vertical Rack samples" = n_installRackSamples,
   "total" = n_totalSamples) %>% 
   pivot_longer(everything(),
-               names_to = "sample category", values_to = "count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv")
+               names_to = "sample category", values_to = "total count") %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv")
 
 ```
 
@@ -3149,6 +3192,41 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
          width = 8.5, height = 11, units = "in")
+
+```
+
+###### baby mega plot
+```{r}
+# with precipitation (not temp)
+# add event lines 
+# and simple sample points
+stage_sample_event_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # start event
+  #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+  #           xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # end event
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event_plot, 
+                   ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
+
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_events_plot.png",
+         width = 8.5, height = 11, units = "in")
 ```
 
 
@@ -3670,6 +3748,7 @@ narrow_results %>%
 
 # grouped-summary (site and sample-type and all)
 a <- sixfilter %>%
+  filter(QAQC_flag == "OK") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, rain_season) %>% 
   summarize(count = n(), 
@@ -3683,9 +3762,10 @@ a <- sixfilter %>%
   ungroup() %>%
 # for a site summary of each, include this:
 rbind(sixfilter %>%
+        filter(QAQC_flag == "OK") %>% 
         filter(sample_type == "Grab" | sample_type == "Rack") %>% 
         group_by(site) %>% 
-        summarize(sample_season = "All",
+        summarize(sample_season = "all",
                   count = n(), 
                   DOCmean = mean(NPOC_ppm, na.rm = T), 
                   DOCsd = sd(NPOC_ppm, na.rm = T), 
@@ -3698,9 +3778,10 @@ rbind(sixfilter %>%
 
 # un-grouped summary
 b <- sixfilter %>%
+  filter(QAQC_flag == "OK") %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "ALL SITES",
-            sample_season = "SUMMARY",
+  summarize(site = "All Sites",
+            sample_season = "Summary",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
@@ -4200,7 +4281,7 @@ additional text for caption:
 # SPECTRAL Indices
 
 ## plot: SUVA vs NPOC
-```{r, spectral-plots, echo = FALSE}
+```{r, spectral-plots}
 # SUVA vs NPOC by season
 sampleresults %>% 
   dplyr::filter(analysis == "DOC", 
@@ -4240,7 +4321,7 @@ sampleresults %>%
 ```
 
 ### questionable plots seasonal
-```{r seasonal-plots, include=FALSE}
+```{r seasonal-plots}
 # Boxplot with jitter scatter 
 synopticfilter %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
@@ -4437,7 +4518,7 @@ metalslab %>%
 ```
 
 # TREATABILITY
-```{r, message = FALSE}
+```{r}
 
 # add date, timing, update site names
 treatdat_UW <- treatdat_UW %>% 
