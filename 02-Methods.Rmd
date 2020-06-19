@@ -67,7 +67,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 
 ###   River sampling
 
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, 444 samples (Table \@ref(tab:samplecount)) were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to forWater partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory. 
+Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. From November 2018 to February 2020, 446 total samples (Table \@ref(tab:samplecount)) were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to forWater partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory. 
 
 \  
 
@@ -80,8 +80,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv", c
 
 ####    Synoptic sampling 
 
-Thirteen sites were selected for synoptic water sampling and water quality analysis. Sampling was conducted from October 2018 to February 2020. Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites.
-
 \  
 
 ```{r sampleSitesMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
@@ -92,7 +90,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_synopti
 
 \  
 
-Synoptic sampling involved collecting grab samples in triple-rinsed acid-washed 250 mL amber HDPE bottles. Samples were capped with minimal headspace and transported on ice. Synoptic samples were collected bi-weekly to monthly. Results from synoptic sampling help to inform spatiotemporal patterns in water quality.   
+Thirteen sites were selected for synoptic water sampling and water quality analysis. Results from synoptic sampling helped to inform spatiotemporal patterns in water quality. Synoptic samples were collected bi-weekly to monthly from October 2018 to February 2020; a total of 206 unique synoptic samples were collected (229 including replicates). Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites. Grab sampling at these sites involved collecting river samples in triple-rinsed acid-washed 250mL amber HDPE bottles. Samples were capped with minimal headspace and transported on in a cooler (on ice) to the lab for analysis.  
 
 #####   ? Collaborative sampling -- MARK SUGGESTS MOVING ALL THIS TO APPENDIX
 
@@ -125,7 +123,7 @@ Aquatic NOM can play an important role in the transport of metals because it has
 
 ####    Sampling across nested catchments of the Leech watershed
 
-Across the Leech Water Supply Area, six of the synoptic sampling sites were selected for more intensive monitoring. The sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment.Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites which represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwater streams), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel.	
+Across the Leech Water Supply Area (LWSA), six of the synoptic sampling sites were selected for more intensive monitoring. These sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment. Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites which represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwater streams), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel.	
 
 \  
 
@@ -172,17 +170,15 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 
-######    Siphon sampler assumptions: vertical rack sampling QA/QC-1 
+######    Siphon sampler assumptions: vertical rack sampling QA/QC 
 
-Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the sub-basins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system (tap water sample collected by siphon sample bottle, food colouring added to flow system after sample collection and circulated for ~15 minutes, sample bottle removed from dye chamber and sample colour compared to surrounding dyed water: no dye present in sample). 
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the sub-basins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system where a tap water sample was collected by siphon sample bottle, food colouring was added to flow system after sample collection and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
 
-######    Sample hold-times and temperatures: vertical rack sampling QA/QC-2
+######    Sample hold-times and temperatures: vertical rack sampling QA/QC
 
-Every effort was made to retrieve rack samples as quickly as possible from the racks; none the less, some samples remained on a rack for more than a few days due to logistical, access and safety considerations. Hobo TidbiT temperature sensors were deployed at each vertical rack to monitor air and water temperature, which was used to assess sample stability between sample collection and retrieval. 
+Every effort was made to retrieve rack samples as quickly as possible from the racks; none the less, some samples remained on a rack for more than a few days due to logistical, access and safety considerations. Hobo TidbiT temperature sensors were deployed at each vertical rack to monitor air and water temperature, which was used in estimates of sample stability between sample collection and retrieval from racks. 
 
-\  
-
-Hold-time experiments were performed to assess sample stability. The hold-time experiments included replicate sample (n = 10) collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Three hold-time experiments were completed such that the rack samples were left in the field for 11, 20 and 34 days before being retrieved and analyzed in comparison to their counterpart replicates.       
+Hold-time experiments were performed to assess sample stability. The hold-time experiments included replicate sample (n = 10) collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Three hold-time experiments were completed such that the rack samples were left in the field for 11, 20 and 34 days before being retrieved and analyzed in comparison to their counterpart replicates (details in results section).       
 	
 ###   Analytical techniques & data
 

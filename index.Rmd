@@ -10,7 +10,7 @@ output:
     toc: true
     fig_caption: true
     reference_docx: UBC-ThesisTemplate_HMc.docx
-bibliography: library.bib 
+bibliography: library.bib
 link-citations: yes
 ---
 

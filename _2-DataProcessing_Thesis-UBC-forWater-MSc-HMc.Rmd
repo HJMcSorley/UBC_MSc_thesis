@@ -1720,7 +1720,7 @@ Temp_Wilcoxon_tests <- bind_rows(
 
 # summarize p-values
 Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>% 
-  select(c(site, p.value)) %>% 
+  select(c(Site = "site", "p-value" = "p.value")) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalues.csv", col_names = TRUE)
 
 ```
@@ -2499,6 +2499,11 @@ n_installGrabSamples <- sixfilter %>%
   dplyr::filter(sample_type == "Grab") %>% 
   summarise(number_of_samples = n()) %>% pull()
 
+# Rack samples
+n_installRackSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+
 # Rack samples -- all including flags
 n_installRackSamples_total <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack") %>% 
@@ -2517,10 +2522,18 @@ n_totalSamples <- sampleresults %>%
   summarise(sample_count = n()) %>% 
   pull()
 
-# Rack samples
-n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
-  summarise(number_of_samples = n()) %>% pull() #---
+#---
+
+# make a summary table:
+tibble::tibble(
+  "synoptic Grab samples outside of monitoring sites" = n_SynopticGrabs - n_installGrabSamples,
+  "opportunistic Grab samples" = (n_Grabs)-(n_SynopticGrabs),
+  "monitoring sites synoptic Grab samples" = n_installGrabSamples,
+  "monitoring sites vertical Rack samples" = n_installRackSamples,
+  "total" = n_totalSamples) %>% 
+  pivot_longer(everything(),
+               names_to = "sample category", values_to = "total count") %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv")
 
 # make a summary table:
 tibble::tibble(

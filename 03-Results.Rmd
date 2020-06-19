@@ -117,19 +117,23 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridg
 
 \  
 
-Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic with no statistical difference (at 90% confidence) for sites 4-6 -- Cragg Crk, West Leech and the Tunnel (\@ref(tab:wilcoxonpvalues)). 
+Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic with no statistical difference (at 90% confidence) for sites 4-6 -- Cragg Crk, West Leech and the Tunnel (Table \@ref(tab:wilcoxonpvalues)). 
 
 \  
 
-```{r wilcoxonpvalues, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{tab:wilcoxonpvalues} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/table_Hobo-FWx_wilcoxon-pvalues.png")
+```{r wilcoxonpvalues}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalues.csv",
+         col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,4),
+               caption = "*Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*")
+               
 ```
 
+
+
 \  
 
-Despite some differences between FWx and Hobo site data, the overlapping FWx and TidbiT air temperature data were used to generate linear regression relationships to estimate air temperatures at each site for the time preceding Hobo TidbiT deployment (Figure \@ref(fig:HoboFWxLinearReg)). Table \@ref(tab:TidbiTestimateErrors) summarizes the average percent error of estimated air temperatures (based on a test period of overlapping data).
+Despite some differences between FWx and Hobo site data, the overlapping FWx and TidbiT air temperature data were used to generate linear regression relationships to estimate air temperatures at each site for the time preceding Hobo TidbiT deployment (Figure \@ref(fig:HoboFWxLinearReg)). Table \@ref(tab:TidbiTestimateErrors) summarizes the average percent error of estimated air temperatures (based on a test period of overlapping data). Estimated mean daily air temperatures at each site were used in flagging data for quality control. 
 
 \  
 
@@ -201,12 +205,12 @@ These results suggest that early-season ("first flush") samples may contain more
 
 ##### QA-QC data handling 
 
-Based on results of the hold-time experiments, results of sample analyses were updated to include QA-QC data flags. Hold-times were calculated for each sample and Rack samples that remained held for fewer than 20 days at temperatures between 0°C-7°C were flagged as acceptable ("OK") whereas samples that were either held for 20 days or longer or were identified as early-wet-season ("first-flush") samples which were held for 7 days or longer were flagged as exceeding an acceptable hold-time. These QA-QC flags were used to filter data for subsequent analyses; 33 Rack samples were flagged, reducing the number of samples included in data analyses from {n_installRackSamples_total} total Rack samples to {n_installRackSamples_OK} acceptable ("OK" flag).  
+Based on results of the hold-time experiments, results of sample analyses were updated to include QA-QC data flags. Hold-times were calculated for each sample and Rack samples that remained held for fewer than 20 days at temperatures between 0°C-7°C were flagged as acceptable ("OK") whereas samples that were either held for 20 days or longer or were identified as early-wet-season ("first-flush") samples which were held for 7 days or longer were flagged as exceeding an acceptable hold-time. These QA-QC flags were used to filter data for subsequent analyses; 33 Rack samples were flagged, reducing the number of samples included in data analyses from 203 total Rack samples to 170 quality-assured Rack samples.  
 
 
-## 3.3     Nested sub-catchments of the LWSA
+###   Nested sub-catchments of the Leech watershed
 
-Six locations across the LWSA were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of sample collection. 
+Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of sample collection. 
 
 \  
  
@@ -252,9 +256,9 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryInt
 
 Relative standard deviation (RSD) indicates how values range around the mean within a group. Across the LWSA DOC at each site ranged from 24% to 41% RSD. Among the headwater sites (sites 1 & 2) DOC had a 52% RSD, compared to 36% among mainstem rivers. This means that the variance observed between headwater sites was greater than the variance thant occured at each site, whereas RSD among mainstem rivers was close to the average observed at each of those sites.    
 
-Results of Levene's test[^1] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^). To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for pairs of sites. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
+Results of Levene's test[^5] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^). To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for pairs of sites. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
 
-[^1]:Levene's test is used to check for homogeneity of variance (homoscedasticity).
+[^5]:Levene's test is used to check for homogeneity of variance (homoscedasticity).
 
 \  
 
