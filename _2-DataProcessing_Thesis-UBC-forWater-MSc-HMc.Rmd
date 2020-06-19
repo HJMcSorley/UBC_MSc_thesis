@@ -1526,6 +1526,14 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png",
 
 ### density ridge comparison
 ```{r}
+# take dataframe with both FWx and Hobo data & pivot longer
+Hobo_Fwx <- Hobo_WxLWSA %>%
+  group_by(site) %>% 
+  pivot_longer(cols = c("Hobo", "FWx"),
+               names_to = "data_source",
+               values_to = "Temp_C") %>%  
+  mutate(data_source = factor(data_source)) # temps as factor levels
+
 # density ridges by TidbiT site
 Hobo_Fwx %>% 
   ggplot(aes(x = Temp_C, y = fct_rev(site)))+
@@ -1541,19 +1549,7 @@ Hobo_Fwx %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png", 
        width = 4, height = 4, units = "in")
 
-```
-
-#### overlap visual checks
-```{r}
-# take dataframe with both FWx and Hobo data & pivot longer
-Hobo_Fwx <- Hobo_WxLWSA %>%
-  group_by(site) %>% 
-  pivot_longer(cols = c("Hobo", "FWx"),
-               names_to = "data_source",
-               values_to = "Temp_C") %>%  
-  mutate(data_source = factor(data_source)) # temps as factor levels
-
-# do the same but with Daily mean temperaures
+# do the same but with Daily mean temperatures
 Hobo_Fwx_dm <- Hobo_WxLWSA %>%
   group_by(site, Date) %>% 
   summarise(Hobo = mean(Hobo),
@@ -1566,8 +1562,9 @@ Hobo_Fwx_dm <- Hobo_WxLWSA %>%
   mutate(data_source = factor(data_source)) # temps as factor levels
 
 
+# --- visual checks for overlap of time period (this should look like a single line)
 # check daily temp overlap
-Hobo_Fwx %>% 
+a <- Hobo_Fwx %>% 
   mutate(Date = as_date(DateTime)) %>% 
   group_by(site, data_source, Date) %>% 
   summarise(Tdaily = mean(Temp_C)) %>% 
@@ -1585,8 +1582,8 @@ Hobo_Fwx %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 # perfect :)
 
-# check daily temp overlap
-Hobo_Fwx_dm %>% 
+# check daily temp overlap too
+b <- Hobo_Fwx_dm %>% 
   filter(data_source == "FWx") %>% 
   ggplot(aes(x = Date))+
   geom_line(aes(y = Tdaily, colour = site), size = 0.8)+
@@ -1599,11 +1596,10 @@ Hobo_Fwx_dm %>%
   scale_x_date(date_labels = "%Y %b %d",
                date_breaks = "1 months")+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 ```
 
 ### trash plots: air temp over time & space
-```{r}
+```
 # compare temps from FWx to HOBO at each site
 # line plot
 Hobo_Fwx_dm %>% 
@@ -3256,7 +3252,7 @@ coincident_peaks <- sixfilter %>%
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
          !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
          NPOC_ppm != 0) %>%  # drop NAs
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Hobo_Tmean_airDaily)) %>% 
   mutate(sample = as.character(sample)) %>% 
   group_by(site, trip, event_ID) %>% 
   summarise(max_stage = max(sampleStage_cm), # maximum stage sampled
@@ -3331,7 +3327,7 @@ coincident_valleys <- sixfilter %>%
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
          !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
          NPOC_ppm != 0) %>%  # drop NAs
-  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Tmean_airDaily)) %>% 
+  select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Hobo_Tmean_airDaily)) %>% 
   mutate(sample = as.character(sample)) %>% 
   group_by(site, trip, event_ID) %>% 
   summarise(min_stage = min(sampleStage_cm), # minimum stage sampled
