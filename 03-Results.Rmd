@@ -299,15 +299,21 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simu
                caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
 ```
 
-\ 
+\  
 
+The majority of samples showed congruence between peaks and lows of DOC and stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each sites samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrama samples with stage at each site.
 
+\  
 
+```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:extremaplot} *Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely.*"
 
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
+```
 
+\  
 
-
-To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis. The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.  
+To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis (highlighted in Figure \@ref(fig:extremaplot) and expanded in Figure \@ref(fig:subsetExtremaplot)). The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.  
 
 \  
 
@@ -317,14 +323,23 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", co
                caption = "*p-values from Wilcoxon tests comparing the subset of rain events 10-12 and those samples' DOC results to all other sampled rain events, showing no significant difference between the groups.*")
 ```
 
+\  
 
+```{r subsetExtremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subsetExtremaplot} *Stage and samples collected for the subset of samples collected over rain events 9-12, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period.*"
 
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png")
+```
 
+\
+
+... _THIS SECTION IS UNDER CONSTRUCTION_ ...
+
+* time to peak
+* range of DOC in each event
 
 
 #### Temporal trends in DOC: seasonality
-
-
 
 Over the study period, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. 
 
@@ -336,15 +351,14 @@ fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrati
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
 ```
 
+\  
 
-### Seasonal trends
-
-Overall, DOC concentrations were higher through the wet season compared to the dry season (Figure \@ref(fig:DOCseasonal) & Figure \@ref(fig:seasonalSubbasinRidge)). Sample results across the LWSA catchments are summarized by season in Table \@ref(tab:SeasonalSubbasinData).
+Overall, there was very little difference between mean DOC concentration through the wet season (6.2 ± 3 mg/L) compared to the dry season (5.5 ± 3 mg/L). However, there were far fewer samples collected in the dry season than during the wet season (Figure \@ref(fig:DOCseasonal).
 
 \  
 
 ```{r DOCseasonal, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry season (n = 53) and wet season (n = 314).*"
+fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry and wet seasons.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png")
 ```
@@ -355,14 +369,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-sub
 fig_cap = "\\label{fig:seasonalSubbasinRidge} *Density distribution of dissolved organic carbon concentrations at six sites over sixteen months across the Leech water supply area, where sample results are grouped by dry season (n = 53) and wet season (n = 314).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
-```
-
-\  
-
-```{r SeasonalSubbasinData}
-
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Sample season", "Sample count", "Mean DOC (mg/L)", "Std.dev. (± mg/L)", "RSD (±%)", "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)"), digits = c(1, 1, 0, 1, 1, 0), caption = "Seasonal summary of samples collected across LWSA subbasin sites")
 ```
 
 \  
@@ -422,93 +428,6 @@ fig_cap = "\\label{fig:RisingLimbPlot} *DOC concentration trends in rising limb 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png")
 ```
-
-
-
-
-### DOC association with other water quality parameters
- 
-#### Metals & DOC 
-
-Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, seven sets of samples were collected from six sites in the LWSA for metals analysis. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was collected and analyzed for DOC at UBC. A suite of total metals were included in the analyses, many of which were below detection limits. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations (Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L). 
-
-\  
-
-```{r metalsug, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsug} *Concentrations of total metals (in μg/L) and dissolved organic carbon.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
-```
-
-\  
-
-```{r metalsmg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsmg} *Concentrations of total metals (in mg/L) and dissolved organic carbon.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
-```
-
-\  
-
-DOC concentrations had strong positive relationships with total mercury, iron, manganese, aluminum. While the relationships were not as strong, DOC was also positively related to concentrations of barium, copper, and arsenic. There was a weak inverse relationship between DOC with silicon and potassium (Table \@ref(tab:metalsdata)). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for drinking source water quality guidelines [@BC2019].
-
-\  
-
-```{r metalsdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv", 
-         col_names = TRUE) %>% 
-  knitr::kable(digits = c(1, 1, 0, 2, 2, 4), 
-               col.names = c("Metal", "unit", "count", "slope", "Y intercept", "R squared"),
-               caption = "*Relationships between total metals with dissolved organic carbon*")
-```
-
-\  
-
-#### Nitrate & DOC 
-
-Each sample that was analyzed on the Spectrolyser resulted in an estimate of DOC and nitrate concentrations based on sample UV-Vis light absorption. Estimated concentrations of nitrate were positively related to DOC concentration (Figure \@ref(fig:nitrate1)).
-
-\  
-
-```{r nitrate1, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:nitrate1} *Concentration of nitrate (estimated via UV-Vis absorption) and dissolved organic carbon.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png")
-```
-
-\  
-
-UV absorbance based estimations of DOC concentration were more strongly correlated to nitrate estimates (Figure \@ref(fig:nitrate2)).
-
-\  
-
-```{r nitrate2, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:nitrate2} *Concentration of nitrate and dissolved organic carbon, both estimated via UV-Vis absorption.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOCeq_scatter.png")
-```
-
-\  
-
-#### Treatability & DOC
-
-Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). Results from two sets of samples at four selected sites showed positive correlations between DOC concentrations and DBP-FPs, and even stronger relationships between DBP-FPs and UV absorbance at 254-nm -- an indicator of NOM aromaticity (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and UV-254 indicates that while DOM concentration is an important indicator of source water treatability challenges, the aromaticity of source water NOM may be an even more important driver. 
-
-\  
-
-```{r treatability, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:treatability} *Plots of disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column) and UV absorbance at 254 nm (right column). Samples collected at four sites on two occasions.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png")
-```
-
-\  
-
-While UV-254 is a good indicator of NOM aromaticity and also appears to be correlated to DBP-FPs, naturally occurring aqueous chemicals (such as nitrate and iron) can interfere with spectroscopic analyses and lead to positive bias in DOM estimates. While aqueous nitrate may lead to an over estimate absorbance-based DOM concentrations, aqueous nitrogen can also play an important roll as a precursor to nitrogenous-DBPs when in combination with NOM, which could make UV{254} an even better indicator of DBP-FP.     
-
-\  
-
-* TO DO: add comparison of treatability metrics at Tunnel versus Sooke Tribs
 
 \  
 

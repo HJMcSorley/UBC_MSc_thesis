@@ -578,8 +578,7 @@ events_summary %>%
 
 Longer data record from the Malahat weather station (for comparison).
 
-```
-#{r, malahat-wx}
+```{r, malahat-wx}
 
 # malahat weather
 malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
@@ -613,12 +612,7 @@ dplyr::rename("year" = Year,
 "std.dev. (± °C)" = temp_sd) %>% 
 write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv")
 
-```
 
-
-```
-### plots: Malahat Wx
-#{r, malahat-plots}
 # plots
 # plot malahat rain and highlight my study period
 malahat_rn <- malahat_data %>% 
@@ -651,11 +645,7 @@ cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 
-```
 
-
-
-```
 ### lag-years: Wilcoxon's rank sum test
 #{r}
 # check for normality
@@ -704,11 +694,7 @@ filter(p.value < 0.10)
 
 # 2015 was an incredible drought year, so it makes sense that 2015-2016 would differ
 
-```
 
-
-```
-#{r}
 #### Wx pre & during MSc
 
 # group
@@ -723,11 +709,9 @@ filter(!is.na(set))
 # subset for tests
 pre_MSc <- malahat_test_data %>% filter(set == "pre")
 MSc <- malahat_test_data %>% filter(set == "MSc")
-```
 
 
-```
-#{r}
+
 ##### plots
 # plot sets
 malahat_test_data %>% 
@@ -759,11 +743,7 @@ ggpubr::ggqqplot(data = ., x = "Value",
 color = "Year", palette = c("#648326", "#f4AB0E"),
 facet.by = "Analysis")
 
-```
 
-
-```
-#{r}
 
 ##### tests
 # t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
@@ -805,6 +785,8 @@ write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2
 # if the p-value is less than the significance level critical value, reject the null hypothesis 
 
 ```
+
+
 # TEMPERATURE (Hobo)
 ```{r}
 # update Hobo wet temperatures 
@@ -3416,7 +3398,8 @@ coincident_proportion_narrow_all
 narrow in on specific (well-sampled) events
 ```{r}
 # for plots, add max_DOC by trip and event to stage_sample dataframe
-# DOC peaks in stage_sample = peaksSS
+
+# Maxima
 peaksss1 <- stage_samples %>% 
   filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
          sample_type == "Grab" | sample_type == "Rack", 
@@ -3424,14 +3407,16 @@ peaksss1 <- stage_samples %>%
          QAQC_flag == "OK",      # remove samples with extended hold-time  
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
          !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-  group_by(site, trip, event_ID) %>% # or by event_ID
+  group_by(site, trip, event_ID) %>% 
+  # summarize maxima
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
   full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
-  arrange(DateTime) %>% 
-  ungroup()
+  arrange(DateTime) %>% ungroup()
 
+# Minima joined to Maxima for full extrema set
+# peaks in stage_sample = peaksSS
 peaksss <- stage_samples %>% 
   filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
          sample_type == "Grab" | sample_type == "Rack", 
@@ -3439,42 +3424,14 @@ peaksss <- stage_samples %>%
          QAQC_flag == "OK",      # remove samples with extended hold-time  
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
          !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-  group_by(site, trip, event_ID) %>% # or by event_ID
+  group_by(site, trip, event_ID) %>%
+  # summarize minima
   summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
             sample = sample[which.min(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
   full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
   arrange(DateTime) %>% 
   ungroup()
-
-
-# ---- 
-# trip 4 -- stage and samples at each site by sampling event
-tripfour <- peaksss %>% 
-  filter(interval == "4", site != "Tunnel") %>% # Tunnel wasn't installed yet
-  ggplot(aes(x = DateTime))+
-  geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
-  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
-             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
-  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample" ), 
-             shape = 21, size = 2, na.rm = TRUE) +
-  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
-             shape = 24, size = 2, na.rm = TRUE) +  
-  scale_fill_manual(values = c(forWater_colours2["MyOrange"], "grey")) +
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Event 3 - 7")+
-  scale_x_datetime(breaks = "1 day")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.position = "top") +
-  scale_color_manual(breaks = c("max DOC", "sample"),
-                     values = c("black", "black"))+ # alphabetical matching
-  guides(colour = guide_legend("key:"),
-         fill = guide_legend("key:", override.aes = list(shape = c(24, 21), fill = c(forWater_colours2["MyOrange"], "grey"))))
 
 # -----
 # trip 17-21 -- stage and samples at each site by sampling event
@@ -3530,6 +3487,35 @@ stage_sample_plot +
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-samples-with_narrow_events_9-12.png",
        width = 6.5, height = 7, units = "in")
+
+# OR --- big plto with all max and min and lines for subset
+# -----
+# stage and sample extrema at each site by sampling event
+peaksss %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), shape = 21, size = 2.5, na.rm = TRUE) +
+  geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), shape = 22, size = 2.5, na.rm = TRUE) +
+  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), shape = 24, size = 2, na.rm = TRUE) +
+  geom_vline(xintercept = narrow_trips_start, size = 0.7)+
+  geom_vline(xintercept = narrow_trips_end, size = 0.7) +
+  # change colour of points -- matches alphabetically (max, min, sample)
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey")) + 
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+  labs(y = "River Stage (cm)", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") +
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "top") +
+  # colour for point outlines:
+  scale_color_manual(breaks = c("max DOC", "min DOC", "sample"), values = c("black", "black", "black"))+ 
+  # legend:
+  guides(colour = guide_legend("key:"),
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png",
+       width = 7.5, height = 8, units = "in")
 
 ```
 
@@ -3732,14 +3718,13 @@ narrow_results %>%
 
 ## Seasonal Sample Method
 
-## seasonal DOC subbasin, Mean/Min/Max 
-```{r, all-samples-together}
+```{r}
 
-# grouped-summary (site and sample-type and all)
-a <- sixfilter %>%
+# how many samples were collected seasonally?
+sixfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(site, rain_season) %>% 
+  group_by(rain_season) %>% 
   summarize(count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
@@ -3747,30 +3732,11 @@ a <- sixfilter %>%
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>%
-  rename(sample_season = "rain_season") %>% 
-  ungroup() %>%
-# for a site summary of each, include this:
-rbind(sixfilter %>%
-        filter(QAQC_flag == "OK") %>% 
-        filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-        group_by(site) %>% 
-        summarize(sample_season = "all",
-                  count = n(), 
-                  DOCmean = mean(NPOC_ppm, na.rm = T), 
-                  DOCsd = sd(NPOC_ppm, na.rm = T), 
-                  RSD = round((DOCsd/DOCmean)*100, 0),
-                  DOCmin = min(NPOC_ppm, na.rm = T), 
-                  DOCmedian = median(NPOC_ppm, na.rm = T), 
-                  DOCmax = max(NPOC_ppm, na.rm = T))) %>% 
   ungroup() %>% 
-  arrange(site)
-
-# un-grouped summary
-b <- sixfilter %>%
+  bind_rows(sixfilter %>%
   filter(QAQC_flag == "OK") %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  summarize(site = "All Sites",
-            sample_season = "Summary",
+  summarize(rain_season = "All",
             count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
@@ -3778,16 +3744,11 @@ b <- sixfilter %>%
             DOCmin = min(NPOC_ppm, na.rm = T), 
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, sample_season, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
-  ungroup()
-
-# tag totals summary onto site summary
-rbind(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-seasonal-DOC.csv", col_names = T)
+  ungroup())
 
 ```
 
-### ridgeplot: wet G/R subbasin ridgeplot 
+### wet plots: box + ridge G/R subbasin ridgeplot 
 ```{r, sample_type-ridgeplots}
 
 # density ridge 
@@ -3814,7 +3775,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-season-wet_subbasin-ridgeplot
 
 ```
 
-#### boxplot: wet G/R subbasin boxplot
+#### wet season only
+
+##### boxplot: G vs R 
 ```{r, DOC-space-time-boxplot}
 
 # wrap by sample_type -- wet season only
@@ -3844,7 +3807,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
 
 ```
 
-### ridgeplot: grabs= wet vs dry season
+### grab-only plots: wet vs dry season
 ```{r}
 
 # density ridge 
@@ -3869,11 +3832,7 @@ sixfilter %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_subbasin-ridgeplot_grabs-only.png")
 
-```
-
-#### boxplot: grabs=wet vs dry season subbasin Box DOC
-```{r}
-
+# --- box
 # plot with adjusted strip label
 # Boxplot with jitter scatter (DOC by season)
 sixfilter %>% 
@@ -3895,9 +3854,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_subbasin_boxplot_gra
 
 ```
 
-### table: DOC means+sd subbasins
-```{r, summaryDOC-table}
-
+###### TRASH -- redundant and lame 
+table: DOC means+sd subbasins
+```
 # DOC summary table, Grabs and Racks combined
 a <- sixfilter %>% 
   filter(QAQC_flag == "OK") %>% 
@@ -3921,8 +3880,7 @@ b <- sixfilter %>%
             DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup()
 
-bind_rows(a, b) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
+#bind_rows(a, b) %>%  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_subbasin_MeanMinMax.csv", col_names = TRUE)
 ```
 
 ### ?table: subbasin Rack DOC trends by event & site
@@ -3951,10 +3909,7 @@ DOC_rack_trends_lm <- sixfilter %>%
 
 ```
 
-## Subbasin seasonal (old)
-
-
-#### 1:1 plot - subbasin NPOC/CDOM
+## subbasin character & Conc 1:1 plot - NPOC/CDOM
 ```{r, DOC-vs-CDOM-subbasins, echo = FALSE}
 # six primary sites: DOC vs CDOM
 sixfilter %>% 
@@ -3982,21 +3937,21 @@ sixfilter %>%
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_subbasin-DOC-surrogate.png") 
 ```
 
-### !?!!? WET G/R count 
-
-Rack and Grab sample wetseason sample count summary
+### table: WET G/R sample count 
+? is this useful ?
+Rack and Grab sample wet season sample count summary
 ```{r, wet-summary-table}
 # how many of each sample_type are there at the 6 main sites?
 a <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
-                rain_season == "Wet season") %>%
+                rain_season == "wet") %>%
   group_by(site, sample_type) %>%   
   summarise(number_of_samples = n()) %>% 
   ungroup()
 
 b <- sixfilter %>% 
   dplyr::filter(sample_type == "Grab",
-                rain_season == "Wet season") %>% 
+                rain_season == "wet") %>% 
   group_by(sample_type) %>% 
   summarise(site = "TOTAL", 
             number_of_samples = n()) %>% 
@@ -4004,7 +3959,7 @@ b <- sixfilter %>%
 
 c <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack",
-                rain_season == "Wet season") %>% 
+                rain_season == "wet") %>% 
   group_by(sample_type) %>% 
   summarise(site = "TOTAL", 
             number_of_samples = n()) %>% 
@@ -4014,17 +3969,17 @@ c <- sixfilter %>%
 bind_rows(a, b, c) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv")
 
-# Grab samples
+# Grab samples only
 wet_n_installGrabSamples <- sixfilter %>% 
   dplyr::filter(sample_type == "Grab",
-                rain_season == "Wet season") %>% 
+                rain_season == "wet") %>% 
   summarise(number_of_samples = n()) %>% 
   pull(number_of_samples)
 
-# Rack samples
+# Rack samples only
 wet_n_installRackSamples <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack",
-                rain_season == "Wet season") %>% 
+                rain_season == "wet") %>% 
   summarise(number_of_samples = n()) %>% 
   pull(number_of_samples) 
 

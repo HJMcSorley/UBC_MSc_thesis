@@ -90,35 +90,6 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_synopti
 
 Thirteen sites were selected for synoptic water sampling and water quality analysis. Results from synoptic sampling helped to inform spatiotemporal patterns in water quality. Synoptic samples were collected bi-weekly to monthly from October 2018 to February 2020; a total of 206 unique synoptic samples were collected (229 including replicates). Figure \@ref(fig:sampleSitesMap) shows the locations of the synoptically sampled sites. Grab sampling at these sites involved collecting river samples in triple-rinsed acid-washed 250mL amber HDPE bottles. Samples were capped with minimal headspace and transported on in a cooler (on ice) to the lab for analysis.  
 
-#####   ? Collaborative sampling -- MARK SUGGESTS MOVING ALL THIS TO APPENDIX
-
-__forWater-coordinated treatability analyses sites__
-
-Four of the synoptic sampling sites were selected as treatability sampling sites, where source water was collected and shipped to collaborative researchers in the forWater Network for analyses of drinking water treatability metrics. The four treatability sites were: 
-
-
-  1. Leech River at the future point of diversion (near Leech Tunnel inlet)
-  2. Deception Reservoir, downstream from Deception Gulch (outlet of Leech Tunnel)
-  3. Rithet Creek (main tributary to Sooke Reservoir)
-  4. Judge Creek (2nd largest tributary to Sooke Reservoir)
-
-\  
-
-These sites were selected to represent future supplemental source water , the future balancing reservoir between the Leech and Sooke water supply areas, and the current tributary source waters to the Sooke Reservoir.
-
-\  
-
-Sets of samples were collected during winter of the 2020 water year (November 12, 2019 and February 18, 2020) and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes (THMs) and haloacetic acids (HAAs) in μg/L), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), and Zeta Potential (mV). Relationships between disinfection by-product formation potentials (DBP-FPs), UV-absorbance at 254nm, and DOC concentrations were examined. 
-
-At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM.
-
-
-__Sampling for Metals__
-
-Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). Reports from BL Labs were provided by the CRD (for the samples collected in association with this research) and data were used to evaluate relationships between DOC and metals in solution. 
-
-\  
-
 ####    Sampling across nested catchments of the Leech watershed {#MethodsNestedCatch}
 
 Across the Leech Water Supply Area (LWSA), six of the synoptic sampling sites were selected for more intensive monitoring. These sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment. Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites which represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwater streams), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel.	
@@ -167,16 +138,6 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 \  
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
-
-######    Siphon sampler assumptions: vertical rack sampling QA/QC 
-
-Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the sub-basins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system where a tap water sample was collected by siphon sample bottle, food colouring was added to flow system after sample collection and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
-
-######    Sample hold-times and temperatures: vertical rack sampling QA/QC
-
-Every effort was made to retrieve rack samples as quickly as possible from the racks; none the less, some samples remained on a rack for more than a few days due to logistical, access and safety considerations. Hobo TidbiT temperature sensors were deployed at each vertical rack to monitor air and water temperature, which was used in estimates of sample stability between sample collection and retrieval from racks. 
-
-Hold-time experiments were performed to assess sample stability. The hold-time experiments included replicate sample (n = 10) collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Three hold-time experiments were completed such that the rack samples were left in the field for 11, 20 and 34 days before being retrieved and analyzed in comparison to their counterpart replicates (details in results section).       
 	
 ###   Analytical techniques & data
 
@@ -209,4 +170,16 @@ SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1
 #####   Spectral indices of NOM character
 	
 Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. In the absence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a simple tool for getting at molecule character. Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators for assessing DOM molecular weights [@Helms2008]. Spectral slopes over the wavelength range of 275-295 nm (S~275-295~, likely range for absorption by poly-aromatic hydrocarbons with 2 or more rings) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectra (spectral absorbance coefficients, m^-1^) as indicated by Helms [-@Helms2008, p 958]. Slope ratio (S~R~) is a unitless value equal to the slope of spectral intensity over the wavelength range of 275-295 nm relative to the slope of spectral intensity over 350-400 nm. S~R~ is inversely proportional to CDOM molecular weight [@Helms2008].	
-The ratio of absorbances at wavelengths 250 nm and 365 nm provides a quotient called E~2~:E~3~ which is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated, along with S~R~ , to try to elucidate molecular character of DOM in samples. 		
+The ratio of absorbances at wavelengths 250 nm and 365 nm provides a quotient called E~2~:E~3~ which is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated, along with S~R~ , to try to elucidate molecular character of DOM in samples. 
+
+#### Quality Control & Quality Assurance
+
+#####    Siphon sampler assumptions: vertical rack sampling QA/QC 
+
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the sub-basins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system where a tap water sample was collected by siphon sample bottle, food colouring was added to flow system after sample collection and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
+
+#####    Sample hold-times and temperatures: vertical rack sampling QA/QC
+
+Every effort was made to retrieve rack samples as quickly as possible from the racks; none the less, some samples remained on a rack for more than a few days due to logistical, access and safety considerations. Hobo TidbiT temperature sensors were deployed at each vertical rack to monitor air and water temperature, which was used in estimates of sample stability between sample collection and retrieval from racks. 
+
+Hold-time experiments were performed to assess sample stability. The hold-time experiments included replicate sample (n = 10) collection at a site, where half the samples were placed out of water on the vertical rack with siphon lids and the other half were returned to the lab for immediate analysis. Three hold-time experiments were completed such that the rack samples were left in the field for 11, 20 and 34 days before being retrieved and analyzed in comparison to their counterpart replicates (details in results section).     
