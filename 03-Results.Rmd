@@ -117,7 +117,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridg
 
 \  
 
-Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic with no statistical difference (at 90% confidence) for sites 4-6 -- Cragg Crk, West Leech and the Tunnel (Table \@ref(tab:wilcoxonpvalues)). 
+Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic (Table \@ref(tab:wilcoxonpvalues)) with no statistical difference (at 90% confidence) for Cragg Crk, West Leech and the Tunnel (sites 4, 5, 6). 
 
 \  
 
@@ -133,12 +133,12 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalu
 
 \  
 
-Despite some differences between FWx and Hobo site data, the overlapping FWx and TidbiT air temperature data were used to generate linear regression relationships to estimate air temperatures at each site for the time preceding Hobo TidbiT deployment (Figure \@ref(fig:HoboFWxLinearReg)). Table \@ref(tab:TidbiTestimateErrors) summarizes the average percent error of estimated air temperatures (based on a test period of overlapping data). Estimated mean daily air temperatures at each site were used in flagging data for quality control. 
+Despite some differences between FWx and Hobo site data, the overlapping FWx and TidbiT daily mean air temperature data were used to generate linear regression relationships to estimate air temperatures at each site for the time preceding Hobo TidbiT deployment (Figure \@ref(fig:HoboFWxLinearReg)). Table \@ref(tab:TidbiTestimateErrors) summarizes the average percent error of estimated air temperatures based on a test period of overlapping data. Estimated mean daily air temperatures at each site were used in flagging Rack sample data for quality control with respect to days samples remained on vertical racks (hold-times). 
 
 \  
 
 ```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations.*"
+fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations. Plots in section A (top) show the relationships for the full data set and plots in section B show daily mean temperatures, the data that was used in linear regression.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
 ```
@@ -199,113 +199,103 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", c
 
 While there was no change in UV absorbance for samples from hold-time set-A, there was a significant (at 90% confidence level) change in DOC concentration (p-value = 0.063). Samples collected for hold-time set-A were DOC-rich "first flush" samples, and the Rack samples were held for 11 days at average temperature of 7°C (slightly above laboratory refrigerator temperatures). For set-A, mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples. Set-B had a hold-time of 20 days with average air temperature at 6°C and there was no significant changes in either DOC concentration or UV~254~ (<10% change). Hold-time Set-C included samples held for 34 days at an average of 4.4°C, including a period of sub-zero temperatures. While set-C did not show significant changes in DOC concentration (23% reduction), there were significant changes to UV~254~ (34% decrease in absorbance). In addition to the change in absorbance, Set-C held samples had greater variability for both DOC and UV~254~ compared to the fresh sample counterparts. 
 
-These results suggest that early-season ("first flush") samples may contain more labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing (set-C) did not alter DOC concentrations but did effect DOM character via a reduction in aromaticity. Additional tests would be required to determine if the change in DOM character was caused by the length of time the sample was held, or perhaps due only to freezing.  
+These results suggest that early-season ("first flush") samples may contain more labile DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing (set-C) significantly changed sample DOM character via a reduction in aromaticity, and while it did not statistically alter DOC concentration there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in DOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature.  
 
 \  
 
-##### QA-QC data handling 
+##### QA/QC data handling 
 
-Based on results of the hold-time experiments, results of sample analyses were updated to include QA-QC data flags. Hold-times were calculated for each sample and Rack samples that remained held for fewer than 20 days at temperatures between 0°C-7°C were flagged as acceptable ("OK") whereas samples that were either held for 20 days or longer or were identified as early-wet-season ("first-flush") samples which were held for 7 days or longer were flagged as exceeding an acceptable hold-time. These QA-QC flags were used to filter data for subsequent analyses; 33 Rack samples were flagged, reducing the number of samples included in data analyses from 203 total Rack samples to 170 quality-assured Rack samples.  
-
+Based on results of the hold-time experiments, results of sample analyses were updated to include QA/QC data flags. Hold-times were calculated for each sample and Rack samples that remained held for fewer than 20 days at temperatures between 0-7°C were flagged as acceptable ("OK"). Rack samples that were held for 20 days or longer and samples identified as early-wet-season ("first-flush") with a hold-time of 7+ days were flagged as unacceptable. Due to possible freeze-thaw changes, any samples that underwent freezing and thawing were also flagged. QA/QC flags were used to filter data, reducing the number of Rack samples included in analyses by 16.25%. Of 203 Rack samples, 33 were flagged resulting in 170 quality-assured Rack samples included in analyses. Some Grab samples were excluded from analysis due to contamination or   
 
 ###   Nested sub-catchments of the Leech watershed
 
-Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of sample collection. 
+Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of samples collected. 
+
+Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
 \  
  
 ```{r megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:megaplot} *Weather and stream rise response at six locations across the Leech water supply area.*"
+fig_cap = "\\label{fig:megaplot} *Weather and stream response at six locations across the Leech Water Supply Area with points indicating stage and time of sample collection.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png")
 ```
 
 \ 
 
-Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult to capture by standard grab sampling, particularly across multiple sites. Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites with the exception of Leech River head (*'LeechHead'*), where peak DOC happened to be collected as a Grab sample.
+#### Spatial variance & DOC concentrations
 
-### 3.3.1     DOC concentrations & variance
-  
-Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest DOC concentrations occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the watershed which includes Weeks Lake and surrounding wetlands. Lowest DOC was recorded at Leech River Tunnel site (*'Tunnel'*, site 6). 
+Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. The number of river samples passively collected on vertical racks more than doubled the number of rive samples collected by standard grab sampling. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult or dangerous to capture by standard grab sampling, particularly across multiple sites. Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site-3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
+
+\  
+
+```{r SixDOCsummarySampleType}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.csv", col_names = TRUE) %>% 
+  knitr::kable(col.names = c("Site", "Sample type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
+               digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
+               caption = "*Summary of DOC across the six LWSA installation sites including breakdown of sample type collected.*")
+```
+
+\  
+
+Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site-1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site-4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site-6) was similar to CraggCrk.
 
 \  
 
 ```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon concentrations across the Leech watershed over sixteen months (366 samples).*"
+fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon (DOC) concentrations across the Leech watershed over sixteen months, collected by standard grab sampling and on vertical racks (318 samples total).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
 ```
 
 \  
 
-The Tunnel site is the outlet of the Leech water supply area (LWSA), as the Leech River Tunnel will be the point of diversion for future inter-basin transfer. Runoff from each of the five nested catchments are effectively integrated at the Tunnel site. Similarly, Weeks Main and Chris Creek sites (*'Weeks'* & *'ChrisCrk'*) are integrated at the Leech-Head site. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins. 
+As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site-6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks Main Creek and Chris Creek (*'Weeks'* & *'ChrisCrk'*, sites 1 & 2) are integrated at (*'LeechHead'*, site-3), which is just below the headwaters' confluence. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability[^5] in DOC within each site and among all sites, with categorical groupings of sub-basins.
+
+[^5]:   Relative standard deviation (RSD) reflects how values range around the mean within a group; it is a ratio of the absolute standard deviation relative to the mean. And standard deviation is the square root of the variance. 
 
 \  
 
 ```{r subbasinDOCtunnelint}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
-               digits = c(0, 0, 0, 0, 0, 0, 2, 2, 2),
-               caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type. Relative standard deviation (RSD) reflects the absolute standard deviation (sd) relative to mean DOC at each site.*")
+  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "Stdev (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
+               digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
+               caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type.*")
 ```
 
 \  
 
-** needs a better frame: 
-  Which was greater, the variability of DOC concentrations within each site or between sites?
+The RSD in DOC observed at LeechHead was less than the DOC RSD in the two headwater sites upstream, and less than the RSD of both headwater sites combined. The relatively high DOC in the Weeks sub-basin was a driver for the wide range of DOC values for the headwaters. Despite the high RSD for headwaters sites, and the ~50% difference in area of these two sub-basins (Table \@ref(tab:WTScharacterSubbasinTable), Section \@ref(MethodsNestedCatch)), median DOC observed at LeechHead was very near to the median for the headwaters sites. Overall, there was greater variance among headwater sites than there was at each site, whereas the variance observed at each mainstem river site was comparable to the variance among mainstems. Results of Levene's test[^6] confirmed that variance in DOC concentrations was not homogeneous across the six sites of the LWSA (p-value = 8.2^-10^). 
 
-Relative standard deviation (RSD) indicates how values range around the mean within a group. Across the LWSA DOC at each site ranged from 24% to 41% RSD. Among the headwater sites (sites 1 & 2) DOC had a 52% RSD, compared to 36% among mainstem rivers. This means that the variance observed between headwater sites was greater than the variance thant occured at each site, whereas RSD among mainstem rivers was close to the average observed at each of those sites.    
+To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results. Table \@ref(tab:LevenesDOC) classifies each site comparison by basin-type and summarizes resulting Levene's test p-values for each pair. Of the nine comparisons made among the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
 
-Results of Levene's test[^5] confirmed that the variance of DOC concentrations was not homogeneous across the LWSA (p-value = 8.2^-10^). To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results for pairs of sites. Table \@ref(tab:Levenes) classifies each site comparison by basin-type and summarizes p-values for each pair. Of the nine comparisons made between the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
-
-[^5]:Levene's test is used to check for homogeneity of variance (homoscedasticity).
+[^6]:Levene's test is used to check for homogeneity of variance (homoscedasticity), it's an alternative to the Bartlett’s test that's less sensitive to departures from normality in the data.
 
 \  
 
-```{r Levenes}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = TRUE) %>% 
+```{r LevenesDOC}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(5),
-               caption = "*Results of Levene's test comparing DOC variance between sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
+               caption = "*Results of Levene's test comparing DOC variance between pairs of sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
 ```
 
 \  
 
-### 3.3.2     Temporal patterns 
+####   Spatiotemporal synchrony in local extrema: river stage and DOC
 
-Fluctuations in stage were synchronized across the LWSA, and it was confirmed that river response was concordant among the six sites (Kendall's W = 0.9721, Spearman's ranked correlation = 0.9666, p-value <0.001 (based on 999 randomizations)). While rainfall generated synchrony in stream rise, how did aqueous DOC concentration vary over time? 
+Streams responded harmoniously to precipitation across the LWSA, with synchronous changes in stage; was the same harmony present for fluctuations in DOC? Aqueous DOC was quantified from discrete river samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. However, because each sample was matched to stage and had a corresponding time-stamp, temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. 
 
+?
+If peak DOC consistently corresponded to peak sample stage, and low DOC consistently corresponded to low stage, it could be inferred that DOC fluctuated with similar synchrony to stage. That is, if DOC extrema were in synch with stage extrema at each site -- and stage is know to vary synchronously across the LWSA -- then we can assume that DOC follows the same trends across the LWSA.      
+?
 
-Over time, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
-
-\  
-
-```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
-```
-
-\ 
-
-__I think I should drop this, because DOC was not recorded continuously or simultaneously__
-
-To determine whether DOC minimum and maximum concentrations occurred at the same time across the LWSA, temporal synchrony tests were run on sample results. The R package Synchrony was used to find the proportion of common time-stamped DOC extrema (minima and maxima) between pairs of sites. Table \@ref(tab:synchDOCpeaks) summarizes the findings of these synchrony tests, where a proportion of 1 indicates perfect temporal synchrony of DOC peaks between sites (and zero indicates asynchrony).
- 
-** OR if DateTime was rounded to 30 minute intervals, there might be more of a level playing field? 
-*** nope never mind, I don't think that will work because you'd have to average DOC values or something
-
-### ? spatial Synchrony DOC & stage local extrema
-
---- manual doc and peak stage analysis 
--- this is the good stuff:
-
-Did DOC concentrations peak in synchrony with river stage at each site? To determine if local extrema (maxima and minima) DOC concentrations were captured in synchrony with the local extrema of sampled flows (minima and maxima sampled stage), temporal synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify maximum and minimum DOC and peak sample stage and then checked to determine whether extrema of DOC occurred in the sample collected at corresponding stage extrema. Table \@ref(tab:synchDOCstage) summarized the proportion of samples collected at each site for which the same sample corresponded to both DOC and sample stage extrema. 
+To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Extrema samples for DOC and stage were compared to determine how often their samples corresponded. Table \@ref(tab:synchDOCstage) summarized the results, where a proportion of 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage. 
 
 \  
 
 ```{r synchDOCstage}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,3),
+  knitr::kable(digits = c(0,3,3),
                caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
 ```
 
@@ -331,6 +321,20 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", co
 
 
 
+
+#### Temporal trends in DOC: seasonality
+
+
+
+Over the study period, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. 
+
+\  
+
+```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
+```
 
 
 ### Seasonal trends

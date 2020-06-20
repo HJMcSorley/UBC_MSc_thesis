@@ -15,3 +15,9 @@ knitr::opts_chunk$set(echo = FALSE)
 Across the Leech Water Supply Area (LWSA), the timing of changes in temperature, river response and DOC concentrations and character were synchornized in the five nested catchments and Leech River Tunnel site (future point of diversion, or mouth of the WSA), however the mean values and magnitude of these changes differed between sites. 
 
 
+Q) Across the LWSA, was the variance in DOC greater within each site or among all sites?
+
+Q) Was the variance in DOC greater at the watershed outlet than the variance in each subbasin?  
+
+*Seasonal trends and DOC over time
+Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).

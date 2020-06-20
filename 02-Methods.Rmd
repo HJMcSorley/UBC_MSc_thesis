@@ -80,8 +80,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_AllSamples_Count.csv", c
 
 ####    Synoptic sampling 
 
-\  
-
 ```{r sampleSitesMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:sampleSitesMap} *Synoptic sampling sites across the Greater Victoria Water Supply Areas (made with QGIS, version 3.12.1 - Bucuresti).*"
 
@@ -121,7 +119,7 @@ Aquatic NOM can play an important role in the transport of metals because it has
 
 \  
 
-####    Sampling across nested catchments of the Leech watershed
+####    Sampling across nested catchments of the Leech watershed {#MethodsNestedCatch}
 
 Across the Leech Water Supply Area (LWSA), six of the synoptic sampling sites were selected for more intensive monitoring. These sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment. Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites which represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek), the head of Leech River (below the confluence of the two headwater streams), two mainstem rivers that feed the Leech (Cragg Creek and West Leech) and the Leech River at the Tunnel.	
 
@@ -135,11 +133,11 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasi
 
 \  
 
-Table \@ref(tab:subbasinTable) includes watershed characteristic data for each sub-basin. Weeks creek (site-1), had the greatest proportion of wetland and open water compared to the other sub-basins. ChrisCrk (site-2) and CraggCrk (site-4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke), and CraggCrk was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). The sub-basin of WestLeech (site-5) was the site that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site-1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary).       
+Table \@ref(tab:WTScharacterSubbasinTable) includes watershed characteristic data for each sub-basin. Weeks creek (site-1), had the greatest proportion of wetland and open water compared to the other sub-basins. ChrisCrk (site-2) and CraggCrk (site-4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke), and CraggCrk was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). The sub-basin of WestLeech (site-5) was the site that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site-1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary).       
 
 \  
 
-```{r subbasinTable}
+```{r WTScharacterSubbasinTable}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/study-sites_basin-characteristics.csv", col_names = TRUE) %>% 
   knitr::kable(caption = "*Watershed characteristics summary for study sites*")
 ```
