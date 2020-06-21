@@ -449,9 +449,7 @@ precip_data %>%
             annual_mean_temp = mean(annual_temp, na.rm = TRUE),
             temp_sd = sd(annual_temp, na.rm = TRUE),
             annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
-            #TMin_sd = sd(annual_min_temp, na.rm = TRUE),
             annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
-  #TMax_sd = sd(annual_max_temp, na.rm = TRUE)) %>% 
   ungroup() %>% 
   dplyr::rename("mean annual rain (mm)" = mean_rain_mm,
                 "stdev rain. (±mm)" = sd_rain_mm,
@@ -459,9 +457,7 @@ precip_data %>%
                 "mean temp. (°C)" = annual_mean_temp, 
                 "st.dev temp. (±°C)" = temp_sd,
                 "min. temp. (°C)" = annual_min_temp2,
-                #"stdev TMin. (±°C)" = TMin_sd,
                 "max. temp. (°C)" = annual_max_temp2) %>%
-  #"stdev TMax. (±°C)" = TMax_sd) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
@@ -810,7 +806,7 @@ Hobo <- Hobo %>%
 
 ```
 
-## plot: Hobo air/water temps time & space
+##plot: Hobo air/water temps time & space
 ```{r}
 # ---- over time
 Hobo %>% 
@@ -928,49 +924,7 @@ Hobo_WxLWSA <- Hobo_WxLWSA_full %>%
   filter(DateTime >= Hobo_start) 
 ```
 
-### plot: [1:1] FWx vs HOBO
-```{r}
-## plot: 1:1 scatter of temperatures -- all data
-HoboFwx_lm <- Hobo_WxLWSA %>% 
-  ggplot(aes(x = FWx, y = Hobo))+
-  geom_point(alpha = 0.35)+
-  theme_bw()+
-  facet_wrap(~ site)+
-  labs(y = "Site temperature (°C)", x = "FWx temperature (°C)") +
-  theme(text = element_text(size = 11))+
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
-  ## to get equations include this line:
-  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
-  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
-
-## plot: 1:1 scatter of temperatures -- daily mean only
-HoboFwx_lm_means <- Hobo_WxLWSA %>% 
-  group_by(site, Date) %>% 
-  summarise(Hobo = mean(Hobo),
-            FWx = mean(FWx)) %>% 
-  ggplot(aes(x = FWx, y = Hobo))+
-  geom_point(alpha = 0.5)+
-  theme_bw()+
-  facet_wrap(~ site)+
-  labs(y = "Mean daily site temperature (°C)", x = "Mean daily FWx temperature (°C)") +
-  theme(text = element_text(size = 11))+
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
-  ## to get equations include this line:
-  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
-  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
-
-# use daily means to estimate temps -- better overlap and less scatter
-
-# arrange plots for presentation
-cowplot::plot_grid(HoboFwx_lm, HoboFwx_lm_means, ncol = 1,
-                   labels="AUTO")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
-       width = 8, height = 8, units = "in")
-
-```
-
-### density ridge comparison
+* density ridge comparison
 ```{r}
 # take dataframe with both FWx and Hobo data & pivot longer
 Hobo_Fwx <- Hobo_WxLWSA %>%
@@ -1044,29 +998,10 @@ b <- Hobo_Fwx_dm %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### trash plots: air temp over time & space
-```
-# compare temps from FWx to HOBO at each site
-# line plot
-Hobo_Fwx_dm %>% 
-  ggplot(aes(x = Date))+
-  geom_line(aes(y = Tdaily, colour = data_source), size = 0.8)+
-  scale_color_brewer(palette = "Dark2")+ 
-  theme_bw()+
-  facet_wrap(~site, ncol = 1,
-             scales = "free_y",
-             strip.position = "right")+
-  labs(x = "", y = "Air temperature (°C)",
-       colour = "Data origin:")+
-  theme(legend.position = "top", 
-        text = element_text(size = 12))+
-  scale_x_date(date_labels = "%Y %b %d", date_breaks = "1 months")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+unused plot, but not bad
+```{r}
 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_subbasin_daily-temps.png", 
-       width = 6, height = 7, units = "in")
-
+# unused plot (box plot with FWx as it's own box)
 # set FWx like it's a site to plot as a box adjacent to the other sites
 HoboFWx_sites <- Hobo %>% 
   filter(TidbiT_location == "air",
@@ -1083,7 +1018,7 @@ HoboFWx_sites <- Hobo %>%
 
 # boxplot
 # compare temps from FWx to HOBO at each site
-a <- HoboFWx_sites %>% 
+HoboFWx_sites %>% 
   mutate(date = as_date(DateTime)) %>%
   group_by(site, date) %>% 
   summarise(T_daily = mean(Temp_C)) %>% 
@@ -1102,13 +1037,15 @@ a <- HoboFWx_sites %>%
 
 ```
 
-### Stats: FWx-Hobo differences 
+## Stats: FWx-Hobo differences 
 
-#### Normality tests (ADD TO APPENDIX)
+### Wilcoxon tests
 ```{r}
 # make a comparison between subbasin hobos and the LWSA FWx data
-# Test temps for normality
 
+
+# Test temps for normality
+# Normality tests (ADD TO APPENDIX)
 # density by weather station source
 # these should be the same 
 ## -- they came from the same source & are limited to the same date range
@@ -1129,10 +1066,7 @@ Hobo_Fwx %>%
   theme(legend.position = "top")+
   facet_wrap(~ data_source)
 
-```
-
-#### Wilcoxon tests
-```{r}
+# --- 
 # Wilcoxon tests (not normally distributed)
 
 # null hypothesis: there is no difference between the means
@@ -1168,6 +1102,49 @@ Wilcoxon_Temp_summary <- Temp_Wilcoxon_tests %>%
 ```
 
 ### Linear Regression
+
+plot: [1:1] FWx vs HOBO
+```{r}
+## plot: 1:1 scatter of temperatures -- all data
+HoboFwx_lm <- Hobo_WxLWSA %>% 
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.35)+
+  theme_bw()+
+  facet_wrap(~ site)+
+  labs(y = "Site temperature (°C)", x = "FWx temperature (°C)") +
+  theme(text = element_text(size = 11))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+  ## to get equations include this line:
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
+
+
+## plot: 1:1 scatter of temperatures -- daily mean only
+HoboFwx_lm_means <- Hobo_WxLWSA %>% 
+  group_by(site, Date) %>% 
+  summarise(Hobo = mean(Hobo),
+            FWx = mean(FWx)) %>% 
+  ggplot(aes(x = FWx, y = Hobo))+
+  geom_point(alpha = 0.5)+
+  theme_bw()+
+  facet_wrap(~ site)+
+  labs(y = "Mean daily site temperature (°C)", x = "Mean daily FWx temperature (°C)") +
+  theme(text = element_text(size = 11))+
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) +
+  ## to get equations include this line:
+  #stat_poly_eq(formula = y ~ x, aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), parse = TRUE, rr.digits = 4)+
+  stat_poly_eq(formula = y ~ x, aes(label = ..rr.label..), parse = TRUE, rr.digits = 4)
+
+# use daily means to estimate temps -- better overlap and less scatter
+
+# arrange plots for presentation
+cowplot::plot_grid(HoboFwx_lm, HoboFwx_lm_means, ncol = 1,
+                   labels="AUTO")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
+       width = 8, height = 8, units = "in")
+
+```
 
 Relate subbasins to FWx & use linear regression to estimate temperature for each subbasin 
 ```{r}
@@ -1230,10 +1207,11 @@ Hobo_FWx_Tdaily_filled <- Hobo_WxLWSA_full %>%
     site == "Tunnel" ~ sites_lm_Tdaily[[6,2]]*FWx + sites_lm_Tdaily[[6,3]]
   )) %>% 
   filter(!is.na(site))
-```
 
-#### table: error for overlap Hobo + estimates
-```{r}
+
+# ------
+# table: error for overlap Hobo + estimates
+
 # isolate overlapping date range & summarize percent error
 Hobo_overlapPredictionErrors <- Hobo_FWx_filled %>% 
   filter(Date > as_date(Hobo_start), Date < as_date(project_end)) %>% 
@@ -1272,10 +1250,8 @@ Hobo_overlapPredictionErrors_Tdaily <- Hobo_FWx_Tdaily_filled %>%
             max_Predicted = max(Predicted, na.rm = TRUE)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE)
 
-```
-
+# ------ 
 #### plot: lines of estimated earlier +FWx +Hobo temps
-```{r}
 
 # take the study period data frame with temp estimates at each site
 # pivot longer
@@ -1304,11 +1280,6 @@ HoboFWx_filled_L %>%
   scale_x_date(date_labels = "%Y %b %d", date_breaks = "2 months")+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx-predicted_lm.png", 
-       width = 5.5, height = 7, units = "in")
-
-
 # line plot of all, not separated by site
 HoboFWx_filled_L %>% 
   group_by(site, Temp_source, Date) %>% 
@@ -1324,7 +1295,9 @@ HoboFWx_filled_L %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   scale_x_date(date_labels = "%Y %b %d",
                date_breaks = "1 months")
-
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx-predicted_lm.png", 
+       width = 5.5, height = 7, units = "in")
 
 ```
 
@@ -1347,8 +1320,7 @@ calver <- QAQC %>%
     is.na(cal_ver) ~ "RO" )) 
 ```
 
-
-## Hold-time experiments (Tunnel rack)
+Hold-time experiments (Tunnel rack)
 ```{r}
 # three cycles of hold time experiments (A, B , C)
 # each time, 5 samples were collected (grab) while 5 were placed on the rack with siphon lids
@@ -1405,7 +1377,9 @@ HT_Hobo <- Hobo %>%
 
 ```
 
-### HT plots
+### HT tests: Wilcoxon + boxplots
+
+HT results box plots
 ```{r}
 
 # create labels for plots
@@ -1456,7 +1430,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
 
 ```
 
-### HT tests: Wilcoxon
+Wilcoxon tests
 ```{r}
 
 # density distribution normality 
@@ -1541,7 +1515,9 @@ HT_Wilcoxon_tests <- bind_rows(
 
 ```
 
-#### table: conc results summary
+#### HT Results summaries
+
+table: conc results summary
 ```{r}
 # summarize
 HT_summ <- HT %>% 
@@ -1554,15 +1530,8 @@ HT_summ <- HT %>%
             RSD_DOC = (sd_DOC/mean_DOC)*100,
             mean_UV254 = mean(SAC254_Abs.m),
             sd_UV254 = sd(SAC254_Abs.m)) 
-# save results
-HT_summ %>% 
-  select(-set) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_sample-summary.csv")
 
-```
 
-#### table: HT summary
-```{r}
 # summarize percent change (DOC & UV254) for each set
 # vector
 HTDOCresult <- HT_summ$mean_DOC
@@ -1642,7 +1611,7 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
 
 ```
 
-### plot HT megaplot
+Results plot -- HT megaplot
 ```{r}
 
 # pivot long
@@ -1692,34 +1661,11 @@ HT_air_plot <- HT_Hobo_L %>%
         text = element_text(size = 12)) +
   scale_x_date(date_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp.png", width = 6.5, height = 6, units = "in")
-
-# --- 
-# plot rain for the same period
-HT_rain_plot <- LWSA_meanWx %>% 
-  filter(DateTime >= first(HT_Hobo_L$DateTime),
-         DateTime <= last(HT_Hobo_L$DateTime)) %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  group_by(date) %>% 
-  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(fill = forWater_colours1[["DarkGrey"]]) +
-  scale_y_reverse() +
-  labs(x = "", y = "Rain (mm/day)") +
-  theme_bw() +
-  theme(text = element_text(size = 11)) +
-  theme(legend.position = "none")+
-  scale_x_date(labels = NULL, 
-               date_breaks = "1 months")
-# stack and save
-cowplot::plot_grid(HT_rain_plot, HT_air_plot, align = "v", ncol = 1, rel_heights = c(1,3.5))
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_withRain.png", width = 7, height = 7, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png", width = 6, height = 5.5, units = "in")
 
 ```
 
-## LAB 
+## laboratory QA/QC
 ```{r}
 
 ### blanks 
@@ -1787,12 +1733,14 @@ error_spectrolyser <- b %>% pull(error_percent)
 # average percent error from both methods:
 error_overall <- (error_shimadzu + error_spectrolyser)/2
 
+# add replicate analysis for rep samples
+
 ```
 
 
 # SAMPLES: augment dataframes
 
-## Categorize
+Categorize
 ```{r, mutate}
 
 # create a "first-flush category in rain_season(s)
@@ -1833,10 +1781,41 @@ sampleresults <- sampleresults %>%
   mutate(site_type = factor(site_type),
          DateTime_sampled = as.POSIXct(DateTime_sampled, tz = TZ))
 
+# --- further categorize
+# subbasin_types
+
+# further categorize site_type
+sixfilter <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "headwater",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "mainstem")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
+# further categorize subbasin_types
+sixfilter_sub <- sixfilter %>% 
+  mutate(subbasin_type = case_when(
+    site == "Weeks" ~ "headwater",   
+    site == "ChrisCrk" ~ "headwater",
+    site == "LeechHead"  ~ "mainstem",
+    site == "CraggCrk" ~ "mainstem",
+    site == "WestLeech" ~ "mainstem",
+    site == "Tunnel" ~ "outlet")) %>% 
+  mutate(subbasin_type = factor(subbasin_type))
+
+# update stage_samples df also
+stage_samples <- left_join(stage_samples, sixfilter) %>% 
+  mutate(trip = factor(trip),
+         sample_type = factor(sample_type),
+         event_ID = factor(event_ID),
+         rain_season = factor(rain_season))
 
 ```
 
-## QA-QC flags
+add QA-QC flags to data
 ```{r}
 # HT: flag samples with HoldTime_days >= 30 
 # FFHT: flag samples with HoldTime_days >=7 days if rain_seasons == "first flush"
@@ -1972,63 +1951,17 @@ tibble::tibble(
   "opportunistic Grab samples" = (n_Grabs)-(n_SynopticGrabs),
   "monitoring sites synoptic Grab samples" = n_installGrabSamples,
   "monitoring sites vertical Rack samples" = n_installRackSamples,
-  "total" = n_totalSamples) %>% 
+  "total samples analyzed for results" = n_totalSamples) %>% 
   pivot_longer(everything(),
                names_to = "sample category", values_to = "total count") %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv")
 
-# make a summary table:
-tibble::tibble(
-  "synoptic Grab samples outside of monitoring sites" = n_SynopticGrabs - n_installGrabSamples,
-  "opportunistic Grab samples" = (n_Grabs)-(n_SynopticGrabs),
-  "monitoring sites synoptic Grab samples" = n_installGrabSamples,
-  "monitoring sites vertical Rack samples" = n_installRackSamples,
-  "total" = n_totalSamples) %>% 
-  pivot_longer(everything(),
-               names_to = "sample category", values_to = "total count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv")
 
 ```
 
-### subbasin_types
-```{r}
+# SUBBASINS STAGE: River Stage 
 
-# further categorize site_type
-sixfilter <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "headwater",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "mainstem")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
-
-# further categorize subbasin_types
-sixfilter_sub <- sixfilter %>% 
-  mutate(subbasin_type = case_when(
-    site == "Weeks" ~ "headwater",   
-    site == "ChrisCrk" ~ "headwater",
-    site == "LeechHead"  ~ "mainstem",
-    site == "CraggCrk" ~ "mainstem",
-    site == "WestLeech" ~ "mainstem",
-    site == "Tunnel" ~ "outlet")) %>% 
-  mutate(subbasin_type = factor(subbasin_type))
-
-# update stage_samples df also
-stage_samples <- left_join(stage_samples, sixfilter) %>% 
-  mutate(trip = factor(trip),
-         sample_type = factor(sample_type),
-         event_ID = factor(event_ID),
-         rain_season = factor(rain_season))
-
-```
-
-# SUBBASINS
-
-## STAGE: River Stage 
-
-### normalized stage
+normalized stage
 ```{r}
 
 # min-max normalized stage data 
@@ -2073,7 +2006,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-normalized_ridgeplot_sub
 
 ```
 
-### temporal Synchrony tests
+## temporal Synchrony tests
 ```{r}
 # reshape odyssey data to wide flat file matrix
 ## sites as columns, timestep as rows
@@ -2161,7 +2094,7 @@ synch_PeaksSumm_stage <- tibble(
 # where proportion of coincident peaks = a fraction of the maximum number of peaks in the two series
 ```
 
-### Levene's test for homoscedasticity in stage:
+## Variance:  Levene's test for homoscedasticity in stage
 
 An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
 
@@ -2262,9 +2195,9 @@ Levenes_summary_stage <- tibble::tibble(
 
 ```
 
-#### trash? peak stage by event & site
+trash? peak stage by event & site
 Don't really know what to do with this...
-```{r}
+```
 # isolate max for each site by year
 max_stage <- stage_samples %>%
   filter(!is.na(DateTime)) %>% 
@@ -2316,9 +2249,7 @@ pks_stage_wide <- pks_stage %>%
 
 ```
 
-### Stage (norm) & samples
-
-#### plot density of stage + sample results 
+### plot density of stage (norm) + sample results 
 ```{r}
 # min-max normalized stage data 
 # (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
@@ -2384,8 +2315,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
 
 ```
 
+TRASH?
 ```
-# TRASH?
 # check with seasons
 
 # with seasons
@@ -2441,7 +2372,22 @@ cowplot::plot_grid(d2,u2,s2, ncol = 3)
 # nope
 ```
 
-### Wx MEGAPLOT: FWx+RiverStage
+# Wx MEGAPLOTs: FWx+RiverStage
+
+```{r}
+# vectors for plots:
+
+# first extract trip start datetimes
+trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
+trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct(tz = TZ)
+
+# and event timing 
+# event times need to be in ten-min intervals to match with stage_sample
+event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
+event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
+
+```
+
 Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
 ```{r, Wx-stage-megas-plots}
 # 1 - plot snow
@@ -2544,9 +2490,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
 
 ```
 
-## Stage & Samples
-
-### second MegaPlot: with samples
+## secondary MegaPlots: with samples
 ```{r}
 
 # Wx megaplot, with simple sample points
@@ -2574,38 +2518,6 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
          width = 7.5, height = 9.5, units = "in")
 
-```
-
-#### baby mega plot
-```{r}
-# plot stage, rain events, samples (by sample type) all sites
-stage_samples %>% 
-  ggplot(aes(x = DateTime))+
-  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+ 
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # start event
-  geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
-             xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # end event
-  geom_line(aes(y = corr_stage_cm), size = 0.6)+ #, colour = forWater_colours2["DeepBlue"])+
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), na.rm = TRUE)+
-  scale_shape_manual(breaks = c("Grab", "Rack"), values = c("Grab" = 24, "Rack" = 21))+
-  scale_fill_manual(breaks = c("Grab", "Rack"), values = c("Grab" = "white", 
-                                                           #"Rack" = forWater_colours2[["MyOrange"]],
-                                                           "Rack" = "white"))+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm)", x = "", shape = "Sample Type:")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.position = "top")+
-  guides(fill = guide_legend("Sample type:"), 
-         shape = guide_legend("Sample type:", override.aes = list(size=2.5)))  
-#save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-with-samples_trip-event-lines.png",
-         width = 6, height = 7, units = "in")
 
 # --- baby mega plot
 
@@ -2635,18 +2547,47 @@ stage_sample_event_plot <- stage_samples %>%
 # stack snow, temp, precip and stage with cowplot::plot_grid
 cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event_plot, 
                    ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
-# save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_events_plot.png",
-         width = 8.5, height = 11, units = "in")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
+         width = 7.5, height = 10, units = "in")
+
+
+# --- river sample plot
+
+# plot stage, rain events, samples (by sample type) all sites - no weather
+stage_samples %>% 
+  ggplot(aes(x = DateTime))+
+  # start of rain events
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ 
+  # river stage
+  geom_line(aes(y = corr_stage_cm), size = 0.5) +
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), 
+             na.rm = TRUE, size = 1.5)+
+  scale_shape_manual(breaks = c("Grab", "Rack"), 
+                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
+  scale_fill_manual(breaks = c("Grab", "Rack"), 
+                    values = c("Grab" = forWater_colours2[["MyOrange"]], 
+                              "Rack" = forWater_colours2[["MyOrange"]]))+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "top")+
+  guides(fill = guide_legend("Sample method:"), 
+         shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
+         width = 6, height = 8, units = "in")
 ```
 
-## DOC samples
+# spatial variance DOC Samples
 
 - nested catchments - DOC ranges
-
 tabulate DOC mean/min/max (descriptive stats summary)
 
-### tables: DOC subbasin sites, Mean/Min/Max 
+## table + boxplot: Mean/Min/Max DOC 
 ```{r, all-samples-together}
 # grouped-summary by site & sample-type 
 a <- sixfilter %>%
@@ -2745,7 +2686,7 @@ sixfilter_sub %>%
 
 ```
 
-### boxplot
+Boxplot: DOC overview boxplot by site
 ```{r}
 # Boxplots with jitter scatter
 
@@ -2764,11 +2705,11 @@ sixfilter_sub %>%
   labs(x = "", y = "DOC (mg/L)")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png",
-       width = 5, height = 5, units = "in")
+       width = 5, height = 4, units = "in")
 
 ```
 
-### variance: Levene's test for homoscedasticity in DOC:
+## DOC variance: Levene's test for homoscedasticity in DOC:
 
 Q1: is the variance at the watershed outlet greater than the variance in each subbasin?
 Q2: is the variance greater within each site or among all sites?
@@ -2866,259 +2807,7 @@ Levenes_summary_DOC <- tibble::tibble(
 ```
 
 
-TRASH: temporal NPOC Synchrony tests
-```
-# this isn't useful --- see manual checks of DOC extrema with stage 
-# -- synchrony::peaks WET
-
-# reshape sixfilter data to wide flat file matrix
-## sites as columns, timestep as rows
-# values should be abundance
-six_wide_NPOC_wet <- sixfilter %>% 
-  filter(rain_season == "wet") %>% 
-  select(c(DateTime_sampled, site, NPOC_ppm)) %>% 
-  pivot_wider(names_from = site,
-              values_from = NPOC_ppm) %>% 
-  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
-  arrange(DateTime_sampled) %>% 
-  mutate(timestep = row_number(DateTime_sampled))
-
-# synchrony tests
-# community-wide & significance via Monte Carlo randomizations
-# 1 == perfect synchrony
-six_wide_NPOC_matrix <- six_wide_NPOC_wet %>% select(-DateTime_sampled) %>% as.matrix()
-
-summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
-
-# synchrony tests
-# Determine the proportion of concurrent local extrema (Peaks)
-# 1
-six_wide_NPOC_Weeks <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
-  filter(!is.na(NPOC_Weeks)) %>% 
-  as.matrix()
-
-# 2
-six_wide_NPOC_Chris <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
-  filter(!is.na(NPOC_ChrisCrk)) %>% 
-  as.matrix()
-
-# 3
-six_wide_NPOC_Head <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
-  filter(!is.na(NPOC_LeechHead)) %>% 
-  as.matrix()
-
-# 4
-six_wide_NPOC_Cragg <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
-  filter(!is.na(NPOC_CraggCrk)) %>% 
-  as.matrix()
-
-# 5
-six_wide_NPOC_West <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
-  filter(!is.na(NPOC_WestLeech)) %>% 
-  as.matrix()
-
-# 6
-six_wide_NPOC_Tunnel <- six_wide_NPOC_wet %>% 
-  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
-  filter(!is.na(NPOC_Tunnel)) %>% 
-  as.matrix()
-
-# tests by site (number)
-peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
-peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
-peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-
-# combine
-synch_PeaksSumm_wet <- tibble(
-  "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
-  "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
-                        "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
-                        "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
-  "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
-#"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
-
-
-
-# DRY SEASON --- 
-# reshape sixfilter data to wide flat file matrix
-## sites as columns, timestep as rows
-# values should be abundance
-six_wide_NPOC_dry <- sixfilter %>% 
-  filter(rain_season == "dry") %>% 
-  select(c(DateTime_sampled, site, NPOC_ppm, rain_season)) %>% 
-  pivot_wider(names_from = site,
-              values_from = NPOC_ppm) %>% 
-  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
-  arrange(DateTime_sampled) %>% 
-  mutate(timestep = row_number(DateTime_sampled)) %>% 
-  select(-rain_season)
-
-# synchrony tests
-# community-wide & significance via Monte Carlo randomizations
-# 1 == perfect synchrony
-six_wide_NPOC_matrix <- six_wide_NPOC_dry %>% select(-DateTime_sampled) %>% as.matrix()
-
-summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
-
-# synchrony tests
-# Determine the proportion of concurrent local extrema (Peaks)
-# 1
-six_wide_NPOC_Weeks <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
-  filter(!is.na(NPOC_Weeks)) %>% 
-  as.matrix()
-
-# 2
-six_wide_NPOC_Chris <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
-  filter(!is.na(NPOC_ChrisCrk)) %>% 
-  as.matrix()
-
-# 3
-six_wide_NPOC_Head <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
-  filter(!is.na(NPOC_LeechHead)) %>% 
-  as.matrix()
-
-# 4
-six_wide_NPOC_Cragg <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
-  filter(!is.na(NPOC_CraggCrk)) %>% 
-  as.matrix()
-
-# 5
-six_wide_NPOC_West <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
-  filter(!is.na(NPOC_WestLeech)) %>% 
-  as.matrix()
-
-# 6
-six_wide_NPOC_Tunnel <- six_wide_NPOC_dry %>% 
-  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
-  filter(!is.na(NPOC_Tunnel)) %>% 
-  as.matrix()
-
-# tests by site (number)
-peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
-peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
-peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-
-# combine
-synch_PeaksSumm_dry <- tibble(
-  "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
-  "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
-                        "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
-                        "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
-  "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
-#"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
-
-
-#### trash -- synchrony::peaks all
-
-# reshape sixfilter data to wide flat file matrix
-## sites as columns, timestep as rows
-# values should be abundance
-six_wide_NPOC <- sixfilter %>% 
-  select(c(DateTime_sampled, site, NPOC_ppm)) %>% 
-  pivot_wider(names_from = site,
-              values_from = NPOC_ppm) %>% 
-  unnest(cols = c(WestLeech, Tunnel, CraggCrk, LeechHead, Weeks, ChrisCrk)) %>% 
-  arrange(DateTime_sampled) %>% 
-  mutate(timestep = row_number(DateTime_sampled))
-
-# synchrony tests
-# community-wide & significance via Monte Carlo randomizations
-# 1 == perfect synchrony
-six_wide_NPOC_matrix <- six_wide_NPOC %>% select(-DateTime_sampled) %>% as.matrix()
-
-summary(synchrony::community.sync(six_wide_NPOC_matrix, type = 2))
-
-# synchrony tests
-# Determine the proportion of concurrent local extrema (Peaks)
-# 1
-six_wide_NPOC_Weeks <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_Weeks = "Weeks")) %>% 
-  filter(!is.na(NPOC_Weeks)) %>% 
-  as.matrix()
-
-# 2
-six_wide_NPOC_Chris <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_ChrisCrk = "ChrisCrk")) %>% 
-  filter(!is.na(NPOC_ChrisCrk)) %>% 
-  as.matrix()
-
-# 3
-six_wide_NPOC_Head <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_LeechHead = "LeechHead")) %>% 
-  filter(!is.na(NPOC_LeechHead)) %>% 
-  as.matrix()
-
-# 4
-six_wide_NPOC_Cragg <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_CraggCrk = "CraggCrk")) %>% 
-  filter(!is.na(NPOC_CraggCrk)) %>% 
-  as.matrix()
-
-# 5
-six_wide_NPOC_West <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_WestLeech = "WestLeech")) %>%
-  filter(!is.na(NPOC_WestLeech)) %>% 
-  as.matrix()
-
-# 6
-six_wide_NPOC_Tunnel <- six_wide_NPOC %>% 
-  select(c(timestep, NPOC_Tunnel = "Tunnel")) %>%
-  filter(!is.na(NPOC_Tunnel)) %>% 
-  as.matrix()
-
-# tests by site (number)
-peaks_1to2 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Chris, type = 2) #, nrands = 999)
-peaks_1to3 <- synchrony::peaks(six_wide_NPOC_Weeks, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_2to3 <- synchrony::peaks(six_wide_NPOC_Chris, six_wide_NPOC_Head, type = 2) #, nrands = 999)
-peaks_3to4 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Cragg, type = 2) #, nrands = 999)
-peaks_3to5 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_4to5 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_West, type = 2) #, nrands = 999)
-peaks_3to6 <- synchrony::peaks(six_wide_NPOC_Head, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_4to6 <- synchrony::peaks(six_wide_NPOC_Cragg, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-peaks_5to6 <- synchrony::peaks(six_wide_NPOC_West, six_wide_NPOC_Tunnel, type = 2) #, nrands = 999)
-
-# combine
-synch_PeaksSumm_all <- tibble(
-  "Comparison Group" = c(rep("headwaters", 3), rep("mainstems", 3), rep("mainstem to outlet", 3)),
-  "Site Comparison" = c("Weeks & ChrisCrk", "LeechHead & Weeks", "LeechHead & ChrisCrk", 
-                        "LeechHead & CraggCrk", "LeechHead & WestLeech", "CraggCrk & WestLeech",
-                        "LeechHead & Tunnel", "CraggCrk & Tunnel", "WestLeech & Tunnel"),
-  "Proportion of common DOC peaks" = c(peaks_1to2$obs, peaks_1to3$obs, peaks_2to3$obs, peaks_3to4$obs, peaks_3to5$obs, peaks_4to5$obs, peaks_3to6$obs, peaks_4to6$obs, peaks_5to6$obs))  #,
-#"p-value" = c(peaks_1to2$pval, peaks_1to3$pval, peaks_2to3$pval, peaks_3to4$pval, peaks_3to5$pval, peaks_4to5$pval, peaks_3to6$pval, peaks_4to6$pval, peaks_5to6$pval)) 
-
-# ---
-# join wet, dry and all
-full_join(
-  synch_PeaksSumm_dry %>% rename(`Dry season common peak proportion` = `Proportion of common DOC peaks`),
-  synch_PeaksSumm_wet %>% rename(`Wet season common peak proportion` = `Proportion of common DOC peaks`)) %>% 
-  full_join(synch_PeaksSumm_all%>% rename(`Proportion of total common DOC peaks` = `Proportion of common DOC peaks`)) 
-
-```
-
-
-#### temporal plot: DOC~time subbasin geom_smooth -- site & subbasin type
+### temporal plot: DOC~time subbasin geom_smooth -- site & subbasin type
 
 ```{r DOC_overtime-by-site}
 
@@ -3179,20 +2868,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 
 
 ## Synchrony: Stage & DOC 
-
-```{r}
-# vectors for plots:
-
-# first extract trip start datetimes
-trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
-trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct(tz = TZ)
-
-# and event timing 
-# event times need to be in ten-min intervals to match with stage_sample
-event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
-event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
-
-```
 
 ### DOC-stage extrema
 ```{r}

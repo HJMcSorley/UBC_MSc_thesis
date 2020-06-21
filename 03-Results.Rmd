@@ -4,17 +4,17 @@ tables: true
 ---
 
 ```{r, include = FALSE, package.startup.message = FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
 
+# load required packages
 library(tidyverse)  # keep it tidy
 library(readr)      # read in delimited files
 library(knitr)      # for nice tables
 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+
 ```
 
 ##    Results
-
-The primary objectives of this project were to characterize the range of hydrochemical dynamics and synchrony during rainfall response among sub-basins ranging in size from 9.6 to 37 km^2^.  To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites enhanced the synoptic sampling program by collecting samples during rainfall-induced hydrologic surges -- samples which would have been challenging and dangerous to collect manually -- near-simultaneously at multiple locations across the watershed. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. 
 
 ###   Weather: precipitation and temperature from CRD weather stations
 
@@ -43,7 +43,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 
 #####   Rain events {#events}
 
-LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 that were classified as major events. Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of 14 hours or longer. Table \@ref(tab:Events) summarizes the eighteen major rain events that occurred during the study period (2018-10-23 to 2020-02-20). For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified and are summarized in the subsequent table, Table \@ref(tab:MinMaxEvents).
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 that were classified as major events. Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of 14 hours or longer. Table \@ref(tab:Events) summarizes the eighteen major rain events that occurred during the study period (2018-10-23 to 2020-02-20). Figure \@ref(fig:EventsPlot) shows stream level at each monitored sub-basin along with events and samples collected. Eight of these events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year.
 
 \  
 
@@ -53,6 +53,18 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>%
                caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
 ```
 
+```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:EventsPlot} *Plot of Precipitation, rain events (as vertical lines), stream rise and sample collection at six sites across the LWSA.*" 
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png")
+```
+\ 
+
+
+For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified and are summarized in the subsequent table, Table \@ref(tab:MinMaxEvents). The maximum intensity event of 2020, on January 30, generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the vertical racks (greater than 2m tall) and ripped the level-loggers out of their stilling wells [^2]. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers.  
+
+[^2]:   Following the Jan.30, 2020 major event, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, and there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2).
+
 \  
 
 ```{r MinMaxEvents}
@@ -61,23 +73,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
                caption = "*Minimum and maximum rain event values *")
 ```
 
-\  
-
-The maximum intensity event of 2020, on January 30, generated incredible flows across the Leech watershed (not unlike the rest of Vancouver Island and most of the south coast of BC). Streamflow at Cragg crk (site-4) and the Leech Tunnel (site-6) over-topped the vertical racks (greater than 2m tall) and ripped the level-loggers out of their stilling wells [^3]. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers.  
-
-Figure \@ref(fig:EventsPlot) shows stream level at each monitored sub-basin along with events and samples collected. Eight of these events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year.
-
-
-[^3]:   Following this major event, changes to the stream-bed morphology were evident at Leech-head (site-3) in the form of gravel and cobble deposition, and there was evidence of substantial coarse woody debris transport at Chris crk (site-2).
-
-\  
-
-```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:EventsPlot} *Plot of Precipitation, rain events (as vertical lines), stream rise and sample collection at six sites across the LWSA.*" 
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_events_plot.png")
-```
 \  
 
 #### Temperature at vertical racks
@@ -137,14 +132,6 @@ Despite some differences between FWx and Hobo site data, the overlapping FWx and
 
 \  
 
-```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations. Plots in section A (top) show the relationships for the full data set and plots in section B show daily mean temperatures, the data that was used in linear regression.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
-```
-
-\  
-
 ```{r TidbiTestimateErrors}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE) %>% 
   #mutate(p.value = format(p.value, digits = 2)) %>% 
@@ -157,6 +144,14 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
                              "Estimated Min. (°C)",
                              "Max. Temp (°C)",
                              "Estimated Max. (°C)"))
+```
+
+\  
+
+```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoboFWxLinearReg} *Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations. Plots in section A (top) show the relationships for the full data set and plots in section B show daily mean temperatures, the data that was used in linear regression.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
 ```
 
 \  
@@ -175,9 +170,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp
 
 \  
 
-Each hold-time set included ten replicate samples, each collected at the same time in the same way from the same location. For each hold-time set, five samples were returned to the lab for immediate quantification of DOC and measurement of UV absorbance ("fresh" samples) and five were placed on the vertical rack, capped with siphon lids to simulate rack samples, and collected at a later date for analysis ("held" samples). Figure \@ref(fig:HoldTimeBoxPlot) shows results of sample analyses for DOC and UV~254~ absorbance of the fresh and held samples of each set, Hold-time sets were compared using two-sided paired Wilcoxon signed rank tests (a.k.a 'Mann-Whitney' test) [^4] and Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results comparing fresh and held samples. 
+Each hold-time set included ten replicate samples, each collected at the same time in the same way from the same location. For each hold-time set, five samples were returned to the lab for immediate quantification of DOC and measurement of UV absorbance ("fresh" samples) and five were placed on the vertical rack, capped with siphon lids to simulate rack samples, and collected at a later date for analysis ("held" samples). Figure \@ref(fig:HoldTimeBoxPlot) shows results of sample analyses for DOC and UV~254~ absorbance of the fresh and held samples of each set, Hold-time sets were compared using two-sided paired Wilcoxon signed rank tests (a.k.a 'Mann-Whitney' test) [^3] and Table \@ref(tab:HoldTimeTtests) summarizes the number of days the rack samples were held, the mean air temperature over that period, and the percent change in DOC concentration and UV absorbance at 254nm, as well as Wilcoxon test results comparing fresh and held samples. 
 
-[^4]:   The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.
+[^3]:   The Wilcoxon signed-rank test is a non-parametric paired difference test used in comparing two related samples to assess whether their means differ, or are the same (null hypothesis); it is an alternative to paired Student's t-tests, suitable for when the differences between two sample's means are not assumed to be normally distributed.
 
 \  
 
@@ -209,23 +204,23 @@ Based on results of the hold-time experiments, results of sample analyses were u
 
 ###   Nested sub-catchments of the Leech watershed
 
-Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows precipitation, air temperature, and stream response over the study period, as well as the timing and stage of samples collected. 
+Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows major precipitation events and stream response over the study period as well as the timing and stage of samples collected. 
 
 Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
 \  
  
 ```{r megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:megaplot} *Weather and stream response at six locations across the Leech Water Supply Area with points indicating stage and time of sample collection.*"
+fig_cap = "\\label{fig:megaplot} *Rain events, stream response and sample collection across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events and points indicate the timing and stage of river samples collected.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png")
 ```
 
 \ 
 
 #### Spatial variance & DOC concentrations
 
-Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. The number of river samples passively collected on vertical racks more than doubled the number of rive samples collected by standard grab sampling. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult or dangerous to capture by standard grab sampling, particularly across multiple sites. Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site-3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
+Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. The number of river samples passively collected on vertical racks more than doubled the number of river samples collected by standard grab sampling. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult or dangerous to capture by standard grab sampling, particularly across multiple sites. Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
 
 \  
 
@@ -238,7 +233,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.
 
 \  
 
-Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site-1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site-4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site-6) was similar to CraggCrk.
+Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was similar to CraggCrk.
 
 \  
 
@@ -250,9 +245,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_box
 
 \  
 
-As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site-6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks Main Creek and Chris Creek (*'Weeks'* & *'ChrisCrk'*, sites 1 & 2) are integrated at (*'LeechHead'*, site-3), which is just below the headwaters' confluence. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability[^5] in DOC within each site and among all sites, with categorical groupings of sub-basins.
+As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site 6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks Main Creek and Chris Creek (*'Weeks'* & *'ChrisCrk'*, sites 1 & 2) are integrated at (*'LeechHead'*, site 3), which is just below the headwaters' confluence. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability[^4] in DOC within each site and among all sites, with categorical groupings of sub-basins.
 
-[^5]:   Relative standard deviation (RSD) reflects how values range around the mean within a group; it is a ratio of the absolute standard deviation relative to the mean. And standard deviation is the square root of the variance. 
+[^4]:   Relative standard deviation (RSD) reflects how values range around the mean within a group; it is a ratio of the absolute standard deviation relative to the mean. And standard deviation is the square root of the variance. 
 
 \  
 
@@ -265,11 +260,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryInt
 
 \  
 
-The RSD in DOC observed at LeechHead was less than the DOC RSD in the two headwater sites upstream, and less than the RSD of both headwater sites combined. The relatively high DOC in the Weeks sub-basin was a driver for the wide range of DOC values for the headwaters. Despite the high RSD for headwaters sites, and the ~50% difference in area of these two sub-basins (Table \@ref(tab:WTScharacterSubbasinTable), Section \@ref(MethodsNestedCatch)), median DOC observed at LeechHead was very near to the median for the headwaters sites. Overall, there was greater variance among headwater sites than there was at each site, whereas the variance observed at each mainstem river site was comparable to the variance among mainstems. Results of Levene's test[^6] confirmed that variance in DOC concentrations was not homogeneous across the six sites of the LWSA (p-value = 8.2^-10^). 
+The RSD in DOC observed at LeechHead was less than the DOC RSD in the two headwater sites upstream, and less than the RSD of both headwater sites combined. The relatively high DOC in the Weeks sub-basin was a driver for the wide range of DOC values for the headwaters. Despite the high RSD for headwaters sites, and the ~50% difference in area of these two sub-basins (Table \@ref(tab:WTScharacterSubbasinTable), Section \@ref(MethodsNestedCatch)), median DOC observed at LeechHead was very near to the median for the headwaters sites. Overall, there was greater variance among headwater sites than there was at each site, whereas the variance observed at each mainstem river site was comparable to the variance among mainstems. Results of Levene's test[^5] confirmed that variance in DOC concentrations was not homogeneous across the six sites of the LWSA (p-value = 8.2^-10^). 
 
 To identify which pairs of sites had equal DOC variance (or were heteroscedastic), Levene's test was applied to sample DOC results. Table \@ref(tab:LevenesDOC) classifies each site comparison by basin-type and summarizes resulting Levene's test p-values for each pair. Of the nine comparisons made among the six sites, West Leech River (*'WestLeech'*, site-5) and Weeks Main Creek (*'Weeks'*, site-1) did not have homogeneous variance when compared with any other sites; all other combinations of sites showed homoscedasticity. Both of these sub-basins drain the west side of LWSA. 
 
-[^6]:Levene's test is used to check for homogeneity of variance (homoscedasticity), it's an alternative to the Bartlett’s test that's less sensitive to departures from normality in the data.
+[^5]:Levene's test is used to check for homogeneity of variance (homoscedasticity), it's an alternative to the Bartlett’s test that's less sensitive to departures from normality in the data.
 
 \  
 

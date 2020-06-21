@@ -3,14 +3,15 @@ output:
   word_document: default
 ---
 
-```{r appendix setup, warning = FALSE, message = FALSE, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.align = "center")
+```{r appendix-setup, warning = FALSE, message = FALSE, include = FALSE, package.startup.message = FALSE}
 
 # load required packages
 library(tidyverse)
-library(forcats)  # factors
 library(readr)    # read in delimited files
 library(knitr)    # for tidy tables
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
 ```
 
 #######   Appendix
@@ -31,7 +32,7 @@ The Leech River watershed is a sub-catchment of the Sooke River watershed (~25% 
 In 1977, the CRD obtained a provincial water licence authorizing the diversion of up to 30.6 million cubic meters per year from the Leech River to the Sooke Reservoir [@Ussery2015]. Based on the 2017 strategic plan statement of a daily average water supply of 130,000 m^3^ [-@CapitalRegionDistrict2017], the Leech water license could contribute about 65% of 2017 average water supply. The license allows diversion only as long as minimum flows (>5.7 m^3^s^-1^) are maintained to protect fish and downstream ecology [@Ussery2015]. Based on current hydroclimatic dynamics, the water license flow requirements will exclude the summer months from inter-basin transfer and limit streamflow diversion to the winter (November to approximately April). The Leech Tunnel was constructed in the 1980's to transfer Leech River water into the Sooke Reservoir. The Tunnel is not currently operational, and it's anticipated that inter-basin transfer won't be required until 2050 or later. 
   
 
-########    Leech River Watershed Site Details
+########  Leech River Watershed Site Details
 
 The Leech River watershed ("the Leech") is located on south-east Vancouver Island, British Columbia, Canada. Like most of coastal BC, it is in the Coastal Western Hemlock Biogeoclimatic Zone. The hydroclimatic regime of the Leech is pluvial (i.e. rain-dominated). Annual rainfall is typically between xxxx - yyyy mm (~2500 mm/yr). This areas has a strong seasonal distribution of rainfall: approximately 90% of rain falls from September to April, with only about 10% of annual rainfall occurring from May to August [*REFS*]. Across the Leech, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. While the majority of precipitaiton falls as rain, snow does accumulate for short periods at higher elevations. 
 
