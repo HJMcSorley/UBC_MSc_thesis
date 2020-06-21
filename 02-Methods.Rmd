@@ -1,6 +1,5 @@
 ---
 output: bookdown::word_document2
-tables: true
 ---
 
 ```{r methods-setup, include=FALSE}
@@ -142,7 +141,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 	
-###   Analytical techniques & data
+###   Analytical techniques & data handling
 
 Water samples were collected and transported in coolers with ice to UBC's EcoHydrology Lab (Earth Science Building) for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentration below detectable limits (0.1 mg/L). 
 
@@ -172,6 +171,8 @@ Spectral slopes over the wavelength range of 275-295 nm (S~275-295~) and 350-400
 #### Quality Assurance & Quality Control
 
 UBC based laboratory QA/QC included analysis of blanks and replicate samples. A calibration curve was generated for the Shimadzu TOC-V each time the zero-air gas cylinder was replaced and accuracy was ensured with analysis of calibration verification standards. Analytical accuracy was determined to be 3.7% based on analysis of 20 calibration verification standards included throughout sample analyses.
+
+The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, unfiltered water samples that had detectable turbidity (greater than 0.000 FTU) were removed from data analysis; this reduced the spectral dataset by 9.5%.
 
 #####    Siphon sampler assumptions: vertical rack sampling 
 
