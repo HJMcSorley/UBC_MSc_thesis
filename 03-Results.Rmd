@@ -225,7 +225,7 @@ Sampling of the six research sites was achieved through a combination of vertica
 
 ```{r SixDOCsummarySampleType}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Sample type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
+  knitr::kable(col.names = c("Site", "Sample type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"),
                digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
                caption = "*Summary of DOC across the six LWSA installation sites including breakdown of sample type collected.*")
 ```
@@ -250,7 +250,7 @@ As the Leech River Tunnel will be the point of diversion for future inter-basin 
 
 ```{r subbasinDOCtunnelint}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "Stdev (± mg/L DOC)", "RSD (± %)", "Min.(mg/L)", "Median (mg/L)", "Max.(mg/L)"),
+  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "Stdev (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"),
                digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
                caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type.*")
 ```
@@ -273,64 +273,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.c
 
 \  
 
-####   Spatiotemporal synchrony in local extrema: river stage and DOC
-
-Streams responded harmoniously to precipitation across the LWSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC? Aqueous DOC was quantified from discrete river samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. Each river sample was matched to stage and had a corresponding time-stamp, therefore temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. 
-
-?
-If peak DOC consistently corresponded to peak sample stage, and low DOC consistently corresponded to low stage, it could be inferred that DOC fluctuated with similar synchrony to stage. That is, if DOC extrema were in synch with stage extrema at each site -- and stage is know to vary synchronously across the LWSA -- then we can assume that DOC follows the same trends across the LWSA.      
-?
-
-To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?). Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
-
-\  
-
-```{r synchDOCstage}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,3,3),
-               caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
-```
-
-\  
-
-The majority of samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each sites samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrama samples with stage at each site.
-
-\  
-
-```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:extremaplot} *Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
-```
-
-\  
-
-To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis (highlighted in Figure \@ref(fig:extremaplot) and expanded in Figure \@ref(fig:subsetExtremaplot)). The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.  
-
-\  
-
-```{r subbsetWilcox}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,0,4),
-               caption = "*p-values from Wilcoxon tests comparing the subset of rain events 10-12 and those samples' DOC results to all other sampled rain events, showing no significant difference between the groups.*")
-```
-
-\  
-
-```{r subsetExtremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subsetExtremaplot} *Stage and samples collected for the subset of samples collected over rain events 9-12, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png")
-```
-
-\
-
-... _THIS SECTION IS UNDER CONSTRUCTION_ ...
-
-* time to peak
-* range of DOC in each event
-
-
 #### Temporal trends in DOC: seasonality
 
 Over the study period, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. 
@@ -338,7 +280,7 @@ Over the study period, DOC concentrations followed similar trends across each of
 \  
 
 ```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 367: 166 grab samples, 201 vertical rack samples.*"
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
 ```
@@ -357,69 +299,27 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-sub
 
 \  
 
-```{r seasonalSubbasinRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalSubbasinRidge} *Density distribution of dissolved organic carbon concentrations at six sites over sixteen months across the Leech water supply area, where sample results are grouped by dry season (n = 53) and wet season (n = 314).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin-ridgeplot.png")
-```
-
-\  
-
-##### Wet season
-
-The wet season was better represented (more samples) than the dry and therefore more interesting in terms of DOC concentration patterns, and with respect to water supply, the wet season is more relevant because that is when flows would be great enough to divert water for inter-basin transfer. 
-
-
-
-#### Stormflow representation
-
-During the wet season, rain events are the dominant hydrologic forcing. Table \@ref(tab:wetSeasonSubbainsSamples) summarizes the number of samples collected across the LWSA sub-basin sites by sample type. 
-
-\  
-
-```{r wetSeasonSubbainsSamples}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_wet-season_subbasins-SampleCount.csv", 
-         col_names = TRUE) %>%
-  knitr::kable(col.names = c("Site", "Sample type", "Count"),
-               caption = "*Summary of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
-```
-
-\  
-
-Stormflow samples collected during stream rise via vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox) & \@ref(fig:subbasinSampletypeRidge)). Results of wet-season sample analysis are summarized in Table \@ref(tab:wetSeasonSubbainDOC).
+The wet season was better represented (more samples) than the dry and therefore more interesting in terms of DOC concentration patterns, and the wet season is more relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows also showed increased DOC concentrations. Stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
 
 \  
 
 ```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
+fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 109) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 170).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
 ```
 
 \  
 
-```{r subbasinSampletypeRidge, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinSampletypeRidge} *Density distribution of dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 114) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 200).*"
+####   Spatiotemporal synchrony in local extrema: river stage and DOC
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin-ridgeplot_GvsR.png")
-```
+Streams responded harmoniously to precipitation across the LWSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC or spectral properties? Aqueous DOC was quantified from discrete river samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. 
 
-\  
+\
 
-```{r wetSeasonSubbainDOC}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", 
-         col_names = TRUE) %>%
-  knitr::kable(col.names = c("Site", "Sample type", "DOC mean (mg/L)", 
-                             "std.dev. (± mg/L)", "RSD (±%)", "min DOC", "max DOC"),
-               digits = c(0, 0, 1, 1, 0, 2, 2),
-               caption = "*Results of wet-season samples collected across LWSA subbasin sites from Oct 2018 to Feb 2020*")
-```
+* rising limb DOC (unsure if this is helpful)
 
-\  
-
-### Rising limb -- hydrologic versus supply controls on export
-
-Figure \@ref(fig:RisingLimbPlot) shows rising limb sample DOC concentrations across rain events at the LWSA sub-basins. While there was a typically some increase in DOC with increasing river stage, seasonality appeared to have a greater influence on DOC concentrations than river rise (highest DOC early in the wet season). 
+_Figure \@ref(fig:RisingLimbPlot) shows rising limb sample DOC concentrations across rain events at the LWSA sub-basins. While there was a typically some increase in DOC with increasing river stage, seasonality appeared to have a greater influence on DOC concentrations than river rise (highest DOC early in the wet season)._ 
 
 ```{r RisingLimbPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:RisingLimbPlot} *DOC concentration trends in rising limb samples categorized by rain events*"
@@ -428,6 +328,118 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.
 ```
 
 \  
+
+* _this is good though_:
+
+Each river sample was matched to stage and had a corresponding time-stamp, therefore temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?). Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
+
+\  
+
+```{r synchDOCstage}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,3,3),
+               caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
+```
+
+\  
+
+The majority of samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each sites samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrema samples with stage at each site.
+
+\  
+
+```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:extremaplot} *Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
+```
+
+\  
+
+* _needs work:_ 
+* Rates of stream response (times to peak): \@ref(tab:stageResponse)
+
+\  
+
+```{r stageResponse}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
+               caption = "*Summary of stream response to precipitation events across the LWSA.*")
+```
+
+\  
+
+* DOC changes in stormflow
+* range of DOC in each event: \@ref(tab:DOCResponse) 
+
+\  
+
+```{r DOCResponse}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "lowest DOC in stormflow (mg/L)", "highest DOC in stormflow (mg/L)", 
+                             "smallest change in DOC (mg/L)", "largest change in DOC (mg/L)", "smallest difference in DOC during stormflow (%)", "largest difference in DOC during stormflow (%)"),
+               caption = "*Summary of DOC changes within stormflow response to precipitation events across the LWSA (samples from wet season only).*")
+```
+
+\
+
+To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis (highlighted in Figure \@ref(fig:extremaplot) and expanded in Figure \@ref(fig:subsetExtremaplot)). The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.
+
+\  
+
+```{r subbsetWilcox}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,4),
+               caption = "*p-values from Wilcoxon tests comparing the subset of rain events 10-12 and those samples' DOC results to all other sampled rain events, showing no significant difference between the groups.*")
+```
+
+\  
+
+* Rates of stream response (times to peak): \@ref(tab:stageResponsesubset)
+
+\  
+
+```{r stageResponsesubset}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "max. rain intensity (mm/hr)", "min. rain intensity (mm/hr)", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
+               caption = "*Summary of stream response to precipitation events 10-12 across the LWSA.*")
+```
+
+\  
+
+* DOC changes in stormflow
+* range of DOC in each event: \@ref(tab:DOCResponsesubset) 
+
+\  
+
+```{r DOCResponsesubset}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary_subset.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "lowest DOC in stormflow (mg/L)", "highest DOC in stormflow (mg/L)", 
+                             "smallest change in DOC (mg/L)", "largest change in DOC (mg/L)", "smallest difference in DOC during stormflow (%)", "largest difference in DOC during stormflow (%)"),
+               caption = "*Summary of DOC changes within stormflow response to precipitation events 10-12 across the LWSA.*")
+```
+
+\  
+
+```{r subsetExtremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subsetExtremaplot} *Stage and samples collected for the subset of samples collected over rain events 9-12, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png")
+```
+
+\  
+
+* density plots of stage with DOC, UV~254~ and SUVA~254 for each site: \@ref(fig:stageDOCdensityscatter) 
+
+```{r stageDOCdensityscatter, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:stageDOCdensityscatter} *Two dimensional density distributions of normalized stage in relation to DOC concentration and DOM molecular character parameters.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png")
+```
+
 
 ### Synoptic Sampling
 
@@ -487,7 +499,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUV
 \  
 
 
-## Random Forests
+___Random Forests___
 
-* in progress
+* in progress -- 
+
+```{r, include=FALSE}
+# empty placeholder
+```
 

@@ -1733,6 +1733,16 @@ error_spectrolyser <- b %>% pull(error_percent)
 error_overall <- (error_shimadzu + error_spectrolyser)/2
 
 # add replicate analysis for rep samples
+# ... modify this 
+sixfilter %>%
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample == "R1" | sample == "R2" | sample == "R3" | sample == "R4" | sample == "R5",# no reps
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+         NPOC_ppm != 0)
 
 ```
 
@@ -2187,65 +2197,14 @@ Levenes_summary_stage <- tibble::tibble(
 
 ```
 
-trash? peak stage by event & site
-Don't really know what to do with this...
-```
-# isolate max for each site by year
-max_stage <- stage_samples %>%
-  filter(!is.na(DateTime)) %>% 
-  mutate(year = lubridate::year(DateTime)) %>% 
-  select(c(site, year, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
-  group_by(site, year) %>% 
-  slice(which.max(corr_stage_cm))
 
-# determine the rate of stage rise for each event at each site
-# odyssey_data
-
-# note: Tunnel was not installed & recording until "2018-12-06 19:30:00"
-# to check for synchrony, all timesteps should be of equal length
-
-# summarize max and min with timesteps for each site
-stepped_normStage <- odyssey_norm %>% 
-  mutate(Date = as_date(DateTime)) %>% # add a Date 
-  mutate(rain_season = case_when( # some are seasons missing, fix that:
-    Date < "2018-10-27" ~ "wet",
-    event_ID %in% 1:8 ~ "wet",   
-    Date %within% interval("2019-01-20", "2019-03-01") ~ "wet",
-    Date %within% interval("2019-03-01", "2019-04-30") ~ "wet", # snow",
-    Date %within% interval("2019-05-01", "2019-09-12") ~ "dry",
-    event_ID %in% 9:18 ~ "wet")) %>% 
-  # isolate span of Tunnel logger life
-  filter(DateTime >= "2018-12-06 19:30:00", DateTime <= "2020-02-01 02:30:00") %>%  
-  select(c(site = source, event_ID, corr_stage_cm, norm_stg, DateTime)) %>% 
-  #filter(!is.na(event_ID)) %>% 
-  group_by(site) %>%
-  mutate(timestep = row_number(DateTime)) %>%  # each site gets timesteps
-  ungroup() 
-
-
-# find peak for stage
-pks_stage <- stepped_normStage %>% 
-  group_by(site, event_ID) %>%
-  summarise(DateTime_peak_stage = DateTime[which.max(norm_stg)],
-            timestep_peak_stage = timestep[which.max(norm_stg)],
-            peak_stage = max(norm_stg))
-# reshape to wide (for visual inspection)
-pks_stage_wide <- pks_stage %>%
-  filter(!is.na(event_ID)) %>% 
-  select(-c(DateTime_peak_stage, peak_stage)) %>% 
-  pivot_wider(names_from = site,
-              values_from = c(timestep_peak_stage)) %>% 
-  mutate(LHtoT = Tunnel - LeechHead,
-         CtoT = Tunnel - CraggCrk,
-         WtoT = Tunnel - WestLeech)
-
-```
 
 ### plot density of stage (norm) + sample results 
 ```{r}
 # min-max normalized stage data 
 # (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
 stage_samples_norm <- stage_samples %>%
+  filter(QAQC_flag == "OK") %>% 
   group_by(site) %>% 
   dplyr::mutate(norm_stg = (corr_stage_cm - min(corr_stage_cm))/(max(corr_stage_cm) - min(corr_stage_cm))) %>% 
   ungroup() %>% 
@@ -2303,7 +2262,7 @@ s <- stage_samples_norm %>%
 cowplot::plot_grid(d,u,s, ncol = 3)
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
-       width = 6, height = 8, units = "in")
+       width = 6, height = 7, units = "in")
 
 ```
 
@@ -2377,6 +2336,9 @@ trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.PO
 # event times need to be in ten-min intervals to match with stage_sample
 event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
 event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
+
+# event IDs for labels
+event_ID_labels <- events$ID 
 
 ```
 
@@ -3040,39 +3002,208 @@ full_join(maxima_tibble, minima_tibble) %>%
 
 ```
 
-##### !!?run the same tests on narrower sample group
-```{r}
-# subset for narrower window of well-sampled rain events -- not very useful?
-# trips 17-18* & 19-20 collected racks for all and 2 grabs on falling limb
-## *note that trip 18 had a major fall algae bloom in Cragg Crk (remove sample = Algae)
-## note that trip 21 exists only for CraggCrk and was actually a rain event that occured on trip 20 between first and second visit to site 4 
-# trips: 17-21 --> event_ID: 10-12
 
-# narrow window by site
-coincident_proportion_narrow_sites <- coincident_peaks %>% 
-  #filter(event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
-  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) %>%
+### Stage response
+
+* find peaks for stage for each event
+* calculate time to peak for each storm
+* calculate magnitude of stage cahnge
+* calculate rate of stream response 
+
+```{r}
+# isolate max for each site by event
+max_stage <- stage_samples %>%
+  filter(!is.na(DateTime)) %>% 
+  select(c(site, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
+  group_by(site, event_ID) %>% 
+  slice(which.max(corr_stage_cm)) %>% 
+  rename(DateTime_stage_max = "DateTime",
+         stage_max = "corr_stage_cm")
+# minimum stage
+min_stage <- stage_samples %>%
+  filter(!is.na(DateTime)) %>% 
+  select(c(site, trip = "interval", DateTime, corr_stage_cm, event_ID)) %>% 
+  group_by(site, event_ID) %>% 
+  slice(which.min(corr_stage_cm))%>% 
+  rename(DateTime_stage_min = "DateTime",
+         stage_min = "corr_stage_cm")
+
+# join and calculate time to peak / magnitude of stage change / rate of response
+stage_response <- full_join(max_stage, min_stage, by = c("site", "trip", "event_ID")) %>% 
+  ungroup() %>% 
+  mutate(time_to_peak_hr = as.double(difftime(DateTime_stage_max, DateTime_stage_min, units = "hours")),
+         stage_change_cm = (stage_max - stage_min),
+         stage_response_cmhr = (stage_change_cm)/time_to_peak_hr) %>% 
   group_by(site) %>% 
-  summarise(sample_count = length(which(coincident_sample == TRUE | coincident_sample == FALSE)),
-            sample_match_true = length(which(coincident_sample == TRUE)),
-            npoc_count = length(which(coincident_DOC == TRUE | coincident_DOC == FALSE)),
-            npoc_match_true = length(which(coincident_DOC == TRUE)),
-            stage_count = length(which(coincident_stage == TRUE | coincident_stage == FALSE)),
-            stage_match_true = length(which(coincident_stage==TRUE))) %>%
-  group_by(site) %>%
-  summarise(common_sample = (sample_match_true/sample_count),
-            common_npoc = (npoc_match_true/npoc_count),
-            common_stage = (stage_match_true/stage_count))
-# all sites together
-coincident_proportion_narrow_all <- coincident_proportion_narrow_sites %>% 
-  summarise(common_sample = mean(common_sample),
-            common_npoc = mean(common_npoc),
-            common_stage = mean(common_stage))
-# check them out (not very interesting)
-coincident_proportion_narrow_sites
-coincident_proportion_narrow_all
+  # add the rain events summary
+  left_join(., (majEvents_summary %>% 
+                select(ID, intensity_mmhr) ), by = c("event_ID" = "ID")  )
+
+
+# summarize all
+stage_response %>% 
+  ungroup() %>% 
+  filter(!is.na(stage_change_cm), time_to_peak_hr > 0) %>%
+  select(c(site, stage_max, stage_min, time_to_peak_hr, stage_change_cm, stage_response_cmhr)) %>% 
+  group_by(site) %>% 
+  summarise_all(list(~mean(.), ~sd(.), ~max(.), ~min(.))) %>% 
+  select(c(site,  
+           time_to_peak_hr_min, time_to_peak_hr_max,  
+           stage_change_cm_min, stage_change_cm_max,  
+           stage_response_cmhr_min, stage_response_cmhr_max)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv")
+
+
+# plot rate of stream response with storm intensity -- not very interesting
+stage_response %>%
+  mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+  filter(!is.na(event_ID), event_ID != 17, event_ID != 18) %>% 
+  ggplot(aes(x = intensity_mmhr, y = stage_response_mmhr))+
+  geom_point(aes(colour = site)) +
+  theme_bw()+
+  theme(legend.position = "top")+
+  scale_color_brewer(palette = "Dark2")
+
+# join to stage data to check visually -- stage plot with max and min
+left_join(odyssey_data, max_stage, by = c("source" = "site", "interval" = "trip", "event_ID", "DateTime" = "DateTime_stage_max")) %>% 
+  left_join(min_stage, by = c("source" = "site", "interval" = "trip", "event_ID", "DateTime" = "DateTime_stage_min")) %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm))+
+  geom_point(aes(y = stage_max), shape = 21, fill = "red", na.rm = TRUE)+
+  geom_point(aes(y = stage_min), shape = 21, fill = "blue",  na.rm = TRUE)+
+  theme_bw()+
+  facet_wrap(~source, ncol = 1, strip.position = "right", scales = "free_y")+
+  labs(x = "", y = "River Stage (cm)")
 
 ```
+
+### magnitude of DOC change
+
+calculate percent difference within storm flow 
+
+diff = max[DOC] - min[DOC] = magnitude of change
+
+percent difference = [diff/((max+min)/2)]*100
+
+```{r}
+# calculate difference
+max_DOC <- sixfilter %>%
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+         NPOC_ppm != 0) %>%  # drop NAs
+  select(c(site, trip, event_ID, DateTime_sampled, NPOC_ppm)) %>% 
+  group_by(site, event_ID) %>% 
+  slice(which.max(NPOC_ppm)) %>% 
+  rename(DateTime_DOC_max = DateTime_sampled,
+         DOC_max = NPOC_ppm)
+
+# minimum DOC
+min_DOC <- sixfilter %>%
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+         NPOC_ppm != 0) %>%  # drop NAs
+  select(c(site, trip, event_ID, DateTime_sampled, NPOC_ppm)) %>% 
+  group_by(site, event_ID) %>% 
+  slice(which.min(NPOC_ppm)) %>% 
+  rename(DateTime_DOC_min = DateTime_sampled,
+         DOC_min = NPOC_ppm)
+
+# join and calculate magnitude of change (DOC diff) / percent difference
+DOC_change <- full_join(max_DOC, min_DOC, by = c("site", "trip", "event_ID")) %>% 
+  ungroup() %>% 
+  group_by(site) %>% 
+  mutate(time_to_max_hr = as.double(difftime(DateTime_DOC_max, DateTime_DOC_min, units = "hours")),
+         DOC_change_mgL = DOC_max - DOC_min,
+         DOC_percentDiff = DOC_change_mgL/((DOC_max+DOC_min)/2)*100 ) %>% 
+  # filter out single sample events and NULL values
+  filter(!is.na(DOC_change_mgL), DOC_change_mgL != 0)
+
+# summarize all
+DOC_change %>% 
+  ungroup() %>% 
+  select(c(site, DOC_max, DOC_min, DOC_change_mgL, DOC_percentDiff)) %>% 
+  group_by(site) %>% 
+  summarise_all(list(~max(.), ~min(.))) %>% 
+  select(c(site,  
+           DOC_min_min, DOC_max_max,  
+           DOC_change_mgL_min, DOC_change_mgL_max,  
+           DOC_percentDiff_min, DOC_percentDiff_max)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv")
+
+
+
+# --- I'm not sure how useful this is:
+
+# join the DOC slice set to stage and filter for empty and missing or null values
+response_full <- left_join(DOC_change, stage_response, by = c("site", "trip", "event_ID")) %>% 
+  filter(!is.na(DOC_change_mgL), !is.na(time_to_peak_hr), DOC_change_mgL != 0) %>% 
+  select(c(site, trip, event_ID, rain_intensity_mmhr = "intensity_mmhr", 
+           DOC_change_mgL, DOC_percentDiff, 
+           time_to_peakStage_hr = "time_to_peak_hr", stage_change_cm)) %>% 
+  ungroup()
+
+# summarize 
+response_full %>% 
+  select(-c(site, trip)) %>% 
+  group_by(event_ID) %>% 
+  summarize_all(list(mean = mean)) %>% 
+  mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+  arrange(event_ID)
+
+```
+
+#### subset
+```{r}
+# repeat the above for the subset samples
+
+# subset stage response
+stage_response_subset <- stage_response %>% 
+  ungroup() %>% 
+  filter(!is.na(stage_change_cm), time_to_peak_hr > 0,
+         event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>%
+  select(c(site, event_ID, intensity_mmhr, stage_max, stage_min, time_to_peak_hr, stage_change_cm, stage_response_cmhr)) %>% 
+  group_by(site) %>% 
+  summarise_all(list(~max(.), ~min(.))) %>% 
+  select(c(site, intensity_mmhr_min, intensity_mmhr_max,   
+           time_to_peak_hr_min, time_to_peak_hr_max,  
+           stage_change_cm_min, stage_change_cm_max,  
+           stage_response_cmhr_min, stage_response_cmhr_max)) %>% 
+  ungroup() %>% 
+  #mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+  arrange(site) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.csv")
+
+# subset DOC differences
+DOC_response_subset <- DOC_change %>% 
+  ungroup() %>% 
+  filter(event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
+  select(c(site, DOC_max, DOC_min, DOC_change_mgL, DOC_percentDiff)) %>% 
+  group_by(site) %>% 
+  summarise_all(list(~max(.), ~min(.))) %>% 
+  select(c(site,   
+           DOC_min_min, DOC_max_max,  
+           DOC_change_mgL_min, DOC_change_mgL_max,  
+           DOC_percentDiff_min, DOC_percentDiff_max)) %>%
+  #mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+  arrange(site) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary_subset.csv")
+
+
+```
+
+
+
+Subset grouping --- not sure this is necessary
 
 plot peak-DOC w/ stage-samples 
 
@@ -3093,7 +3224,7 @@ peaksss1 <- stage_samples %>%
   summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
             sample = sample[which.max(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
-  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
+  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample",  "event_ID")) %>% 
   arrange(DateTime) %>% ungroup()
 
 # Minima joined to Maxima for full extrema set
@@ -3110,18 +3241,25 @@ peaksss <- stage_samples %>%
   summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
             sample = sample[which.min(NPOC_ppm)],
             sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
-  full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample")) %>% 
+  full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample", "event_ID")) %>% 
   arrange(DateTime) %>% 
   ungroup()
 
 # -----
 # trip 17-21 -- stage and samples at each site by sampling event
+subset_event_starts <- (events %>% filter(ID == 9 | ID == 10 | ID == 11 | ID == 12))$StartDate
+  
+# plot
 peaksss %>% 
   filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) %>%
   ggplot(aes(x = DateTime))+
   #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+
   #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
-  #geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # events start
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(subset_event_starts), size = 0.65, show.legend = TRUE)+ # events start
+  
+  #annotate("text", x = c(subset_event_starts), y = 60, label = c("9", "10", "11", "12")) +
+  
   geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
   theme_bw()+
   geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), 
@@ -3201,7 +3339,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png",
 ```
 
 
-similarity tests:
+subset similarity tests:
 
 how did events 17-21 compare to other sampled events, is this subset representative?
 ```{r}
@@ -3397,11 +3535,7 @@ narrow_results %>%
 
 ```
 
-****** 
-calcualte time to peak for stage
-calculate percent change within storm flow 
 
-percent difference = [(max-min)/((max+min)/2)]*100
 
 ## Seasonal Sample Method
 
@@ -3436,7 +3570,7 @@ sixfilter %>%
 
 ### wet season only
 
-# sample counts and DOC mean/min/max (wet season only)
+sample counts and DOC mean/min/max (wet season only)
 ```{r}
 # --- wet season only
 # how many of each sample_type are there at the 6 main sites?
@@ -3536,14 +3670,15 @@ sixfilter %>%
   scale_fill_brewer(palette="Set2") +
   theme_bw() +
   theme(legend.position = "none",
-        axis.text.x = element_text(angle = 60, hjust = 1),
+        axis.text.x = element_text(angle = 40, hjust = 1),
         text = element_text(size = 12)) +
   facet_wrap(~sample_type, ncol = 2, nrow = 1,
              labeller = labeller(sample_type = label)) +  
   labs(#caption = (glue::glue("DOC concentration by sample type and site during wet season \n Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})")), 
     x = "", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png") 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png",
+       width = 5, height = 3.5, unit = "in") 
 
 ```
 
@@ -3573,7 +3708,6 @@ sixfilter %>%
   dplyr::filter(sample_type == "Grab", sample == "Grab") %>%
   group_by(rain_season) %>% 
   summarize(n = n())
-
 
 # density ridge 
 # wrap by sample_type -- dry season only
@@ -3610,8 +3744,8 @@ sixfilter %>%
   theme_bw() +
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 45, hjust = 1))+
-  facet_wrap(~rain_season, ncol = 2, nrow = 1,
-             labeller = labeller(rain_season = label)) +  
+  facet_wrap(~rain_season, #labeller = labeller(rain_season = label),
+  ncol = 2, nrow = 1) +  
   labs(x = "", y = "DOC (mg/L)")
 
 # save
@@ -3653,7 +3787,7 @@ DOC_rack_trends_lm <- sixfilter %>%
 ```{r, rackDOC}
 # rising limb
 sixfilter %>% 
-  filter(sample_type == "Rack") %>%
+  filter(sample_type == "Rack", rain_season == "wet") %>%
   filter(event_ID != "NA") %>% 
   group_by(site, event_ID) %>% 
   mutate(RisingLimb = NumberXtract(sample),
@@ -3675,9 +3809,32 @@ sixfilter %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
        height = 8, width = 6, unit ="in")
 
+
+# what if x axis was event rather than time?
+# rising limb
+sixfilter %>% 
+  filter(sample_type == "Rack") %>%
+  filter(event_ID != "NA") %>% 
+  group_by(site, event_ID) %>% 
+  mutate(RisingLimb = NumberXtract(sample),
+         RisingLimb = factor(RisingLimb, levels = c(1:9))) %>%
+  ggplot(aes(x = event_ID, y = RisingLimb))+
+  geom_point(aes(colour = NPOC_ppm, size = NPOC_ppm))+
+  #scale_size_continuous(breaks = c(2, 6, 10, 14, 18), values = c(1,2,3,4,5))+ # ???
+  scale_colour_viridis(option = "plasma")+
+  theme_bw()+
+  theme(#axis.text.x = element_text(angle = 45, hjust = 1),
+        text = element_text(size = 11),
+        legend.position = "top")+
+  labs(y = "Sampling Rack Position", x = "Rain event ID", size = "DOC (mg/L):", colour = "")+
+  facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")
+#+
+ # guides(size = guide_legend("DOC (mg/L)"), colour = guide_legend("DOC (mg/L)"))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
+       height = 7, width = 5, unit ="in")
 ```
-
-
 
 
 # SYNOPTIC
