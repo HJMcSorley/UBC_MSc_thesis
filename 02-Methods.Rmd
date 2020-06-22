@@ -25,7 +25,7 @@ The Leech River watershed is a sub-catchment of the Sooke River watershed, locat
 \  
 
 ```{r GVWSAoverview, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "*Overview of the Leech and Sooke Water Supply Areas (Greater Victoria, CRD), located on southeastern Vancouver Island, British Columbia, Canada. Bottom image of Canada and inset of Vancouver Island were screenshots from the app 'Windy' (Prague, Czechia, EU); map of the water supply areas (top) was generated in QGIS.*"
+fig_cap = "*Overview of the Leech and Sooke Water Supply Areas (Greater Victoria, CRD), located on southeastern Vancouver Island, British Columbia, Canada. The overveiw of Canada illustrates precipitation of an atmospheric river event common to the west coast. The map (top) was generated in QGIS, and the image of Canada (bottom) and inset of Vancouver Island are screenshots from the Windy app (Windy.com).*"
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview_colour.png")
 ```
