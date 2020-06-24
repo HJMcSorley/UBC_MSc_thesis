@@ -1,0 +1,7 @@
+site,latitude,longitude,strahler_order,drainage_area_km2,elevation_masl,forest_percent,wetland_percent,openWater_percent,geo_WarkGneiss_percent,geo_ArgilliteMetagreywacke_percent,geo_ChertArgilliteVolcanic_percent,geo_Metagreywacke_percent,geo_MetchosinVolcanics_percent,geo_SookeGabbro_percent,slope_med_degrees,slope_max_degrees,1980s_logging_percent,1990s_logging_percent,2000s_logging_percent,2010and2011_logging_percent
+Weeks ,48.57567885,-123.8455689,3,11.5,521,94.5,4.2,2.9,13.64884368,64.15379846,22.19735789,0,0,0,8,44,11.2,11.7,4.5,0.6
+ChrisCrk,48.577394,-123.840265,3,5.9,522,99,0.8,0.6,44.91210382,1.58E-06,55.08789433,0,0,0,10,38,56.3,3,3.4,0
+LeechHead,48.566468,-123.825671,4,20.6,476,96.6,2.6,1.8,20.52422078,42.05276823,37.42301101,0,0,0,9,50,28.6,9.6,4.1,0.4
+CraggCrk,48.5478274,-123.7710629,4,28.1,509,97.8,1.6,0.9,77.61759518,0,22.38240484,0,0,0,9,40,30.8,8.7,1.1,0.7
+WestLeech,48.50688101,-123.7846764,4,20.9,248,98.5,0.4,0.3,0,76.84851894,0,7.154807449,15.99667362,0,9,56,21.6,3,1.1,0.1
+Tunnel,48.50701281,-123.7674148,5,95.3,207,97.6,1.1,0.7,30.62618077,45.0670291,17.85063496,1.565472941,4.217131033,0.673551183,10,61,24.2,5.9,2.9,0.9

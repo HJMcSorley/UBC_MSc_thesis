@@ -128,7 +128,10 @@ precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-
 # LWSA mean precip data (FWx-mean-LWSA df)
 # 2018-2020 weather station data compiled and formatted
 LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE, col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
-  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))    
+  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))  %>% 
+  distinct(DateTime, .keep_all = TRUE) # I guess I ended up with duplicate rows, woops.
+# resave this one:
+#  write_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE)
 
 
 # rain events defined with Rainmaker::RMevents()
@@ -319,17 +322,15 @@ precip_data %>%
 ### Mean Wx LWSA 
 
 Arithmetic means from ChrisCrk and MartinsGulch.
-*Too few stations to do Theissen polygons (2 point polygon = straight line) or isohyetal lines.*
-
 ```{r}
 # add seasons to mean weather df
 LWSA_meanWx <- precip_data %>% 
-  select(DateTime, rain_season) %>% 
+  select(DateTime, rain_season) %>%  # just to get rainseason from precip_data df
   right_join(LWSA_meanWx, by = "DateTime") %>% 
   mutate(Year = lubridate::year(DateTime),
          year = case_when(Year == 2018 ~ "2018",
                           Year == 2019 ~ "2019",
-                          Year == 2020 ~ "Jan-Feb 2020")) 
+                          Year == 2020 ~ "Jan-Feb 2020"))
 
 # check seasons visually
 a <- LWSA_meanWx %>% 
@@ -1221,7 +1222,7 @@ Wilcoxon tests
 
 # density distribution normality 
 # NPOC
-HT %>% 
+a <- HT %>% 
   ggplot(aes(NPOC_ppm))+
   geom_density(aes(colour = HoldTime_set))+
   theme_bw()+
@@ -1230,11 +1231,11 @@ HT %>%
              nrow = 3,
              scales = "free_y")
 # QQ plot
-ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
+aa <- ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
                  color = "HoldTime_set")
 
 # Tests UV254 abs for normality 
-HT %>% 
+b <- HT %>% 
   ggplot(aes(SAC254_Abs.m))+
   geom_density(aes(colour = HoldTime_set))+
   theme_bw()+
@@ -1243,11 +1244,11 @@ HT %>%
              nrow = 3,
              scales = "free_y")
 # QQ plot
-ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
+bb <- ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
                  color = "HoldTime_set")
 
 # Tests DOC estimate abs for normality 
-HT %>% 
+c <- HT %>% 
   ggplot(aes(DOCeq_ppm))+
   geom_density(aes(colour = HoldTime_set))+
   theme_bw()+
@@ -1256,7 +1257,7 @@ HT %>%
              nrow = 3,
              scales = "free_y")
 # QQ plot
-ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
+cc <- ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
                  color = "HoldTime_set")
 # ---
 # Wilcoxon tests (not normally distributed + small sample size)
@@ -1295,9 +1296,6 @@ HT_Wilcoxon_tests <- bind_rows(
                               p.value < 0.1 ~ "*",
                               p.value > 0.1 ~ "NA")) 
 
-## view
-# HT_Wilcoxon_tests
-# cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6)) 
 
 ```
 
@@ -1518,18 +1516,6 @@ error_spectrolyser <- b %>% pull(error_percent)
 
 # average percent error from both methods:
 error_overall <- (error_shimadzu + error_spectrolyser)/2
-
-# add replicate analysis for rep samples
-# ... modify this 
-sixfilter %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-         sample_type == "Grab" | sample_type == "Rack", 
-         sample != "Algae",      # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK",      # remove samples with extended hold-time  
-         sample == "R1" | sample == "R2" | sample == "R3" | sample == "R4" | sample == "R5",# no reps
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
-         NPOC_ppm != 0)
 
 ```
 
@@ -1756,6 +1742,7 @@ stage_samples <- left_join(stage_samples, sixfilter) %>%
          sample_type = factor(sample_type),
          event_ID = factor(event_ID),
          rain_season = factor(rain_season))
+
 ```
 
 
@@ -2845,7 +2832,7 @@ stage_response %>%
 stage_response %>%
   mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
   filter(!is.na(event_ID), event_ID != 17, event_ID != 18) %>% 
-  ggplot(aes(x = intensity_mmhr, y = stage_response_mmhr))+
+  ggplot(aes(x = intensity_mmhr, y = stage_response_cmhr))+
   geom_point(aes(colour = site)) +
   theme_bw()+
   theme(legend.position = "top")+
@@ -3886,9 +3873,45 @@ sampleresults %>%
 # that's not very helpful
 ```
 
-# !!!! Random Forest
+# Random Forest
 ```{r}
+# first, calculate antecedent rain conditions at the cumulative rain for 7 days up to and including date sampled
+# NOTE this is not antecedent 'wetness' because it doesn't account for snow or snowmelt
 
+# get daily mean rain
+antecedent_7day_Wx <- LWSA_meanWx %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(daily_rain = sum(Rn15_mean, na.rm = TRUE),
+            daily_mean_T = mean(Temp_mean, na.rm = TRUE)) %>%  # temp too, why not
+  ungroup() %>% 
+  arrange(Date) %>% 
+  # add a 7 day antecedent rain for each day
+  mutate(antecedent_7day_rain = as.double(zoo::rollsum(daily_rain, k = 7, align = "right", fill = NA)),
+         antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA)))
+  # note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
+
+# add samples to this and then calculate the total rain for week up to sample
+sixfilter <- sixfilter %>% 
+  filter(!is.na(analysis)) %>% # drop enply TOC samples (unfiltered on shimadzu)
+  select(-c(Date, two_seasons, corr_stage_cm)) %>% # drop un-needed items 
+  group_by(site, trip, sample) %>% 
+  left_join(., antecedent_7day_Wx, by = c("Date_sampled" = "Date")) %>% ungroup() %>%  group_by(site)
+
+# add all the watershed characteristics for each site
+physiographic <- read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics_RandomForests.csv", 
+                          col_names = TRUE) %>% 
+  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
+
+# combine
+sixfilter_physiographic <- left_join(sixfilter, physiographic, by = c("site")) %>%
+  filter(QAQC_flag == "OK") %>% 
+  # filter so all that's left is NPOC and any predictor variables
+  select(c(NPOC_ppm, DateTime_sampled, rain_season, site_type, sample_type, sample, sampleStage_cm, antecedent_7day_rain, antecedent_7day_temp, latitude, longitude, strahler_order, drainage_area_km2, elevation_masl, forest_percent, wetland_percent, openWater_percent, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent, slope_med_degrees, slope_max_degrees, "1980s_logging_percent", "1990s_logging_percent", "2000s_logging_percent", "2010and2011_logging_percent"))
+
+# feed it into RandomForests with NPOC_ppm as the dependent variable
+RandoFrst_NPOC <- randomForest::randomForest(y = NPOC_ppm, data = sixfilter_physiographic, na.action=na.roughfix)
+  
 ```
 
 # APPENDIX PLOTS
@@ -4341,10 +4364,26 @@ b <- treatdat_long %>%
 cowplot::plot_grid(a, b, ncol = 2, align = "h") 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
-       width = 7, height = 9, units = "in")
+       width = 6, height = 8, units = "in")
 ```
 
 # end
+
+```{r}
+# empty code chunk
+# sometimes RStudio cuts off the last bit of the view, this holds place :)
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
