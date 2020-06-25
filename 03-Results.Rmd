@@ -9,7 +9,7 @@ library(tidyverse)  # keep it tidy
 library(readr)      # read in delimited files
 library(knitr)      # for nice tables
 
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
@@ -217,10 +217,30 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasi
 
 \ 
 
-####    Spatial and temporal variance and synchrony in river stage
+####    River response: spatial and temporal variance and synchrony in stage 
 
 Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
+\  
+
+* _needs work:_ 
+* Rates of stream response (times to peak): \@ref(tab:stageResponse)
+
+\  
+
+```{r stageResponse}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
+               caption = "*Summary of stream response to precipitation events across the LWSA.*")
+```
+
+\  
+
+
+.
+.
+.
 
 
 #### Spatial variance in DOC concentrations
@@ -300,9 +320,9 @@ Overall, there was very little difference between mean DOC concentration through
 \  
 
 ```{r DOCseasonal, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry and wet seasons.*"
+fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry (n = 34) and wet (n = 90) seasons.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots_2.png")
 ```
 
 
@@ -367,20 +387,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-
 
 \  
 
+
+
 * _needs work:_ 
-* Rates of stream response (times to peak): \@ref(tab:stageResponse)
-
-\  
-
-```{r stageResponse}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = 1, 
-               col.names = c("site", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
-               caption = "*Summary of stream response to precipitation events across the LWSA.*")
-```
-
-\  
-
 * DOC changes in stormflow
 * range of DOC in each event: \@ref(tab:DOCResponse) 
 

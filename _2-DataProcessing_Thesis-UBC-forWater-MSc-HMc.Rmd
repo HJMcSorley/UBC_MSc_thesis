@@ -32,7 +32,8 @@ library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
 library(car)        # stats: Companion to Applied Regression
 library(synchrony)  # stats for autocorrelated & non-independent data :)
-#library(randomForest)
+library(randomForest)
+library(randomForestExplainer)
 
 ```
 
@@ -2622,8 +2623,7 @@ coincident_peaks <- sixfilter %>%
          sample != "Algae",      # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK",      # remove samples with extended hold-time  
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
-         NPOC_ppm != 0) %>%  # drop NAs
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm), NPOC_ppm != 0) %>%  # drop NAs
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Hobo_Tmean_airDaily)) %>% 
   mutate(sample = as.character(sample)) %>% 
   group_by(site, trip, event_ID) %>% 
@@ -3474,8 +3474,7 @@ sixfilter %>%
 
 ```
 
-
-#FIX THESE -- Remake the seaosnal boxplot (Fig 17 in draft)
+boxplot - seasonal 
 wet vs dry season (number of samples is so different)
 ```{r}
 # count samples
@@ -3485,50 +3484,26 @@ sixfilter %>%
   group_by(rain_season) %>% 
   summarize(n = n())
 
-# density ridge 
-# wrap by sample_type
+# wrap by sample_type with nice labels
 label <- c(dry = "Dry season grab samples", wet = "Wet season grab samples")
 
 # plot with adjusted strip label
 sixfilter %>%
   filter(QAQC_flag == "OK") %>% 
-  dplyr::filter(sample_type == "Grab", sample == "Grab") %>%
-  ggplot(aes(x = NPOC_ppm, y = fct_rev(site))) +
-  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.4) +
-  facet_wrap(labeller = labeller(rain_season = label),
-             ~rain_season, ncol = 1, nrow = 2) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  labs(y = "",  
-       #caption = glue::glue("Density distribution plots of DOC concentration by sample type and site \n       Grab samples (n =  {n_installGrabSamples} ) and rising limb Rack samples (n =  {n_installRackSamples})"),
-       x = "DOC (mg/L)") +
-  theme(legend.position = "none",
-        text = element_text(size = 12)) 
-# save
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_subbasin-ridgeplot_grabs-only.png")
-
-# --- box
-# plot with adjusted strip label
-# Boxplot with jitter scatter (DOC by season)
-# wrap by sample_type
-label <- c(dry = "Dry season grab samples", wet = "Wet season grab samples")
-# box plot
-sixfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  dplyr::filter(sample_type == "Grab") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  geom_boxplot(alpha = 0.4)+
+  geom_jitter(alpha = 0.4, shape = 21) +
+  facet_wrap(labeller = labeller(rain_season = label),
+             ~rain_season, nrow = 1) +
   scale_fill_brewer(palette="Set2") +
   theme_bw() +
+  labs(y = "DOC (mg/L)",  
+       x = "") +
   theme(legend.position = "none",
-        axis.text.x = element_text(angle = 45, hjust = 1))+
-  facet_wrap(~rain_season, labeller = labeller(rain_season = label),
-             ncol = 2, nrow = 1) +  
-  labs(x = "", y = "DOC (mg/L)")
-
+        text = element_text(size = 11),
+        axis.text.x = element_text(angle = 30, hjust = 1)) 
 # save
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC-seasonal_subbasin_boxplot_grab-only.png", width = 6, height = 3.5, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots_2.png", width = 5, height = 4, units = "in")
 
 ```
 
@@ -3892,7 +3867,13 @@ antecedent_7day_Wx <- LWSA_meanWx %>%
   # note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
 
 # add samples to this and then calculate the total rain for week up to sample
-sixfilter <- sixfilter %>% 
+sixfilter_RF <- sixfilter %>%
+  # add normalized stage
+  group_by(site) %>% 
+  left_join(., (odyssey_norm %>% group_by(source)), 
+            by = c("DateTime_sampled" = "DateTime", "site" = "source", "trip" = "interval", 
+                   "corr_stage_cm", "rain_season", "event_ID"))
+  
   filter(!is.na(analysis)) %>% # drop enply TOC samples (unfiltered on shimadzu)
   select(-c(Date, two_seasons, corr_stage_cm)) %>% # drop un-needed items 
   group_by(site, trip, sample) %>% 
@@ -3904,13 +3885,35 @@ physiographic <- read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristic
   mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 
 # combine
-sixfilter_physiographic <- left_join(sixfilter, physiographic, by = c("site")) %>%
+sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")) %>%
   filter(QAQC_flag == "OK") %>% 
-  # filter so all that's left is NPOC and any predictor variables
-  select(c(NPOC_ppm, DateTime_sampled, rain_season, site_type, sample_type, sample, sampleStage_cm, antecedent_7day_rain, antecedent_7day_temp, latitude, longitude, strahler_order, drainage_area_km2, elevation_masl, forest_percent, wetland_percent, openWater_percent, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent, slope_med_degrees, slope_max_degrees, "1980s_logging_percent", "1990s_logging_percent", "2000s_logging_percent", "2010and2011_logging_percent"))
+  ungroup() %>% 
+  # filter so all that's left is NPOC and any predictor variables, no NAs
+  filter(!is.na(DateTime_sampled),
+         !is.na(sampleStage_cm)) %>%
+  select(c(site, DateTime_sampled, NPOC_ppm, rain_season, sampleStage_cm, antecedent_7day_rain, antecedent_7day_temp, latitude, longitude, strahler_order, drainage_area_km2, elevation_masl, forest_percent, wetland_percent, openWater_percent, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent, slope_med_degrees, slope_max_degrees, 
+           eightiesLogging = "1980s_logging_percent", 
+           ninetiesLogging = "1990s_logging_percent", 
+           twothousandsLogging = "2000s_logging_percent", 
+           twentytenElevenLogging = "2010and2011_logging_percent")) #removed: c(trip, sample_type) # remove features that seems to disrupt the algorithm by overshadowing 
 
+# remove unnecessary variables for RF
+RF_sixPhysiog <- sixfilter_physiographic %>% 
+  select(-c(site, DateTime_sampled)) 
+  
 # feed it into RandomForests with NPOC_ppm as the dependent variable
-RandoFrst_NPOC <- randomForest::randomForest(y = NPOC_ppm, data = sixfilter_physiographic, na.action=na.roughfix)
+# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 =~= 10
+RF_NPOC <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                             data = RF_sixPhysiog, 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = 10, ntree = 500,  # ntree default = 500
+                                             importance = TRUE,
+                                             proximity = TRUE) 
+
+# use functions of randomForestExplainer on obtained results
+# measure_importance() == each row corresponds to a predictor
+RF_NPOC_importance <- randomForestExplainer::measure_importance(RF_NPOC)
+RF_NPOC_explained <- randomForestExplainer::explain_forest(RF_NPOC, interactions = TRUE, data = RF_sixPhysiog)
   
 ```
 
