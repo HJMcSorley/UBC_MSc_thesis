@@ -3919,8 +3919,9 @@ RF_NPOC <- randomForest::randomForest(NPOC_ppm ~ .,
                                              proximity = TRUE) 
 
 # randomForestExplainer to describe results of RF model
-# create a descriptive html report
-RF_NPOC_explained <- randomForestExplainer::explain_forest(RF_NPOC, interactions = TRUE, 
+# create a descriptive html report 
+# this is comutationally expensive -- hash out when done
+# RF_NPOC_explained <- randomForestExplainer::explain_forest(RF_NPOC, interactions = TRUE, 
                                                            data = RF_sixPhysiog)
 # report saved in root directory
 # ---
