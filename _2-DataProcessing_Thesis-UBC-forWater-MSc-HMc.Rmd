@@ -3849,6 +3849,9 @@ sampleresults %>%
 ```
 
 # Random Forest
+
+filter data
+
 ```{r}
 # first, calculate antecedent rain conditions at the cumulative rain for 7 days up to and including date sampled
 # NOTE this is not antecedent 'wetness' because it doesn't account for snow or snowmelt
@@ -3893,84 +3896,136 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
   # filter so all that's left is NPOC and any predictor variables, no NAs
   filter(!is.na(DateTime_sampled),
          !is.na(sampleStage_normalized)) %>%
-  select(c(site, DateTime_sampled, HoldTime_days, NPOC_ppm, rain_season, sampleStage_normalized, antecedent_7day_rain, antecedent_7day_temp, latitude, longitude, strahler_order, drainage_area_km2, elevation_masl, forest_percent, wetland_percent, openWater_percent, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent, slope_med_degrees, slope_max_degrees, logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) 
+  select(c(site, DateTime_sampled, HoldTime_days, NPOC_ppm, rain_season, sampleStage_normalized, antecedent_7day_rain, antecedent_7day_temp, latitude, longitude, strahler_order, drainage_area_km2, elevation_masl, forest_percent, wetland_percent, openWater_percent, geo_WarkGneiss_percent, geo_metamorphic_percent, geo_ArgilliteMetagreywacke_percent, geo_Metagreywacke_percent, geo_metasedimentary_percent, geo_ChertArgilliteVolcanic_percent, geo_metaSedimentaryVolcanic_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent, geo_igneous_percent, slope_med_degrees, slope_max_degrees, logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) 
 # remove features that seems to disrupt the algorithm by overshadowing 
 
 # remove unnecessary variables for RF
 RF_sixPhysiog <- sixfilter_physiographic %>% 
-  select(-c(site, DateTime_sampled)) %>% 
-  mutate(rain_season = factor(rain_season)) %>% 
+  select(-c(site, DateTime_sampled, rain_season)) %>% 
   # add a column of random values as as QA -- this should not be found to be important
-  mutate(QA_randomNumbers = sample(100, size = nrow(.), replace = TRUE)) #,
+  mutate(QA_randomNumbers = sample(200, size = nrow(.), replace = TRUE)) #,
          #QA_randomNumbers_doubled = QA_randomNumbers*2) # add a correlated variable to check
 
-# filter for cross-correlation which biases the importance ranking
-RF_sixPhysiog_clean <- RF_sixPhysiog %>% 
-  select(-c())
+# check for correlations
+view(cor(RF_sixPhysiog))
 
-# ---  
-# feed it into RandomForests with NPOC_ppm as the dependent variable
-# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
-RF_NPOC <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                             data = RF_sixPhysiog, 
-                                             na.action = randomForest::na.roughfix,
-                                             mtry = length(RF_sixPhysiog)-1, ntree = 500,  # ntree default = 500
-                                             importance = TRUE,
-                                             proximity = TRUE) 
 
-# randomForestExplainer to describe results of RF model
-# create a descriptive html report 
-# this is comutationally expensive -- hash out when done
-# RF_NPOC_explained <- randomForestExplainer::explain_forest(RF_NPOC, interactions = TRUE, 
-                                                           data = RF_sixPhysiog)
-# report saved in root directory
+## filter for cross-correlation which biases the importance ranking
+# subset for subsurface attributes (geological / parent material)
+RF_sixPhysiog_subsurface <- RF_sixPhysiog %>% 
+  select(c(NPOC_ppm, antecedent_7day_rain, geo_metamorphic_percent, geo_metasedimentary_percent, geo_metaSedimentaryVolcanic_percent, geo_igneous_percent, latitude, longitude, QA_randomNumbers))
+# check for correlations
+view(cor(RF_sixPhysiog_subsurface))
+ 
+ 
+# subset for surface attributes (land-cover attributes)
+RF_sixPhysiog_select <- RF_sixPhysiog %>% 
+  select(-c(HoldTime_days,
+           antecedent_7day_rain, # strongly correlated to stage 
+            strahler_order, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent,  latitude, longitude))
+# check for correlations
+# view(cor(RF_sixPhysiog_surface))
+
+
 # ---
+## Run RF
 
+# fNPOC_ppm is dependent variable
+# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
+RF_NPOC <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                      data = RF_sixPhysiog_select, 
+                                      na.action = randomForest::na.roughfix,
+                                      mtry = ceiling(length(data)/2), # no. of features
+                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                      importance = TRUE,
+                                      proximity = TRUE,
+                                      corr.bias = TRUE) # experimental 
 
 ## relative importance of features in predicting DOC
 # type 1 = mean decrease in accuracy
-RF_NPOC_relimp_1 <- randomForest::importance(RF_NPOC, type = 1) %>% 
+# plot relative importance of MSE_percent
+RF_plot_relimp_MSE <- randomForest::importance(RF_NPOC, type = 1) %>% 
   as.data.frame() %>%  # rather than matrix
   rownames_to_column() %>% 
   select(predictor = rowname,
          MSE = "%IncMSE") %>% # percent increase in mean square error
-  mutate(predictor = fct_reorder(predictor, MSE, .desc=TRUE),
-         MSE_percent = MSE/sum(MSE)*100) # add a percent MSE variable
-
-# plot relative importance of MSE_percent
-RF_plot_relimp_MSE <- RF_NPOC_relimp_1 %>%
-  ggplot(aes(reorder(predictor, MSE_percent), MSE_percent)) +
+  mutate(predictor = fct_recode(predictor,
+                                "sampling stage" = "sampleStage_normalized",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "darainage area" = "drainage_area_km2",
+                                "sample site elevation"= "elevation_masl",
+                                "forest cover" = "forest_percent",
+                                "wetland cover" = "wetland_percent",
+                                "open water" ="openWater_percent",
+                                "metamorphic parent material" = "geo_metamorphic_percent",
+                                "metasedimentary parent material" = "geo_metasedimentary_percent",
+                                "metasedimentary-igneous parent material" = "geo_metaSedimentaryVolcanic_percent",
+                                "igneous parent material"  = "geo_igneous_percent",
+                                "median basin slope" = "slope_med_degrees",
+                                "maximum basin slope" = "slope_max_degrees",
+                                "logging history (1980-2011)" = "logging_percent_FROMnineteeneightyTOtwentyeleven", 
+                                "QA-QC (random numbers)" = "QA_randomNumbers" ),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>%  
+  ggplot(aes(predictor, MSE_percent)) +
   coord_flip()+
-  geom_bar(stat = "identity", aes(), position="dodge", color="black", fill="navy") +
+  geom_bar(stat = "identity", position = "dodge", color = "black", 
+           fill= forWater_colours2["DeepBlue"]) +
   theme_bw() +
-  labs(y = "Percent contribution to MSE", x = "") +
-  ggtitle("Relative importance in predicting DOC from watershed data (type 1, mean square errors)")
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_rel-imp_type1-MSE")
+  labs(y = "Relative importance", x = "", size = 11, 
+       caption = "Importance of variables in predicting DOC, measured by type 1 (mean square errors, \n ie., mean decrease in accuracy when variable was omitted).")
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-relimp_type1-MSE.png", 
+       width = 5, height = 4, units = "in")
 
 ## relative importance of features in predicting DOC
 # type 2 = mean decrease in node impurity
-RF_NPOC_relimp_2 <- randomForest::importance(RF_NPOC, type = 2) %>% 
+# plot relative importance of RSS_percent -- more sensitive to correlated values
+RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC_surface, type = 2) %>% 
   as.data.frame() %>% 
   rownames_to_column() %>% 
   select(predictor = rowname,
          RSS = IncNodePurity) %>% # residual sum of squares
-  mutate(predictor = fct_reorder(predictor, RSS, .desc=TRUE),
-         RSS_percent = RSS/sum(RSS)*100) # add a percent RSS variable)
-
-# plot relative importance of RSS_percent -- more sensitive to correlated values
-RF_plot_relimp_RSE <- RF_NPOC_relimp_2 %>%
-  ggplot(aes(reorder(predictor, RSS_percent), RSS_percent)) +
+  mutate(predictor = fct_recode(predictor,
+                                "sampling stage" = "sampleStage_normalized",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "darainage area" = "drainage_area_km2",
+                                "sample site elevation"= "elevation_masl",
+                                "forest cover" = "forest_percent",
+                                "wetland cover" = "wetland_percent",
+                                "open water" ="openWater_percent",
+                                "metamorphic parent material" = "geo_metamorphic_percent",
+                                "metasedimentary parent material" = "geo_metasedimentary_percent",
+                                "metasedimentary-igneous parent material" = "geo_metaSedimentaryVolcanic_percent",
+                                "igneous parent material"  = "geo_igneous_percent",
+                                "median basin slope" = "slope_med_degrees",
+                                "maximum basin slope" = "slope_max_degrees",
+                                "logging history (1980-2011)" = "logging_percent_FROMnineteeneightyTOtwentyeleven", 
+                                "QA-QC (random numbers)" = "QA_randomNumbers" ), 
+         RSS_percent = RSS/sum(RSS)*100, # add a percent RSS variable
+         predictor = fct_reorder(predictor, RSS, .desc=FALSE)) %>% 
+  ggplot(aes(predictor, RSS_percent)) +
   coord_flip()+
-  geom_bar(stat = "identity", aes(), position="dodge", color="black", fill="navy") +
+  geom_bar(stat = "identity", aes(), position="dodge", color = "black", 
+           fill = forWater_colours2["DeepBlue"]) +
   theme_bw() +
-  labs(y = "Percent contribution to RSE", x = "") +
-  ggtitle("Relative importance in predicting DOC from watershed data (type 2, residual sum of squares)")
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_rel-imp_type1-MSE")
+  labs(y = "Relative importance", x = "", size = 11, 
+       caption = 
+         "Importance of variables in predicting DOC, measured by type 2 (residual sum of squares, \n ie., mean decrease in node impurity when variable was omitted).")
+# save this one too 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-relimp_type2-RSS.png",
+       width = 5, height = 4, units = "in")
 
 
 # arrange side by side
 cowplot::plot_grid(RF_plot_relimp_MSE, RF_plot_relimp_RSE, nrow = 1)
 
+# randomForestExplainer to describe results of RF model
+# create a descriptive html report 
+# this is comutationally expensive -- hash out when done
+# RF_NPOC_explained <- randomForestExplainer::explain_forest(RF_NPOC, interactions = TRUE, data = RF_sixPhysiog)
+# report saved in root directory
 
 ```
 
@@ -4433,32 +4488,3 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
 # empty code chunk
 # sometimes RStudio cuts off the last bit of the view, this holds place :)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
