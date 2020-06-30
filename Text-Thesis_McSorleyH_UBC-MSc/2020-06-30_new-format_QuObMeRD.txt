@@ -1,0 +1,21 @@
+RQ 1: What are the ranges for DOC concentration and DOM character between adjacent drainage basins and among nested sub-catchments in the LWSA, and what influence does seasonality have on concentration and character of DOC?
+
+Objective 1.0: Design a sampling strategy to measure the spatial and temporal variation of DOM & DOC.
+Objective 1.1: Describe the variation and trends in DOC and DOM over space and time.
+
+
+RQ2: (Assuming that hydrological processes are the main driver for DOC transport and variation in the LWSA) 
+	Is there a mechanistic relationship between river stage and DOC? 
+
+Objective 2.0: Relate water samples to river stage and report on the relationships between DOC concentrations and DOM character with stage, with attention to differences between baseflow and storm events.
+
+
+RQ3: Are some watershed characteristics more important than others for driving DOM dynamics?
+
+Objective 3.0: Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
+
+RQ4: What are the implications for watershed management and future drinking water supply?
+
+Objective 4.0: Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+
+ 
