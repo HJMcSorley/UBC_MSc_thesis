@@ -203,6 +203,17 @@ These results suggest that early-season ("first flush") samples may contain more
 
 Based on results of the hold-time experiments, results of sample analyses were updated to include QA/QC data flags. Hold-times were calculated for each sample and Rack samples that remained held for fewer than 20 days at temperatures between 0-7°C were flagged as acceptable ("OK"). Rack samples that were held for 20 days or longer and samples identified as early-wet-season ("first-flush") with a hold-time of 7+ days were flagged as unacceptable. Due to possible freeze-thaw changes, any samples that underwent freezing and thawing were also flagged. QA/QC flags were used to filter data, reducing the number of Rack samples included in analyses by 16.25%. Of 203 Rack samples, 33 were flagged resulting in 170 quality-assured Rack samples included in analyses. Some Grab samples were excluded from analysis due to contamination or   
 
+### sampling in general
+
+\  
+
+```{r samplecount}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_names = TRUE) %>% 
+  knitr::kable(caption = "*Summary of samples collected*")
+```
+
+\  
+
 ###   Nested sub-catchments of the Leech watershed
 
 Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Figure \@ref(fig:megaplot) shows major precipitation events and stream response over the study period as well as the timing and stage of samples collected. 

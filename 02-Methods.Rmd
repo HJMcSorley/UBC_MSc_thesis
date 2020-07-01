@@ -14,13 +14,10 @@ library(knitr)      # tidy tables
 
 ##    Methods
 
-Geospatial data were collected from GeoGratis, the Government of Canada Geospatial Data Extraction tool (geogratis.gc.ca) with supplemental data provided by the CRD [^1]. Maps were created using QGIS (version 3.12.1, Bucuresti; www.qgis.org), and catchment boundaries were delineated using the QGIS GRASS plugin (GRASS GIS 7, version 2).
-
-[^1]:   Any and all geospatial data provided by the CRD was used with permission from the Capital Regional District.
 
 ###   Study Site: Leech River Watershed
 
-The Leech River watershed is a sub-catchment of the Sooke River watershed, located west of Sooke Reservoir (primary water supply for the Greater Victoria Area). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water. Figure \@ref(fig:GVWSAoverview) shows the Leech and Sooke Water Supply areas in context to their location on Vancouver Island, BC, Canada. 
+The Leech River watershed is a sub-catchment of the Sooke River watershed, the primary water supply for the Greater Victoria Area; the Leech River watershed is located west of Sooke Reservoir (Figure \@ref(fig:GVWSAoverview)). In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased about 92% of the Leech River watershed in 2007 (84%) and 2010 (additional 8%) and designated the Leech Water Supply Area (LWSA) for future supplemental source water (~96 km^2^, elevation 215 to 870 m a.s.l). 
 
 \  
 
@@ -32,16 +29,29 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-o
 
 \  
 
-While monitoring programs began in 2017, the hydrology and water quality in the LWSA are poorly understood. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several small headwater lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake and Lazar meadows north of Jarvis Lake). Runoff peaks in the winter under saturated conditions when rivers respond rapidly to precipitation events, rising and falling dramatically. Across the watershed, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. 
+Hydrology and water quality monitoring programs for the Leech began in 2017, thus there is little historical data to describe hydrochemical dynamics in the Leech watershed. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several small headwater lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake and Lazar meadows north of Jarvis Lake). Runoff peaks in the winter under saturated conditions when rivers respond rapidly to precipitation events, rising and falling dramatically. Across the watershed, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. 
 
 
 ####    Climate, Weather, Forests
 
-The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year is rain (i.e., pluvial hydroclimatic regime). The water year can be broadly divided into wet and dry seasons where approximately 90% of precipitation falls from October to April, and May through September are relatively dry. 
+The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year is rain (i.e., pluvial hydroclimatic regime) [@ *refs*]. The water year can be broadly divided into wet and dry seasons where approximately 90% of precipitation falls from October to April, and May through September are relatively dry [@ *refs*]. 
 
 \  
 
-There are two weather stations which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from January 2018 to March 2020. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(fig:WxLWSA). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Annual weather data from each of the LWSA weather stations are summarized in Table \@ref(tab:WxLWSAdata). 
+There are two weather stations (Table \@ref(tab:StnSummary)) which operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
+
+\  
+ 
+```{r StnSummary}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
+         col_names = TRUE) %>% 
+  knitr::kable(caption = "*CRD fire weather station (FWx) summary of features*")
+
+```
+
+\
+
+The CRD provided weather station data from Chris Creek and Martin's Gulch weather stations from January 2018 to March 2020. Rainfall and air temperature from each of the two LWSA weather stations is shown in Figure \@ref(fig:WxLWSA). Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station. Annual weather data from each of the LWSA weather stations are summarized in Table \@ref(tab:WxLWSAdata). 
 
 \  
  
@@ -65,18 +75,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 Using the R package _Rainmaker_ (USGS), rain data were used to define events that corresponded to sampling campaigns. Seasons were operationally defined based on periods with or without major rain events, where "wet" season included major events and "dry" season did not.
 
 
-###   River sampling
+###   River sampling (FIX)
 
-Sixteen months of bi-weekly field work was completed with the goals of contributing to the characterization of the Leech Water Supply Area (LWSA) while furthering our understanding of the variability of dissolved organic matter (DOM) dynamics in hydrologic response across a second growth forested watershed. A total of 446 samples were collected from November 2018 to February 2020, all samples were analyzed and some were excluded during QA/QC, resulting in 393 unique samples included in data analyses and results (Table \@ref(tab:samplecount)). Samples were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to forWater partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory (see Appendix). 
+*fix this section*
 
-\  
-
-```{r samplecount}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Summary of samples collected*")
-```
-
-\  
+River sampling was conducted from November 2018 to February 2020. *A total of 446 samples were collected from November 2018 to February 2020*, all samples were analyzed and some were excluded during quality control (more details please), resulting in 393 unique samples included in data analyses and results (Table \@ref(tab:samplecount)). Samples were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy (respectively). In addition, two sets of replicate samples from four sites were sent to forWater partners at the University of Waterloo for source water analyses of drinking water treatability metrics; and an additional 42 samples were collected on behalf of the CRD for analysis of a suite of total metals at an external laboratory (see Appendix). 
 
 ####    Synoptic sampling 
 
@@ -92,26 +95,27 @@ Thirteen sites were selected for synoptic water sampling and water quality analy
 
 ####    Sampling across nested catchments of the Leech watershed {#MethodsNestedCatch}
 
-Across the Leech Water Supply Area (LWSA), six of the synoptic sampling sites were selected for more intensive monitoring. These sites represented the LWSA drainage basin defined from the the point of (future) diversion, the Leech Tunnel, and five sub-basins nested within the Leech Tunnel catchment. Figure \@ref(fig:subbasinMap) shows a map of the six monitoring sites and their catchment boundaries
-which were delineated using each sampling site as the drainage outlet. The sub-basins represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5). Site 6 was located at the Leech River Tunnel and the drainage area included the entire LWSA.	
+Six of the synoptic sampling sites were selected for more intensive monitoring. These sites represent the drainage area upstream of a future diversion at the Leech River Tunnel, and five sub-basins nested within the Leech Tunnel catchment (Figure \@ref(fig:subbasinMap)).
+
+The sub-basins represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5). Site 6 was located at the Leech River Tunnel and the drainage area included the entire LWSA.	
 
 \  
 
 ```{r subbasinMap, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinMap} *Research sites in the Leech Water Supply Area. Sites are named and numbered, where the number indicates both the sequence of vertical rack installations as well as the relative progression from headwaters to mouth. Each research basin boundary is outlined in black, and the water supply area boundary is delineated in red.*"
+fig_cap = "\\label{fig:subbasinMap} *Research sites in the Leech Water Supply Area. Sites are named and numbered, where the number indicates both the sequence of vertical rack installations as well as the relative progression from headwaters to mouth. Each research basin boundary (defined using each sampling site as the drainage outlet) is outlined in black, and the water supply area boundary is delineated in red.*"
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasin-sampling_with-numbers.png")
 ```
 
 \  
 
-Table \@ref(tab:WTScharacterSubbasinTable) includes watershed characteristic data for each of the six research site basins. Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins. Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
+Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
 
 \  
 
 ```{r WTScharacterSubbasinTable}
 options(knitr.kable.NA = '')
-read_csv("R-inputs_UBC-forWater-MSc_HMc/study-sites_basin-characteristics.csv", col_names = TRUE) %>% 
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_study-sites_basin-characteristics.csv", col_names = TRUE) %>% 
   knitr::kable(caption = "*Watershed characteristics summary for study sites*")
 ```
 
@@ -143,7 +147,11 @@ These vertical racks collected whole water samples on the rising limb of the hyd
 	
 ###   Analytical techniques & data handling
 
-Water samples were collected and transported in coolers with ice to UBC's EcoHydrology Lab (Earth Science Building) for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentration below detectable limits (0.1 mg/L). 
+Water samples were collected in acid-wached 250mL HDPE wide-mouth amber bottles and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character).
+
+Grab samples collected for DOC quantification were filtered and acidified within 36 hours of collection, except for a set of *12* late-season samples that were collected by CRD staff and refrigerated for two weeks prior to filtration & acidification. Hold-times for Rack samples were assessed and details are provided below (QA-QC section). Spectroscopy samples were not acidified. 
+
+Samples were also measured for phosphate concentration using a colourmetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each sample had phosphate concentration below detectable limits (0.1 mg/L). 
 
 	
 ####    Dissolved organic carbon (DOC) concentration and characterization
@@ -176,7 +184,7 @@ The spectro::lyser has been shown to effectively determine DOC content and chara
 
 #####    Siphon sampler assumptions: vertical rack sampling 
 
-Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the velocity and turbulence associated with flows in the step-pool formation of the sub-basins, the assumption of unstratified waters seems very reasonable. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system where a tap water sample was collected by siphon sample bottle, food colouring was added to flow system after sample collection and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
+Rising level siphon samplers collect water from approximately 5cm below the surface (top of intake tube to inlet orifice). Data related to rack samples relies on two key assumptions: the water column is well mixed (no stratification) therefore the sample is representative of water quality at each sampling stage; and the sample is discrete such that there is no infiltration or mixing after the sample is collected. Based on the turbulence associated with flows in the step-pool formation upstream of sampling locations, the assumption of fully mixed and unstratified water seems justified. The assumption of sample discretion was validated in lab using food colouring and a flow-through bucket system where a tap water sample was collected by siphon sample bottle, food colouring was added to flow system after sample collection and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
 
 #####    Sample hold-times and temperatures: vertical rack sampling
 

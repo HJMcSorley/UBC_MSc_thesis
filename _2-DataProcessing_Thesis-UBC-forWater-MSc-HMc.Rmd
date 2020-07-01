@@ -211,6 +211,8 @@ NOMcharacter_UA <- read_csv("R-inputs_UBC-forWater-MSc_HMc/NOM-character-results
 
 plots: rain/snow/temp
 At Chris Creek and Martin's Gulch FWx stations
+
+* fix snow data -- SR50a noise creates weird 3m error
 ```{r, FWx-plots}
 
 # Rn15 is 15-minute rainfall (mm) 
@@ -244,7 +246,7 @@ snowplot <- precip_data %>%
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_Snowmean)) +
   geom_col(colour = "grey60") +
-  labs(x = "", y = "Snow accum.\n (m /day)") +
+  labs(x = "", y = "Snow depth \n (m)") +
   theme_bw() +
   theme(text = element_text(size = 11),
         legend.position = "none")+
@@ -302,7 +304,7 @@ precip_data %>%
                           Year == 2019 ~ "2019",
                           Year == 2020 ~ "Jan-Feb 2020")) %>% 
   group_by(year, StationName) %>%
-  summarise(total_precip_mm = sum(Rn15, na.rm = TRUE),
+  summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
             max_snow_m = max(SnowDep, na.rm = TRUE), # not sure how to report
             annual_mean_temp = mean(Temp, na.rm = TRUE),
             temp_sd = sd(Temp, na.rm = TRUE),
