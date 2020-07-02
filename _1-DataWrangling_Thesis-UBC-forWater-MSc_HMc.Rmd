@@ -514,6 +514,7 @@ FULLSCAN_results <- FULLSCAN_results %>%
   ungroup()
 ```
 
+# YOU ARE HERE -- fix spectra so that absorbance values are SAC (SAC (/m) = abs/pathlength(m))
 ### Spectral indices
 ```{r, spectral-indices, message = FALSE}
 
