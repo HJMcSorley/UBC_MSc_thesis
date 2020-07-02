@@ -1,0 +1,122 @@
+---
+output: bookdown::word_document2
+---
+
+##	Spatial and temporal patterns in DOC & DOM
+
+### Introduction
+
+*Research Question:* What are the ranges for DOC concentration and DOM character between adjacent drainage basins and among nested sub-catchments in the LWSA, and what influence does seasonality have on concentration and character of DOC?
+
+*Research Objective:* Design a sampling strategy to measure the spatial and temporal variation of DOM & DOC, then describe spatiotemporal patterns that were observed.
+
+### Methods
+
+To measure the ranges of DOC concentration and DOM character over space and time, river sampling was conducted from October 2018 to February 2020. Water samples were collected and analyzed at UBC for DOC concentration and DOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The river sampling program designed for this project included synoptic sampling of 13 sites across the Greater Victoria Water Supply Area, as well as installation of monitoring and sampling stations at 6 sites in the Leech River watershed. 
+
+####    Synoptic sampling 
+
+```{r sampleSitesMap, out.width = "75%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:sampleSitesMap} *Synoptic sampling sites across the Greater Victoria Water Supply Areas.*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_synoptic-sampling.png")
+```
+
+\  
+
+Thirteen river sites were selected for synoptic water sampling, and results of sample analyses were used to elucidate spatial and temporal patterns in DOM and DOC. 
+
+The majority of synoptic sites were in the Leech WSA and a few rivers in the Sooke WSA were also included (Figure \@ref(fig:sampleSitesMap)). Rithet Creek is the largest tributary to Sooke Reservoir and Judge Creek is the second largest. Deception (gulch) is a small tributary to Deception Reservoir, which is separated from the south-west of Sooke Reservoir by a dam. The Leech River Tunnel (currently deactivated) terminates at Deception gulch, thus Deception Reservoir is a likely balancing reservoir for future inter-basin transfers. The Boneyard site is located on the Leech River, downstream of the Leech WSA (LWSA) boundary, upstream of the confluence of Leech River with Sooke River (downstream of the Sooke Reservoir and drinking water intake tower). 
+
+In the LWSA, Lazar Creek and Jarvis Creek are headwater rivers of Cragg Creek, which is a major tributary to the Leech River. Chris Creek and Weeks Creek are headwater streams of Leech River. West Leech River is a major tributary to the Leech and Leech Beach site was located just downstream of the confluence of West Leech with Leech River. The Leech Tunnel site was located near the effective mouth of the LWSA, the Leech River Tunnel. 
+
+Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-wached 250mL HDPE wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). All samples were refrigerated if they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 36 hours of collection, except for a set of *12* samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration & acidification. Samples for DOM spectroscopy were not acidified. 
+****note about unfiltered and removal of high turb samples**** 
+
+
+####    Monitoring & sampling stations {#MethodsNestedCatch}
+
+Six of the LWSA synoptic sampling sites were selected for more intensive monitoring. These sites represent the drainage area upstream of the Leech River Tunnel and five sub-basins nested within the Leech Tunnel catchment (Figure \@ref(fig:sampleSitesMap)). The sub-basins represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), the two mainstem river tributaries that feed the Leech: Cragg Creek and West Leech (sites 4 & 5). Site 6 was located at the Leech River Tunnel, where the drainage area included the entire LWSA.	
+
+\  
+
+It was important to sample across the hydrograph in order to capture sample-sets that represented the variation in DOC and DOM that occurred during changing flow conditions (i.e., within storm variability). Additionally, event-based river samples collected near-simultaneously at sites across a watershed can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. While synoptic grab sampling can cover a wide area over a relatively short period of time, it can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short durations of rapid runoff (@Harmel2003). The Leech watershed system responds quickly to rainfall, and the logistics of grab sampling through events at multiple sites would have been very challenging for one person to accomplish and would have required site access beyond safe working hours (i.e., not logistically feasible). Furthermore, it can be dangerous to access river sites and/or manually collect river samples during high flows (@Graczyk2000; @Mackay2012). 
+
+\  
+
+Pump samplers or passive samplers can be used to collect water samples under difficult or unsafe conditions. A pump sampler (e.g., ISCO samplers, Teledyne ISCO, Inc., Lincoln, NE, USA; Global Water Instrumentation, Gold River, California) can be set up in the field and programmed to collect a set of water samples based on time interval or changes in conditions condition (e.g., stage or turbidity thresholds). Pump samplers are effective for automatic event-based sampling (@Harmel2003) but can be prohibitively expensive ($2K-3K CAD), and also require a reliable power source which can pose logistical challenged for setting up multiple sites in remote or difficult to access locations (@Mackay2012). A passive sampling alternative to a pump sampler is a siphon sampler, which automatically and effectively collects discrete water samples on the rising limb of the hydrograph (e.g.: @Mackay2012; @Graczyk2000; @Diehl2007). Siphon samplers are limited to sampling a single event and as of yet are not suitable for sampling the falling hydrograph limb; they are however very low cost, customizable and require no power. Based on cost, logistical considerations and curiosity, siphon sampling strategies were employed at the monitoring sites in the LWSA.   
+
+\  
+
+Siphon sampling bottles were used on vertical racks installed at each of the six sites to collect discrete water samples during the rising limb of the hydrograph. Vertical sampling racks were a cost-effective, logistically practical and reliable method of event-based sampling that enhanced the synoptic sampling program. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage and air/water temperatures (HOBO TidbiT v2 Temperature Data Logger, Onset, USA). 
+
+Each vertical sampling rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held siphon sampler bottles (Figure \@ref(fig:verticalRack)). Custom-built siphon sampler bottles used in this research were based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). Screw caps for 250mL amber HDPE wide-mouth bottles were augmented to include two 1/4" (O.D.) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end. Marine epoxy was used on the outside of siphon caps to ensure a water-tight seal around the inlet and exhaust (lower and upper tubes, respectively), and silicone sealant was added to the inside of lids. The siphon samplers collected water from approximately 5cm below the surface (distance between bend at top of intake tube to inlet orifice).  
+
+```{r verticalRack, fig.cap = fig_cap}
+fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2).*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
+```
+
+\  
+
+Each time a monitoring site was visited, empty acid-washed sample bottles with siphon lids were set out on vertical racks and the stage at which each siphon bottle filled (the stilling-well measuring tape height corresponding to top of intake tube bend) was recorded. Samples were passively collected in my absence, and were retrieved on subsequent field trips. 
+
+During data analysis, the observed stage at which each siphon bottle filled was references to level-logger data to determine the date and time of collection for each rising-stage sample. To the best of my knowledge, vertically staggered passive siphon samplers have not been combined with observed and continuously recorded stage to obtain time-stamps of sample collection. The time-stamps were used to asses temporal variability in DOC & DOM and to inform quality management of samples (below). Additionally, the time-stamp of event-based samples was used to inform stage-concentration relationships (Chapter 3).   
+
+#####    Siphon sampler assumptions
+
+The representativeness of vertical rack samples relied on on two key assumptions: (1) the water column was well mixed (no stratification) therefore the sample collected was representative of river water quality at each sampling stage; and (2) the sample was discrete, such that there was no infiltration or mixing between surrounding river water and the sample in the bottle once the sample was collected.
+
+Based on turbulence associated with flows upstream of the vertical racks (step-pool formations), the assumption of fully mixed and unstratified water seems justified. Sample discretion was validated in lab using food colouring and a flow-through bucket system: a tap water sample was collected by siphon sample bottle, after sample collection food colouring was added to flow system and circulated for 15 minutes, then the sample bottle was removed from dye chamber and the colour of the sample was compared to surrounding dyed water. There was no dye present in sample bottle following this test, which was repeated five times with different siphon-lid bottles. 
+
+#####    Rack sample hold-times and temperatures
+
+Every effort was made to retrieve rack samples as quickly as possible from the racks following rain events. None the less, some samples remained on a rack for more than a few days due to logistical, access and safety considerations. 
+
+Hold-time experiments were performed to assess river sample stability over periods between rack sample collection and retrieval. The hold-time experiments included replicate sample (n = 10) collection at a site, where half the samples were capped with siphon lids and placed out of water on the vertical rack and the other half of samples were immediately returned to the lab for analysis. Three sets of hold-time experiments were completed, such that the rack samples were left in the field for 11, 20 and 34 days before being retrieved, analyzed and compared to their counterpart replicates (details in results section). The temperature sensors installed at each vertical rack were used as part of the hold-time assessment for sample stability.
+
+***discussion point***
+...
+The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
+...
+
+
+####   Laboraory analyses of water samples
+
+Each water sample was transported from the field to the lab in a cooler with ice for quantification of dissolved organic carbon (DOC) and qualitative assessment of natural organic matter (NOM) molecular character. Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each water sample had phosphate concentration below detectable limits (0.1 mg/L) and phosphate will not be mentioned again in this report.
+
+#####    Dissolved organic carbon (DOC) 
+
+For quantification of DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured by non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
+
+#####     Natural organic matter (NOM)
+ 
+Spectral properties of sample NOM were analyzed using a 'spectro::lyser' spectrophotometer (S::can, Vienna, Austria) which measures turbidity and the chromophoric portion of organic matter to estimate concentrations of total organic carbon (TOC), dissolved organic carbon (DOC), as well as nitrate-nitrogen (NO~3~^-^-N). For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC quantified by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have an aromatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character. For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, its reactivity [@Weishaar2003; @Chow2008]. The spectro::lyser measures absorbance from 200 nm to 750 nm wavelengths, across which several spectral indicies can be calculated. 
+
+
+#####   SUVA~254~
+
+Specific ultraviolet absorbance at 254nm (SUVA~254~) is the ratio of UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254nm wavelength, normalized to DOC concentration [@Weishaar2003]. SUVA~254~ is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^) and was determined by dividing the UV absorbance measured at wavelength 254nm (SAC~254~) by DOC concentration ( mgL^-1^ as NPOC). SUVA~254~ correlates strongly with DOM aromaticity, and also with chemical reactivity [@Weishaar2003; @Helms2008; @Chow2008]. A higher SUVA value indicates greater aromaticity, and a lower SUVA value indicates more alliphatic DOM. Because humic substances (i.e., allochthonous NOM) are more aromatic, SUVA~254~ is a good indicator of humic sources of DOM [@Weishaar2003; @Vidon2008; @Abbott2018]. 
+
+With respect to SUVA~254~ and drinking water treatability, it's important to consider the diversity of DOM and DBP species and the heterogeneous character contained in a water sample. While SUVA~254~ may indicate reactivity, it is not necessarily a strong indicator of DBP-FPs [@Weishaar2003; @Chow2008]. This is because some DBP precursor NOM components (e.g., alliphatics), which have negligible absorptivities in the UV-Vis range, may contribute to DBPs but not SUVA~254~; additionally, not all NOM with measurable SUVA~254~ will create DBPs [@Weishaar2003]. 
+
+
+#####   Spectral indices of NOM character
+	
+Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. In the absence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a simple tool for getting at molecule character. Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators for assessing DOM molecular size (weight) and aromaticity [@Helms2008]. 
+
+Spectral slopes over the wavelength range of 275-295 nm (S~275-295~) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectral absorbance coefficients (m^-1^) as indicated by Helms [-@Helms2008, p 958]. Slope ratio (S~R~) is a unitless value equal to the ratio of S~275-295~ to S~350-400~ and is inversely proportional to CDOM molecular weight [@Helms2008]. A similar parameter is a quotient called E~2~:E~3~, which is the ratio of absorbances at wavelengths 250-nm and 365-nm, and is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated, along with S~R~ , to try to elucidate molecular character of DOM in samples. 
+
+#### Quality Assurance & Quality Control
+
+UBC based laboratory QA/QC included analysis of blanks and replicate samples. A calibration curve was generated for the Shimadzu TOC-V each time the zero-air gas cylinder was replaced and accuracy was ensured with analysis of calibration verification standards. Analytical accuracy was determined to be 3.7% based on analysis of 20 calibration verification standards included throughout sample analyses.
+
+The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, unfiltered water samples that had detectable turbidity (greater than 0.000 FTU) were removed from data analysis.
+
+ 
+
+
+### Results
+
+*A total of 446 samples were collected from November 2018 to February 2020*, all samples were analyzed and some were excluded during quality control (*more details please*), resulting in 393 unique samples included in data analyses and results. --- add table of samples counts pre/post QA-QC

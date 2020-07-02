@@ -50,9 +50,11 @@ _roman numeral TOC_
 
 This dissertation is an original intellectual product of the author, Hannah J. McSorley. 
 
-The vertical sampling racks (Chapters 2 & 3) were based on principals employed by Maartje Korver (MSc Vrije Universiteit Amsterdam) at Hakai Institute, BC, Canada. The siphon sampling bottles were built by H.J.McSorley based on M.Korver's prototypes and the US Geological Survey's single-stage siphon sampler for suspended sediment design (USGS U-59 Sampler). 
+The vertical sampling racks (Chapter 2) were based on principles employed by Maartje Korver (MSc Vrije Universiteit Amsterdam) at Hakai Institute, BC, Canada. The siphon sampling bottles were built by H.J.McSorley based on M.Korver's prototypes and the US Geological Survey's single-stage siphon sampler for suspended sediment design (USGS U-59 Sampler). 
 
 Weather station data and geospatial data (forests and subsurface geological layers) for the Leech Watershed was supplied by the Capital Regional District and used with their permission.
+
+Laboratory analyses conducted at the University of British Columbia (UBC) were completed solely by Hannah J. McSorley.
 
 All data analysis was completed by H.J.McSorley using R (R-3.6.2) in RStudio (Version 1.3.820). Geospatial data were collected from GeoGratis, the Government of Canada Geospatial Data Extraction tool (geogratis.gc.ca) with supplemental data provided by the CRD [^1]. All maps inlcuded in this thesis were created by H.J.McSorley using QGIS (version 3.12.1, Bucuresti; www.qgis.org), and catchment boundaries were delineated using the QGIS GRASS plugin (GRASS GIS 7, version 2). All geospatial data extraction (Chapter 2, Table #####) was completed or confirmed by (in the case of watershed boundary delineation) Alison Bishop, BSc, ADGIS (Research Assistant, VIU Coastal Hydrology Research Lab). 
 
