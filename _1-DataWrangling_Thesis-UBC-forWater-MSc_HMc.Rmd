@@ -24,6 +24,8 @@ library(tidyverse)  # tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
 library(knitr)      # tidy tables, knitting docs
 library(lubridate)  # dates, times, ranges
 library(broom)      # tidy stats
+# install.packages("devtools")
+# devtools::install_github("USGS-R/Rainmaker")
 library(Rainmaker)  # USGS tool -- https://github.com/USGS-R/Rainmaker
 library(viridis)    # pretty colour-blind-friendly pallete
 ```
@@ -236,7 +238,7 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
 TOCV_results <- TOCV_results %>% 
-  mutate(#trip = as.character(trip),
+  mutate(trip = as.character(trip),
     trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
                      TRUE ~ trip),
     trip = as_factor(trip))

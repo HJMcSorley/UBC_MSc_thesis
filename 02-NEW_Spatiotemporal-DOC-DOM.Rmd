@@ -84,28 +84,55 @@ The rising limb has been shown to have higher DOC concentration than low flows b
 
 ####   Laboraory analyses of water samples
 
-Each water sample was transported from the field to the lab in a cooler with ice for quantification of dissolved organic carbon (DOC) and qualitative assessment of natural organic matter (NOM) molecular character. Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each water sample had phosphate concentration below detectable limits (0.1 mg/L).
+Each water sample was transported from the field to the lab in a cooler with ice for quantification of dissolved organic carbon (DOC) and qualitative assessment of natural organic matter (NOM) molecular character. Aqueous forms of NOM in freshwater play important ecological roles, but can be problematic for drinking water treatment because they contribute to the formation of disinfection by-products, increase oxidant demand (e.g. chlorination), and cause other disruptions (e.g. short filter run times, microbial bio-fouling, coagulant demand). Because the backbone of NOM is carbon, DOC is a measure of the dissolved forms of NOM in a sample. While quantifying a sample's DOC is important in describing the amount of NOM, it tells us nothing about the structure (and therefore the function) of that NOM. Characterizing the molecular attributes of NOM in addition to its quantity provides greater insight. Therefore, both quantification and characterization of NOM were tackled for this project. Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); each water sample had phosphate concentration below detectable limits (0.1 mg/L).
 
-#####    Dissolved organic carbon (DOC) 
+##### Quantifying DOC (dissolved organic carbon)
 
-To quantify DOC, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet2000]. For this method, samples were filtered with 0.45-micron PES filters, acidified (HCl) to bring pH below 2, then sparged with hydrocarbon-free air to drive off inorganic carbon. Following sparging, samples were combusted to convert all organic carbon to carbon dioxide which was measured by non-dispersive infrared gas detector to quantify the DOC content of the sample. This method represents a direct quantitative measure of DOC; although small volatile organic compounds would be removed in the sparging process, most NOM compounds are of higher molecular weight and it is unlikely that NOM analytes would be lost [@StdMet2000; @Matilainen2011].
+To quantify dissolved organic carbon (DOC), the major constituent of natural organic matter, samples were analyzed for non-purgeable organic carbon (NPOC) via High-Temperature Combustion (Method 5310-B) on a Shimadzu TOC-V [@StdMet5310]. 
 
-Instrument calibration was achieved with potassium hydrogen phthalate standards (five to six point calibration curves, 0-30 mg/L organic carbon) which were updated each time the zero-air gas cylinder was replaced. Calibration was verified regularly using standard reference material calibration verifications (*****).
+###### Sample preparation
 
-#####    Natural organic matter (NOM)
- 
-Spectral properties of water samples were analyzed using a 'spectro::lyser' spectrophotometer (S::can, Vienna, Austria). The spectro::lyser is a self-contained spectrophotometer and data-logger (with external power source) that measures turbidity and ultraviolet-visible light (UV-Vis) absorbance (i.e. light attenuation) across the wavelength range of 200 nm to 750 nm (recorded at 2.5 nm intervals). The spectro::lyser model used for this project (*** Model # ***) had a fixed pathlength of 100mm (***)., and while the instrument is field-deployable the analyses for this project were completed in-lab on room-temperature samples.
+Water samples were removed from refrigeration, brought to room temperature, inverted to mix (just in case), then filtered and acidified by hand. A clean 60 mL luer-lock syringe was pre-rinsed with sample water three times, then used to triple-rinse a vial (acid-washed 40 mL borosilicate amber glass vial) with filtered sample water. Samples were filtered using pre-rinsed (filter to waste) 0.45 μm polyethersulfone syringe filters [@Karanfil2003, @StdMet5310]. Each sample was syringe-filtered into its pre-rinsed vial and acidified to bring pH below 2 (200 μL of 4 M hydrochloric acid, reagent grade, into 35 mL filtered sample). Acidifying the samples converted any inorganic carbon species to aqueous carbon dioxide [@StdMet5310]. Filtered and acidified samples were sealed with Parafilm and place on the autosampler tray (Shimadzu ASI) for instrumental analysis.  
 
-Files output by the spectro::lyser include results of estimated concentrations (more below) and specific absorbance coefficients (m^-1^) at 254 nm and 436 nm, as well as full scan spectral absorbance data (unitless absorbance values) for the entire wavelength range. The spectro::lyser is pre-calibrated with an internal global calibration file to calculate estimates of total organic carbon (TOC), dissolved organic carbon (DOC), and nitrate-nitrogen (NO~3~^-^-N) concentrations. Details of the global calibration algorithm were not provided by the manufacturer or local representative (Aquatic Life, Ltd.), but were reported as "multi-wavelength algorithms of a turbidity-compensated absorbance fingerprint" by Avagyan et.al [-@Avagyan2014]. 
-...
+###### Instrumental analysis
+
+In series, the Shimadzu autosampler sparged each sample vial with high purity hydrocarbon-free air (1 minute) to drive off dissolved inorganic carbon (leaving only dissolved organic carbon in the sample). Aliquots (80 μL) of sparged sample were then drawn into the TOC-V and catalytically combusted (Shimadzu standard catalyst with quartz wool) to convert all organic carbon into carbon dioxide which was measured by non-dispersive infrared gas detection to quantify sample NPOC (i.e. DOC). the instrument measured three to five aliquots from each vial to ensure the replicate measurements coefficient of variation (CV) was below 2% and standard deviation (SD) was below 0.1 mg/L. 
+
+This method represents a direct quantitative measure of DOC; although small volatile organic compounds (e.g. ) could be removed in the sparging process, most NOM compounds are of higher molecular weight (e.g. humic acids) and it is unlikely that DOC analytes would be lost [@StdMet5310; @Matilainen2011].
+
+The first five vials of each analytical run contained lab grade water only, to (1) flush the system and (2) assess instrumental stability (i.e. precision). Files output by the TOC-V software included sample identification information, details of analytical processes and results including detected intensities and calculated NPOC concentrations. Concentration results were calculated from a selected calibration file. Calibration was completed each time the zero-air gas cylinder was replaced, and in one instance when the gas flow rate was adjusted. A five or six point calibration curve (0-30 mg/L organic carbon) was created with series made from a stock solution of anhydrous primary-standard grade potassium hydrogen phthalate. Calibration was verified regularly by including a 'cal-ver' in most sample trays (standard solution (labchecm.com, catalog No.LC129107) diluted to approximately 5 mg/L); these cal-vers resulted in an average accuracy of 3.7% (n=20).
+
+##### Characterization of NOM (natural organic matter)
+
+To assess the molecular character of NOM, samples were analyzed by UV-Vis spectroscopy (ultraviolet-visible light) using a spectro::lyser (S::can, Vienna, Austria). The spectro::lyser is a self-contained spectrophotometer and data-logger (with external power source) that measures turbidity and UV-Vis absorbance (i.e., light attenuation) across the wavelength range of 200 nm to 750 nm (recorded at 2.5 nm intervals). While the spectro::lyser is a field-deployable instrument, it was used in-lab for this project. 
+
+For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, a physiochemical ability determined by the electronic structure of the molecules. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e., a chromophore) in the molecule, which is common in aromatic molecules. The suite of molecules that comprise NOM generally have more aromatic than aliphatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, and a more concentrated sample will lead to greater absorption intensity; therefore, the UV-Vis spectrum of a sample can provide valuable information about relative weights and aromaticity [***!!!REFS!!!***]. 
+
+###### Sample analysis YOU ARE HERE!!!
+
+Water samples were removed from refrigeration, brought to room temperature, and inverted to mix prior to analysis. The spectro::lyser comes with a sleeve to contain approximately ***50 mL*** of sample, I triple rinsed the analytical path and surrounding sleeve with room-temperature sample
+
+The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter interferes with UV-Vis absorbance due primarily to light scattering [@Rodger2017b]. Therefore, unfiltered water samples that had detectable turbidity (greater than 0.0000 FTU) were removed from data analysis.
+
+
+
+
+
+
+The spectro::lyser used for this project (SN 10230382) had a fixed path-length of 35.0 mm.
+
+Files output by the spectro::lyser software (ana::pro, Version 5.9h (1.0.z)) include results of estimated concentrations (details follow) and specific absorbance coefficients (m^-1^) at 254 nm and 436 nm, as well as full scan spectral absorbance data (unitless absorbance values) for the entire wavelength range. The spectro::lyser is pre-calibrated with an internal Global calibration file (Global Calib.: "RIVER000V120") to calculate estimates of total organic carbon (TOC), dissolved organic carbon (DOC), and nitrate-nitrogen (NO~3~^-^-N) concentrations. Details of the Global calibration algorithm were not provided by the manufacturer or local representative (Aquatic Life, Ltd.), but were reported as "multi-wavelength algorithms of a turbidity-compensated absorbance fingerprint" by Avagyan et.al [-@Avagyan2014], a paper suggested by Aquatic Life.
+
 
 * removed: the chromophoric portion of aqueous organic matter to
 
-For NOM to be detected by UV-Vis absorption, the molecules must absorb ultraviolet (UV) or visible (Vis) light, which relies on the electronic structure of the molecules. UV-Vis absorption requires the presence of conjugated pi-bond systems (i.e., chromophore) in the molecule, which are common in aromatic systems. Therefore, DOC estimated by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. The suite of molecules that comprise NOM generally have more aromatic than aliphatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, therefore an absorbance spectrum can provide information about a samples molecular character such as relative weights and aromaticity. 
+###### Instrument and data handling
+...
+Therefore, DOC estimated by the spectro::lyser is a proxy measure that represents the chromophoric component of DOM (CDOM), which is proportional to the samples' average aromaticity. 
 
 remove: ? 
-For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, its reactivity [@Weishaar2003; @Chow2008].   
-
+For example, absorption of near-UV wavelengths (i.e., 200-380 nm) is indicative of conjugated systems that are common to aromatic compounds; as such, specific UV absorbance at 254nm (SUVA~254~) has been adopted as a surrogate for DOM aromaticity and, to some extent, its reactivity [@Weishaar2003; @Chow2008].
+...
 
 ######   SUVA~254~
 
@@ -119,10 +146,4 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 Based on full scan data from the Spectrolyser (250-700nm), several indices of NOM character were determined. In the absence of fluorescence excitation-emission matrices, or high resolution spectrometric methods, spectral slopes are a simple tool for getting at molecule character. Spectral slopes (i.e., the change in absorbance intensity over a range of wavelengths) are semi-quantitative indicators for assessing DOM molecular size (weight) and aromaticity [@Helms2008]. 
 
 Spectral slopes over the wavelength range of 275-295 nm (S~275-295~) and 350-400 nm (S~350-400~) were calculated from linear regression of log~e~-transformed spectral absorbance coefficients (m^-1^) as indicated by Helms [-@Helms2008, p 958]. Slope ratio (S~R~) is a unitless value equal to the ratio of S~275-295~ to S~350-400~ and is inversely proportional to CDOM molecular weight [@Helms2008]. A similar parameter is a quotient called E~2~:E~3~, which is the ratio of absorbances at wavelengths 250-nm and 365-nm, and is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated, along with S~R~ , to try to elucidate molecular character of DOM in samples. 
-
-##### Quality Assurance & Quality Control
-
-UBC based laboratory QA/QC included analysis of blanks and replicate samples. A calibration curve was generated for the Shimadzu TOC-V each time the zero-air gas cylinder was replaced and accuracy was ensured with analysis of calibration verification standards. Analytical accuracy was determined to be 3.7% based on analysis of 20 calibration verification standards included throughout sample analyses.
-
-The spectro::lyser has been shown to effectively determine DOC content and character on unfiltered samples [@Avagyan2014]. However, suspended matter may bias absorbance values due to non-DOC light absorption or scattering. Therefore, unfiltered water samples that had detectable turbidity (greater than 0.000 FTU) were removed from data analysis.
 
