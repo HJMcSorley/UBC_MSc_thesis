@@ -80,13 +80,25 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %
 
 # Acknowledgments
 
-This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations. 
+This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations and worker checks. 
 
-This research also would not have been possible without the support and encouragement from academic supervisors and partners from the NSERC forWater Network for Forested Drinking Water Source Protection Technologies: Bill Floyd, Mark Johnson, Suzanne Tank, Mike Stone, Dana Harriman, Monica Emelko, Uldis Silins, Axel Anderson. I would like to acknowledge the support from Vancouver Island University and University of British Columbia - thank you for supporting me as a master's student.  
+This research also would not have been possible without the support and encouragement from my academic supervisors -- Bill Floyd and Mark Johnson -- and from partners in the NSERC forWater Network: Suzanne Tank, Mike Stone, Dana Harriman, Monica Emelko, Uldis Silins, Axel Anderson. I would like to acknowledge the support from Vancouver Island University, the University of British Columbia and the NSERC Canadian Graduate Scholarship Masters Award -- thank you for supporting me as a master's student.   
 
-For help with field installations and streamflow gauging, a big thanks to my friend and former field partner, Stewart Butler (VIU Coastal Hydrology Research Lab); thanks Stew. Thanks also to Alison Bishop for field assistance during the winter of 2019/2020, and for help with GIS.
+For help with field installations and streamflow gauging, a big thanks to my friend and former field partner, Stewart Butler (VIU Coastal Hydrology Research Lab); thanks Stew. Thanks also to Alison Bishop for assistance on a field trip during the winter of 2019/2020 and for help with GIS.
 
-Last but certainly not least, thanks to my incredibly wonderful friends and family for supporting me in my scientific and academic pursuits. I really appreciate all the love and support, dinners and coffees, bike rides and beers, proof-reading and encouragement. Thank you all for your patience also, this was a big project. 
+Big thanks to my incredibly wonderful friends and family for supporting me in my scientific and academic pursuits. I really appreciate all the love and support, dinners, coffees, bike rides, beers, proof-reading and encouragement. Thank you all for your patience also, this was a big project.
+
+__Land Acknowledgement__
+
+The author, Hannah J. McSorley, acknowledges and thanks the First Nations on whose traditional lands she traveled, learned, researched, lived and played on during this masters thesis project, and on whose land she continues to live.
+
+The research sites in Greater Victoria water supply areas are located on traditional territory of the T’sou-ke (Sooke) Nation, who have lived on these lands since time immemorial and who were the original watershed protectors. The Capital Regional District occupies land of the Scia'new (Beecher Bay), Songhees, T’Sou-ke First Nation and Malahat First Nation.
+
+Research at the University of British Columbia in Vancouver BC, was conducted on the traditional, unceded territories of xʷməθkʷəy̓əm (Musqueam) People. For the duration of this masters research, Hannah gratefully lived and played in East Vancouver on traditional territory of the Musqueam, Sḵwx̱wú7mesh (Squamish), and Səlilwətaɬ (Tsleil-Waututh) Nations. Traveling between UBC and the water supply areas included passage across Tsawout and Tsawwassen First Nation territories. 
+
+Vancouver Island University (Nanaimo campus) is located on traditional lands of the Snuneymuxw First Nation, Quw’utsun and Tla’Amin Peoples. The land traveled between VIU and the research sites, along the south east coast of Vancouver Island, includes territories of the Stz'uminus First Nation (Chemainus), Halalt, Cowichan Tribes, Malahat First Nation, T'Sou-ke First Nation, and Songhees.
+
+Thank you to the First Nations who are the original land protectors of the areas I call home; I tread lightly and I am actively un-learning and re-learning our history.   
 
 \  
 
@@ -96,7 +108,6 @@ First, I dedicate this thesis to each person who reads it in its entirety.
 
 Second, I dedicate this thesis to the love of data science. I'm grateful for Jenny Bryan's online resources, Stack Overflow (stackoverflow.com) for the solution to so many coding challenges, and to Dan Moore for teaching me R (UBC GEOB 503) and continuing to support my R development with additional resources. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).
 
-Third, I dedicate this to my undergraduate research supervisor and mentor, Erik Krogh (VIU Chemistry), for inspiring me to realize my potential as a scientific researcher. 
+Third, I dedicate this to my undergraduate research supervisor and mentor, Dr. Erik Krogh (VIU Chemistry), for inspiring me to realize my potential as a scientific researcher. 
 
-Cheers
-
+Cheers!

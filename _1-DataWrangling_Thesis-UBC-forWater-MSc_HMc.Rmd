@@ -514,107 +514,90 @@ FULLSCAN_results <- FULLSCAN_results %>%
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
   summarise_all(list(~mean(.))) %>% 
   ungroup()
+
+# ---
+# now join the full scan with the results data
+spectral_results_all <- dplyr::full_join(FULLSCAN_results, SCAN_results,
+                                     by = c("trip", "site", "sample_type", "sample", 
+                                            "dt_sampled", "fillStage_cm"))
 ```
 
-# YOU ARE HERE -- fix spectra so that absorbance values are SAC (SAC (/m) = abs/pathlength(m))
 ### Spectral indices
-```{r, spectral-indices, message = FALSE}
+```{r}
 
 # ------ spectral indices -------
 # the absorbance values can be used to determine spectral indices
 # indices are more useful for interpretation than raw ABS values
 
-# first, check that SAC254_Abs/m is ABS/m @254nm
-spectral_results <- dplyr::full_join(FULLSCAN_results, SCAN_results,
-                                     by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm"))
-
-# explore 
-spectral_results %>%
+# first, check that SAC254_Abs/m is ABS/m @254nm (or are the fp values AU absorbances?)
+spectral_results_all %>%
+  filter(site != "Lab") %>% 
   group_by(site, sample_type, sample, SAC254_Abs.m) %>% 
-  summarise(twofiftyfour = mean(c(Abs_252.5, Abs_255)))  # actually abs at 253.75
-# I believe it.
+  summarise(twofiftyfour_abs = mean(c(Abs_252.5, Abs_255)), # actually abs at 253.75
+            twofiftyfour_SAC = mean(c(Abs_252.5/0.035, Abs_255/0.035)))  
+# Looks like the .fp files contain specific absorbance coefficients rather than absorbance data
 
-# how was turbidity?
-spectral_results %>%
-  filter(Turbid.FTUeq > 0) %>% 
-  select(trip, site, sample_type, sample, SAC254_Abs.m, Abs_252.5, Abs_255, Turbid.FTUeq)
-
+# remove samples with turbidity
 # how many samples will I lose by filtering out those with turbidity>0?
-turby <- nrow(spectral_results %>%
-                filter(Turbid.FTUeq > 0.000) %>% 
-                select(trip, site, sample_type, sample, SAC254_Abs.m, Turbid.FTUeq)
-)
-loss <- 100*(turby/nrow(spectral_results))
+100*(nrow(spectral_results_all %>% filter(Turbid.FTUeq > 0.000)) / nrow(spectral_results_all))
+# 10.7% loss in data
 
-# -------------------------------------------------------------------------------------------
-# Spectral slopes -- from linear regression of log~e~-transformed spectra
+# save only samples with no turbidity
+spectral_results <- spectral_results_all %>% filter(Turbid.FTUeq == 0.00000)
 
-# S1
-# 275-295 nm (S~275-295~) == S1
+```
+
+#### Spectral slopes
+
+spectral slopes are weird and I don't understand them. An alternative is A250:A365 ("E2:E3") (below)
+```{r}
+# Spectral slopes -- from linear regression of log~e~-transformed SAC
+# read Helms, et.al (2008). Absorption spectral slopes and slope ratios as indicators of molecular weight, source and photobleaching of chromophoric dissolved organic matter. Limnol. Oceanogr, 53(3), 955-969. 
+
+# S1 == 275-295 
 S1 <- spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>%                   # remove turbid samples 
-  pivot_longer(cols = Abs_275:Abs_295,            # longer is better (select only what you need)
+  pivot_longer(cols = Abs_275:Abs_295, # longer is better (select only what you need)
                names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
   select(c(trip, site, sample_type, sample, dt_sampled, fillStage_cm, 
-           Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, 
-           SAC254_Abs.m, SAC436_Abs.m, wavelength_nm, SAC_per.m)) %>% 
+           wavelength_nm, SAC_per.m)) %>% 
   mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm))) %>%  # numeric wavelength
-  mutate(lnSAC = log(SAC_per.m)) %>% 
-  group_by(trip, site, sample_type, sample) %>% 
+  mutate(lnSAC = log(SAC_per.m)) 
+
+# plot it? -- not very informative
+#S1 %>% 
+#  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
+#  geom_jitter() +
+#  geom_smooth(method = "lm")
+
+S1 <- S1 %>% group_by(trip, site, sample_type, sample) %>%
   summarise(sample_slope1 = cor(y = lnSAC, x = wavelength_nm)) 
 
-# plot it
-spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>% 
-  pivot_longer(cols = Abs_275:Abs_295,            # longer is better (select only what you need)
-               names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
-  mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm)),  # numeric wavelength
-         lnSAC = log(SAC_per.m)) %>%  
-  group_by(trip, site, sample_type, sample) %>% 
-  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
-  geom_jitter() +
-  geom_smooth(method = "lm")
-
-# S2
-# 350-400 nm (S~350-400~) == S2
+# S2 == 350-400 nm 
 S2 <- spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>%                   # remove turbid samples 
-  pivot_longer(cols = Abs_350:Abs_400,            # longer is better (select only what you need)
+  pivot_longer(cols = Abs_350:Abs_400,
                names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
   select(c(trip, site, sample_type, sample, dt_sampled, fillStage_cm, 
-           Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, 
-           SAC254_Abs.m, SAC436_Abs.m, wavelength_nm, SAC_per.m)
-  ) %>% 
+           wavelength_nm, SAC_per.m)) %>% 
   mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm))) %>%  # numeric wavelength
   mutate(lnSAC = log(SAC_per.m)) %>% 
   group_by(trip, site, sample_type, sample) %>% 
   summarise(sample_slope2 = cor(y = lnSAC, x = wavelength_nm)) 
 
-# plot it
-spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>% 
-  pivot_longer(cols = Abs_350:Abs_400,            # longer is better (select only what you need)
-               names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
-  mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm)),  # numeric wavelength
-         lnSAC = log(SAC_per.m)) %>%  
-  group_by(trip, site, sample_type, sample) %>% 
-  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
-  geom_jitter() +
-  geom_smooth(method = "lm")
-
 # Summary df with slope ratios and spectral indicies
 spectral_summary <- spectral_results %>%
   mutate(pseudo254 = (Abs_252.5+Abs_255)/2) %>% 
-  select(trip:fillStage_cm,
-         pseudo254,
-         Abs_250, Abs_365
-  ) %>% 
-  full_join(S1) %>% 
-  full_join(S2) %>% 
+  select(trip:fillStage_cm, 
+         Abs_250, Abs_365, Abs_465, Abs_665, 
+         Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, pseudo254) %>% 
+  group_by(trip, site, sample_type, sample) %>% 
+  full_join(S1, by = c("trip", "site", "sample_type", "sample")) %>% 
+  full_join(S2, by = c("trip", "site", "sample_type", "sample")) %>% 
   mutate(SlopeRatio = sample_slope1/sample_slope2,
-         E2E3 = Abs_250/Abs_365,
+         E2E3 = Abs_250/Abs_365, # akak A~250:A~365
+         E4E6 = Abs_465/Abs_665, # humification indicator
          trip = as_factor(trip)) %>% 
-  select(-c(sample_slope1, sample_slope2))
+  select(-c(sample_slope1, sample_slope2, Abs_250, Abs_365, Abs_465, Abs_665)) %>% 
+  ungroup()
 
 ```
 
@@ -636,22 +619,23 @@ spectral_summary <- spectral_results %>%
 # the instrument was TOCV or SCAN
 
 # --- WIDE SUMMARY DF --- # 
-sampleresults <- full_join(TOCV_results, SCAN_results, 
-                           by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+sampleresults <- full_join(TOCV_results, spectral_summary, by = c(
+  "trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")
+  ) %>% 
   mutate(trip = as_factor(trip),
          site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
-         analysis = factor(analysis, exclude = "TOC"),  # drop "TOC"
-         analysis = factor(analysis),   # drop residual NA from removing "TOC"
-         site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
-         site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
-  select(-c(vial))   # drop unnecessary variables
+         analysis = factor(analysis),   
+         site = factor(site)) %>% 
+  select(-c(vial, Turbid.FTUeq)) %>%    # drop unnecessary variables
+  filter(site != "Mystery-bottle", # drop "mystery bottle"
+         analysis != "TOC")  # drop TOC (unfiltered on Shimadzu)
+
 # check it out
 #str(sampleresults)
 
-# add a variable to identify season 
+# add a variable to estimate season (based on month of year)
 # two seasons (wet/dry))    
 sampleresults <- sampleresults %>% 
   mutate(trip = factor(trip),
@@ -663,12 +647,16 @@ sampleresults <- sampleresults %>%
 
 # SUVA ------ 
 # add a variable for SUVA = [DOC]/SAC254
-sampleresults  <-  sampleresults %>% 
-  mutate(SUVA = SAC254_Abs.m/NPOC_ppm)
+sampleresults <- sampleresults %>% 
+  mutate(SUVA = SAC254_Abs.m/NPOC_ppm,
+         pseudo_SUVA = pseudo254/NPOC_ppm)
 
 # good!
 
 ```
+
+# YOU ARE HERE
+you just updated the indices above... pseudo SUVA254 could be better... but your brain stopped working. YOU HAVE A LOT TO DO!!!!
 
 ## Metals data
 ```{r, CRD-metals, message = FALSE}
