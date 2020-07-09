@@ -6,7 +6,7 @@ output: bookdown::word_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(include = FALSE, package.startup.message = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(include = FALSE, message = FALSE, warning = FALSE)
 ```
 
 # Setup
@@ -17,7 +17,7 @@ install.packages("devtools")
 devtools::install_github("USGS-R/Rainmaker")
 ```
 
-```{r wrangling packages}
+```{r, package.startup.message = FALSE}
 
 # load packages
 library(tidyverse)  # tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
@@ -34,7 +34,7 @@ assign time zone and create functions
 
 ```{r, function}
 # time-zone note: all Odyssey level loggers recorded in standard time (no daylight savings shift)
-TZ <- "America/Los_Angeles"
+TZ <- "Etc/GMT+8"
 
 # create a function: for Alpha-numeric number extraction
 # from http://stla.github.io/stlapblog/posts/Numextract.html
@@ -821,7 +821,7 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 ```
 
-# Match bottle height to logged stage
+### Match bottle height to logged stage
 
 Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join
 ```{r, join-stage-samples}
@@ -964,7 +964,7 @@ results %>%
 
 ```
 
-## simplify and plot
+#### simplify and plot
 ```{r, plot-hydro-samples}
 
 # create a subset dataframe for the six install sites for tidier calling
@@ -1655,10 +1655,6 @@ write_csv(results,
 # Rain events from Rainmaker
 write_csv(Hobo_Trip, 
 "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", na = "NA")
-
-# subbasin_Hobos
-write_csv(subbasin_Hobos, 
-"R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", na = "NA")
 
 # corr_stage df
 # baseflow and rack corrected Odyssey data
