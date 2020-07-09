@@ -650,13 +650,13 @@ sampleresults <- sampleresults %>%
 sampleresults <- sampleresults %>% 
   mutate(SUVA = SAC254_Abs.m/NPOC_ppm,
          pseudo_SUVA = pseudo254/NPOC_ppm)
-
-# good!
+# fill in  SUVA gaps
+sampleresults <- within(sampleresults, 
+                      SUVA <- ifelse(
+                        is.na(SUVA), pseudo_SUVA, SUVA)) 
 
 ```
 
-# YOU ARE HERE
-you just updated the indices above... pseudo SUVA254 could be better... but your brain stopped working. YOU HAVE A LOT TO DO!!!!
 
 ## Metals data
 ```{r, CRD-metals, message = FALSE}
@@ -862,7 +862,7 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 ```
 
-
+# YOU ARE HERE
 # Match bottle height to logged stage
 
 Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join
@@ -988,6 +988,7 @@ results3 <- within(results2,
 
 # save as a new dataframe
 results <- results3 %>% 
+  mutate(DateTime = dt_sampled) %>% 
   select(-c(dt_sampled, ID, fillStage_cm)) %>%  # not needed
   mutate(two_seasons = factor(two_seasons)) %>% 
   dplyr::distinct(site, trip, sample_type, sample, DateTime_sampled, .keep_all = TRUE)  
