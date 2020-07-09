@@ -10,7 +10,7 @@ This RMD file generates summary tables and figures but is not included in the fi
 
 # Set-up
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message = FALSE)
+knitr::opts_chunk$set(include = FALSE, warning = FALSE, message = FALSE)
 ```
 
 Packages
@@ -21,11 +21,9 @@ library(tidyverse)  # includes: dplyr, ggplot2, purrr, readr, forcats
 library(lubridate)  # dates and times
 library(broom)      # tidy up
 library(glue)       # glue() is an object-integrated 'paste'-like function
-#library(knitr)      # tidy tables
 library(RColorBrewer) # Brewer palette for plots
 library(viridis)    # nice colours for plots gradient fills
 library(cowplot)    # add-on to ggplot for layout (nice grid)
-#library(directlabels) # add labels to ggplots
 library(gghighlight)# plot highlighting
 library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
@@ -99,17 +97,6 @@ Hobo_df <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_tri
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ)) %>% 
   rename(TidbiT_location = "location")
 
-# subbasin_Hobos -- I DON'T THINK I USE THIS...
-subbasin_dailyHobo <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", col_names = TRUE) %>% 
-  mutate(trip = factor(trip),
-         event_ID = factor(event_ID), 
-         rain_season = factor(rain_season),
-         site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")), 
-         sample_type = factor(sample_type),
-         sample = factor(sample),
-         TidbiT_location = factor(TidbiT_location))
-
-
 # odyssey_data df
 # stage data compiled with interval/trip
 odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Odyssey-RackCorrected-stage.csv", col_names = TRUE) %>% 
@@ -120,20 +107,20 @@ odyssey_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Ody
 
 # precip_data df
 # 2018-2020 weather station data compiled and formatted
-precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", col_names = TRUE, col_types = list("c", "T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "c")) %>%
+precip_data <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-PrecipTemp_compiled.csv", col_names = TRUE) %>%
   mutate(StationName = factor(StationName),
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
+         Precip = as.numeric(Precip), # read in as logical
+         Prec_24 = as.numeric(Prec_24),
          event_ID = factor(event_ID),
          rain_season = factor(rain_season))    
 
 # LWSA mean precip data (FWx-mean-LWSA df)
 # 2018-2020 weather station data compiled and formatted
-LWSA_meanWx <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE, col_types = list("T", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d")) %>% 
-  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ))  %>% 
-  distinct(DateTime, .keep_all = TRUE) # I guess I ended up with duplicate rows, woops.
-# resave this one:
-#  write_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE)
-
+LWSA_meanWx_dat <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/FWx-Mean-LWSA_PrecipTemp.csv", col_names = TRUE) %>% 
+  mutate(DateTime = lubridate::ymd_hms(DateTime, tz = TZ),
+         Precip_mean = as.numeric(Precip_mean), 
+         Prec_24_mean = as.numeric(Prec_24_mean))  
 
 # rain events defined with Rainmaker::RMevents()
 # mean 15-minute rainfall record from Chris Crk and Martin's gulch FWx stns
@@ -212,7 +199,6 @@ NOMcharacter_UA <- read_csv("R-inputs_UBC-forWater-MSc_HMc/NOM-character-results
 plots: rain/snow/temp
 At Chris Creek and Martin's Gulch FWx stations
 
-* fix snow data -- SR50a noise creates weird 3m error
 ```{r, FWx-plots}
 
 # Rn15 is 15-minute rainfall (mm) 
@@ -241,8 +227,8 @@ snowplot <- precip_data %>%
   filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   group_by(StationName, date) %>% 
-  
-  dplyr::summarise(daily_Snowmean = mean(SnowDep, na.rm = TRUE)) %>% 
+  # note: "SnowDep" contains noise (raw), "SnowDepth" is clean(er)
+  dplyr::summarise(daily_Snowmean = mean(SnowDepth, na.rm = TRUE)) %>% 
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_Snowmean)) +
   geom_col(colour = "grey60") +
@@ -296,29 +282,56 @@ table: annual precip, max snow, mean temp
 FWx for each station
 ```{r}
 # precip_data summary
-precip_data %>%
+a <- precip_data %>%
   mutate(Year = lubridate::year(DateTime)) %>% 
   filter(StationName != "Survey Mtn Wx", 
-         Year != 2017) %>%   #, Year != 2020
-  mutate(year = case_when(Year == 2018 ~ "2018",
-                          Year == 2019 ~ "2019",
-                          Year == 2020 ~ "Jan-Feb 2020")) %>% 
-  group_by(year, StationName) %>%
+         Year != 2017, Year != 2020) %>%   
+  group_by(Year, StationName) %>%
   summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
-            max_snow_m = max(SnowDep, na.rm = TRUE), # not sure how to report
+            max_snow_m = max(SnowDepth, na.rm = TRUE), 
             annual_mean_temp = mean(Temp, na.rm = TRUE),
             temp_sd = sd(Temp, na.rm = TRUE),
             annual_min_temp = min(TMin, na.rm = TRUE),
             annual_max_temp = max(TMax, na.rm = TRUE)) %>% 
-  dplyr::rename("Year" = year, 
+  dplyr::rename("year" = Year,
                 "station name" = StationName, 
-                "annual precip. (mm)" = total_precip_mm,
+                "annual rain. (mm)" = total_rain_mm,
                 "max snow (m)" = max_snow_m,
                 "mean air temp. (°C)" = annual_mean_temp, 
                 "stdev air temp. (± °C)" = temp_sd,
-                "mean max. temp. (°C)" = annual_min_temp,
-                "mean min. temp. (°C)" = annual_max_temp) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv")
+                "mean min. air temp. (°C)" = annual_min_temp,
+                "mean max. air temp. (°C)" = annual_max_temp) %>% 
+  mutate(year = as.character(year)) # to join Jan-Feb table below
+
+b <- precip_data %>%
+  mutate(Year = lubridate::year(DateTime),
+         Month = lubridate::month(DateTime, label = TRUE, abbr = TRUE)) %>% 
+  filter(StationName != "Survey Mtn Wx", 
+         Year != 2017,
+         Month == "Jan" | Month == "Feb") %>%   
+  mutate(JanFebYr = case_when(
+    Year == 2018 ~ "Jan-Feb 2018",
+    Year == 2019 ~ "Jan-Feb 2019",
+    Year == 2020 ~ "Jan-Feb 2020")) %>% 
+  group_by(JanFebYr, StationName) %>%
+  summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
+            max_snow_m = max(SnowDepth, na.rm = TRUE), 
+            annual_mean_temp = mean(Temp, na.rm = TRUE),
+            temp_sd = sd(Temp, na.rm = TRUE),
+            annual_min_temp = min(TMin, na.rm = TRUE),
+            annual_max_temp = max(TMax, na.rm = TRUE)) %>% 
+  dplyr::rename("year" = JanFebYr,
+                "station name" = StationName, 
+                "annual rain. (mm)" = total_rain_mm,
+                "max snow (m)" = max_snow_m,
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "stdev air temp. (± °C)" = temp_sd,
+                "mean min. air temp. (°C)" = annual_min_temp,
+                "mean max. air temp. (°C)" = annual_max_temp) 
+
+# combine as full summary table
+c <- bind_rows(a, b) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/FWx_LWSA-stn-summary.csv")
 ```
 
 
@@ -328,15 +341,12 @@ Arithmetic means from ChrisCrk and MartinsGulch.
 ```{r}
 # add seasons to mean weather df
 LWSA_meanWx <- precip_data %>% 
-  select(DateTime, rain_season) %>%  # just to get rainseason from precip_data df
-  right_join(LWSA_meanWx, by = "DateTime") %>% 
-  mutate(Year = lubridate::year(DateTime),
-         year = case_when(Year == 2018 ~ "2018",
-                          Year == 2019 ~ "2019",
-                          Year == 2020 ~ "Jan-Feb 2020"))
+  select(DateTime, rain_season) %>%  # just want to get rain_season
+  right_join(LWSA_meanWx_dat, by = "DateTime") %>% 
+  distinct(DateTime, .keep_all = TRUE)  # keep only individual days (duplicates from multi- stations)
 
 # check seasons visually
-a <- LWSA_meanWx %>% 
+LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   filter(date >= "2018-10-23") %>% 
   ggplot(aes(x = DateTime, y = Rn_1_mean)) +
@@ -347,8 +357,6 @@ a <- LWSA_meanWx %>%
   scale_x_datetime(date_breaks = "2 months", date_minor_breaks = "1 months")+
   theme(text = element_text(size = 11),
         axis.text.x = element_text(angle = 60, hjust = 1))
-
-#a
 
 ```
 
@@ -364,7 +372,7 @@ mean_rainplot <- LWSA_meanWx %>%
   ggplot(aes(x = date, y = daily_rn)) +
   geom_col(colour = "#09A4D2") +
   scale_y_reverse() +
-  labs(x = "", y = "Rain\n(mm/day)") +
+  labs(x = "", y = "Rain (mm/day)") +
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
@@ -375,17 +383,17 @@ mean_rainplot <- LWSA_meanWx %>%
              colour = brewer.pal(8, "Dark2")[4],
              linetype = "dashed", size = 0.75) +
   annotate("text", label = "Project start", angle = 90, colour = brewer.pal(8, "Dark2")[8],
-           x = as_date("2018-10-23")-20, y = 170)
+           x = as_date("2018-10-23")-20, y = 100)
 
 # plot LWSA snow
 mean_snowplot <- LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   group_by(date) %>% 
-  dplyr::summarise(daily_Snowmean = mean(SnowDep_mean, na.rm = TRUE)) %>% 
+  dplyr::summarise(daily_Snowmean = mean(SnowDepth_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_Snowmean)) +
   geom_col(colour = "grey60") +
-  labs(x = "", y = 'Snow\n(m/day)') +
+  labs(x = "", y = 'Snow (m/day)') +
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
@@ -406,7 +414,7 @@ mean_tempplot <- LWSA_meanWx %>%
   geom_line(colour = "#f4AB0E") +
   geom_hline(yintercept = 0,
              linetype = "dotted") +
-  labs(x = "", y = 'Daily air temp\n(°C)') +
+  labs(x = "", y = 'Air temp (°C/day)') +
   theme_bw()+
   theme(legend.position = "none",
         text = element_text(size = 11),
@@ -419,7 +427,7 @@ mean_tempplot <- LWSA_meanWx %>%
              linetype = "dashed", size = 0.75)
 
 # LWSA Wx -- stack precip and temp with cowplot
-cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, ncol = 1, rel_heights = c(3,3,4))
+cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, ncol = 1, rel_heights = c(3,3,4), align = "v")
 
 # save plot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 6, height = 6, units = "in")
@@ -428,23 +436,20 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 6, he
 table: mean Wx
 
 ```{r, table_mean-FWx_summary}
-# mean weather summary
-precip_data %>%
-  mutate(Year = lubridate::year(DateTime),
-         year = case_when(Year == 2018 ~ "2018",
-                          Year == 2019 ~ "2019",
-                          Year == 2020 ~ "Jan & Feb 2020")) %>% 
+# mean weather summary by year
+a <- precip_data %>%
+  mutate(Year = lubridate::year(DateTime)) %>% 
   filter(StationName != "Survey Mtn Wx", 
-         Year != 2017) %>%  
-  group_by(Year, year, StationName) %>%
+         Year != 2017, Year != 2020) %>%  
+  group_by(Year, StationName) %>%
   summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
-            max_snow_m = max(SnowDep, na.rm = TRUE),
+            max_snow_m = max(SnowDepth, na.rm = TRUE),
             annual_temp = mean(Temp, na.rm = TRUE),
             temp_sd = sd(Temp, na.rm = TRUE),
             annual_min_temp = min(TMin, na.rm = TRUE),
             annual_max_temp = max(TMax, na.rm = TRUE)) %>%
   ungroup() %>% 
-  group_by(year) %>%
+  group_by(Year) %>%
   summarise(mean_rain_mm = mean(total_rain_mm, na.rm = TRUE),
             sd_rain_mm = sd(total_rain_mm, na.rm = TRUE),
             max_snow_m = max(max_snow_m, na.rm = TRUE),
@@ -453,14 +458,53 @@ precip_data %>%
             annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
             annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
   ungroup() %>% 
-  dplyr::rename("mean annual rain (mm)" = mean_rain_mm,
+  dplyr::rename("year" = Year,
+                "mean annual rain (mm)" = mean_rain_mm,
                 "stdev rain. (±mm)" = sd_rain_mm,
-                "max. snow accum. (m)" = max_snow_m,
-                "mean temp. (°C)" = annual_mean_temp, 
-                "st.dev temp. (±°C)" = temp_sd,
-                "min. temp. (°C)" = annual_min_temp2,
-                "max. temp. (°C)" = annual_max_temp2) %>%
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
+                "max. snow depth, mean (m)" = max_snow_m,
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "stdev air temp. (±°C)" = temp_sd,
+                "min. temp., mean (°C)" = annual_min_temp2,
+                "max. temp., mean (°C)" = annual_max_temp2) %>% 
+  mutate(year = as.character(year)) # to bind to Jan-Feb table below
+
+b <- precip_data %>%
+  mutate(Year = lubridate::year(DateTime),
+         Month = lubridate::month(DateTime, label = TRUE, abbr = TRUE)) %>% 
+  filter(StationName != "Survey Mtn Wx", 
+         Year != 2017,
+         Month == "Jan" | Month == "Feb") %>%   
+  mutate(JanFebYr = case_when(Year == 2018 ~ "Jan-Feb 2018",
+                              Year == 2019 ~ "Jan-Feb 2019",
+                              Year == 2020 ~ "Jan-Feb 2020")) %>% 
+  group_by(JanFebYr, StationName) %>%
+  summarise(total_rain_mm = sum(Rn15, na.rm = TRUE),
+            max_snow_m = max(SnowDepth, na.rm = TRUE), 
+            annual_temp = mean(Temp, na.rm = TRUE),
+            temp_sd = sd(Temp, na.rm = TRUE),
+            annual_min_temp = min(TMin, na.rm = TRUE),
+            annual_max_temp = max(TMax, na.rm = TRUE)) %>%
+  ungroup() %>% 
+  group_by(JanFebYr) %>%
+  summarise(mean_rain_mm = mean(total_rain_mm, na.rm = TRUE),
+            sd_rain_mm = sd(total_rain_mm, na.rm = TRUE),
+            mean_max_snow_m = mean(max_snow_m, na.rm = TRUE),
+            annual_mean_temp = mean(annual_temp, na.rm = TRUE),
+            temp_sd = sd(annual_temp, na.rm = TRUE),
+            annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
+            annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
+  ungroup() %>% 
+  dplyr::rename("year" = JanFebYr,
+                "mean annual rain (mm)" = mean_rain_mm,
+                "stdev rain. (±mm)" = sd_rain_mm,
+                "max. snow depth, mean (m)" = mean_max_snow_m,
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "stdev air temp. (±°C)" = temp_sd,
+                "min. temp., mean (°C)" = annual_min_temp2,
+                "max. temp., mean (°C)" = annual_max_temp2) 
+
+# combine as full summary table
+c <- bind_rows(a, b) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
 ##### questionable objects
