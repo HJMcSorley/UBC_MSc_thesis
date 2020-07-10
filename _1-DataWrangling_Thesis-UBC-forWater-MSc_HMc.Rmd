@@ -865,7 +865,7 @@ rack_sample_df <- sixfilter %>%
 stage_racks <- corr_stage %>% 
   group_by(source, interval) %>%  # site & trip
   select(-c(Date, stage_cm)) %>% 
-  rename(site = source,
+  rename(site = source, # new = old
          trip = interval) %>% 
   mutate(sampleStage_cm = round(corr_stage_cm)) %>% 
   dplyr::distinct(sampleStage_cm, .keep_all = TRUE)  # first occurrence of rack stage
@@ -981,12 +981,12 @@ sixfilter_join <- results %>%
   filter(!is.na(sample_type))
 
 # join odyssey and result 
-stg_sample <- left_join(corr_stage, sixfilter_join, 
-                        by = c("DateTime", 
-                               "source" = "site", 
-                               "corr_stage_cm")) %>% 
+stg_sample <- corr_stage %>%
   dplyr::rename(site = source) %>%    # new_name = old_name 
-  select(-c(Date.y,Date.x)) %>% 
+  group_by(site) %>% 
+  left_join((sixfilter_join %>% mutate(DateTime = "DateTime_sampled") %>% group_by(site)), 
+                        by = c("DateTime", "site", "corr_stage_cm")) %>% #, "rain_season", "event_ID"
+  select(-c(Date.y, Date.x, DateTime.y)) %>% 
   mutate(Date = as_date(DateTime))
 
 
@@ -1090,8 +1090,21 @@ wx_mean <- precip_data %>%
 #### Rain Events defined based on 15-minute rain using Rainmaker::RMevents
 ```{r, warnings = FASLE, messages = FALSE}
 # use precipitation to define events
-# precip_data
-# odyssey_data
+
+# use Rainmaker to delineate storms
+# inter-event period = 14 hrs, threshold for major event = 50mm 
+# mean 15-minute rainfall record from Chris Crk and Martin's gulch FWx stns
+Wx_CC_storms <- wx_mean %>% 
+  filter(DateTime >= "2018-10-23") %>% 
+  as.data.frame() %>% 
+  Rainmaker::RMevents(., ieHr = 14, rainthresh = 50, rain = "Rn15_mean", time = "DateTime")
+
+Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
+Wx_CC_storms[["storms"]]   # list of all events
+```
+
+##### plot 
+```{r, plot-hydro-events}
 
 # save plot of stage and samples
 stage_sample_plot <-  stg_sample %>% 
@@ -1109,22 +1122,6 @@ stage_sample_plot <-  stg_sample %>%
   theme(axis.text.x = element_text(angle = 60, hjust=1),
         text = element_text(size=11),
         legend.position = "bottom")
-
-
-# use Rainmaker to delineate storms
-# inter-event period = 14 hrs, threshold for major event = 50mm 
-# mean 15-minute rainfall record from Chris Crk and Martin's gulch FWx stns
-Wx_CC_storms <- wx_mean %>% 
-  filter(DateTime >= "2018-10-23") %>% 
-  as.data.frame() %>% 
-  Rainmaker::RMevents(., ieHr = 14, rainthresh = 50, rain = "Rn15_mean", time = "DateTime")
-
-Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event depth)
-Wx_CC_storms[["storms"]]   # list of all events
-```
-
-##### plot 
-```{r, plot-hydro-events}
 
 # rain plot with storm lines
 rn_strm_plot <- wx_mean %>% 

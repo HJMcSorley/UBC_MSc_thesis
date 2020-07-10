@@ -4,6 +4,17 @@ output: bookdown::word_document2
 
 ##	Spatial and temporal patterns in DOC & DOM
 
+```{r, include = FALSE, package.startup.message = FALSE}
+
+# load required packages
+library(tidyverse)  # keep it tidy
+library(readr)      # read in delimited files
+library(knitr)      # for nice tables
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
+
+```
+
 ### Introduction
 
 *Research Question:* What are the ranges for DOC concentration and DOM character between adjacent drainage basins and among nested sub-catchments in the LWSA, and what influence does seasonality have on concentration and character of DOC?
@@ -30,9 +41,7 @@ The majority of synoptic sites were in the Leech WSA and a few rivers in the Soo
 
 In the LWSA, Lazar Creek and Jarvis Creek are headwater rivers of Cragg Creek, which is a major tributary to the Leech River. Chris Creek and Weeks Creek are headwater streams of Leech River. West Leech River is a major tributary to the Leech and Leech Beach site was located just downstream of the confluence of West Leech with Leech River. The Leech Tunnel site was located near the effective mouth of the LWSA, the Leech River Tunnel. 
 
-Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-wached 250mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). All samples were refrigerated if they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 36 hours of collection, except for a set of *12* samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration & acidification. Samples for DOM spectroscopy were not acidified. 
-****note about unfiltered and removal of high turb samples**** 
-
+Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-wached 250mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). All samples were refrigerated if they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of *12* samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration & acidification. Samples for NOM spectroscopy were not acidified and were measured unfiltered with confirmed turbidity of zero. 
 
 ####    Monitoring & sampling stations {#MethodsNestedCatch}
 

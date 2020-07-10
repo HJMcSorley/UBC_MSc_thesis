@@ -165,7 +165,7 @@ metalslab <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/metals
 
 # stage_samples
 # subbasin sample results with stage, timestamps, and precip event ID
-stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/subbasins_matched-chemohydro-samples.csv", col_names = TRUE) %>% 
+stage_samples_dat <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/subbasins_matched-chemohydro-samples.csv", col_names = TRUE) %>% 
   select(-c(stage_cm)) %>% 
   mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")),
          interval = factor(interval), # stage chunk that corresponds to field trip
@@ -177,7 +177,18 @@ stage_samples <- read_csv("R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/su
          rain_season = factor(rain_season),  # season assigned by rain events
          event_ID = factor(event_ID),  # rain events defined by precip >50mm & 14hrs btwn events
          DateTime = lubridate::ymd_hms(DateTime, tz = TZ), # continuous stage
-         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ)) # sample collection
+         DateTime_sampled = lubridate::ymd_hms(DateTime_sampled, tz = TZ),
+         NPOC_ppm = as.numeric(NPOC_ppm),
+         NO3.Neq_ppm = as.numeric(NO3.Neq_ppm),
+         TOCeq_ppm = as.numeric(TOCeq_ppm),
+         DOCeq_ppm = as.numeric(DOCeq_ppm),
+         SAC254_Abs.m = as.numeric(SAC254_Abs.m),
+         pseudo254 = as.numeric(pseudo254),
+         SlopeRatio = as.numeric(SlopeRatio),
+         E2E3 = as.numeric(E2E3),
+         E4E6 = as.numeric(E4E6),
+         SUVA = as.numeric(SUVA),
+         pseudo_SUVA = as.numeric(pseudo_SUVA)) # sample collection
 
 # Treatability data from U.Waterloo (Fariba Amiri)
 treatdat_UW <- 
@@ -544,7 +555,8 @@ rn_annual <- precip_data %>%
 
 # water-year rainfalls (Oct 1 - Sept 30)
 rn_wateryr <- LWSA_meanWx %>%
-  mutate(month = lubridate::month(DateTime),
+  mutate(Year = lubridate::year(DateTime),
+         month = lubridate::month(DateTime),
          water_year = case_when(
            between(month, 1, 9) & Year == "2018" ~ "2018",
            between(month, 10, 12) & Year == "2018" ~ "2019",
@@ -1167,8 +1179,8 @@ HT <- QAQC %>%
   filter(site == "Tunnel",
          !is.na(NPOC_ppm)) %>% 
   select(-c(sampleStage_cm, corr_stage_cm)) %>% 
-  mutate(HoldTime_set = substr(sample, 10, 10),
-         HoldTime_rep = substr(sample, 11, 12),
+  mutate(HoldTime_set = substr(sample, 10, 10), # set A, B, C
+         HoldTime_rep = substr(sample, 11, 12), # replicate 1-5 (fresh) & 6-10 (held)
          HoldTime_group = case_when(
            HoldTime_rep == c(1:5) ~ "G",  # 'fresh' grab samples
            HoldTime_rep == c(6:10) ~ "R", # 'held' rack samples
@@ -1181,7 +1193,10 @@ HT <- QAQC %>%
     HoldTime_set == "B" & HoldTime_rep == c(6:10) ~ "BR", # second set rack, 2019-11-12 (trip 18)
     HoldTime_set == "C" & HoldTime_rep == c(1:5) ~ "CG", # third set grabs, 2019-11-12 (trip 18)
     HoldTime_set == "C" & HoldTime_rep == c(6:10) ~ "CR", # third set rack, 2019-12-16 (trip 20)
-  ))
+  )) 
+#%>% 
+ # filter(sample != "HoldTime-B6") %>% 
+  #filter(!is.na(sample))  # -----------------change
 
 # how many days passed between collecting fresh and held samples?
 a <- HT %>% 
@@ -1218,9 +1233,10 @@ HT results box plots
 
 # create labels for plots
 HT$HT_group_labels <- fct_recode(HT$HT_group_labels, Fresh = "G", Held = "R")
-HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "A (11 days)" = "A", "B (20 days)" = "B", "C (34 days)" = "C")
+HT$HT_set_labels <- fct_recode(HT$HT_set_labels, "set A (held 11 days)" = "A", "set B (held 20 days)" = "B", "set C (held 34 days)" = "C")
 
-# plot sets
+# plot holdtime sets for different parameters
+# NPOC
 a <- HT %>% 
   ggplot(aes(x = HT_group_labels, y = NPOC_ppm, fill = HT_group_labels))+
   geom_boxplot(alpha = 0.8)+
@@ -1230,37 +1246,51 @@ a <- HT %>%
   labs(y = "DOC (mg/L)", x = "")+
   theme_bw()+
   theme(legend.position = "top")+
-  facet_wrap(~HoldTime_set)
+  facet_wrap(~HT_set_labels)
 
+# SAC 254
 b <- HT %>% 
   ggplot(aes(x = HT_group_labels, y = SAC254_Abs.m, fill = HT_group_labels))+
   geom_boxplot(alpha = 0.8)+
   scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
                     #labels = c(G = "Fresh", R = "Held"),
                     name = "Hold-time sample type:")+
-  labs(y = "UV abs at 254nm (a.u.)", x = "")+
+  labs(y = expression(SAC[254]~(m^-1)), x = "")+
   theme_bw()+
   theme(legend.position = "none")+
-  facet_wrap(~HoldTime_set)
+  facet_wrap(~HT_set_labels)
 
+#E2:E3
 c <- HT %>% 
-  ggplot(aes(x = HT_group_labels, y = DOCeq_ppm, fill = HT_group_labels))+
+  ggplot(aes(x = HT_group_labels, y = E2E3, fill = HT_group_labels))+
   geom_boxplot(alpha = 0.8)+
   scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
                     #labels = c(G = "Fresh", R = "Held"),
                     name = "Hold-time sample type:")+
-  labs(y = "Est. DOC (mg/L)", x = "")+
+  labs(y = expression(E[2]:E[3]), x = "")+
   theme_bw()+
   theme(legend.position = "none")+
-  facet_wrap(~HoldTime_set)
+  facet_wrap(~HT_set_labels)
+
+# SUVA254
+d <- HT %>% 
+  ggplot(aes(x = HT_group_labels, y = SUVA, fill = HT_group_labels))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    #labels = c(G = "Fresh", R = "Held"),
+                    name = "Hold-time sample type:")+
+  labs(y = expression(SUVA[254]), x = "")+
+  theme_bw()+
+  theme(legend.position = "none")+
+  facet_wrap(~HT_set_labels)
 
 # with Estimated DOC
 #cowplot::plot_grid(a, b, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6))  
 
 # without estimated DOC
-cowplot::plot_grid(a, b, align = "v", ncol = 1, rel_heights = c(2, 1.6))  
+cowplot::plot_grid(a, b, d, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6, 1.6))  
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
 
 ```
 
@@ -1316,7 +1346,7 @@ cc <- ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 # run tests and compile results
 # paired (before and after)
 HT_Wilcoxon_tests <- bind_rows(
-  ## NPOC ---
+## NPOC ---
   # set A
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "NPOC_ppm"),
@@ -1326,7 +1356,7 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "NPOC_ppm"),
-  ## UV-254 ---
+## UV-254 ---
   # set A
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "SAC254_Abs.m"),
@@ -1335,7 +1365,28 @@ HT_Wilcoxon_tests <- bind_rows(
     mutate(Set = "B", Analysis = "SAC254_Abs.m"),
   # set C
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"], paired = TRUE)) %>% 
-    mutate(Set = "C", Analysis = "SAC254_Abs.m")) %>% 
+    mutate(Set = "C", Analysis = "SAC254_Abs.m"), 
+## SUVA ---
+  # set A
+  tidy(wilcox.test(HT$SUVA[HT$group == "AG"], HT$SUVA[HT$group == "AR"], paired = TRUE)) %>% 
+    mutate(Set = "A", Analysis = "SUVA"),
+  # set B
+  tidy(wilcox.test(HT$SUVA[HT$group == "BG"], HT$SUVA[HT$group == "BR"], paired = TRUE)) %>% 
+    mutate(Set = "B", Analysis = "SUVA"),
+  # set C
+  tidy(wilcox.test(HT$SUVA[HT$group == "CG"], HT$SUVA[HT$group == "CR"], paired = TRUE)) %>% 
+    mutate(Set = "C", Analysis = "SUVA"),
+## E2:E3 ---
+  # set A
+  tidy(wilcox.test(HT$E2E3[HT$group == "AG"], HT$E2E3[HT$group == "AR"], paired = TRUE)) %>% 
+    mutate(Set = "A", Analysis = "E2:E3"),
+  # set B
+  tidy(wilcox.test(HT$E2E3[HT$group == "BG"], HT$E2E3[HT$group == "BR"], paired = TRUE)) %>% 
+    mutate(Set = "B", Analysis = "E2:E3"),
+  # set C
+  tidy(wilcox.test(HT$E2E3[HT$group == "CG"], HT$E2E3[HT$group == "CR"], paired = TRUE)) %>% 
+    mutate(Set = "C", Analysis = "E2:E3")) %>% 
+# pull values  
   select(Analysis, Set, p.value) %>% 
   # pull values of interest to summarize
   mutate(sig.diff = case_when(p.value < 0.01 ~ "***",
@@ -1359,14 +1410,26 @@ HT_summ <- HT %>%
             mean_DOC = mean(NPOC_ppm),
             sd_DOC = sd(NPOC_ppm),
             RSD_DOC = (sd_DOC/mean_DOC)*100,
+            
             mean_UV254 = mean(SAC254_Abs.m),
-            sd_UV254 = sd(SAC254_Abs.m)) 
+            sd_UV254 = sd(SAC254_Abs.m),
+            RSD_UV254 = (sd_UV254/mean_UV254)*100,
+            
+            mean_SUVA = mean(SUVA),
+            sd_SUVA = sd(SUVA),
+            RSD_SUVA = (sd_SUVA/mean_SUVA)*100,
+            
+            mean_E2E3 = mean(E2E3),
+            sd_E2E3 = sd(E2E3),
+            RSD_E2E3 = (sd_E2E3/mean_E2E3)*100)
 
 
 # summarize percent change (DOC & UV254) for each set
 # vector
 HTDOCresult <- HT_summ$mean_DOC
 HTUVresult <- HT_summ$mean_UV254
+HTSUVAresult <- HT_summ$mean_SUVA
+HTE2E3result <- HT_summ$mean_E2E3
 # summarize
 change <- 
   tibble(set = c("A", "B", "C"),
@@ -1377,7 +1440,15 @@ change <-
          percent_change_UV254 = c(
            round((((HTUVresult[2]-HTUVresult[1])/HTUVresult[1])*100),0),
            round((((HTUVresult[4]-HTUVresult[3])/HTUVresult[3])*100),0),
-           round((((HTUVresult[6]-HTUVresult[5])/HTUVresult[5])*100),0)))
+           round((((HTUVresult[6]-HTUVresult[5])/HTUVresult[5])*100),0)),
+         percent_change_SUVA = c(
+           round((((HTSUVAresult[2]-HTSUVAresult[1])/HTSUVAresult[1])*100),0),
+           round((((HTSUVAresult[4]-HTSUVAresult[3])/HTSUVAresult[3])*100),0),
+           round((((HTSUVAresult[6]-HTSUVAresult[5])/HTSUVAresult[5])*100),0)),
+         percent_change_E2E3 = c(
+           round((((HTE2E3result[2]-HTE2E3result[1])/HTE2E3result[1])*100),0),
+           round((((HTE2E3result[4]-HTE2E3result[3])/HTE2E3result[3])*100),0),
+           round((((HTE2E3result[6]-HTE2E3result[5])/HTE2E3result[5])*100),0)))
 
 
 # pull & set values for plot + table
@@ -1394,7 +1465,7 @@ HT_dates <- HT %>%
   summarise(date_fresh = as_date(first(DateTime_sampled)),
             date_held = as_date(last(DateTime_sampled)),
             lapse = mean(lapse),
-            half_lapse = lapse*0.5)
+            half_lapse = lapse*0.5) # for labels
 
 
 # summarize mean temp +/- sd for each hold-time set
@@ -1435,9 +1506,18 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
          "DOC change (%)" = percent_change_DOC, # rename: new = old
          "sig.diff (DOC)" = sig.diff_NPOC_ppm,  
          "p-value (DOC)" = p.value_NPOC_ppm,
+         
          "UV 254 change (%)" = percent_change_UV254,
          "sig.diff (UV 254)" = sig.diff_SAC254_Abs.m, 
-         "p-value (UV 254)" = p.value_SAC254_Abs.m) %>% 
+         "p-value (UV 254)" = p.value_SAC254_Abs.m,
+         
+         "SUVA254 change (%)" = percent_change_SUVA,
+         "sig.diff (SUVA254)" = sig.diff_SUVA, 
+         "p-value (SUVA254)" = p.value_SUVA,
+         
+         "E2:E3 change (%)" = percent_change_E2E3,
+         "sig.diff (E2:E3)" = 'sig.diff_E2:E3', 
+         "p-value (E2:E3)" = 'p.value_E2:E3') %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv")
 
 ```
@@ -1640,6 +1720,9 @@ sixfilter <- sampleresults %>%
                          c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech","Tunnel")),
          QAQC_flag = factor(QAQC_flag))
 
+# make a sixfilter with only QA-QC flag OK samples
+sixfilter_ok <- sixfilter %>% filter(QAQC_flag == "OK")
+
 # add air temperatures: 
 ## 1. replace missing Hobo values with predicted values 
 ## 2. summarize mean daily air temps
@@ -1696,67 +1779,91 @@ n_SynopticGrabs <- synopticfilter %>%
   dplyr::filter(sample_type == "Grab") %>%
   #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
   summarise(grab_sample_count = n()) %>% 
-  filter(grab_sample_count > 2) %>% 
-  #ungroup() %>%  
-  pull()
-
+  filter(grab_sample_count > 2) %>% pull()
 # how many grab samples were grabbed (<2 per site)?
 n_Grabs <- sampleresults %>% 
   dplyr::filter(sample_type == "Grab", analysis == "DOC") %>%
-  summarise(grab_sample_count = n()) %>% 
-  pull()
-
+  summarise(grab_sample_count = n()) %>%  pull()
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK" | sample_type == "Grab") %>%
-  summarise(number_of_samples = n()) %>% 
-  pull()
-
+  dplyr::filter(sample_type == "Rack"| sample_type == "Grab") %>%
+  summarise(number_of_samples = n()) %>% pull()
 # Grab samples
 n_installGrabSamples <- sixfilter %>% 
   dplyr::filter(sample_type == "Grab") %>% 
   summarise(number_of_samples = n()) %>% pull()
-
 # Rack samples
 n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% pull() 
-
 # Rack samples -- all including flags
 n_installRackSamples_total <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% pull() 
-
 # Rack samples -- QA-QC OK
-n_installRackSamples_OK <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK") %>% 
+n_installRackSamples <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% pull() 
-
-
 # How many samples were collected overall
 n_totalSamples <- sampleresults %>% 
-  dplyr::filter(sample_type == "Rack" & QAQC_flag == "OK" | sample_type == "Grab",
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
                 analysis == "DOC") %>%
-  summarise(sample_count = n()) %>% 
-  pull()
-
+  summarise(sample_count = n()) %>% pull()
 #---
 
+# ------
+# sample counts -- OK flagged samples
+
+# how many synoptic samples were grabbed?
+n_SynopticGrabs_ok <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab" & QAQC_flag == "OK") %>%
+  #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% pull()
+# how many grab samples were grabbed (<2 per site)?
+n_Grabs_ok <- sampleresults %>% 
+  dplyr::filter(sample_type == "Grab", analysis == "DOC", QAQC_flag == "OK") %>%
+  summarise(grab_sample_count = n()) %>%  pull()
+# how many of each sample_type are there at the 6 main sites?
+n_subbbasinSamples_ok <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  summarise(number_of_samples = n()) %>% pull()
+# Grab samples
+n_installGrabSamples_ok <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
+  summarise(number_of_samples = n()) %>% pull()
+# Rack samples
+n_installRackSamples_ok <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- all including flags
+n_installRackSamples_total_ok <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- QA-QC OK
+n_installRackSamples_ok <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# How many samples were collected overall
+n_totalSamples_ok <- sampleresults %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                QAQC_flag == "OK", analysis == "DOC") %>%
+  summarise(sample_count = n()) %>% pull()
+
+# --- 
 # make a summary table:
-tibble::tibble(
-  "synoptic Grab samples outside of monitoring sites" = n_SynopticGrabs - n_installGrabSamples,
-  "opportunistic Grab samples" = (n_Grabs)-(n_SynopticGrabs),
-  "monitoring sites synoptic Grab samples" = n_installGrabSamples,
-  "monitoring sites vertical Rack samples" = n_installRackSamples,
-  "total samples analyzed for results" = n_totalSamples) %>% 
-  pivot_longer(everything(),
-               names_to = "sample category", values_to = "total count") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv")
+tibble::tibble(samples = c("synoptic Grabs outside of monitoring sites", "opportunistic Grabs", "monitoring sites synoptic Grabs", "monitoring sites vertical Rack", "total"),
+  total = c((n_SynopticGrabs - n_installGrabSamples), (n_Grabs)-(n_SynopticGrabs), n_installGrabSamples, n_installRackSamples, n_totalSamples),
+  QAQC = c((n_SynopticGrabs_ok - n_installGrabSamples_ok), (n_Grabs_ok)-(n_SynopticGrabs_ok), n_installGrabSamples_ok, n_installRackSamples_ok, n_totalSamples_ok)) %>% 
+  mutate("reduction (%)" = round( (-1*((QAQC-total)/total)*100 ), digits = 1))  %>% 
+  dplyr::rename("total count" = total,
+                "analyzed (QA/QC count)" = QAQC) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv") 
 
 
 ```
 
-
+add additional categories for plotting groups
 ```{r}
 # --- further categorize
 # subbasin_types
@@ -1783,8 +1890,15 @@ sixfilter_sub <- sixfilter %>%
     site == "Tunnel" ~ "outlet")) %>% 
   mutate(subbasin_type = factor(subbasin_type))
 
-# update stage_samples df also
-stage_samples <- left_join(stage_samples, sixfilter) %>% 
+# update stage_samples df to also include c(rain_seasons, site_type, subbasin_type, QAQC_flag)
+a <- sixfilter %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  select(site, trip, sample_type, sample, rain_seasons, site_type, subbasin_type, QAQC_flag) %>% 
+  group_by(site)
+
+stage_samples <- stage_samples_dat %>% group_by(site) %>% 
+  full_join(a, by = c("site", "trip", "sample_type", "sample")) 
+
   mutate(trip = factor(trip),
          sample_type = factor(sample_type),
          event_ID = factor(event_ID),
