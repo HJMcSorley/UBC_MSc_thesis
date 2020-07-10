@@ -984,9 +984,9 @@ sixfilter_join <- results %>%
 stg_sample <- corr_stage %>%
   dplyr::rename(site = source) %>%    # new_name = old_name 
   group_by(site) %>% 
-  left_join((sixfilter_join %>% mutate(DateTime = "DateTime_sampled") %>% group_by(site)), 
+  left_join((sixfilter_join %>% mutate(DateTime = DateTime_sampled) %>% group_by(site)), 
                         by = c("DateTime", "site", "corr_stage_cm")) %>% #, "rain_season", "event_ID"
-  select(-c(Date.y, Date.x, DateTime.y)) %>% 
+  select(-c(Date.y, Date.x)) %>% 
   mutate(Date = as_date(DateTime))
 
 
