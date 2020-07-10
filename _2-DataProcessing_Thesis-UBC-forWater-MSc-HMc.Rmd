@@ -1892,17 +1892,11 @@ sixfilter_sub <- sixfilter %>%
 
 # update stage_samples df to also include c(rain_seasons, site_type, subbasin_type, QAQC_flag)
 a <- sixfilter %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   select(site, trip, sample_type, sample, rain_seasons, site_type, subbasin_type, QAQC_flag) %>% 
   group_by(site)
 
 stage_samples <- stage_samples_dat %>% group_by(site) %>% 
   full_join(a, by = c("site", "trip", "sample_type", "sample")) 
-
-  mutate(trip = factor(trip),
-         sample_type = factor(sample_type),
-         event_ID = factor(event_ID),
-         rain_season = factor(rain_season))
 
 ```
 
