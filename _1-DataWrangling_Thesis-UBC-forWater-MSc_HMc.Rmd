@@ -6,7 +6,7 @@ output: bookdown::word_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, package.startup.message = FALSE, message = FALSE, warning = FALSE, fig.path="R-outputs_UBC-forWater-MSc_HMc/figures/")
+knitr::opts_chunk$set(include = FALSE, message = FALSE, warning = FALSE)
 ```
 
 # Setup
@@ -17,13 +17,15 @@ install.packages("devtools")
 devtools::install_github("USGS-R/Rainmaker")
 ```
 
-```{r wrangling packages}
+```{r, package.startup.message = FALSE}
 
 # load packages
 library(tidyverse)  # tidyverse includes: dplyr, ggplot2, purrr, readr, forcats
 library(knitr)      # tidy tables, knitting docs
 library(lubridate)  # dates, times, ranges
 library(broom)      # tidy stats
+# install.packages("devtools")
+# devtools::install_github("USGS-R/Rainmaker")
 library(Rainmaker)  # USGS tool -- https://github.com/USGS-R/Rainmaker
 library(viridis)    # pretty colour-blind-friendly pallete
 ```
@@ -31,11 +33,10 @@ library(viridis)    # pretty colour-blind-friendly pallete
 assign time zone and create functions
 
 ```{r, function}
-# time-zone note: all loggers record in standard time (no daylight savings shift)
-TZ <- "America/Los_Angeles"
+# time-zone note: all Odyssey level loggers recorded in standard time (no daylight savings shift)
+TZ <- "Etc/GMT+8"
 
-# create a function:
-# ---- Alpha-numeric extraction function ---- #
+# create a function: for Alpha-numeric number extraction
 # from http://stla.github.io/stlapblog/posts/Numextract.html
 NumberXtract <- function(alphnum){
   unlist(regmatches(alphnum, gregexpr("[[:digit:]]+\\.*[[:digit:]]*", alphnum)))
@@ -119,9 +120,6 @@ shimadzu_samples <- shimadzu_samples %>%
                    fillStage_cm = as.numeric(`fill-stage`),
                    analysis = as_factor(analysis),
                    trip = as_factor(trip))
-# read in all the files
-
-
 # str(shimadzu_samples)
 # head(shimadzu_samples)
 
@@ -161,7 +159,7 @@ shimadzu_samples$site <- shimadzu_samples$site %>%
 # assign column names = col.names():
 nineteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Mean Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
 
-# no "mean area" variable
+# no "Mean Area" variable in trips 9-23
 eighteencolumns <- c("Type",	"Anal.",	"Sample Name",	"Sample ID",	"Origin",	"Cal. Curve",	"Manual Dilution	Notes",	"Date", "Time", "AM/PM",	"Spl. No.", "Inj. No.", "Analysis(Inj.)",	"Area",	"Conc.",	"Result",	"Excluded",	"Inj. Vol.")
 
 ## read in files and add a column indicating trip #, based on source file name
@@ -236,7 +234,7 @@ TOCV_results %>% filter(trip == "20" | trip == "21", site =="Cragg-crk")
 
 # update vials 19-21 to be "trip 21", for later matching with Odyssey stage data
 TOCV_results <- TOCV_results %>% 
-  mutate(#trip = as.character(trip),
+  mutate(trip = as.character(trip),
     trip = case_when(trip == "20" & site =="Cragg-crk" & (vial == 19 | vial == 20 | vial == 21) ~ "21",
                      TRUE ~ trip),
     trip = as_factor(trip))
@@ -420,7 +418,7 @@ SCAN_results <- SCAN_results %>%
 
 ### Full scan spectrophotometry (SCAN_results, spectral fingerprints)
 
-The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. These .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight.
+The Spectrolyser outputs a fingerprint file containing absorbance values at all of the wavelengths monitored. 
 
 ```{r Spectrolyser-fp, message=FALSE, warning=FALSE}
 
@@ -512,107 +510,87 @@ FULLSCAN_results <- FULLSCAN_results %>%
   group_by(trip, site, sample_type, sample, dt_sampled, fillStage_cm) %>% 
   summarise_all(list(~mean(.))) %>% 
   ungroup()
+
+# ---
+# now join the full scan with the results data
+spectral_results_all <- dplyr::full_join(FULLSCAN_results, SCAN_results,
+                                     by = c("trip", "site", "sample_type", "sample", 
+                                            "dt_sampled", "fillStage_cm"))
 ```
 
-# YOU ARE HERE -- fix spectra so that absorbance values are SAC (SAC (/m) = abs/pathlength(m))
 ### Spectral indices
-```{r, spectral-indices, message = FALSE}
 
+The .fp files can provide information about NOM structure. For example, the ratio of the slope between 275-295nm and the slope from 350-400nm ("slope ratio (SR)"), commonly used as an indicator of molecular weight. Or more tidy is the ratio of SAC250/SAC365, which provides the same info as SR but is WAY less confusing to calculate. Spectral slopes are weird and I don't understand them or trust I'm calculating them appropriately. An alternative is A250:A365 ("E2:E3") (below)
+
+```{r}
 # ------ spectral indices -------
 # the absorbance values can be used to determine spectral indices
 # indices are more useful for interpretation than raw ABS values
 
-# first, check that SAC254_Abs/m is ABS/m @254nm
-spectral_results <- dplyr::full_join(FULLSCAN_results, SCAN_results,
-                                     by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm"))
-
-# explore 
-spectral_results %>%
+# first, check that SAC254_Abs/m is ABS/m @254nm (or are the fp values AU absorbances?)
+spectral_results_all %>%
+  filter(site != "Lab") %>% 
   group_by(site, sample_type, sample, SAC254_Abs.m) %>% 
-  summarise(twofiftyfour = mean(c(Abs_252.5, Abs_255)))  # actually abs at 253.75
-# I believe it.
+  summarise(twofiftyfour_abs = mean(c(Abs_252.5, Abs_255)), # actually abs at 253.75
+            twofiftyfour_SAC = mean(c(Abs_252.5/0.035, Abs_255/0.035)))  
+# Looks like the .fp files contain specific absorbance coefficients rather than absorbance data
 
-# how was turbidity?
-spectral_results %>%
-  filter(Turbid.FTUeq > 0) %>% 
-  select(trip, site, sample_type, sample, SAC254_Abs.m, Abs_252.5, Abs_255, Turbid.FTUeq)
-
+# remove samples with turbidity
 # how many samples will I lose by filtering out those with turbidity>0?
-turby <- nrow(spectral_results %>%
-                filter(Turbid.FTUeq > 0.000) %>% 
-                select(trip, site, sample_type, sample, SAC254_Abs.m, Turbid.FTUeq)
-)
-loss <- 100*(turby/nrow(spectral_results))
+100*(nrow(spectral_results_all %>% filter(Turbid.FTUeq > 0.000)) / nrow(spectral_results_all))
+# 10.7% loss in data
 
-# -------------------------------------------------------------------------------------------
-# Spectral slopes -- from linear regression of log~e~-transformed spectra
+# save only samples with no turbidity
+spectral_results <- spectral_results_all %>% filter(Turbid.FTUeq == 0.00000)
 
-# S1
-# 275-295 nm (S~275-295~) == S1
+
+# Spectral slopes -- from linear regression of log~e~-transformed SAC
+# read Helms, et.al (2008). Absorption spectral slopes and slope ratios as indicators of molecular weight, source and photobleaching of chromophoric dissolved organic matter. Limnol. Oceanogr, 53(3), 955-969. 
+
+# S1 == 275-295 
 S1 <- spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>%                   # remove turbid samples 
-  pivot_longer(cols = Abs_275:Abs_295,            # longer is better (select only what you need)
+  pivot_longer(cols = Abs_275:Abs_295, # longer is better (select only what you need)
                names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
   select(c(trip, site, sample_type, sample, dt_sampled, fillStage_cm, 
-           Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, 
-           SAC254_Abs.m, SAC436_Abs.m, wavelength_nm, SAC_per.m)) %>% 
+           wavelength_nm, SAC_per.m)) %>% 
   mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm))) %>%  # numeric wavelength
-  mutate(lnSAC = log(SAC_per.m)) %>% 
-  group_by(trip, site, sample_type, sample) %>% 
+  mutate(lnSAC = log(SAC_per.m)) 
+
+# plot it? -- not very informative
+#S1 %>% 
+#  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
+#  geom_jitter() +
+#  geom_smooth(method = "lm")
+
+S1 <- S1 %>% group_by(trip, site, sample_type, sample) %>%
   summarise(sample_slope1 = cor(y = lnSAC, x = wavelength_nm)) 
 
-# plot it
-spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>% 
-  pivot_longer(cols = Abs_275:Abs_295,            # longer is better (select only what you need)
-               names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
-  mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm)),  # numeric wavelength
-         lnSAC = log(SAC_per.m)) %>%  
-  group_by(trip, site, sample_type, sample) %>% 
-  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
-  geom_jitter() +
-  geom_smooth(method = "lm")
-
-# S2
-# 350-400 nm (S~350-400~) == S2
+# S2 == 350-400 nm 
 S2 <- spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>%                   # remove turbid samples 
-  pivot_longer(cols = Abs_350:Abs_400,            # longer is better (select only what you need)
+  pivot_longer(cols = Abs_350:Abs_400,
                names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
   select(c(trip, site, sample_type, sample, dt_sampled, fillStage_cm, 
-           Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, 
-           SAC254_Abs.m, SAC436_Abs.m, wavelength_nm, SAC_per.m)
-  ) %>% 
+           wavelength_nm, SAC_per.m)) %>% 
   mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm))) %>%  # numeric wavelength
   mutate(lnSAC = log(SAC_per.m)) %>% 
   group_by(trip, site, sample_type, sample) %>% 
   summarise(sample_slope2 = cor(y = lnSAC, x = wavelength_nm)) 
 
-# plot it
-spectral_results %>%
-  filter(Turbid.FTUeq == 0) %>% 
-  pivot_longer(cols = Abs_350:Abs_400,            # longer is better (select only what you need)
-               names_to = "wavelength_nm", values_to = "SAC_per.m") %>% 
-  mutate(wavelength_nm = as.numeric(NumberXtract(wavelength_nm)),  # numeric wavelength
-         lnSAC = log(SAC_per.m)) %>%  
-  group_by(trip, site, sample_type, sample) %>% 
-  ggplot(aes(x = wavelength_nm, y = lnSAC)) +
-  geom_jitter() +
-  geom_smooth(method = "lm")
-
 # Summary df with slope ratios and spectral indicies
 spectral_summary <- spectral_results %>%
-  mutate(pseudo254 = (Abs_252.5+Abs_255)/2) %>% 
-  select(trip:fillStage_cm,
-         pseudo254,
-         Abs_250, Abs_365
-  ) %>% 
-  full_join(S1) %>% 
-  full_join(S2) %>% 
+  mutate(pseudo254 = ((Abs_252.5 + Abs_255) / 2)) %>% 
+  select(trip:fillStage_cm, 
+         Abs_250, Abs_365, Abs_465, Abs_665, 
+         Turbid.FTUeq, NO3.Neq_ppm, TOCeq_ppm, DOCeq_ppm, SAC254_Abs.m, pseudo254) %>% 
+  group_by(trip, site, sample_type, sample) %>% 
+  full_join(S1, by = c("trip", "site", "sample_type", "sample")) %>% 
+  full_join(S2, by = c("trip", "site", "sample_type", "sample")) %>% 
   mutate(SlopeRatio = sample_slope1/sample_slope2,
-         E2E3 = Abs_250/Abs_365,
+         E2E3 = Abs_250/Abs_365, # aka A~250:A~365
+         E4E6 = Abs_465/Abs_665, # humification indicator --  for soils (may not be appropriate in limnology)
          trip = as_factor(trip)) %>% 
-  select(-c(sample_slope1, sample_slope2))
+  select(-c(sample_slope1, sample_slope2, Abs_250, Abs_365, Abs_465, Abs_665)) %>% 
+  ungroup()
 
 ```
 
@@ -634,22 +612,22 @@ spectral_summary <- spectral_results %>%
 # the instrument was TOCV or SCAN
 
 # --- WIDE SUMMARY DF --- # 
-sampleresults <- full_join(TOCV_results, SCAN_results, 
-                           by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
-  full_join(spectral_summary, by = c("trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")) %>% 
+sampleresults <- full_join(TOCV_results, spectral_summary, by = c(
+  "trip", "site", "sample_type", "sample", "dt_sampled", "fillStage_cm")  ) %>% 
   mutate(trip = as_factor(trip),
          site = as_factor(site),
          sample_type = as_factor(sample_type),
          sample = as_factor(sample),
-         analysis = factor(analysis, exclude = "TOC"),  # drop "TOC"
-         analysis = factor(analysis),   # drop residual NA from removing "TOC"
-         site = factor(site, exclude = "Mystery-bottle"),  # drop "mystery bottle"
-         site = factor(site)) %>%  # drop residual NA from removing "mystery bottle"
-  select(-c(vial))   # drop unnecessary variables
+         analysis = factor(analysis),   
+         site = factor(site)) %>% 
+  select(-c(vial, Turbid.FTUeq)) %>%    # drop unnecessary variables
+  filter(site != "Mystery-bottle", # drop "mystery bottle"
+         analysis != "TOC")  # drop TOC (unfiltered on Shimadzu)
+
 # check it out
 #str(sampleresults)
 
-# add a variable to identify season 
+# add a variable to estimate season (based on month of year)
 # two seasons (wet/dry))    
 sampleresults <- sampleresults %>% 
   mutate(trip = factor(trip),
@@ -660,13 +638,17 @@ sampleresults <- sampleresults %>%
            trip %in% 17:23 ~ "wet")) # mid-Oct 2019 to Jan 2020
 
 # SUVA ------ 
-# add a variable for SUVA = [DOC]/SAC254
-sampleresults  <-  sampleresults %>% 
-  mutate(SUVA = SAC254_Abs.m/NPOC_ppm)
-
-# good!
+# add a variable for SUVA = SAC254/[DOC] (L/mg-m)
+sampleresults <- sampleresults %>% 
+  mutate(SUVA = SAC254_Abs.m/NPOC_ppm,
+         pseudo_SUVA = pseudo254/NPOC_ppm)
+# fill in  SUVA gaps
+sampleresults <- within(sampleresults, 
+                      SUVA <- ifelse(
+                        is.na(SUVA), pseudo_SUVA, SUVA)) 
 
 ```
+
 
 ## Metals data
 ```{r, CRD-metals, message = FALSE}
@@ -728,39 +710,6 @@ The six pirmary research location in the Leech River watershed were equipped wit
 * air and water temperature (Hobo TidbiTs)
 
 3. At the four mainstem sites (Leech Head, Cragg Creek, West Leech, Tunnel), I collected 10 minute interval triggered trail-cam photos.
-
-## Weather data (CRD fire weather stations)
-
-The Leech river watershed hydroclimatic regime is pluvial, therefore precipitation data is very important. There were (at the time of my research) three weather stations in proximity to the Leech:
-
-* Chris Crk WxStn at the headwaters
-* Survey Mtn WxStn at the highest peak, in the Leech (installed in 2019, short record)
-* Martin's Gulch WxStn near the Leech River Tunnel (future point of diversion)
-
-## Weather
-```{r, Wx-precip, message = FALSE}
-
-# bring in WxStn data 
-# Note: each file has a different DateTime format (be sure to lubridate)
-
-# read it in
-precip_data <- 
-  list.files("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", pattern = "*.CSV") %>% 
-  set_names(str_extract(., "([A-ZA-Z]{4,}+)")) %>%
-  purrr::map_dfr(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", .), 
-                            col_names = TRUE,
-                            col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 
-  mutate(DateTime = lubridate::parse_date_time(DateTime, c("dmY HM", "Ymd HM", "Ymd HMS", "Ymd HMS Op!*")))
-
-
-# create a summary datafame with mean weather data between Chris creek and Martin's Gulch
-wx_mean <- precip_data %>% 
-  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
-  group_by(DateTime) %>% 
-  select(-StationName) %>% 
-  summarise_all(list(mean = mean))
-```
-
 
 ## Odyssey - River stage data 
 
@@ -872,8 +821,7 @@ corr_stage <- odyssey_data %>%
                          levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 ```
 
-
-# Match bottle height to logged stage
+### Match bottle height to logged stage
 
 Instead of trying to extract DateTime from odyssey data to add to corresponding stage in the sample df, join them by site and trip, but first group stage by unique values such that only the first occurrence is used to join
 ```{r, join-stage-samples}
@@ -917,7 +865,7 @@ rack_sample_df <- sixfilter %>%
 stage_racks <- corr_stage %>% 
   group_by(source, interval) %>%  # site & trip
   select(-c(Date, stage_cm)) %>% 
-  rename(site = source,
+  rename(site = source, # new = old
          trip = interval) %>% 
   mutate(sampleStage_cm = round(corr_stage_cm)) %>% 
   dplyr::distinct(sampleStage_cm, .keep_all = TRUE)  # first occurrence of rack stage
@@ -998,6 +946,7 @@ results3 <- within(results2,
 
 # save as a new dataframe
 results <- results3 %>% 
+  mutate(DateTime = dt_sampled) %>% 
   select(-c(dt_sampled, ID, fillStage_cm)) %>%  # not needed
   mutate(two_seasons = factor(two_seasons)) %>% 
   dplyr::distinct(site, trip, sample_type, sample, DateTime_sampled, .keep_all = TRUE)  
@@ -1015,7 +964,7 @@ results %>%
 
 ```
 
-## simplify and plot
+#### simplify and plot
 ```{r, plot-hydro-samples}
 
 # create a subset dataframe for the six install sites for tidier calling
@@ -1032,12 +981,12 @@ sixfilter_join <- results %>%
   filter(!is.na(sample_type))
 
 # join odyssey and result 
-stg_sample <- left_join(corr_stage, sixfilter_join, 
-                        by = c("DateTime", 
-                               "source" = "site", 
-                               "corr_stage_cm")) %>% 
+stg_sample <- corr_stage %>%
   dplyr::rename(site = source) %>%    # new_name = old_name 
-  select(-c(Date.y,Date.x)) %>% 
+  group_by(site) %>% 
+  left_join((sixfilter_join %>% mutate(DateTime = DateTime_sampled) %>% group_by(site)), 
+                        by = c("DateTime", "site", "corr_stage_cm")) %>% #, "rain_season", "event_ID"
+  select(-c(Date.y, Date.x)) %>% 
   mutate(Date = as_date(DateTime))
 
 
@@ -1062,40 +1011,85 @@ stg_sample %>%
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust=1),
-        text = element_text(size=12),
+  theme(axis.text.x = element_text(angle = 30, hjust=1),
+        text = element_text(size=11),
         legend.position = "top")
 
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/hydro-samples_subbasins.png",width = 6, height = 8, units = "in")
 ```
 
-# Rain Events defined based on precip using Rainmaker::RMevents
+## Weather data (CRD fire weather stations)
+
+The Leech river watershed hydroclimatic regime is pluvial, therefore precipitation data is very important. There were (at the time of my research) three weather stations in proximity to the Leech:
+
+* Chris Crk WxStn at the headwaters
+* Survey Mtn WxStn at the highest peak, in the Leech (installed in 2019, short record)
+* Martin's Gulch WxStn near the Leech River Tunnel (future point of diversion)
+
+## Weather
+```{r, Wx-precip, message = FALSE}
+
+# bring in WxStn data 
+# Note: each file has a different DateTime format (be sure to lubridate)
+
+# read it in
+precip_data_raw <- 
+  list.files("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", pattern = "*.CSV") %>% 
+  set_names(str_extract(., "([A-ZA-Z]{4,}+)")) %>%
+  purrr::map_dfr(~ read_csv(file.path("R-inputs_UBC-forWater-MSc_HMc/CRD_FWx-Data/", .), 
+                            col_names = TRUE,
+                            col_types = list("c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d"))) %>% 
+  mutate(DateTime = lubridate::parse_date_time(DateTime, c("dmY HM", "Ymd HM", "Ymd HMS", "Ymd HMS Op!*")),
+         StationName =  factor(StationName))
+
+
+# check it out (likely noise in snow depth)
+precip_data_raw %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  ggplot(aes(x = DateTime, y = SnowDep))+
+  geom_point(na.rm = TRUE)+
+  theme_bw()+
+  facet_wrap(~StationName, ncol = 1)
+
+# for both Martin's Gulch & Chris Creek, remove all SnowDep values > max snow in 2020
+maxSnow_2020 <- precip_data_raw %>% 
+  filter(year(DateTime) == 2020,
+         SnowDep < 0.75) %>% 
+  group_by(StationName) %>%  
+  summarise(max_snow_2020 = max(SnowDep, na.rm = TRUE)) 
+  
+# filter data
+precip_data <- precip_data_raw %>% 
+  mutate(SnowDepth = case_when(
+    StationName == maxSnow_2020$StationName[[1]] & SnowDep > maxSnow_2020$max_snow_2020[[1]] ~ "NA",
+    StationName == maxSnow_2020$StationName[[2]] & SnowDep > maxSnow_2020$max_snow_2020[[2]] ~ "NA",
+    StationName == maxSnow_2020$StationName[[3]] & SnowDep > maxSnow_2020$max_snow_2020[[3]] ~ "NA",                               TRUE ~ as.character(SnowDep)
+    ),
+         SnowDep = as.numeric(SnowDep),
+         SnowDepth = as.numeric(SnowDepth))
+
+# check again
+precip_data %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  ggplot(aes(x = DateTime, y = SnowDepth))+
+  geom_point(na.rm = TRUE)+
+  theme_bw()+
+  facet_wrap(~StationName, ncol = 1)
+# woot! got that fixed :)
+
+
+# create a summary datafame with mean weather data between Chris creek and Martin's Gulch
+wx_mean <- precip_data %>% 
+  filter(StationName == "FWx Chris Creek" | StationName == "FWx Martins Gulch") %>% 
+  group_by(DateTime) %>% 
+  select(-StationName) %>% 
+  summarise_all(list(mean = mean))
+```
+
+
+#### Rain Events defined based on 15-minute rain using Rainmaker::RMevents
 ```{r, warnings = FASLE, messages = FALSE}
 # use precipitation to define events
-# precip_data
-# odyssey_data
-
-# save plot of stage and samples
-stage_sample_plot <- 
-  stg_sample %>% 
-  ggplot()+
-  geom_line(aes(x = as_date(Date), y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+
-  geom_point(aes(x = as_date(Date), y = sampleStage_cm), fill = "white", colour = "black", na.rm = TRUE, shape = 21)+
-  #scale_fill_manual(values = c("Grab" = "#E69F00", "Rack" = "#009E73"), na.translate = FALSE)+
-  facet_wrap(~site, ncol = 1, 
-             strip.position = "right",
-             scales = "free_y")+
-  labs(y = "River stage (cm)", x = "",
-       fill = "Sample Type")+
-  scale_x_date(date_labels = "%Y %b %d",
-               date_breaks = "2 months",
-               date_minor_breaks = "1 months",
-               limits = as_date(c("2018-10-24", "2020-03-01")))+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 60, hjust=1),
-        text = element_text(size=12),
-        legend.position = "bottom")
-
 
 # use Rainmaker to delineate storms
 # inter-event period = 14 hrs, threshold for major event = 50mm 
@@ -1109,8 +1103,25 @@ Wx_CC_storms[["storms2"]]  # list of events that surpass rainthresh (mm event de
 Wx_CC_storms[["storms"]]   # list of all events
 ```
 
-## plot 
+##### plot 
 ```{r, plot-hydro-events}
+
+# save plot of stage and samples
+stage_sample_plot <-  stg_sample %>% 
+  ggplot(aes(x = as_date(Date)))+
+  geom_line(aes(y = corr_stage_cm), na.rm = TRUE, colour = "#0072B2")+
+  geom_point(aes(y = sampleStage_cm), fill = "white", colour = "black", na.rm = TRUE, shape = 21)+
+  #scale_fill_manual(values = c("Grab" = "#E69F00", "Rack" = "#009E73"), na.translate = FALSE)+
+  facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")+
+  labs(y = "River stage (cm)", x = "", fill = "Sample Type")+
+  scale_x_date(date_labels = "%Y %b %d",
+               date_breaks = "2 months",
+               date_minor_breaks = "1 months",
+               limits = as_date(c("2018-10-24", "2020-03-01")))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust=1),
+        text = element_text(size=11),
+        legend.position = "bottom")
 
 # rain plot with storm lines
 rn_strm_plot <- wx_mean %>% 
@@ -1259,7 +1270,7 @@ stg_sample %>%
   ungroup() %>% 
   mutate(trip = factor(trip, levels = c(1:23))) %>% 
   group_by(site) %>% 
-  dplyr::arrange(trip, event_ID) %>%     write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-events-hydrochem.csv")
+  dplyr::arrange(trip, event_ID) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/subbasin-events-hydrochem.csv")
 
 ```
 
@@ -1350,7 +1361,7 @@ precip_data <- within(precip_data,
 
 # I am sure this could be a loop!?!?!?!?!
 
-# add a HoldTime_span for period each rack sample sat on the rack before collection
+# add a HoldTime_span for period each rack sample sat on the rack between collection & retrieval
 results <- results %>% 
   mutate(collection = case_when(  
     trip == "1" ~ trip_df$trip.end[1],
@@ -1425,9 +1436,7 @@ Hobo$location <- fct_recode(Hobo$location, air = "dry", water = "wet")
 
 ```{r}
 
-# --------
 ## Add trips
-
 # I don't know how to loop or map between dataframes (only within one)...
 #### MAYBE lapply() with a function!?!?!?!
 # continuing with this janky method:
@@ -1643,10 +1652,6 @@ write_csv(results,
 # Rain events from Rainmaker
 write_csv(Hobo_Trip, 
 "R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Hobo_trip-event.csv", na = "NA")
-
-# subbasin_Hobos
-write_csv(subbasin_Hobos, 
-"R-outputs_UBC-forWater-MSc_HMc/wrangled_dataframes/Subbasin_Results_complete.csv", na = "NA")
 
 # corr_stage df
 # baseflow and rack corrected Odyssey data

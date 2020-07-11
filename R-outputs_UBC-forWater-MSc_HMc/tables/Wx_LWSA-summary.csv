@@ -1,7 +1,7 @@
-Year,station name,annual precip. (mm),max snow (m),mean air temp. (°C),stdev air temp. (± °C),mean max. temp. (°C),mean min. temp. (°C)
-2018,FWx Chris Creek,1967.83,3.091,8.074524802,7.511868435,-11.9,34.8
-2018,FWx Martins Gulch,2042.35,3.011,8.91671566,7.259151031,-9.5,32.9
-2019,FWx Chris Creek,1428.37,3.091,7.484631411,7.239802787,-13.7,31.9
-2019,FWx Martins Gulch,1486.66,3.011,8.375552955,6.942069618,-12.7,30.5
-Jan-Feb 2020,FWx Chris Creek,837.25,3.091,1.614206706,3.739386761,-9.6,10.5
-Jan-Feb 2020,FWx Martins Gulch,930.37,3.01,2.177000173,3.625775451,-9.3,11.2
+Year,station name,annual rain. (mm),max snow (m),mean air temp. (Â°C),stdev air temp. (Â± Â°C),mean max. temp. (Â°C),mean min. temp. (Â°C)
+2018,FWx Chris Creek,1967.83,0.531,8.07452480164393,7.511868435339075,-11.9,34.8
+2018,FWx Martins Gulch,2042.35,0.245,8.916715659693484,7.25915103111298,-9.5,32.9
+2019,FWx Chris Creek,1428.3700000000001,0.476,7.484631410713776,7.239802786832101,-13.7,31.9
+2019,FWx Martins Gulch,1486.66,0.351,8.375552955278405,6.942069617504297,-12.7,30.5
+Jan-Feb 2020,FWx Chris Creek,837.25,0.619,1.614206705841687,3.7393867607369895,-9.6,10.5
+Jan-Feb 2020,FWx Martins Gulch,930.37,0.508,2.177000172801106,3.625775450701226,-9.3,11.2
