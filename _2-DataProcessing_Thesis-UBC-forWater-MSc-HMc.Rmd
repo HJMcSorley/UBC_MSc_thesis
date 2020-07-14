@@ -2662,7 +2662,7 @@ season_meanrain_plot <- subbasin_meanrain_plot +
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_wet2019), size = 0.65)+
   # labels
-  annotate("text", label = "rain/snow-melt", x = as.Date(last_2018_rainevent)+15, 
+  annotate("text", label = "rain / snow-melt", x = as.Date(last_2018_rainevent)+15, 
            y = 75, colour = "grey45")+
   annotate("text", label = "2018/2019 wet season", x = as.Date(last_2018_rainevent), 
            y = 125)+
@@ -2698,7 +2698,7 @@ season_stage_sample_plot <- stage_samples %>%
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
   theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        axis.text.x = element_text(angle = 20, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
         legend.position = "bottom")
 
 # update snow and temp to include season lines
@@ -2729,7 +2729,7 @@ cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot,
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
-       width = 7.5, height = 9.5, units = "in")
+       width = 7.5, height = 9.25, units = "in")
 ```
 
 # spatial variance DOC Samples
@@ -4017,7 +4017,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 plot: synoptic box, all sites
 ```{r, synoptic-all-sites}
 
-# all sites
+# all sites -- grab only
 synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
   dplyr::filter(sample_type == "Grab") %>%  
@@ -4033,6 +4033,8 @@ synopticfilter %>%
     x = "", y = "DOC (mg/L)")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png", width = 6.5, height = 4, units = "in")
+
+
 ```
 
 plot: synoptic ridge, all sites
