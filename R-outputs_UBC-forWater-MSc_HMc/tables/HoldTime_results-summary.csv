@@ -1,4 +1,4 @@
-Set,Days held,Temp range,DOC change (%),sig.diff (DOC),p-value (DOC),UV 254 change (%),sig.diff (UV 254),p-value (UV 254),SUVA254 change (%),sig.diff (SUVA254),p-value (SUVA254),E2:E3 change (%),sig.diff (E2:E3),p-value (E2:E3)
+Set,Days held,Air temp.,DOC change (%),sig. diff (DOC),p-value (DOC),SAC254 change (%),sig. diff (SAC254),p-value (SAC254),SUVA254 change (%),sig. diff (SUVA254),p-value (SUVA254),E2:E3 change (%),sig. diff (E2:E3),p-value (E2:E3)
 A,11,7.1 ± 2.2,-45,*,0.0625,-0,"NA",0.125,80,*,0.0625,-1,"NA",0.125
 B,20,6.0 ± 2.7,1,"NA",0.4375,-8,*,0.0625,-10,*,0.0625,-0,"NA",0.8125
 C,34,4.3 ± 3.2,-23,"NA",0.1875,-34,*,0.0625,-9,"NA",0.625,-14,*,0.0625

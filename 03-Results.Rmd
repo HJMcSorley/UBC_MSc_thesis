@@ -21,7 +21,8 @@ The Capital Regional District (CRD) provided data from two fire-weather ("FWx") 
 
 \    
 
-```{r meanWxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r meanWxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:meanWxLWSA}*Average weather from two stations in the Leech water supply area, where the highlighted section indicates the study period.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
@@ -32,7 +33,8 @@ Table \@ref(tab:meanWxLWSAdata) summarizes weather data by calender year, as wel
  
 \  
 
-```{r meanWxLWSAdata}
+```
+{r meanWxLWSAdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(1, 1, 1, 2, 2, 2, 1, 1),
                caption = "*Average weather data from CRD stations in Leech water supply area in 2018 and 2019*")
@@ -46,7 +48,8 @@ LWSA mean FWx precipitation data were used to define rain events using the USGS 
 
 \  
 
-```{r Events}
+```
+{r Events}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
   knitr::kable(digits = c(0,0,0,1,1,1),
                caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
@@ -81,7 +84,8 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
 TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30 minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
 
 
-```{r TidbiTairwaterLine, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r TidbiTairwaterLine, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTairwaterLine}*Temperatures recorded in air and water on vertical racks at each research site.*"
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png")
 ```
@@ -92,7 +96,8 @@ While loggers were installed in both positions (air and water) on each rack at t
 
 \  
 
-```{r TidbiTairwaterBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r TidbiTairwaterBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTairwaterBox}*Temperatures recorded in air and water on vertical racks at each research site.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png")
@@ -106,7 +111,8 @@ Air temperatures recorded at each of the six sites were compared to LWSA FWx for
 
 \  
 
-```{r TidbiTFWxridges, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r TidbiTFWxridges, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:TidbiTFWxridges}*Density distribution of air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png")
@@ -118,7 +124,8 @@ Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air tempera
 
 \  
 
-```{r wilcoxonpvalues}
+```
+{r wilcoxonpvalues}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalues.csv",
          col_names = TRUE) %>% 
   knitr::kable(digits = c(0,4),
@@ -134,7 +141,8 @@ Despite some differences between FWx and Hobo site data, the overlapping FWx and
 
 \  
 
-```{r TidbiTestimateErrors}
+```
+{r TidbiTestimateErrors}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE) %>% 
   #mutate(p.value = format(p.value, digits = 2)) %>% 
   knitr::kable(digits = c(0,1,1,1,1,1,1,1),
@@ -150,7 +158,8 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
 
 \  
 
-```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoboFWxLinearReg}*Relationships between air temperature recorded at each research site compared to mean air temperature recorded by LWSA weather stations. Plots in section A (top) show the relationships for the full data set and plots in section B show daily mean temperatures, the data that was used in linear regression.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
@@ -164,7 +173,8 @@ Hold-time experiments were conducted at the Tunnel site to assess stability of r
 
 \  
 
-```{r HoldTimeAirPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r HoldTimeAirPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoldTimeAirPlot}*Plot of air temperature during vertical rack hold-time experiments. Red horizontal lines indicate the 0-7°C range of a typical laboratory refrigerator and dashed vertical lines separate the three sets of hold-time samples from collection of grab samples to retrieval of held samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png")
@@ -178,7 +188,8 @@ Each hold-time set included ten replicate samples, each collected at the same ti
 
 \  
 
-```{r HoldTimeBoxPlot, out.width = "100%", fig.cap = fig_cap}
+```
+{r HoldTimeBoxPlot, out.width = "100%", fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoldTimeBoxPlot}*Sample DOC concentrations and UV absorbance at 254nm contrasting  hold-time samples from collection of grab samples to retrieval of held samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
@@ -186,7 +197,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 \ 
 
-```{r HoldTimeTtests}
+```
+{r HoldTimeTtests}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
   knitr::kable(caption = "*Results comparing hold-time sample sets*")
 ```
@@ -207,7 +219,8 @@ Based on results of the hold-time experiments, results of sample analyses were u
 
 \  
 
-```{r samplecount}
+```
+{r samplecount}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_names = TRUE) %>% 
   knitr::kable(caption = "*Summary of samples collected*")
 ```
@@ -479,7 +492,8 @@ Thirteen river sites across the Leech and Sooke water supply areas were sampled 
 
 \ 
 
-```{r synopticDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r synopticDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:synopticDOCbox} *Synoptic sampling results of dissolved organic carbon concentrations from 13 sites over 16 months (201 grab samples).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
@@ -487,7 +501,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_
 
 \  
 
-```{r synopticDOCdata}
+```
+{r synopticDOCdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic-grab_summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 1, 1, 0, 1, 1, 1), 
                caption = "*Summary of dissolved organic carbon across thirteen synoptically sampled river sites*")
@@ -506,7 +521,8 @@ The synoptic samples collected over sixteen months were used to assess seasonali
 
 \  
 
-```{r seasonalDOCest, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r seasonalDOCest, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:seasonalDOCest} *Dissolved organic carbon measured directly (as NPOC) plotted against concentrations estimated via UV-Vis spectroscopy, with a dashed lined indicating best fit (1:1). The 276 samples are grouped by season (n~wet~ = 210, n~first-flush~ = 15, n~dry~ = 27).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_surrogate-NPOC.png")
@@ -522,7 +538,8 @@ While an aromatic NOM sample will have stronger absorbance at 254-nm relative to
 
 \  
 
-```{r seasonalSUVADOC, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```
+{r seasonalSUVADOC, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:seasonalSUVADOC} *Dissolved organic carbon plotted against specific UV absorbance at 254 nm (SUVA{254}) with samples (n = 282) grouped by season (n{wet} = 237, n{first-flush} = 18, n{dry} = 27) showing greater aromaticity (more humic-like organic matter) in wet season samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png")

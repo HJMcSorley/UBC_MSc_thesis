@@ -1,3 +1,3 @@
 Station name (FWx),Latitude,Longitude,Elevation (m a.s.l),Installation,Rain gauge,Snow depth,Air temp
-Chris Creek,"48° 34' 49""","123° 50' 26""",560,Jan. 2015,RG-T tipping bucket (FTS),SR50A sensor (Campbell Sci),THS-3-R (FTS)
-Martin's Gulch,"48° 30' 58""","123° 45' 52""",512,Nov. 2009,RG-T tipping bucket (FTS),SR50A sensor (Campbell Sci),THS-3-1 (FTS)
+Chris Creek,48.580278,-123.840556,560,Jan. 2015,RG-T tipping bucket (FTS),SR50A sensor (Campbell Sci),THS-3-R (FTS)
+Martin's Gulch,48.516111,-123.761667,512,Nov. 2009,RG-T tipping bucket (FTS),SR50A sensor (Campbell Sci),THS-3-1 (FTS)

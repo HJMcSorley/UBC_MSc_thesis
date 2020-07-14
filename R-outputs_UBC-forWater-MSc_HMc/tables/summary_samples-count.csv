@@ -1,6 +1,6 @@
-samples,total count,analyzed (QA/QC count),reduction (%)
-synoptic Grabs outside of monitoring sites,53,53,-0
-opportunistic Grabs,17,16,5.9
-monitoring sites synoptic Grabs,153,148,3.3
-monitoring sites vertical Rack,203,170,16.3
-total,426,387,9.2
+type of sample collected,total collected & analyzed for DOC,data included in DOC results,total collected & analyzed for NOM,data included in NOM results
+synoptic Grabs outside of monitoring sites,55,55,44,44
+opportunistic Grabs,15,14,10,9
+monitoring sites synoptic Grabs,153,148,114,103
+monitoring sites vertical Rack,203,170,150,100
+total,426,387,318,256

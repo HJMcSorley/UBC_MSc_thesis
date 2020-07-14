@@ -71,7 +71,7 @@ see: https://www.grad.ubc.ca/sites/default/files/doc/page/thesis_sample_prefaces
 
 \  
 ```{r Abbreviations, echo = FALSE}
-read_csv("R-inputs_UBC-forWater-MSc_HMc/index-acronyms.csv", col_names = TRUE) %>%
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/index-acronyms.csv", col_names = TRUE) %>%
   arrange(Acronym) %>% 
   knitr::kable(caption = "**List of Abbreviations**")
 ```

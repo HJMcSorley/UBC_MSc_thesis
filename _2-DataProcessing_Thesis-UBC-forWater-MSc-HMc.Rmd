@@ -971,7 +971,7 @@ HoboFwx_lm_means <- Hobo_WxLWSA %>%
   summarise(Hobo = mean(Hobo),
             FWx = mean(FWx)) %>% 
   ggplot(aes(x = FWx, y = Hobo))+
-  geom_point(alpha = 0.5)+
+  geom_point(alpha = 0.5, na.rm = TRUE)+
   theme_bw()+
   facet_wrap(~ site)+
   labs(y = "Mean daily site temperature (°C)", x = "Mean daily FWx temperature (°C)") +
@@ -984,11 +984,10 @@ HoboFwx_lm_means <- Hobo_WxLWSA %>%
 # use daily means to estimate temps -- better overlap and less scatter
 
 # arrange plots for presentation
-cowplot::plot_grid(HoboFwx_lm, HoboFwx_lm_means, ncol = 1,
-                   labels="AUTO")
+#cowplot::plot_grid(HoboFwx_lm, HoboFwx_lm_means, ncol = 1, Labels="AUTO")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png", 
-       width = 8, height = 8, units = "in")
+       width = 4, height = 4, units = "in")
 
 ```
 
@@ -1160,11 +1159,82 @@ calver <- QAQC %>%
   select(c(site, sample_type, sample, analysis, NPOC_ppm, SAC254_Abs.m, DOCeq_ppm)) %>% 
   mutate(cal_ver = str_extract(sample, "([0-9]{1,}+\\.[0-9]{1,}+)"),
          cal_ver = as.numeric(cal_ver),
-         rn = row_number(cal_ver)) %>% 
+         ID = row_number(cal_ver)) %>% 
   mutate(sample_type = case_when(
     !is.na(cal_ver) ~ "cal_ver",
     is.na(cal_ver) ~ "RO" )) 
 ```
+
+## laboratory QA/QC
+```{r}
+
+### blanks 
+# check lab blanks
+# this is a difficult measure of precision because the RO water is not the most reliably stable
+calver %>% 
+  filter(sample_type == "RO",
+         sample == "RO" | sample == "RO_pH<2",
+         NPOC_ppm != 0) %>% 
+  group_by(sample) %>% 
+  summarise(count = n(),
+            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            RSD = (sd_DOC/DOC_mean)*100)
+
+### cal vers 
+# percent error calculated as 'measured' minus 'actual'
+# negative error indicates the method was under-estimating DOC concentration 
+# positive error indicates the method was over-estimating DOC concentration
+
+# check cal vers for shimadzu
+a <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(NPOC_ppm),
+         ID != 7, ID != 4,  # error -- did not add standard 
+         cal_ver != 5.7) %>%  # true concs were not calculated
+  group_by(ID) %>% 
+  summarise(count = n(),
+            actual = mean(cal_ver),
+            measured = mean(NPOC_ppm, na.rm = TRUE),
+            sd_DOC = sd(NPOC_ppm, na.rm = T),
+            percent_error = ((measured - actual)/ actual)*100) %>% 
+  ungroup() %>% 
+  summarise(count = sum(count),
+            error_percent_mean = mean(percent_error),
+            error_percent_sd = sd(percent_error))
+
+# check cal vers for spectrolyser
+b <- calver %>% 
+  filter(sample_type == "cal_ver",
+         !is.na(DOCeq_ppm)) %>% 
+  group_by(ID) %>% 
+  summarise(count = n(),
+            calc = mean(cal_ver),
+            DOCeq_mean = mean(DOCeq_ppm, na.rm = TRUE),
+            sd_DOCeq = sd(DOCeq_ppm, na.rm = T),
+            percent_error = ((DOCeq_mean - calc)/ calc)*100) %>% 
+  ungroup() %>%  
+  summarise(count = sum(count),
+            error_percent_mean = mean(percent_error),
+            error_percent_sd = sd(percent_error))
+
+# total cal-vers included
+n_calvers_total <- QAQC %>% 
+  filter(site == "Lab", sample != "RO", sample != "RO_pH<2") %>% 
+  summarise(n = n())
+
+# percent error from shimadzu
+error_shimadzu <- a %>% pull(error_percent_mean)
+
+# percent error from spectrolyser
+error_spectrolyser <- b %>% pull(error_percent_mean)
+
+# average percent error from both methods:
+error_overall <- (error_shimadzu + error_spectrolyser)/2
+
+```
+
+## Field QA/QC
 
 Hold-time experiments (Tunnel rack)
 ```{r}
@@ -1290,7 +1360,8 @@ d <- HT %>%
 # without estimated DOC
 cowplot::plot_grid(a, b, d, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6, 1.6))  
 # save
-#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png", 
+       height = 7, width = 6, units = "in")
 
 ```
 
@@ -1340,7 +1411,7 @@ cc <- ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 # Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
 # alternative hypothesis: the difference between means is significant 
-# p-value > 0.05 --> cannot reject null hypothesis
+# p-value > 0.05 --> cannot reject null hypothesis (at 95% confidence)
 # p-value < 0.05 --> reject the null hypothesis 
 
 # run tests and compile results
@@ -1500,25 +1571,42 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
                     group_by(HoldTime_set) %>% 
                     summarise(lapse = last(lapse)))$lapse) %>% 
   full_join(change, by = c("Set" = "set")) %>% 
-  mutate("Temp range" = c(A_temp, B_temp, C_temp)) %>% 
+  mutate("Air temp." = c(A_temp, B_temp, C_temp)) %>% 
   select(Set, "Days held" = lapse, 
-         "Temp range", 
+         "Air temp.",
          "DOC change (%)" = percent_change_DOC, # rename: new = old
-         "sig.diff (DOC)" = sig.diff_NPOC_ppm,  
+         "sig. diff (DOC)" = sig.diff_NPOC_ppm,  
          "p-value (DOC)" = p.value_NPOC_ppm,
          
-         "UV 254 change (%)" = percent_change_UV254,
-         "sig.diff (UV 254)" = sig.diff_SAC254_Abs.m, 
-         "p-value (UV 254)" = p.value_SAC254_Abs.m,
+         "SAC254 change (%)" = percent_change_UV254,
+         "sig. diff (SAC254)" = sig.diff_SAC254_Abs.m, 
+         "p-value (SAC254)" = p.value_SAC254_Abs.m,
          
          "SUVA254 change (%)" = percent_change_SUVA,
-         "sig.diff (SUVA254)" = sig.diff_SUVA, 
+         "sig. diff (SUVA254)" = sig.diff_SUVA, 
          "p-value (SUVA254)" = p.value_SUVA,
          
          "E2:E3 change (%)" = percent_change_E2E3,
-         "sig.diff (E2:E3)" = 'sig.diff_E2:E3', 
+         "sig. diff (E2:E3)" = 'sig.diff_E2:E3', 
          "p-value (E2:E3)" = 'p.value_E2:E3') %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv")
+
+
+
+# Dixon's Q-test the to reject outlier in set b 
+# Q = gap / range
+# if Q > Qtable, that value was an outlier
+Q_SAC254 <- HT %>% filter(HoldTime_set == "B",HoldTime_group == "R") %>% 
+  select(HoldTime_set, HoldTime_rep, HoldTime_group, SAC254_Abs.m) %>% 
+  summarise(neighbour = SAC254_Abs.m[[2]], # Rep 7
+            suspect = SAC254_Abs.m[[1]], # Rep 6
+            gap = (neighbour - suspect),
+            range = max(SAC254_Abs.m) - min(SAC254_Abs.m),
+            Q = gap/range,
+            Qtable90 = 0.642,
+            Qtable85 = 0.710,
+            Qtable99 = 0.821)
+
 
 ```
 
@@ -1576,76 +1664,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png", w
 
 ```
 
-## laboratory QA/QC
-```{r}
-
-### blanks 
-# check lab blanks
-# this is a difficult measure of precision because the RO water is not the most reliably stable
-calver %>% 
-  filter(sample_type == "RO",
-         sample == "RO" | sample == "RO_pH<2",
-         NPOC_ppm != 0) %>% 
-  group_by(sample) %>% 
-  summarise(count = n(),
-            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd_DOC = sd(NPOC_ppm, na.rm = T),
-            RSD = (sd_DOC/DOC_mean)*100)
-
-### cal vers 
-# percent error calculated as 'measured' minus 'actual'
-# negative error indicates the method was under-estimating DOC concentration 
-# positive error indicates the method was over-estimating DOC concentration
-
-# check cal vers for shimadzu
-a <- calver %>% 
-  filter(sample_type == "cal_ver",
-         !is.na(NPOC_ppm),
-         rn != 7,  # error -- did not add standard 
-         cal_ver != 5.7) %>%  # true concs were not calculated
-  group_by(rn) %>% 
-  summarise(count = n(),
-            calc = mean(cal_ver),
-            DOC_mean = mean(NPOC_ppm, na.rm = TRUE),
-            sd_DOC = sd(NPOC_ppm, na.rm = T),
-            percent_error = ((DOC_mean - calc)/ calc)*100) %>% 
-  ungroup() %>% 
-  summarise(count = sum(count),
-            error_percent = mean(percent_error))
-
-# check cal vers for spectrolyser
-b <- calver %>% 
-  filter(sample_type == "cal_ver",
-         !is.na(DOCeq_ppm)) %>% 
-  group_by(rn) %>% 
-  summarise(count = n(),
-            calc = mean(cal_ver),
-            DOCeq_mean = mean(DOCeq_ppm, na.rm = TRUE),
-            sd_DOCeq = sd(DOCeq_ppm, na.rm = T),
-            percent_error = ((DOCeq_mean - calc)/ calc)*100) %>% 
-  ungroup() %>%  
-  summarise(count = sum(count),
-            error_percent = mean(percent_error))
-
-# total cal-vers included
-n_calvers_total <- calver %>% 
-  filter(sample_type == "cal_ver") %>% 
-  summarise(n = n())
-
-# cal-vers included
-n_calvers <- a[1,1]+b[1,1]
-
-# percent error from shimadzu
-error_shimadzu <- a %>% pull(error_percent)
-
-# percent error from spectrolyser
-error_spectrolyser <- b %>% pull(error_percent)
-
-# average percent error from both methods:
-error_overall <- (error_shimadzu + error_spectrolyser)/2
-
-```
-
 
 # SAMPLES: augment dataframes
 
@@ -1688,7 +1706,10 @@ sampleresults <- sampleresults %>%
     site == "Lab" ~ "LabQAQC",
     TRUE ~ "synoptic")) %>% 
   mutate(site_type = factor(site_type),
-         DateTime_sampled = as.POSIXct(DateTime_sampled, tz = TZ))
+         DateTime_sampled = as.POSIXct(DateTime_sampled, tz = TZ)) 
+ 
+sampleresults$site <- fct_recode(sampleresults$site, Deception = "Deception-crk",
+             Deception = "Deception-res")
 
 ```
 
@@ -1756,11 +1777,10 @@ synopticfilter <- sampleresults %>%
       site == "Judge"|
       site == "Leech-downstreamconf"|
       site == "Boneyard"|
-      #site == "Deception-crk"|  ## only two samples
       #site == "West-Jordan"| ## only two samples
-      site == "Deception-res") %>% 
+      site == "Deception") %>% 
   mutate(site = factor(site, # order as you want to see them in plots
-                       levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception-crk", "Boneyard" ))) 
+                       levels = c("West-Jordan", "Weeks", "ChrisCrk", "LeechHead", "Jarvis", "Lazar", "CraggCrk", "WestLeech", "Leech-downstreamconf", "Tunnel", "Rithet", "Judge", "Deception-res", "Deception", "Boneyard" ))) 
 # rename funky names
 synopticfilter$site <- synopticfilter$site %>% 
   plyr::revalue(c("Leech-downstreamconf" = "Leech-Beach",  ## old = new
@@ -1768,7 +1788,6 @@ synopticfilter$site <- synopticfilter$site %>%
                   "Judge" = "Judge-crk", 
                   "Lazar" = "Lazar-crk", 
                   #"West-Jordan" = "W.Jordan-Trib",
-                  #"Deception-crk" = "Deception-Gluch",
                   "Rithet" = "Rithet-crk"))
 
 # ------
@@ -1800,18 +1819,12 @@ n_installRackSamples <- sixfilter %>%
 n_installRackSamples_total <- sixfilter %>% 
   dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% pull() 
-# Rack samples -- QA-QC OK
-n_installRackSamples <- sixfilter %>% 
-  dplyr::filter(sample_type == "Rack") %>% 
-  summarise(number_of_samples = n()) %>% pull() 
 # How many samples were collected overall
 n_totalSamples <- sampleresults %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
                 analysis == "DOC") %>%
   summarise(sample_count = n()) %>% pull()
 #---
-
-# ------
 # sample counts -- OK flagged samples
 
 # how many synoptic samples were grabbed?
@@ -1840,26 +1853,164 @@ n_installRackSamples_ok <- sixfilter_ok %>%
 n_installRackSamples_total_ok <- sixfilter_ok %>% 
   dplyr::filter(sample_type == "Rack") %>% 
   summarise(number_of_samples = n()) %>% pull() 
-# Rack samples -- QA-QC OK
-n_installRackSamples_ok <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Rack") %>% 
-  summarise(number_of_samples = n()) %>% pull() 
 # How many samples were collected overall
 n_totalSamples_ok <- sampleresults %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
                 QAQC_flag == "OK", analysis == "DOC") %>%
   summarise(sample_count = n()) %>% pull()
+# ------
+
+# for NOM samples, one file was overwritten by a lab mate (trip 5), find out how many samples were there
+# note, all samples were collected at the LWSA subbasins
+
+# trip 5 
+# how many synoptic samples were grabbed?
+n_SynopticGrabs_5 <- synopticfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Grab") %>%
+  #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% pull()
+# how many grab samples were grabbed (<2 per site)?
+n_Grabs_5 <- sampleresults %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Grab", analysis == "DOC") %>%
+  summarise(grab_sample_count = n()) %>%  pull()
+# how many of each sample_type are there at the 6 main sites?
+n_subbbasinSamples_5 <- sixfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  summarise(number_of_samples = n()) %>% pull()
+# Grab samples
+n_installGrabSamples_5 <- sixfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Grab") %>% 
+  summarise(number_of_samples = n()) %>% pull()
+# Rack samples
+n_installRackSamples_5 <- sixfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- all including flags
+n_installRackSamples_total_5 <- sixfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- QA-QC OK
+n_installRackSamples_5 <- sixfilter %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Rack") %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# How many samples were collected overall
+n_totalSamples_5 <- sampleresults %>% filter(trip == 5) %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                analysis == "DOC") %>%
+  summarise(sample_count = n()) %>% pull()
+# sample counts -- UV-Vis samples
+
+# how many synoptic samples were grabbed for UV analysis?
+n_SynopticGrabs_UV <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab", !is.na(pseudo_SUVA)) %>%
+  #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% pull() +n_SynopticGrabs_5
+# how many grab samples were grabbed (<2 per site)?
+n_Grabs_UV <- sampleresults %>% 
+  dplyr::filter(sample_type == "Grab", analysis == "DOC", !is.na(pseudo_SUVA)) %>%
+  summarise(grab_sample_count = n()) %>%  pull() + n_Grabs_5
+# how many of each sample_type are there at the 6 main sites?
+n_subbbasinSamples_UV <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab", !is.na(pseudo_SUVA)) %>%
+  summarise(number_of_samples = n()) %>% pull() + n_subbbasinSamples_5
+# Grab samples
+n_installGrabSamples_UV <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() + n_installGrabSamples_5
+# Rack samples
+n_installRackSamples_UV <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() + n_installRackSamples_5
+# Rack samples -- all including flags
+n_installRackSamples_total_UV <- sixfilter %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() + n_installRackSamples_total_5
+# How many samples were collected overall
+n_totalSamples_UV <- sampleresults %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                analysis == "DOC", !is.na(pseudo_SUVA)) %>%
+  summarise(sample_count = n()) %>% pull() + n_totalSamples_5
+
+# ------
+# sample counts -- UV-Vis samples OK flag
+
+# how many synoptic samples were grabbed?
+n_SynopticGrabs_UV_OK <- synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab", QAQC_flag == "OK", !is.na(pseudo_SUVA)) %>%
+  #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
+  summarise(grab_sample_count = n()) %>% 
+  filter(grab_sample_count > 2) %>% pull()
+# how many grab samples were grabbed (<2 per site)?
+n_Grabs_UV_OK <- sampleresults %>% 
+  dplyr::filter(sample_type == "Grab", analysis == "DOC", QAQC_flag == "OK", !is.na(pseudo_SUVA)) %>%
+  summarise(grab_sample_count = n()) %>%  pull()
+# how many of each sample_type are there at the 6 main sites?
+n_subbbasinSamples_UV_OK <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab", !is.na(pseudo_SUVA)) %>%
+  summarise(number_of_samples = n()) %>% pull()
+# Grab samples
+n_installGrabSamples_UV_OK <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Grab", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull()
+# Rack samples
+n_installRackSamples_UV_OK <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- all including flags
+n_installRackSamples_total_UV_OK <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# Rack samples -- QA-QC OK
+n_installRackSamples_UV_OK <- sixfilter_ok %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  summarise(number_of_samples = n()) %>% pull() 
+# How many samples were collected overall
+n_totalSamples_UV_OK <- sampleresults %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
+                QAQC_flag == "OK", analysis == "DOC", !is.na(pseudo_SUVA)) %>%
+  summarise(sample_count = n()) %>% pull()
 
 # --- 
 # make a summary table:
-tibble::tibble(samples = c("synoptic Grabs outside of monitoring sites", "opportunistic Grabs", "monitoring sites synoptic Grabs", "monitoring sites vertical Rack", "total"),
-  total = c((n_SynopticGrabs - n_installGrabSamples), (n_Grabs)-(n_SynopticGrabs), n_installGrabSamples, n_installRackSamples, n_totalSamples),
-  QAQC = c((n_SynopticGrabs_ok - n_installGrabSamples_ok), (n_Grabs_ok)-(n_SynopticGrabs_ok), n_installGrabSamples_ok, n_installRackSamples_ok, n_totalSamples_ok)) %>% 
-  mutate("reduction (%)" = round( (-1*((QAQC-total)/total)*100 ), digits = 1))  %>% 
-  dplyr::rename("total count" = total,
-                "analyzed (QA/QC count)" = QAQC) %>% 
+tibble::tibble(samples = c("synoptic Grabs outside of monitoring sites", 
+                           "opportunistic Grabs", 
+                           "monitoring sites synoptic Grabs", 
+                           "monitoring sites vertical Rack", 
+                           "total"),
+               total_DOC = c((n_SynopticGrabs - n_installGrabSamples),
+                             (n_Grabs - n_SynopticGrabs), 
+                             n_installGrabSamples, 
+                             n_installRackSamples, 
+                             n_totalSamples),
+               QAQC_DOC = c((n_SynopticGrabs_ok - n_installGrabSamples_ok),
+                            (n_Grabs_ok - n_SynopticGrabs_ok), 
+                            n_installGrabSamples_ok, 
+                            n_installRackSamples_ok, 
+                            n_totalSamples_ok),
+               total_UV = c((n_SynopticGrabs_UV - n_installGrabSamples_UV),
+                            (n_Grabs_UV - n_SynopticGrabs_UV), 
+                            n_installGrabSamples_UV, 
+                            n_installRackSamples_UV, 
+                            n_totalSamples_UV),
+               QAQC_UV = c((n_SynopticGrabs_UV_OK-n_installGrabSamples_UV_OK),
+                           (n_Grabs_UV_OK - n_SynopticGrabs_UV_OK),
+                           n_installGrabSamples_UV_OK, 
+                           n_installRackSamples_UV_OK, 
+                           n_totalSamples_UV_OK)) %>% 
+  mutate(reduc_DOC = round( (-1*((n_totalSamples_ok-n_totalSamples)/n_totalSamples)*100 ), digits = 1),
+         reduc_UV = round( (-1*((n_totalSamples_UV_OK-n_totalSamples_UV)/n_totalSamples_UV)*100 ), digits = 1))  %>% 
+  dplyr::select("type of sample collected" = samples, 
+                "total collected & analyzed for DOC" = total_DOC,
+                "data included in DOC results" = QAQC_DOC,
+                "total collected & analyzed for NOM" = total_UV,
+                "data included in NOM results" = QAQC_UV) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv") 
 
+# total DOC data reduction:
+T_reduc_DOC = -1*((n_totalSamples_ok-n_totalSamples)/n_totalSamples)*100
+T_reduc_UV = -1*((n_totalSamples_UV_OK-n_totalSamples_UV)/n_totalSamples_UV)*100
 
 ```
 
@@ -2401,7 +2552,6 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
          width = 7.5, height = 9.5, units = "in")
 
-
 # --- baby mega plot
 
 # with precipitation (not temp)
@@ -2463,6 +2613,123 @@ stage_samples %>%
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
          width = 6, height = 8, units = "in")
+```
+
+
+## Seasonal megaplot
+```{r}
+# --- junior megaplot: megaplot 2 with lines indicating seasons
+
+# pull last rain event date from 2018/2019 wet season
+last_2018_rainevent <- events %>% 
+  filter(ID == 8) %>%
+  summarize(eventend = round_date(as.POSIXct(EndDate, tz = TZ), "10 min")) %>% 
+  pull()
+
+# pull season start dates
+start_wet2018 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2018,
+         rain_seasons == "wet") %>% 
+  summarize(start_wet2018 = first(DateTime)) %>% pull()
+
+start_dry2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "dry") %>% 
+  summarize(start_dry2019 = first(DateTime)) %>% pull()
+
+start_FF2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "first flush") %>% 
+  summarize(start_FF2019 = first(DateTime)) %>% pull()
+
+start_wet2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "wet", 
+         lubridate::month(DateTime) > 9) %>% 
+  summarize(start_wet2019 = first(DateTime)) %>% pull()
+
+# make the plots
+
+# seasons labels on rain
+season_meanrain_plot <- subbasin_meanrain_plot +
+  # seasons
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)+
+  # labels
+  annotate("text", label = "rain/snow-melt", x = as.Date(last_2018_rainevent)+15, 
+           y = 75, colour = "grey45")+
+  annotate("text", label = "2018/2019 wet season", x = as.Date(last_2018_rainevent), 
+           y = 125)+
+  annotate("text", label = "2019 dry season", x = as.Date(start_dry2019)+65, 
+           y = 125)+
+  annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
+           y = 80, angle = 90)+
+  annotate("text", label = "2019/2020 wet season", x = as.Date(start_wet2019)+75, 
+           y = 125)
+
+# update stage plot  
+season_stage_sample_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type), fill = "white", na.rm = TRUE, size = 1.5)+
+  scale_shape_manual(breaks = c("Grab", "Rack"), 
+                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
+  # seasons
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = last_2018_rainevent, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_dry2019, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_FF2019, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_wet2019, size = 0.65)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "",
+       shape = "sample collection method:")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "bottom")
+
+# update snow and temp to include season lines
+# snow
+season_snow_plot <- subasin_snow_plot +
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)
+# and temp
+season_meantemp_plot <- subasin_meantemp_plot +
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
+
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
+       width = 7.5, height = 9.5, units = "in")
 ```
 
 # spatial variance DOC Samples
@@ -3090,7 +3357,7 @@ response_full %>%
 
 ```
 
-#### subset
+#### subset -ERROR
 ```{r}
 # repeat the above for the subset samples
 
