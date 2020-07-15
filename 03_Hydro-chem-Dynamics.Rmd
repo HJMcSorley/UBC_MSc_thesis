@@ -286,4 +286,4 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-ab
 
 ### Discussion
 
-### Conculsion
+### Conculsions

@@ -20,3 +20,11 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 __RQ.3.__   Are some watershed characteristics more important than others for influencing DOC and NOM dynamics?
 
 __Objective 3:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
+
+### Methods
+
+### Results
+
+### Discussion
+
+### Conclusions
