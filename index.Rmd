@@ -92,15 +92,15 @@ Big thanks to my incredibly wonderful friends and family for supporting me in my
 
 __Land Acknowledgement__
 
-The author, Hannah J. McSorley, acknowledges and thanks the First Nations on whose traditional lands she traveled, learned, researched, lived and played on during this masters thesis project, and on whose land she continues to live.
+The author, Hannah J. McSorley, acknowledges and thanks the First Nations on whose traditional lands she traveled, learned, researched, lived and played on during this master's thesis project, and on whose land she continues to live.
+
+\  
 
 The research sites in Greater Victoria water supply areas are located on traditional territory of the T’sou-ke (Sooke) Nation, who have lived on these lands since time immemorial and who were the original watershed protectors. The Capital Regional District occupies land of the Scia'new (Beecher Bay), Songhees, T’Sou-ke First Nation and Malahat First Nation.
 
-Research at the University of British Columbia in Vancouver BC, was conducted on the traditional, unceded territories of xʷməθkʷəy̓əm (Musqueam) People. For the duration of this masters research, Hannah gratefully lived and played in East Vancouver on traditional territory of the Musqueam, Sḵwx̱wú7mesh (Squamish), and Səlilwətaɬ (Tsleil-Waututh) Nations. Traveling between UBC and the water supply areas included passage across Tsawout and Tsawwassen First Nation territories. 
+Research at the University of British Columbia in Vancouver BC was conducted on the traditional, unceded territories of xʷməθkʷəy̓əm (Musqueam) People. For the duration of this masters research, Hannah gratefully lived and played in East Vancouver on traditional territory of the Musqueam, Sḵwx̱wú7mesh (Squamish), and Səlilwətaɬ (Tsleil-Waututh) Nations. Traveling between UBC and the water supply areas included passage across Tsawout and Tsawwassen First Nation territories. 
 
 Vancouver Island University (Nanaimo campus) is located on traditional lands of the Snuneymuxw First Nation, Quw’utsun and Tla’Amin Peoples. The land traveled between VIU and the research sites, along the south east coast of Vancouver Island, includes territories of the Stz'uminus First Nation (Chemainus), Halalt, Cowichan Tribes, Malahat First Nation, T'Sou-ke First Nation, and Songhees.
-
-Thank you to the First Nations who are the original land protectors of the areas I call home; I tread lightly and I am actively un-learning and re-learning our history.   
 
 \  
 
@@ -108,8 +108,18 @@ Thank you to the First Nations who are the original land protectors of the areas
 
 First, I dedicate this thesis to each person who reads it in its entirety.
 
+\  
+
 Second, I dedicate this thesis to the love of data science. I'm grateful for Jenny Bryan's online resources, Stack Overflow (stackoverflow.com) for the solution to so many coding challenges, and to Dan Moore for teaching me R (UBC GEOB 503) and continuing to support my R development with additional resources. Thank you to RStudio for making a functional and friendly IDE for the R programming language and to GitHub for making version control streamlined and reproducible. Cheers to Hadley Wickham for the tidyverse and Yihui Xie for the bookdown package (in which I generated this thesis).
 
+\  
+
 Third, I dedicate this to my undergraduate research supervisor and mentor, Dr. Erik Krogh (VIU Chemistry), for inspiring me to realize my potential as a scientific researcher. 
+
+\  
+
+Thank you to the First Nations who are the original land protectors of the areas I call home; I tread lightly, and I am actively un-learning and re-learning our history.
+
+\  
 
 Cheers!

@@ -1,0 +1,94 @@
+---
+output: bookdown::word_document2
+---
+
+##	Introduction & background
+
+###	Forested source water supplies and drinking water treatment 
+	
+Surface water is the primary source of drinking water for over 85% of the Canadian population and in the province of British Columbia, approximately 80% of drinking water originates from forested headwaters [@Pike2010]. Forests offer a variety of ecosystem services (e.g. biodiversity) and also slow and filter runoff which can result in high quality source water supply [@Dudley2003]. Surface water quality varies over time and space due to climate, weather, and physical characteristics of the watershed (such as topography, land cover and geology), with runoff introducing terrestrial material, sediments, nutrients, and organic matter into surface waters [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015; @Matilainen2010]. 
+
+\  
+
+In Canada, all drinking water must meet Health Canada drinking water quality guidelines, which specify allowable levels of biological, physical and chemical parameters that are safe for human use and consumption [@BC2019; @HealthLinkBC2018; @HealthCanada2019a]. To meet guidelines, source water is most commonly treated to remove substances which may pose a health risk. Drinking water treatment processes vary from simple chlorination to combinations of physical filtration, chemically assisted filtration, reverse osmosis, and or advanced oxidative processes [@MWH2014; @Emelko2011]. Drinking water treatment technologies differ between communities by infrastructure design and operation, which may be guided by source water quality, infrastructure capabilities, budget, regional size and  water quality regulations [@Emelko2011]. All drinking water treatment processes share the same goal: ensure public health by providing a continuous supply of safe water. While there are guidelines for radiological, chemical and physical parameters (e.g. removal of metals), the highest priority drinking water guidelines focus on the inactivation of potentially harmful microorganisms, therefore disinfection is the most important step in the treatment process [@MWH2014; @HealthCanada2019a]. In BC, chlorination remains the most widely used method of disinfection, whether it is used alone or in combination with other treatment processes [@HealthCanada2006; @HealthLinkBC2018]. 
+
+\  
+
+Because drinking water treatment requirements vary with source water quality, there are source water quality guidelines in place in addition to treated drinking water quality guidelines [@HealthLinkBC2018; @BC2019]. Stable source water conditions lead to predictable treatment procedures, while fluctuating source water quality creates treatment challenges [@Emelko2011]. Treatment effectiveness is influenced, for example, by turbidity levels (i.e., suspended solids), varying temperature, dissolved oxygen, pH and natural organic matter.
+
+\  
+
+Aqueous natural organic matter (NOM) can lead to issues of objectionable taste, odour and colour (i.e., guideline aesthetic objectives) and while these aesthetic issues may create unpalatable drinking water, they do not directly impact human health [@HealthCanada2019; @HealthCanada2019a]. However, source water NOM can interfere with effective drinking water treatment and therefore BC source drinking water quality guidelines include colour as an indicator of aqueous NOM [@BC2019; @HealthCanada2019]. Depending on infrastructure design and operation of a drinking water treatment plant, elevated levels of NOM in source water can increase coagulant demand which increases the production of sludge (to be disposed of) and promote the formation of disinfection by-products [@Matilainen2010; @HealthCanada2019]. NOM reduces treatment effectiveness by interfering with ultraviolet (UV) disinfection and/or increasing chlorination demand; NOM can effect coagulation efficiency and oxidative processes; and because NOM promotes biological growth, it can lead to fouling of treatment and distribution infrastructure [@BC2019; @Matilainen2010; @HealthCanada2019; @Jacangelo1995].
+
+\  
+
+In addition to operational impediments, NOM is partly responsible for unintended chemical contaminants in treated drinking water. When source water is chlorinated, chemical reactions with NOM can form a variety of chlorinated organic compounds which are broadly classified as disinfection by-products (DBPs) [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet5310]. A number of chlorinated carbonaceous DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their possible or known health affects (i.e., possible genotoxicity or carcinogenicity) [@Richardson2007; @BC2019; @HealthCanada2019].
+ 
+
+####    Source water considerations for Greater Victoria's water supply areas
+
+The Capital Regional District (CRD), encompassing the southern tip of Vancouver Island (including Victoria) and the southern Gulf Islands,  is committed to the multiple barrier approach to clean drinking water and has taken control of source water protection by purchasing and privatizing the water supply areas for Greater Victoria. Located on southeastern Vancouver Island, British Columbia, Canada, the Greater Victoria Water Supply Area (GVWSA) includes 20,549 hectares (205.49 km^2^) of protected drinking water catchment lands. Currently, Greater Victoria's water supply is sourced from five surface water reservoirs in the Sooke and Goldstream watersheds, and Sooke Reservoir is the primary drinking water supply. 
+
+\  
+
+The provincial Drinking Water Protection Act and Drinking Water Protection Regulation frameworks were developed to implement Health Canada's drinking water quality guidelines and set out requirements for drinking water operators & suppliers to ensure the provision of safe drinking water (*refs or link*). Treatment of source water from the Greater Victoria Water Supply Area consists only of disinfection: raw water (unfiltered) is treated with ultraviolet light as primary disinfection, chlorination is secondary, and finally ammonia is added to produce chloramine (NH~2~Cl, a long-lasting disinfectant that persists throughout the distribution system). 
+
+\  
+
+In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased an additional 96.28 km^2^ (9,628 hectares) of land in 2007 and 2010. This area includes about 92% of the Leech River watershed (~96 km^2^) which was designated as the Leech Water Supply Area (LWSA) for future supplemental source water. In the future (possibly by 2050), inter-basin transfer will move water from the LWSA through a diversion tunnel to supplement Sooke Reservoir (Figure \@ref(fig:GVWSAoverview)). Approximately 92% of the Leech River watershed above the point of diversion (Leech Tunnel) is protected as WSA . 
+
+\  
+
+```{r GVWSAoverview, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "*Overview of the Leech and Sooke Water Supply Areas (Greater Victoria, CRD), located on southeastern Vancouver Island, British Columbia, Canada. The overview (bottom) illustrates precipitation and an atmospheric river event common to the west coast. The map (top) was generated in QGIS, and the image of Canada (bottom) and inset of Vancouver Island are screenshots from the Windy app (Windy.com).*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview_colour.png")
+```
+
+\  
+
+Hydrology and water quality monitoring programs for the Leech began in 2017, thus there is little historical data to describe hydrochemical dynamics in the Leech watershed. The Leech River watershed includes three mainstem rivers (Cragg Creek, Leech River, and West Leech River) as well as several small headwater lakes (Weeks, Jarvis, and Worley) and wetlands (Jordan Meadows surrounding Weeks Lake and Lazar meadows north of Jarvis Lake). Runoff is greatest in the winter under saturated conditions when rivers respond rapidly to precipitation events, rising and falling dramatically. Across the watershed, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. 
+
+\  
+
+In the mid-1980’s, some water was transferred from the Leech River into Deception Gulch and Reservoir (adjacent to but physically separated from Sooke Reservoir), and the mixing resulted in biological water quality problems that included odour and raised concerns about the operational usage of the existing tunnel [*personal communication ?refs*]. Before work is done on inter-basin transfers, the hydrology and water quality of the Leech River system need to be better understood. 
+
+\  
+
+The LWSA was privately managed forest land which was extensively harvested over the past 70 years (nearly 96% clearcut); as a result, a large portion of the WSA is densely forested with softwood stands less than 35 years of age as of 2020. The second growth forests of the LWSA are no longer managed for timber supply, but rather to improve and maintain drinking source water quality and to reduce the risk of landscape level wildfire. Due to prior harvest, reforestation and active fire suppression, forest fire fuels have accumulated in the LWSA and pose a threat if a fire occurs. In the Sooke WSA, the CRD implements forest treatments designed to foster healthy forest stands capable of reducing fire intensity, such as reducing fuel hazards and creating conditions that are safe for crews to action a fire (e.g., closed-canopy fuel breaks). Similar preventative fire treatments may be applied in the LWSA prior to inter-basin transfers. 
+
+\  
+
+Establishing an understanding of baseline water quality dynamics and hydrologic forces in the LWSA will help to inform forest management strategies and evaluate the effects of fire fuel management on water supply. Furthermore, developing relationships between event-based water quality dynamics and establishing hydrochemical ranges across the LWSA will help to anticipate possible treatment challenges that may accompany future inter-basin transfer from the LWSA to the Sooke WSA.
+
+###   Research questions and objectives
+
+This Master of Science thesis research was conducted in partnership with the CRD and forWater Network in an effort to help characterize the Leech Water Supply Area while contributing to our understanding of variations in source water quality (primarily with respect to DOC and NOM) across nested catchments in a second growth forested watershed. This thesis tackled four research questions (RQ) and associated objectives (below), each of which are addressed in subsequent chapters.
+
+\  
+
+__RQ.1.__   What are the ranges for DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments in the Greater Victoria water supply area, and what influence does seasonality have on concentration of DOC and character of NOM?
+
+__Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
+
+\  
+
+__RQ.2.__   Are hydrological processes the main driver for DOC transport and variation in the LWSA and is there a mechanistic relationship between river stage and DOC or NOM?
+
+__Objective 2:__   Relate water sample results to river stage and report on the relationships between DOC concentrations and NOM character with stage, particularly paying attention to differences between baseflow and storm events.
+
+\  
+
+__RQ.3.__   Are some watershed characteristics more important than others for influencing DOC and NOM dynamics?
+
+__Objective 3:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
+
+\  
+
+__RQ.4.__   What are the implications for watershed management and future drinking water supply?
+
+__Objective 4:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+
+\  
+
+Ideally, results of this research will contribute to baseline understanding for further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. Understanding source water quality, as well as the timing and magnitude of flows, is an essential component to multiple barrier approach to ensuring clean drinking water. 

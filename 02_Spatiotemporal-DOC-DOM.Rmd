@@ -17,10 +17,26 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Introduction
 
-__RQ.1.__   What are the ranges for DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments in this water supply area, and what influence does seasonality have on concentration of DOC and character of NOM?
+Drinking water in Canada is primarily sourced from surface water supplies.
+Over 85% of Canadians, and approximately 80% of British Columbias depend on drinking water that originates from forested headwaters [@Pike2010]. Climate, weather, and physical characteristics of a watershed lead to variations in surface water quality, and runoff links surface water sources to the landscape by introducing terrestrial sediments, nutrients, and organic matter into solution [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015; @Matilainen2010]. 
 
-__Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
+####   Aqueous natural organic matter in source water supply
 
+Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997 ;@Aiken2011; @Matilainen2011]. NOM can be introduced to a water body from terrestrial sources (i.e., allochthonous NOM) or generated through in-stream processes (i.e., autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
+
+\  
+
+NOM concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM in drinking source water have different disinfection by-product formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010].  
+
+\  
+
+Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen and are composed primarily of carbon; thus, organic carbon (OC) is often quantified as a proxy for NOM concentration [@HealthCanada2019; @Matilainen2010; @MWH2014]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively) which are typically distinguished based on separation by a 0.45-micron filter [@StdMet5310; @Aiken2011]. Generally, DOC is the predominant fraction of TOC in surface water, and the amount of DBPs in treated water is proportional to raw water DOC concentration [@Weishaar2003; @Chow2008]. 
+
+\  
+
+In addition to acting as a precursor for DBPs, DOC has been called a master variable due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Zarnetske2018]. NOM is an energy source for aquatic heterotrophic microbes, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes; which, in turn, effect aquatic microbial communities [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012]. DOC is an important source water quality parameter to monitor and guidelines in British Columbia specify that drinking source water TOC should remain below 4 mg/L, primarily to reduce the production of trihalomethanes (e.g., chloroform, a common DBP) in treated drinking water [@BC2019]. Aside from DBPs, monitoring source water DOC is important for addressing other operational issues associated with NOM and drinking water treatment challenges. Within a watershed, the characteristics and concentrations of NOM (and therefore DOC) naturally fluctuate over space and through time, creating dynamic treatability conditions [@Li2014; @Yang2015].
+
+#### Surface water sampling strategies
 
 why do we sample?...
 representative sampling...
@@ -29,17 +45,20 @@ methods of collecting samples...
 -temporal representation
 influence of seasonality 
 
+##### Event-based sampling
+
+Synoptic grab sampling can cover a wide area over a relatively short period of time, but it can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short durations of rapid runoff (@Harmel2003). 
+
+Water samples from the rising limb of the hydrograph have been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. The dynamic changes that occur during events are of interest for understanding water quality variation and ranges, however it is logistically challenging and potentially dangerous to manually collect standard grab samples during high flows across multiple sites (@Graczyk2000; @Mackay2012).
+
 \  
-
-"Furthermore, it can be dangerous to access river sites and/or manually collect river samples during high flows (@Graczyk2000; @Mackay2012)."
-
-...While synoptic grab sampling can cover a wide area over a relatively short period of time, it can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short durations of rapid runoff (@Harmel2003). 
-
-rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]
 
 Pump samplers or passive samplers can be used to collect water samples under difficult or unsafe conditions. A pump sampler (e.g., ISCO samplers, Teledyne ISCO, Inc., Lincoln, NE, USA; Global Water Instrumentation, Gold River, California) can be set up in the field and programmed to collect a set of water samples based on time interval or changes in conditions (e.g., stage or turbidity thresholds). Pump samplers are effective for automatic event-based sampling (@Harmel2003) but can be prohibitively expensive ($2K-3K CAD), and also require a reliable power source which can pose logistical challenged for setting up multiple sites in remote or difficult to access locations (@Mackay2012). A siphon sampler is a passive sampling alternative to a pump sampler; it automatically and effectively collects discrete water samples on the rising limb of the hydrograph (e.g.: @Mackay2012; @Graczyk2000; @Diehl2007). Siphon samplers are limited to sampling a single event and (so far) are not suitable for sampling the falling hydrograph limb; they are however very low cost, customizable and require no power.
 
-\  
+#### Research objectives
+
+A sampling strategy was developed to quantify the ranges of DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments the Greater Victoria water supply area across seasons.
+
 
 ### Methods
 
@@ -174,16 +193,9 @@ A spectral slope (S) is the change in absorbance intensity over a range of wavel
 
 Alternatively, the quotient E~2~:E~3~ provides information analogous to that of S~R~ and is a much simpler calculation [@Helms2008]. E~2~:E~3~ is the ratio of absorbance coefficients at wavelengths 250 nm and 365 nm (calculated by dividing A~250~ by A~365~) and, like S~R~, is inversely related to the aromaticity and molecular weight of aquatic humic solutes [@Peuravuori1997; @Helms2008]. E~2~:E~3~ values were calculated to elucidate molecular character of NOM in samples. 
 
-#### Ancilary data: climate and forests
-
-__note: this section should be augmented to include data and comments on Sooke watershed also (synoptic sites)__
-
-The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year falls as rain (i.e., pluvial hydroclimatic regime) [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry. 
-
 ##### Weather in the Leech watershed 
 
-
-The Capital Regional District (CRD) provided data from these two fire-weather ("FWx") stations in the Leech water supply area (LWSA). Chris Creek weather station is located in the headwaters of the Leech watershed and Martin's Gulch is located near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary) & Figure \@ref(fig:???), Chapter 1).
+The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech water supply area (LWSA). Chris Creek weather station was located in the headwaters of the Leech watershed and Martin's Gulch was located near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary) & Figure 1, Chapter 1). Data from January 2018 to March 2020 were provided and were used in defining sampling seasons and in quality control assessments of vertical rack samples. 
 
 \  
  
@@ -196,40 +208,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
 
 \  
 
-Data from January 2018 to March 2020 were provided and used to define sampling seasons and were employed in quality control assessments of vertical rack samples. 
-
-```
-possibly move this into intro and just keep means here.
-Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station (Figure \@ref(fig:WxLWSA), Table \@ref(tab:WxLWSAdata)).
-
-\  
- 
-```{r WxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:WxLWSA} *Weather from FWx stations in the Leech water supply area. Coloured sections of plots highlight the field study period of this project.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
-```
-
-\  
-
-```{r WxLWSAdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "Annual weather from CRD FWx stations in the Leech water supply area*", 
-               digits = c(0, 0, 1, 2, 1, 1, 1, 1))
-``` 
-
-\  
-```
-
-Average LWSA weather data was calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Figure \@ref(fig:meanWxLWSA), Table \@ref(tab:meanWxLWSAdata)). It was assumed that the arithmetic means of rainfall from these two FWx stations were representative of rain conditions across the Leech watershed (LWSA rain), and were used to define storm events that corresponded to vertical rack sample collection. Mean LWSA air temperature data were used in linear regression to estimate temperatures at each of the six monitoring sites for the period before temperature loggers were deployed. While snow melt contributed to runoff and river responses at the six LWSA monitoring sites, the CRD FWx stations are situated at elevation and therefore snow depth records were not assumed to be representative of snow cover across the LWSA and snow depth data were not included in event calculations, but were taken into consideration when delineating seasons.
-
-\    
-
-```{r meanWxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:meanWxLWSA}*Average weather from two stations in the Leech water supply area, where the highlighted section indicates the study period.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
-```
+Average LWSA weather data was calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Figure \@ref(fig:meanWxLWSA), Table \@ref(tab:meanWxLWSAdata), see Appendix for summary of each FWx station). It was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech watershed (LWSA rain), and were used to define storm events that corresponded to vertical rack sample collection. Mean LWSA air temperature data were used in linear regression to estimate temperatures at each of the six monitoring sites for the period before temperature loggers were deployed. While snow melt contributed to runoff and river responses at the six LWSA monitoring sites, the CRD FWx stations are situated at elevation and therefore snow depth records were not assumed to be representative of snow cover across the LWSA and snow depth data were not included in event calculations, but were taken into consideration when delineating seasons.
 
 \  
 
@@ -241,9 +220,17 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 
 \  
 
+```{r meanWxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:meanWxLWSA}*Average weather from two stations in the Leech water supply area, where the highlighted section indicates the study period.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
+```
+
 ###### Defining seasons 
 
 The R package _Rainmaker_ (USGS, github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to sampling campaigns and to distinguish between seasons. The pluvial hydroclimatic regime on the coast of BC is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for vertical racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for rack sampler collection.
+
+\  
 
 ### Results
 
@@ -315,25 +302,13 @@ Hold-times were calculated for each sample as the time between sample collection
 
 Temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression (Appendix ###). QA/QC flags were used to filter sample data, reducing the effective number of samples included in results by less than 10% (Table \@ref(tab:samplecount)). 
 
-####   Season delineation  
+####   Seasonal delineation  
 
 Wet seasons were defined by conditions that generated significant stream responses and rack sample collection, and the dry season was defined by baseflow conditions where precipitation did not generate detectable stream responses at the vertical racks.
 
 \  
 
-LWSA rain data were used to define rain events using the USGS _Rainmaker_ package in R ('RMevents' function), which determined there were 151 total rain events during the study period, with 18 classified as major events that corresponded to vertical rack sample collection (Table \@ref(tab:Events)). The conditions that defined major rain events were: precipitation accumulating to 50 mm or more, with a period of at least 14 hours passing between 50 mm events.     
-
-\  
-
-```{r Events}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
-  knitr::kable(digits = c(0,0,0,1,1,1),
-               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
-```
-
-\  
-
-As major rain events were defined based on rack sampling responses, they were the primary method of delineating seasons, where the wet season was defined by the presence of major rain events and the dry season was defined by their absence. However, there was a period of surprising snowfall in the winter of 2018/2019, during which time rainfall runoff subsided but the eventual melt generated streamflow response across the monitoring sites. Therefore, that period of snow accumulation and melt was included when defining wet seasons, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)).
+LWSA rain data were used to define rain events using the USGS _Rainmaker_ package in R ('RMevents' function), which determined there were 18 major events that corresponded to vertical rack sample collection. The conditions that defined major rain events were: precipitation accumulating to 50 mm or more, with a period of at least 14 hours passing between 50 mm events. As major rain events were defined based on rack sampling responses, they were the primary method of delineating seasons, where the wet season was defined by the presence of major rain events and the dry season was defined by their absence. However, there was a period of surprising snowfall in the winter of 2018/2019, during which time rainfall runoff subsided but the eventual melt generated streamflow response across the monitoring sites. Therefore, that period of snow accumulation and melt was included when defining wet seasons, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)).
 
 \  
 
@@ -344,9 +319,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 ```
 
 
-#### Spatial patterns 
+#### Spatial patterns in DOC & NOM 
 
-Twelve river sites across the Leech and Sooke water supply areas (Figure \@ref(fig:sampleSitesMap)) were sampled synoptically over the sixteen-month study period for quantification of DOC  and assessment of NOM. Among these sites, several comparisons can be made: cross-basin, from LWSA to SWSA; upstream to downstream; nested catchments and sampling methods. 
+Twelve river sites across the Leech and Sooke water supply areas (Figure \@ref(fig:sampleSitesMap)) were sampled synoptically for quantification of DOC and assessment of NOM. Several comparisons can be made among these sites; presented here are comparisons of cross-basin (from LWSA to SWSA), upstream to downstream, nested catchments and sampling methods. 
 
 Mean DOC concentrations were similar when comparing across basins from the current source water tributaries, Rithet and Judge Creeks, to the future supplemental supply, Leech River at the Tunnel (Table \@ref(tab:synopticDOCdata)). From upstream to downstream sites there was an overall decreasing trend for DOC concentrations and NOM aromaticity and/or molecular size  (Figure \@ref(fig:synopticDOCbox)).  
 
@@ -368,7 +343,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_boxplot_allP
 
 \  
 
-With respect to sampling methods among nested catchments of the Leech watershed, three comparisons were made to asses whether Rack sampling at a downstream site captured the same range in DOC concentration as synoptic grab sampling at upstream sites (Figure \@ref(fig:abcDOCbox)). 
+With respect to sampling methods among nested catchments of the Leech watershed, three comparisons were made to asses whether including a Rack sampler at a site downstream of a confluence captured the same range in DOC concentrations as synoptic grab sampling at the upstream sites (Figure \@ref(fig:abcDOCbox)). 
 
 \  
 
@@ -379,41 +354,14 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_
 ```
 \  
 
-Synoptic Grab samples from the headwater sites of Weeks and Chris Creeks were compared to all samples (Rack and Grab) from below their confluence at LeechHead site (Figure \@ref(fig:abcDOCbox), plot A). Similarly, Grab samples collected at the headwater of Cragg Creek, Jarvis and Lazar creeks, were compared to all samples at the CraggCrk monitoring site (Figure \@ref(fig:abcDOCbox), plot B). Note that there was a greater distance between CraggCrk site and its headwaters' sampling locations compared to LeechHead and its headwaters' locations. In these comparisons, the range in DOC observed in grab samples alone at the upstream sites was not obtained by combining Rack and Grab samples below their confluences. However, when higher order rivers were examined in a similar comparison, the combination of Rack and Grab samples at the mainstem (Leech Tunnel) captured the DOC range observed in Grab samples alone at the sites upstream (Figure \@ref(fig:abcDOCbox), plot C). 
-
+Synoptic Grab samples from the headwater sites of Weeks and Chris Creeks were compared to all samples (Rack and Grab) from below their confluence at LeechHead site (Figure \@ref(fig:abcDOCbox), plot A). Similarly, Grab samples collected at the headwater of Cragg Creek, Jarvis and Lazar creeks, were compared to all samples at the CraggCrk monitoring site (Figure \@ref(fig:abcDOCbox), plot B). Note that there was a greater distance between CraggCrk site and its headwaters' sampling locations compared to LeechHead and its headwaters' locations (Figure \@ref(fig:sampleSitesMap)). In these comparisons, the range in DOC observed in grab samples alone at the upstream sites was not obtained by combining Rack and Grab samples below their confluences. However, when higher order rivers were examined by a similar comparison, the combination of Rack and Grab samples at the Leech Tunnel mainstem site did capture the DOC range observed in Grab samples alone at the three sites upstream (Figure \@ref(fig:abcDOCbox), plot C). 
 
 
 ##### UPDATE Spatial variance in DOC concentrations
 
-Sampling of the six research sites was achieved through a combination of vertical rack sampling and synoptic grab sampling. The number of river samples passively collected on vertical racks more than doubled the number of river samples collected by standard grab sampling. Vertical racks collected river samples on the rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010] and can be difficult or dangerous to capture by standard grab sampling, particularly across multiple sites. 
+As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site 6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks and ChrisCrk (sites 1 & 2) are integrated at LeechHead (site 3), which is just below the headwaters' confluence. 
 
-
-Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
-
-\  
-
-```{r SixDOCsummarySampleType}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Sample type", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"),
-               digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
-               caption = "*Summary of DOC across the six LWSA installation sites including breakdown of sample type collected.*")
-```
-
-\  
-
-Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was similar to CraggCrk.
-
-\  
-
-```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon (DOC) concentrations across the Leech watershed over sixteen months, collected by standard grab sampling and on vertical racks (318 samples total).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
-```
-
-\  
-
-As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site 6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks and ChrisCrk (sites 1 & 2) are integrated at LeechHead (site 3), which is just below the headwaters' confluence. Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins.
+Table \@ref(tab:subbasinDOCtunnelint) summarizes the range and variability in DOC within each site and among all sites, with categorical groupings of sub-basins.
 
 \  
 
@@ -428,7 +376,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryInt
 
 The relative standard deviation (RSD) in DOC observed at LeechHead was lower than that of the two headwater sites upstream, and median DOC observed at LeechHead was very near to the median for the headwaters sites. Overall, there was greater variance among headwater sites than there was within each headwater site. For the higher order rivers, the variance observed at each mainstem was comparable to the variance among the three mainstems. Results of Levene's test confirmed that variance in DOC concentrations was not homogeneous across the six sites of the LWSA (p-value = 8.2^-10^).[^4] 
 
-To identify which pairs of sites had equal DOC variance Levene's test was applied to sample DOC results. Table \@ref(tab:LevenesDOC) classifies each site comparison by basin-type and summarizes resulting Levene's test p-values for each pair. Of the nine comparisons made among the six sites, all pairs with WestLeech (site 5) and/or Weeks (site 1) did not have homogeneous variance with any other sites, while all other combinations of sites showed homoscedasticity in DOC. Both of these heteroscedastic sub-basins drain the west side of LWSA. 
+To identify which pairs of sites had equal DOC variance Levene's test was applied to sample DOC results. Table \@ref(tab:LevenesDOC) classifies each site comparison by basin-type and summarizes resulting Levene's test p-values for each pair. Of the nine comparisons made among the six sites, all pairs with WestLeech (site 5) and/or Weeks (site 1) did not have homogeneous variance with any other sites, while all other combinations of sites showed homoscedasticity in DOC. Both heteroscedastic sub-basins drain the west side of LWSA. 
 
 [^4]:Levene's test is used to check for homogeneity of variance (homoscedasticity), it's an alternative to the Bartlett’s test that's less sensitive to departures from normality in the data.
 
@@ -442,13 +390,15 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.c
 
 
 
-#### Temporal patterns
+#### Temporal patterns in DOC & NOM
 
 Over the study period, DOC concentrations followed similar trends across each of the six LWSA monitoring sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. 
 
 \  
 
 ```{r DOCloess, fig.cap = fig_cap}
+# Maybe -- replace this with a plot of ALL sites and move this into Ch3 with a similar plot for stage
+
 fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples. Trend line represents locally weighted smoothing (loess, local polynomial regression).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
@@ -470,9 +420,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-sub
 * these patterns were consistent // or not // across all __12 synoptic sampling sites__
 
 
-##### Seasonal patterns in NOM character
+##### Seasonal changes in NOM character
 
-Molecular aromaticity is associated with chromophores which are responsible for UV-Vis absorbance in aqueous NOM, therefore more aromatic NOM molecules (e.g., humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules. To evaluate if and when molecular character of river samples may have shifted, DOC concentrations (NPOC) were compared to absorbance-based DOC estimates (Figure \@ref(fig:seasonalDOCest)). 
+Molecular aromaticity is associated with chromophores which are responsible for UV-Vis absorbance in aqueous NOM, therefore more aromatic NOM molecules (i.e., humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules. To evaluate if - and when - molecular character of river samples may have shifted, DOC concentrations (NPOC) were compared to absorbance-based DOC estimates (Figure \@ref(fig:seasonalDOCest)). 
 
 \  
 
@@ -504,4 +454,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUV
 
 ### Discussion
 
+__RQ.1.__   What are the ranges for DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments in this water supply area, and what influence does seasonality have on concentration of DOC and character of NOM?
+
+__Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
+
+
 ### Conclusions and future directions 
+
+describe observed spatiotemporal patterns in DOC concentration and NOM character.
