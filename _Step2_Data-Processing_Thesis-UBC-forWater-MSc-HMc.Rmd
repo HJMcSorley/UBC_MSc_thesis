@@ -1664,336 +1664,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png", w
 
 ```
 
-# Wx MegaPlots: FWx + Rv.response
-
-```{r}
-# vectors for plots:
-
-# first extract trip start datetimes
-trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
-trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct(tz = TZ)
-
-# and event timing 
-# event times need to be in ten-min intervals to match with stage_sample
-event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
-event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
-
-# event IDs for labels
-event_ID_labels <- events$ID 
-
-```
-
-Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
-```{r, Wx-stage-megas-plots}
-# 1 - plot snow
-# LWSA (Chris crk and Martin's Gulch FWx stns)
-subasin_snow_plot <- LWSA_meanWx %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         Snow = factor("Snow")) %>% 
-  group_by(date, Snow) %>% 
-  dplyr::summarise(daily_meansnow = mean(SnowDep_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
-  ggplot(aes(x = date, y = daily_meansnow)) +
-  geom_col(aes(colour = Snow), colour = "grey40") +
-  labs(x = "", y = "m /day") +
-  theme_bw() +
-  scale_x_date(date_breaks = "2 months",
-               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
-  facet_wrap(~Snow, ncol = 1, 
-             strip.position = "right") +
-  theme(text = element_text(size = 12),
-        legend.position = "none",
-        strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90),
-        plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
-
-# 2 - plot LWSA temp for the same time span
-subasin_meantemp_plot <- LWSA_meanWx %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         Temp = factor("Temp")) %>% 
-  group_by(date, Temp) %>% 
-  dplyr::summarise(daily_Tmean = mean(Temp_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
-  ggplot(aes(x = date, y = daily_Tmean)) +
-  geom_line(aes(colour = Temp), colour = "#E69F00") +
-  geom_hline(yintercept = 0,
-             linetype = "dotted") +
-  labs(x = "", y = "°C /day") +
-  theme_bw() +
-  scale_x_date(date_breaks = "2 months",
-               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
-  facet_wrap(~Temp, ncol = 1, 
-             strip.position = "right") +
-  theme(text = element_text(size = 12),
-        legend.position = "none",
-        strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90),
-        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-
-# 3 - plot rainfall: mean LWSA rain for study period
-subbasin_meanrain_plot <- LWSA_meanWx %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         Rain = factor("Rain")) %>% 
-  group_by(date, Rain) %>% 
-  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
-  ungroup()  %>% 
-  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
-  ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(aes(colour = Rain), colour = "#0072B2") +
-  scale_y_reverse() +
-  labs(x = "", y = "mm /day") +
-  theme_bw() +
-  scale_x_date(date_breaks = "2 months",
-               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
-  facet_wrap(~Rain, ncol = 1, 
-             strip.position = "right") +
-  theme(text = element_text(size = 12),
-        legend.position = "none",
-        strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90),
-        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-
-# 4 - plot stage at each of the subbasins
-stage_plot <- odyssey_data %>% 
-  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%   
-  ggplot(aes(x = DateTime, y = corr_stage_cm))+
-  geom_line(colour = "#09A4D2")+
-  theme_bw()+
-  facet_wrap(~source, ncol = 1, 
-             scales = "free_y",
-             strip.position = "right")+
-  labs(y = "River Stage (cm)", x = "")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
-
-# mega-plot!! 
-# stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_plot, 
-                   ncol = 1, 
-                   axis = "l", 
-                   align = "v",
-                   rel_heights = c(1,1,1,5))
-# save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
-       width = 8.5, height = 11, units = "in")
-
-```
-
-secondary MegaPlots: with samples
-```{r}
-
-# Wx megaplot, with simple sample points
-stage_sample_plot <- stage_samples %>% 
-  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE, size = 1)+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm) and Sample Collection", x = "")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
-        legend.position = "none")
-
-
-# create a second megaplot with sample points included
-# stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
-
-# save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-         width = 7.5, height = 9.5, units = "in")
-
-# --- baby mega plot
-
-# with precipitation (not temp)
-# add event lines 
-# and simple sample points
-stage_sample_event_plot <- stage_samples %>% 
-  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
-  theme_bw()+
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # start event
-  #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
-  #           xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # end event
-  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm) and Sample Collection", x = "")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
-        legend.position = "none")
-
-# create a second megaplot with sample points included
-# stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event_plot, 
-                   ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
-         width = 7.5, height = 10, units = "in")
-
-
-# --- river sample plot
-
-# plot stage, rain events, samples (by sample type) all sites - no weather
-stage_samples %>% 
-  ggplot(aes(x = DateTime))+
-  # start of rain events
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ 
-  # river stage
-  geom_line(aes(y = corr_stage_cm), size = 0.5) +
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), 
-             na.rm = TRUE, size = 1.5)+
-  scale_shape_manual(breaks = c("Grab", "Rack"), 
-                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
-  scale_fill_manual(breaks = c("Grab", "Rack"), 
-                    values = c("Grab" = forWater_colours2[["MyOrange"]], 
-                              "Rack" = forWater_colours2[["MyOrange"]]))+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
-  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
-        legend.position = "top")+
-  guides(fill = guide_legend("Sample method:"), 
-         shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
-# save 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
-         width = 6, height = 8, units = "in")
-```
-
-
-## Seasonal megaplot
-```{r}
-# --- junior megaplot: megaplot 2 with lines indicating seasons
-
-# pull last rain event date from 2018/2019 wet season
-last_2018_rainevent <- events %>% 
-  filter(ID == 8) %>%
-  summarize(eventend = round_date(as.POSIXct(EndDate, tz = TZ), "10 min")) %>% 
-  pull()
-
-# pull season start dates
-start_wet2018 <- stage_samples %>% ungroup() %>% 
-  filter(lubridate::year(DateTime) == 2018,
-         rain_seasons == "wet") %>% 
-  summarize(start_wet2018 = first(DateTime)) %>% pull()
-
-start_dry2019 <- stage_samples %>% ungroup() %>% 
-  filter(lubridate::year(DateTime) == 2019,
-         rain_seasons == "dry") %>% 
-  summarize(start_dry2019 = first(DateTime)) %>% pull()
-
-start_FF2019 <- stage_samples %>% ungroup() %>% 
-  filter(lubridate::year(DateTime) == 2019,
-         rain_seasons == "first flush") %>% 
-  summarize(start_FF2019 = first(DateTime)) %>% pull()
-
-start_wet2019 <- stage_samples %>% ungroup() %>% 
-  filter(lubridate::year(DateTime) == 2019,
-         rain_seasons == "wet", 
-         lubridate::month(DateTime) > 9) %>% 
-  summarize(start_wet2019 = first(DateTime)) %>% pull()
-
-# make the plots
-
-# seasons labels on rain
-season_meanrain_plot <- subbasin_meanrain_plot +
-  # seasons
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
-             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_wet2019), size = 0.65)+
-  # labels
-  annotate("text", label = "rain / snow-melt", x = as.Date(last_2018_rainevent)+15, 
-           y = 75, colour = "grey45")+
-  annotate("text", label = "2018/2019 wet season", x = as.Date(last_2018_rainevent), 
-           y = 125)+
-  annotate("text", label = "2019 dry season", x = as.Date(start_dry2019)+65, 
-           y = 125)+
-  annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
-           y = 80, angle = 90)+
-  annotate("text", label = "2019/2020 wet season", x = as.Date(start_wet2019)+75, 
-           y = 125)
-
-# update stage plot  
-season_stage_sample_plot <- stage_samples %>% 
-  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, shape = sample_type), fill = "white", na.rm = TRUE, size = 1.5)+
-  scale_shape_manual(breaks = c("Grab", "Rack"), 
-                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
-  # seasons
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
-             xintercept = last_2018_rainevent, size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = start_dry2019, size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = start_FF2019, size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = start_wet2019, size = 0.65)+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm) and Sample Collection", x = "",
-       shape = "sample collection method:")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 20, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
-        legend.position = "bottom")
-
-# update snow and temp to include season lines
-# snow
-season_snow_plot <- subasin_snow_plot +
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
-             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_wet2019), size = 0.65)
-# and temp
-season_meantemp_plot <- subasin_meantemp_plot +
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
-             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_wet2019), size = 0.65)
-
-# create a second megaplot with sample points included
-# stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
-
-# save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
-       width = 7.5, height = 9.25, units = "in")
-```
-
-
 # SAMPLES: augment dataframes
 
 Categorize
@@ -2380,6 +2050,334 @@ T_reduc_UV = -1*((n_totalSamples_UV_OK-n_totalSamples_UV)/n_totalSamples_UV)*100
 
 ```
 
+# Wx MegaPlots: FWx + Rv.response
+
+```{r}
+# vectors for plots:
+
+# first extract trip start datetimes
+trip_df <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Leech-FieldTrip-tracking_forWater-MSc_HMc.csv")
+trip_starts <- trip_df %>% filter(!is.na(trip)) %>% pull('trip-start') %>% as.POSIXct(tz = TZ)
+
+# and event timing 
+# event times need to be in ten-min intervals to match with stage_sample
+event_starts <- round_date(as.POSIXct(events$StartDate, tz = TZ), "10 min") 
+event_ends <- round_date(as.POSIXct(events$EndDate, tz = TZ), "10 min")
+
+# event IDs for labels
+event_ID_labels <- events$ID 
+
+```
+
+Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
+```{r, Wx-stage-megas-plots}
+# 1 - plot snow
+# LWSA (Chris crk and Martin's Gulch FWx stns)
+subasin_snow_plot <- LWSA_meanWx %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Snow = factor("Snow")) %>% 
+  group_by(date, Snow) %>% 
+  dplyr::summarise(daily_meansnow = mean(SnowDep_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
+  ggplot(aes(x = date, y = daily_meansnow)) +
+  geom_col(aes(colour = Snow), colour = "grey40") +
+  labs(x = "", y = "m /day") +
+  theme_bw() +
+  scale_x_date(date_breaks = "2 months",
+               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Snow, ncol = 1, 
+             strip.position = "right") +
+  theme(text = element_text(size = 12),
+        legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
+
+# 2 - plot LWSA temp for the same time span
+subasin_meantemp_plot <- LWSA_meanWx %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Temp = factor("Temp")) %>% 
+  group_by(date, Temp) %>% 
+  dplyr::summarise(daily_Tmean = mean(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
+  ggplot(aes(x = date, y = daily_Tmean)) +
+  geom_line(aes(colour = Temp), colour = "#E69F00") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = "°C /day") +
+  theme_bw() +
+  scale_x_date(date_breaks = "2 months",
+               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Temp, ncol = 1, 
+             strip.position = "right") +
+  theme(text = element_text(size = 12),
+        legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
+
+# 3 - plot rainfall: mean LWSA rain for study period
+subbasin_meanrain_plot <- LWSA_meanWx %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         Rain = factor("Rain")) %>% 
+  group_by(date, Rain) %>% 
+  dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
+  ungroup()  %>% 
+  filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
+  ggplot(aes(x = date, y = daily_rn)) +
+  geom_col(aes(colour = Rain), colour = "#0072B2") +
+  scale_y_reverse() +
+  labs(x = "", y = "mm /day") +
+  theme_bw() +
+  scale_x_date(date_breaks = "2 months",
+               date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
+  facet_wrap(~Rain, ncol = 1, 
+             strip.position = "right") +
+  theme(text = element_text(size = 12),
+        legend.position = "none",
+        strip.background = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
+
+# 4 - plot stage at each of the subbasins
+stage_plot <- odyssey_data %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%   
+  ggplot(aes(x = DateTime, y = corr_stage_cm))+
+  geom_line(colour = "#09A4D2")+
+  theme_bw()+
+  facet_wrap(~source, ncol = 1, 
+             scales = "free_y",
+             strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
+
+# mega-plot!! 
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_plot, 
+                   ncol = 1, 
+                   axis = "l", 
+                   align = "v",
+                   rel_heights = c(1,1,1,5))
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
+       width = 8.5, height = 11, units = "in")
+
+```
+
+secondary MegaPlots: with samples
+```{r}
+
+# Wx megaplot, with simple sample points
+stage_sample_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE, size = 1)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_plot, stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
+
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
+         width = 7.5, height = 9.5, units = "in")
+
+# --- baby mega plot
+
+# with precipitation (not temp)
+# add event lines 
+# and simple sample points
+stage_sample_event_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.65, show.legend = TRUE)+ # start event
+  #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", 
+  #           xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # end event
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event_plot, 
+                   ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
+         width = 7.5, height = 10, units = "in")
+
+
+# --- river sample plot
+
+# plot stage, rain events, samples (by sample type) all sites - no weather
+stage_samples %>% 
+  ggplot(aes(x = DateTime))+
+  # start of rain events
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ 
+  # river stage
+  geom_line(aes(y = corr_stage_cm), size = 0.5) +
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), 
+             na.rm = TRUE, size = 1.5)+
+  scale_shape_manual(breaks = c("Grab", "Rack"), 
+                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
+  scale_fill_manual(breaks = c("Grab", "Rack"), 
+                    values = c("Grab" = forWater_colours2[["MyOrange"]], 
+                              "Rack" = forWater_colours2[["MyOrange"]]))+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "top")+
+  guides(fill = guide_legend("Sample method:"), 
+         shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
+         width = 6, height = 8, units = "in")
+```
+
+
+## Seasonal megaplot
+```{r}
+# --- junior megaplot: megaplot 2 with lines indicating seasons
+
+# pull last rain event date from 2018/2019 wet season
+last_2018_rainevent <- events %>% 
+  filter(ID == 8) %>%
+  summarize(eventend = round_date(as.POSIXct(EndDate, tz = TZ), "10 min")) %>% 
+  pull()
+
+# pull season start dates
+start_wet2018 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2018,
+         rain_seasons == "wet") %>% 
+  summarize(start_wet2018 = first(DateTime)) %>% pull()
+
+start_dry2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "dry") %>% 
+  summarize(start_dry2019 = first(DateTime)) %>% pull()
+
+start_FF2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "first flush") %>% 
+  summarize(start_FF2019 = first(DateTime)) %>% pull()
+
+start_wet2019 <- stage_samples %>% ungroup() %>% 
+  filter(lubridate::year(DateTime) == 2019,
+         rain_seasons == "wet", 
+         lubridate::month(DateTime) > 9) %>% 
+  summarize(start_wet2019 = first(DateTime)) %>% pull()
+
+# make the plots
+
+# seasons labels on rain
+season_meanrain_plot <- subbasin_meanrain_plot +
+  # seasons
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)+
+  # labels
+  annotate("text", label = "rain / snow-melt", x = as.Date(last_2018_rainevent)+15, 
+           y = 75, colour = "grey45")+
+  annotate("text", label = "2018/2019 wet season", x = as.Date(last_2018_rainevent), 
+           y = 125)+
+  annotate("text", label = "2019 dry season", x = as.Date(start_dry2019)+65, 
+           y = 125)+
+  annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
+           y = 80, angle = 90)+
+  annotate("text", label = "2019/2020 wet season", x = as.Date(start_wet2019)+75, 
+           y = 125)
+
+# update stage plot  
+season_stage_sample_plot <- stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type), fill = "white", na.rm = TRUE, size = 1.5)+
+  scale_shape_manual(breaks = c("Grab", "Rack"), 
+                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
+  # seasons
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = last_2018_rainevent, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_dry2019, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_FF2019, size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = start_wet2019, size = 0.65)+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "",
+       shape = "sample collection method:")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 20, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "bottom")
+
+# update snow and temp to include season lines
+# snow
+season_snow_plot <- subasin_snow_plot +
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)
+# and temp
+season_meantemp_plot <- subasin_meantemp_plot +
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "dashed", 
+             xintercept = as.Date(last_2018_rainevent), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.65)+
+  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+             xintercept = as.Date(start_wet2019), size = 0.65)
+
+# create a second megaplot with sample points included
+# stack snow, temp, precip and stage with cowplot::plot_grid
+cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
+
+# save megaplot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
+       width = 7.5, height = 9.25, units = "in")
+```
 
 
 # CH1 RESULTS
@@ -2597,7 +2595,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png",
 
 ```
 
-## nested catchment DOC
+## return here - nested catchment DOC 
 
 is rack sampling downstream of a confluence the same as synoptic grab sampling upstream?
 first: change synoptic sites to include upstream/downstream grouping for method comparison
@@ -2608,47 +2606,53 @@ first: change synoptic sites to include upstream/downstream grouping for method 
 Weeks_grab <- synopticfilter %>% 
   select(site, trip, sample_type, sample, DateTime_sampled, sampleStage_cm, analysis, NPOC_ppm, SAC254_Abs.m, SUVA, pseudo_SUVA, E2E3, rain_season, HoldTime_days, QAQC_flag, site_type) %>% 
   filter(site == "Weeks" & sample_type == "Grab") 
-Weeks_grab$site <- fct_recode(Weeks_grab$site, Weeks_grab = "Weeks")
+Weeks_grab$site <- fct_recode(Weeks_grab$site, 'Weeks (HW Grabs)' = "Weeks")
 
 #2
 ChrisCrk_grab <- synopticfilter %>% 
   select(site, trip, sample_type, sample, DateTime_sampled, sampleStage_cm, analysis, NPOC_ppm, SAC254_Abs.m, SUVA, pseudo_SUVA, E2E3, rain_season, HoldTime_days, QAQC_flag, site_type) %>% 
   filter(site == "ChrisCrk" & sample_type == "Grab")
-ChrisCrk_grab$site <- fct_recode(ChrisCrk_grab$site, ChrisCrk_grab = "ChrisCrk")
+ChrisCrk_grab$site <- fct_recode(ChrisCrk_grab$site, 'ChrisCrk (HW Grabs)' = "ChrisCrk")
 
 #3
 LeechHead_grab <- synopticfilter %>% 
   select(site, trip, sample_type, sample, DateTime_sampled, sampleStage_cm, analysis, NPOC_ppm, SAC254_Abs.m, SUVA, pseudo_SUVA, E2E3, rain_season, HoldTime_days, QAQC_flag, site_type) %>% 
   filter(site == "LeechHead" & sample_type == "Grab")
-LeechHead_grab$site <- fct_recode(LeechHead_grab$site, LeechHead_grab = "LeechHead")
+LeechHead_grab$site <- fct_recode(LeechHead_grab$site, 'LeechHead (US Grabs)' = "LeechHead")
 
 #4
 CraggCrk_grab <- synopticfilter %>% 
   select(site, trip, sample_type, sample, DateTime_sampled, sampleStage_cm, analysis, NPOC_ppm, SAC254_Abs.m, SUVA, pseudo_SUVA, E2E3, rain_season, HoldTime_days, QAQC_flag, site_type) %>% 
   filter(site == "CraggCrk" & sample_type == "Grab")
-CraggCrk_grab$site <- fct_recode(CraggCrk_grab$site, CraggCrk_grab = "CraggCrk")
+CraggCrk_grab$site <- fct_recode(CraggCrk_grab$site, 'CraggCrk (US Grabs)' = "CraggCrk")
 
 #5
 WestLeech_grab <- synopticfilter %>% 
   select(site, trip, sample_type, sample, DateTime_sampled, sampleStage_cm, analysis, NPOC_ppm, SAC254_Abs.m, SUVA, pseudo_SUVA, E2E3, rain_season, HoldTime_days, QAQC_flag, site_type) %>% 
   filter(site == "WestLeech" & sample_type == "Grab")
-WestLeech_grab$site <- fct_recode(WestLeech_grab$site, WestLeech_grab = "WestLeech")
+WestLeech_grab$site <- fct_recode(WestLeech_grab$site, 'WestLeech (US Grabs)' = "WestLeech")
 
 # then join these pseudo-sites 
 pseudo <- full_join(Weeks_grab, ChrisCrk_grab) %>% 
   full_join(LeechHead_grab) %>% 
   full_join(CraggCrk_grab) %>% 
   full_join(WestLeech_grab)
+
 # and join to synopticfilter
 pseudo_synopticfilter <- full_join(synopticfilter, pseudo) %>% 
   mutate(site = factor(site, levels = c('Weeks', 'ChrisCrk', 
-                                        'Weeks_grab', 'ChrisCrk_grab', 
-                                        'LeechHead', 'LeechHead_grab',  
+                                        'Weeks (HW Grabs)', 
+                                        'ChrisCrk (HW Grabs)', 
+                                        'LeechHead (US Grabs)', 'LeechHead',
                                         'Jarvis-crk', 'Lazar-crk', 
-                                        'CraggCrk', 'CraggCrk_grab', 
-                                        'WestLeech', 'WestLeech_grab',
+                                        'CraggCrk', 'CraggCrk (US Grabs)', 
+                                        'WestLeech', 'WestLeech (US Grabs)',
                                         'Leech-Beach', 'Tunnel', 
                                         'Rithet-crk', 'Judge-crk', 'Deception') ))
+
+# rename
+pseudo_synopticfilter$site <- fct_recode(pseudo_synopticfilter$site, 
+                                         'LeechHead (DS Rack + Grabs)' = 'LeechHead')
 
 ```
 
@@ -2724,7 +2728,7 @@ abc <- cowplot::plot_grid(ab, c, ncol = 1, rel_heights = c(1,1.5),
 
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_up-down_metcompar.png", width = 5, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_up-down_metcompar.png", width = 6, height = 6, units = "in")
 
 
 ```

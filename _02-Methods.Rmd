@@ -95,19 +95,7 @@ Thirteen sites were selected for synoptic water sampling and water quality analy
 
 ####    Sampling across nested catchments of the Leech watershed {#MethodsNestedCatch}
 
-Six of the synoptic sampling sites were selected for more intensive monitoring. These sites represent the drainage area upstream of a future diversion at the Leech River Tunnel, and five sub-basins nested within the Leech Tunnel catchment (Figure \@ref(fig:subbasinMap)).
-
-The sub-basins represent important portions of the Leech River system: two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5). Site 6 was located at the Leech River Tunnel and the drainage area included the entire LWSA.	
-
-\  
-
-```{r subbasinMap, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinMap} *Research sites in the Leech Water Supply Area. Sites are named and numbered, where the number indicates both the sequence of vertical rack installations as well as the relative progression from headwaters to mouth. Each research basin boundary (defined using each sampling site as the drainage outlet) is outlined in black, and the water supply area boundary is delineated in red.*"
-
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasin-sampling_with-numbers.png")
-```
-
-\  
+Six of the synoptic sampling sites were selected for more intensive monitoring. These sites represent the drainage area upstream of a future diversion at the Leech River Tunnel, and five sub-basins nested within the Leech Tunnel catchment 
 
 Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
 
@@ -121,29 +109,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_study-sites_basin-charact
 
 \  
 
-#####   Installations 
 
-At each of the six monitoring sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow, without employing costly pump-samplers. Each vertical rack also included a water level logger that recorded continuous stage (at ten-minute intervals). Vertical sampling racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e., sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Vertical racks collected samples during flows that would otherwise be difficult or unsafe to access, and were supplemented with standard grab samples between storm events and during summer baseflow.
-
-\  
-
-The passive sampling bottles employ principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE widemouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end.
-
-\  
-
-Each rack included a central stilling well (3.81cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. Each rack also included sensors (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) that recorded air and water temperatures (Figure \@ref(fig:verticalRack)). By combining the height at which each siphon bottle filled with observed stage (stilling-well measuring tape) and level-logger data, the date and time for collection of each rising-stage sample was determined. 
-
-\  
-
-```{r verticalRack, out.width = "30%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2).*"
-
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
-```
-
-\  
-
-These vertical racks collected whole water samples on the rising limb of the hydrograph. The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 	
 ###   Analytical techniques & data handling
 

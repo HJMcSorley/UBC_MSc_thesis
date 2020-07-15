@@ -1,0 +1,22 @@
+---
+output: bookdown::word_document2
+---
+
+##	Conclusions
+
+```{r, include = FALSE, package.startup.message = FALSE}
+
+# load required packages
+library(tidyverse)  # keep it tidy
+library(readr)      # read in delimited files
+library(knitr)      # for nice tables
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
+
+```
+
+
+
+__Objective 4:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+
+

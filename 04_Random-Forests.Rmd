@@ -1,0 +1,22 @@
+---
+output: bookdown::word_document2
+---
+
+## Watershed characteristics as predictors for DOC and NOM	
+
+```{r, include = FALSE, package.startup.message = FALSE}
+
+# load required packages
+library(tidyverse)  # keep it tidy
+library(readr)      # read in delimited files
+library(knitr)      # for nice tables
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
+
+```
+
+
+### Introduction
+__RQ.3.__   Are some watershed characteristics more important than others for influencing DOC and NOM dynamics?
+
+__Objective 3:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
