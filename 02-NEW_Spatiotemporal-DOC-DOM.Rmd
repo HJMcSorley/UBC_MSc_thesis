@@ -35,17 +35,19 @@ influence of seasonality
 
 ...While synoptic grab sampling can cover a wide area over a relatively short period of time, it can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short durations of rapid runoff (@Harmel2003). 
 
+rising hydrograph limb, which has been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]
+
 Pump samplers or passive samplers can be used to collect water samples under difficult or unsafe conditions. A pump sampler (e.g., ISCO samplers, Teledyne ISCO, Inc., Lincoln, NE, USA; Global Water Instrumentation, Gold River, California) can be set up in the field and programmed to collect a set of water samples based on time interval or changes in conditions (e.g., stage or turbidity thresholds). Pump samplers are effective for automatic event-based sampling (@Harmel2003) but can be prohibitively expensive ($2K-3K CAD), and also require a reliable power source which can pose logistical challenged for setting up multiple sites in remote or difficult to access locations (@Mackay2012). A siphon sampler is a passive sampling alternative to a pump sampler; it automatically and effectively collects discrete water samples on the rising limb of the hydrograph (e.g.: @Mackay2012; @Graczyk2000; @Diehl2007). Siphon samplers are limited to sampling a single event and (so far) are not suitable for sampling the falling hydrograph limb; they are however very low cost, customizable and require no power.
 
 \  
 
 ### Methods
 
-To measure the ranges of dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character over space and time, river sampling was conducted from October 2018 to February 2020. Water samples were collected and analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The river sampling program designed for this project included synoptic sampling of 13 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech River watershed. Results of synoptic sampling analyses were used to elucidate spatial and temporal patterns in NOM and DOC.  
+To measure the ranges of dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character over space and time, river sampling was conducted from October 2018 to February 2020. Water samples were collected and analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The river sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech River watershed. Results of synoptic sampling analyses were used to elucidate spatial and temporal patterns in NOM and DOC.  
 
 ####    Sampling sites 
 
-Most of sampling sites were located in the Leech WSA and a few key rivers in the Sooke WSA were also included (Figure \@ref(fig:sampleSitesMap)). Rithet Creek is the largest tributary to Sooke Reservoir and Judge Creek is the second largest. Deception (gulch) is a small tributary to Deception Reservoir, which is separated entirely from the south-west of Sooke Reservoir by a dam. The Leech River Tunnel (currently deactivated) terminates at Deception gulch, thus Deception Reservoir is a likely balancing reservoir for future inter-basin transfers. The Boneyard site is located on the Leech River downstream from the Tunnel and upstream of the confluence of Leech and Sooke Rivers (below the Sooke Reservoir drinking water intake tower). 
+Most of sampling sites were located in the Leech WSA and a few key rivers in the Sooke WSA were also included (Figure \@ref(fig:sampleSitesMap)). Rithet Creek is the largest tributary to Sooke Reservoir and Judge Creek is the second largest. Deception (gulch) is a small tributary to Deception Reservoir, which is separated entirely from the south-west of Sooke Reservoir by a dam. The Leech River Tunnel (currently deactivated) terminates at Deception gulch, thus Deception Reservoir is a likely balancing reservoir for future inter-basin transfers. 
 
 In the LWSA, Lazar Creek and Jarvis Creek are headwaters of Cragg Creek, which is a major tributary to the Leech River, and Weeks and Chris Creek are headwater streams of the Leech River. West Leech is a major tributary to the Leech River, and Leech-Beach site was located just downstream of the confluence of West Leech with the mainstem. The Leech Tunnel site was located near the effective mouth of the LWSA, at the Leech River Tunnel. 
 
@@ -174,7 +176,7 @@ Alternatively, the quotient E~2~:E~3~ provides information analogous to that of 
 
 #### Ancilary data: climate and forests
 
-__note: this section should be augmented to include data and comments on Sooke watersehd also (synoptic sites)__
+__note: this section should be augmented to include data and comments on Sooke watershed also (synoptic sites)__
 
 The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year falls as rain (i.e., pluvial hydroclimatic regime) [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry. 
 
@@ -196,8 +198,8 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
 
 Data from January 2018 to March 2020 were provided and used to define sampling seasons and were employed in quality control assessments of vertical rack samples. 
 
-
- --- possibly move this into intro and just keep means here.
+```
+possibly move this into intro and just keep means here.
 Slightly more precipitation was recorded at Martin's Gulch than Chris Creek station (Figure \@ref(fig:WxLWSA), Table \@ref(tab:WxLWSAdata)).
 
 \  
@@ -217,7 +219,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 ``` 
 
 \  
----
+```
 
 Average LWSA weather data was calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Figure \@ref(fig:meanWxLWSA), Table \@ref(tab:meanWxLWSAdata)). It was assumed that the arithmetic means of rainfall from these two FWx stations were representative of rain conditions across the Leech watershed (LWSA rain), and were used to define storm events that corresponded to vertical rack sample collection. Mean LWSA air temperature data were used in linear regression to estimate temperatures at each of the six monitoring sites for the period before temperature loggers were deployed. While snow melt contributed to runoff and river responses at the six LWSA monitoring sites, the CRD FWx stations are situated at elevation and therefore snow depth records were not assumed to be representative of snow cover across the LWSA and snow depth data were not included in event calculations, but were taken into consideration when delineating seasons.
 
@@ -342,34 +344,67 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 ```
 
 
-#### Synoptic Sampling
+#### Spatial patterns 
 
-Thirteen river sites across the Leech and Sooke water supply areas were sampled synoptically over the sixteen-month study period (\@ref(fig:sampleSitesMap)). DOC concentrations from the 201 quality-assured synoptic grab samples are shown in Figure \@ref(fig:synopticDOCbox) and summarized in Table \@ref(tab:synopticDOCdata). 
+Twelve river sites across the Leech and Sooke water supply areas (Figure \@ref(fig:sampleSitesMap)) were sampled synoptically over the sixteen-month study period for quantification of DOC  and assessment of NOM. Among these sites, several comparisons can be made: cross-basin, from LWSA to SWSA; upstream to downstream; nested catchments and sampling methods. 
+
+Mean DOC concentrations were similar when comparing across basins from the current source water tributaries, Rithet and Judge Creeks, to the future supplemental supply, Leech River at the Tunnel (Table \@ref(tab:synopticDOCdata)). From upstream to downstream sites there was an overall decreasing trend for DOC concentrations and NOM aromaticity and/or molecular size  (Figure \@ref(fig:synopticDOCbox)).  
+
+\  
+
+```{r synopticDOCdata}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH1_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 1, 1), 
+               caption = "*Dissolved organic carbon concentrations across twelve synoptically sampled river sites*")
+``` 
 
 \ 
 
 ```{r synopticDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:synopticDOCbox} *Synoptic sampling results of dissolved organic carbon concentrations from 13 sites over 16 months (201 grab samples).*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_boxplot_allParams-allSites-allSamples.png")
 ```
 
 \  
 
-```{r synopticDOCdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic-grab_summary.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0, 0, 1, 1, 0, 1, 1, 1), 
-               caption = "*Summary of dissolved organic carbon across thirteen synoptically sampled river sites*")
-``` 
+With respect to sampling methods among nested catchments of the Leech watershed, three comparisons were made to asses whether Rack sampling at a downstream site captured the same range in DOC concentration as synoptic grab sampling at upstream sites. Synoptic Grab samples from the headwater sites of Weeks and Chris Creeks were compared to all samples (Rack and Grab) from below their confluence at LeechHead site (Figure \@ref(fig:abcDOCbox), plot A). Similarly, Grab samples collected at the headwater of Cragg Creek, Jarvis and Lazar creeks, were compared to all samples at the CraggCrk monitoring site (Figure \@ref(fig:abcDOCbox), plot B). Note that there was a greater distance between CraggCrk site and its headwaters' sampling locations compared to LeechHead and its headwaters' locations. In these comparisons, the range in DOC observed in grab samples alone at the upstream sites was not obtained by combining Rack and Grab samples below their confluences. However, when higher order rivers were examined in a similar comparison, the combination of Rack and Grab samples at the mainstem (Leech Tunnel) captured the DOC range observed in Grab samples alone at the sites upstream (Figure \@ref(fig:abcDOCbox), plot C).     
+
+Figure \@ref(fig:abcDOCbox)
+
+```{r abcDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:abcDOCbox} *Synoptic sampling results of dissolved organic carbon concentrations from 13 sites over 16 months (201 grab samples).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_up-down_metcompar.png")
+```
+
+
+#### Temporal patterns
+
+Over the study period, DOC concentrations followed similar trends across each of the six LWSA sites (Figure \@ref(fig:DOCloess)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations in the spring before progressively increasing again through the summer. 
 
 \  
 
-Rithet Creek, the largest tributary to Sooke Reservoir, showed a range of DOC concentrations comparable to those observed at the Tunnel site. And median DOC at Judge Creek, the second largest tributary to Sooke Reservoir, was greater than concentrations at any of the LWSA mainstem rivers and the Tunnel site.  
+```{r DOCloess, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
+```
 
 \  
 
- 
-#### Seasonal patterns in DOM character
+Overall, there was very little difference between mean DOC concentration through the wet season (6.2 ± 3 mg/L) compared to the dry season (5.5 ± 3 mg/L). However, there were far fewer samples collected in the dry season than during the wet season (Figure \@ref(fig:DOCseasonal).
+
+\  
+
+```{r DOCseasonal, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCseasonal} *Boxplots of DOC concentrations at six LWSA sites during dry (n = 34) and wet (n = 90) seasons.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal-subbasin_boxplots_2.png")
+```
+
+
+##### Seasonal patterns in DOM character
 
 The synoptic samples collected over sixteen months were used to assess seasonality in source water DOM character. DOC concentrations were measured directly as NPOC and were estimated by UV-vis absorbance using a Spectrolyser. More aromatic molecules of NOM will absorb more UV energy at 254nm wavelength than non-aromatic molecules; therefore, spectroscopic estimates of DOM are proxy measures of sample aromaticity (e.g., humic substances). As chromophores are required (i.e. responsible) for UV absorbance, absorbance-based DOC estimates will be referred to as chromophoric-DOM or CDOM. DOC concentrations (NPOC) were compared to CDOM to evaluate if and when molecular character of river samples may have shifted. Of the 371 synoptic samples, 276 had data for both NPOC and CDOM,  Figure \@ref(fig:seasonalDOCest) shows DOC (NPOC) plotted against CDOM for all quality assured data (i.e., both Rack and Grab samples). 
 
