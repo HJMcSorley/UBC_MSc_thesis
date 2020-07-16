@@ -25,15 +25,15 @@ __Objective 2:__   Relate water sample results to river stage and report on the 
 
 ####   Watershed processes and water quality
 	
-Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals represent an important link between ecosystem processes, land-use, hydrology, and water resources. Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019]. The origins, transport and fate of biogeochemicals in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and concentrations) governs treatment requirements and, with respect to DBPs, dictates the quality of treated water [@Weishaar2003; @Chow2008]. 
+Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals represent an important link between ecosystem processes, land-use, hydrology, and water resources. Biogeochemical signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019]. The origins, transport and fate of biogeochemicals in source waters is important for drinking water treatment, because the quality of source water (physiochemical composition and concentrations) governs treatment requirements and largely dictates the quality of treated water [@Weishaar2003; @Chow2008]. Natural organic matter (NOM) encompasses a suite of biogeochemical compounds that link the landscape and fluvial systems, with runoff introducing terrestrial compounds into aquatic systems. Because NOM is a complicated medley of molecules it can be challenging to measure, but measuring organic carbon (the backbone of NOM) is standard and thus quantified as a surrogate for NOM.    
 
 \  
 
-Water quality parameters exhibit natural variability across watersheds due to dynamic biotic and abiotic interactions. For example, the river continuum concept (RCC) predicts a temporal shift in DOM character, including seasonal shifts between autotrophic generation of NOM and heterotrophic processing of detritus; a shift from autochthonous to allochthonous NOM [@Vannote1980; @Meyer1983]. The RCC also predicts a spatial reduction in DOM molecular diversity from headwaters (entry point for majority of solutes) to river mouth (i.e., reduced DOM diversity from low to high order streams) [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. The longitudinal attenuation of DOM diversity can be explained by a combination of hydrological processes; geomorphic variables and physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
+NOM exhibits dynamic variability across watersheds. The river continuum concept (RCC) predicts a temporal shift in NOM character, including seasonal shifts between autotrophic generation of NOM and heterotrophic processing of detritus; a shift from autochthonous to allochthonous NOM [@Vannote1980; @Meyer1983]. The RCC also predicts a spatial reduction in NOM molecular diversity from headwaters (entry point for majority of solutes) to river mouth (i.e., reduced NOM diversity from low to high order streams) [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. The longitudinal attenuation of NOM diversity can be explained by a combination of hydrological processes; geomorphic variables and physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
 
 \  
 
-On a finer temporal scale, hydrologic pulses can cause temporal variability in DOM characteristics; for example, the character of DOM has been shown to vary during hydrologic response to precipitation, which indicates a change in DOM source over the course of an event [@Vidon2008; @Abbott2018]. The Pulse Shunt Concept (PSC) supplements the temporal aspects of RCC by considering how major hydrologic events drive regional DOM metabolism and the magnitude, timing and spatial extent of DOM flux [@Raymond2016]. While the link between mobilization of source material and biogeochemical processes govern the character of aqueous NOM, the PSC shows that it is hydrologic processes that govern NOM concentrations in streams [@Abbott2018; @Creed2015; @Zarnetske2018]. Where the RCC relies on in-stream biogeochemical processing to explain longitudinal alteration of NOM character, intense hydrologic pulses (related to precipitation or melt events) override the rate of biogeochemical processing and force mass transport events. Discharge determines the magnitude of DOC flux (i.e., concentration transport) and under pluvial regime, precipitation and discharge are the primary controls on stream DOC concentrations [@Zarnetske2018; @Vidon2008]. Indeed, brief flood events are often responsible for most of the fluvial DOC transport in a watershed [@Raymond2010]. With respect to drinking water supply, the timing and magnitude of fluvial DOC transport is important for water treatment considerations; treatment infrastructure can be designed and adjusted to handle a range of source water conditions, but rapid changes and dramatic variations in source water quality pose major challenges for drinking water treatment.   
+On a finer temporal scale, hydrologic pulses can cause temporal variability in NOM characteristics; for example, the character of NOM has been shown to vary during hydrologic response to precipitation, which indicates a change in NOM source over the course of an event [@Vidon2008; @Abbott2018]. The Pulse Shunt Concept supplements the temporal aspects of RCC by considering how major hydrologic events drive regional NOM metabolism and the magnitude, timing and spatial extent of NOM flux [@Raymond2016]. While the link between mobilization of source material and biogeochemical processes govern the character of aqueous NOM, the Pulse Shunt Concept (PSC) shows that it is hydrologic processes that govern NOM concentrations in streams [@Abbott2018; @Creed2015; @Zarnetske2018]. Where the RCC relies on in-stream biogeochemical processing to explain longitudinal alteration of NOM character, intense hydrologic pulses (related to precipitation or melt events) override the rate of biogeochemical processing and force mass transport events. Discharge determines the magnitude of dissolved organic carbon (DOC) flux (i.e., concentration transport) and under pluvial regime, precipitation and discharge are the primary controls on stream DOC concentrations [@Zarnetske2018; @Vidon2008]. Indeed, brief flood events are often responsible for most of the fluvial DOC transport in a watershed [@Raymond2010]. With respect to drinking water supply, the timing and magnitude of fluvial DOC transport is important for water treatment considerations; treatment infrastructure can be designed and adjusted to handle a range of source water conditions, but rapid changes and dramatic variations in source water quality pose major challenges for drinking water treatment.   
 
 \  
 
@@ -41,7 +41,7 @@ Through a large and geographically diverse data study in the United States, Zarn
 
 \  
 
-Aspects of both the RCC and PSC were illustrated in a recent nested catchment study by Abbott _et al_ [-@Abbott2018] which found greater DOM chemical diversity in headwaters relative to downstream, but not greater temporal variance in headwaters biogeochemistry. Despite longitudinal differences in molecular character, solute concentrations varied synchronously among upstream and downstream sites, leading to temporal stability in relative biogeochemical signatures [@Abbott2018]. The temporal extent to which water quality changes echo across nested sub-catchments depends on the synchrony (i.e. mean covariance) of the hydrologic pulse generation among sub-catchments [@Abbott2018]. 
+Aspects of both the RCC and PSC were illustrated in a recent nested catchment study by Abbott _et al_ [-@Abbott2018] which found greater NOM chemical diversity in headwaters relative to downstream, but not greater temporal variance in headwaters biogeochemistry. Despite longitudinal differences in molecular character, solute concentrations varied synchronously among upstream and downstream sites, leading to temporal stability in relative biogeochemical signatures [@Abbott2018]. The temporal extent to which water quality changes echo across nested sub-catchments depends on the synchrony (i.e. mean covariance) of the hydrologic pulse generation among sub-catchments [@Abbott2018]. 
 
 \  
 
@@ -55,24 +55,19 @@ Forest management and landscape disturbances can also affect water quality by al
 
 ##### Event based sampling 
 
-The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
+The rising limb of the hydrograph has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Therefore, the collection of event-based river samples is important for clarifying the magnitude and direction of water quality changes in response to precipitation, which provides information about solute supply and hydrologic connectivity to the landscape [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 
+___... add more on sampling...___
 
 ### Methods
 
-... time-stamps of event-based samples were used to inform stage-concentration relationships (Chapter 3). 
-
-
-... event-based river samples collected near-simultaneously at sites across a watershed can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]....
-
-
 ####    Leech River Watershed
 
-The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year falls as rain (i.e., pluvial hydroclimatic regime) [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
+The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests NOMinated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year falls as rain (i.e., pluvial hydroclimatic regime) [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
 
 \  
 
-#### Monitoring sites
+#### Monitoring sites and sub-basin characteristics
 
 Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events (Figure \@ref(fig:subbasinMap)). Nested catchments of the Leech River system included two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5) and the entire LWSA drainage area above the point of diversion, Leech Tunnel (Site 6).	
 
@@ -86,7 +81,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasi
 
 \ 
 
-Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
+Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with preNOMinantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is preNOMinantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
 
 \  
 
@@ -98,7 +93,9 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_study-sites_basin-charact
 
 \ 
 
-At each of the six monitoring sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow, without employing costly pump-samplers. Each vertical rack also included a water level logger that recorded continuous stage (at ten-minute intervals). Vertical sampling racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e., sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Vertical racks collected samples during flows that would otherwise be difficult or unsafe to access, and were supplemented with standard grab samples between storm events and during summer baseflow.
+___this is essentially the same method section as in chapter 2___
+
+At each of the six monitoring sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow, without employing costly pump-samplers. Each vertical rack also included a water level logger that recorded continuous stage (at ten-minute intervals). Vertical sampling racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e., sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Vertical racks collected samples during flows that would otherwise be difficult or unsafe to access and were supplemented with standard grab samples between storm events and during summer baseflow.
 
 \  
 
@@ -118,31 +115,34 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 \  
 
+The time-stamps of event-based river samples collected near-simultaneously at sites across a watershed were used to inform stage-concentration relationships, and to tease-out insights about relative hydrologic pulse responses across nested catchments.
+
 ####   Sample analysis
 
 Water samples were collected in acid-wached 250mL HDPE wide-mouth amber bottles and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). DOC samples were filtered (0.45-micron PES filters) and acidified (pH < 2), spectroscopy samples were not filtered nor acidified but were ensured to have zero turbidity. Descriptions of sample preparation and quality control are detailed in Chapter 2. DOC was quantified via Method 5310-B on a Shimadzu TOC-V [@StdMet5310], and UV-Vis measurements were completed on a spectro::lyser spectrophotometer (S::can, Vienna, Austria)
 
 \  
 
-Molecular character of NOM in water samples was assessed through specific ultraviolet absorbance at 254nm (SUVA~254~) and the spectral quotient E~2~:E~3~. SUVA~254~ is UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254 nm wavelength, normalized to the samples DOC concentration [@Weishaar2003], it correlates with DOM aromaticity [@Weishaar2003; @Helms2008; @Chow2008]. E~2~:E~3~ is the ratio of absorbance at wavelengths 250 nm and 365 nm, and is inversely related to aquatic humic solute aromaticity and molecular size  [@Peuravuori1997; @Helms2008].
+Molecular character of NOM in water samples was assessed through specific ultraviolet absorbance at 254nm (SUVA~254~) and the spectral quotient E~2~:E~3~. SUVA~254~ is UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254 nm wavelength, normalized to the samples DOC concentration [@Weishaar2003], it correlates with NOM aromaticity [@Weishaar2003; @Helms2008; @Chow2008]. E~2~:E~3~ is the ratio of absorbance at wavelengths 250 nm and 365 nm, and is inversely related to aquatic humic solute aromaticity and molecular size  [@Peuravuori1997; @Helms2008].
 
 #### Defining events
 
-"
+___this is the same as in Chapter 2___
+
 The R package _Rainmaker_ (USGS, github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to sampling campaigns and to distinguish between seasons. The pluvial hydroclimatic regime on the coast of BC is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for vertical racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for rack sampler collection.
-"
+
 
 ### Results
 
 ####   Rain events 
 
-LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 that were classified as major events. Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of 14 hours or longer. Table \@ref(tab:EventsTable3) summarizes the eighteen major rain events that occurred during the study period (2018-10-23 to 2020-02-20). 
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 events that were classified as major events that corresponded to sample collection by the vertical racks (i.e., events large enough to trigger substantial river responses). Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
 
 \  
 
 ```{r EventsTable3}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv") %>% 
-  knitr::kable(digits = c(0,0,0,1,1,1),
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv") %>%  
+  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2), 
                caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
 ```
 
@@ -178,12 +178,9 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
 
 \  
 
-####    River response: 
+#### Spatial patterns in DOC & NOM
 
-#### DOC and NOM 
-
-...
-Indeed, samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
+Samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
 
 \  
 
@@ -196,7 +193,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.
 
 \  
 
-Figure \@ref(fig:subbasinDOCbox) shows the distribution of DOC concentrations at each of the six sites. Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was similar to CraggCrk.
+Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was similar to CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
 
 \  
 
@@ -208,26 +205,70 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_box
 
 \  
 
+##### Spatial and temporal patterns in DOC & NOM
+
+```{r DOCloess, fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples. Trend line represents locally weighted smoothing (loess, local polynomial regression).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
+```
+
+
+Figure \@ref(fig:seasonalDOC)
+
+```{r seasonalDOC, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalDOC} *Contrasting DOC from samples collected across wet (n = 279) and dry (n = 39) seasons by both synoptic grab and vertical rack sampling*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH3_DOC-seasonal-subbasin_boxplots.png")
+```
+
+Table \@ref(tab:seasonalsamples) 
+
+```{r seasonalsamples}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,2,2,0,2,2,1), 
+               #col.names = c(),
+               caption = "*Seasonal comparison of sample DOC results*")
+```
+
+
+#### River response in relation to DOC & NOM
+
+Figure \@ref(fig:stageRelations)
+
+```{r stageRelations, fig.cap = fig_cap}
+fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png")
+```
+
+
 
 #### spatial and temporal variance and synchrony in stage 
 
-Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
+Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 ranNOMizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
 \  
 
 * _needs work:_ 
-* Rates of stream response (times to peak): \@ref(tab:stageResponse)
+* Rates of stream response (times to peak): Table \@ref(tab:stageResponse)
 
 \  
 
 ```{r stageResponse}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = 1, 
-               col.names = c("site", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
+               col.names = c("site", 
+                             "shortest time to peak stage (hr)", 
+                             "longest time to peak stage (hr)", 
+                             "smallest change in stage (cm)", 
+                             "largest change in stage (cm)", 
+                             "fastest rate of stage change (cm/hr)", 
+                             "slowest rate of stage change (cm/hr)"),
                caption = "*Summary of stream response to precipitation events across the LWSA.*")
 ```
 
-####   Rising stage & DOM dynamics
+####   Rising stage & NOM dynamics
 
 The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season is more relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
 
@@ -243,24 +284,16 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_Gvs
 
 A trend in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e., depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018]. While not every river response pulse was full sampled across, the vertical racks collected samples at progressively higher stage in each site. Figure \@ref(fig:RisingLimbPlot) shows DOC concentrations in rising limb sample across rain events. Generally, DOC increased with increasing river stage; however, the trend was not linear in each event response.
 
-****************
-To get a better idea of stream surge DOM dynamics, well sampled rising limb stream surges were examined... 
+___Fix___
+To get a better idea of stream surge NOM dynamics, well sampled rising limb stream surges were examined... 
 * mid wet 2018
 Trip 4 // rain event 3 [for sites 1-5] 
 Trip 5 // rain event 4 for Tunnel
 
 * earlier 2019
 rain events 10 & 11 (maybe)
-****************
-\  
 
-```{r RisingLimbPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:RisingLimbPlot} *DOC concentration trends in rising limb samples categorized by rain events*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png")
-```
-
-\  
 
 ####   Spatiotemporal synchrony in local extrema: river stage and DOC
 
@@ -276,7 +309,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simu
 
 \  
 
-The majority of samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each sites samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrema samples with stage at each site.
+Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrema samples with stage at each site.
 
 \  
 
@@ -290,7 +323,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-
 
 
 
-* _needs work:_ 
+__needs work:__ 
 * DOC changes in stormflow
 * range of DOC in each event: \@ref(tab:DOCResponse) 
 
@@ -318,7 +351,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", co
 
 \  
 
-* Rates of stream response (times to peak): \@ref(tab:stageResponsesubset)
+* Rates of stream response (times to peak): Table \@ref(tab:stageResponsesubset)
 
 \  
 
@@ -332,7 +365,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.cs
 \  
 
 * DOC changes in stormflow
-* range of DOC in each event: \@ref(tab:DOCResponsesubset) 
+* range of DOC in each event: Table \@ref(tab:DOCResponsesubset) 
 
 \  
 
@@ -354,19 +387,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-
 
 \  
 
-* density plots of stage with DOC, UV~254~ and SUVA~254 for each site: \@ref(fig:stageDOCdensityscatter) 
-
-```{r stageDOCdensityscatter, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageDOCdensityscatter} *Two dimensional density distributions of normalized stage in relation to DOC concentration and DOM molecular character parameters.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png")
-```
 
 
 
 ### Discussion
 
 
-Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
+Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 
 ### Conculsions
