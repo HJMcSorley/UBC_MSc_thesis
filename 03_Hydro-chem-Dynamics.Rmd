@@ -395,4 +395,17 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-
 
 Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 
+* variability among sub-basins versus variability within each sub-basin over time
+* timing of peaks and valleys of stage -- at 10 min resolution was there a lag from upstream to downstream?
+* source versus transport limitations -- DOC in rising limb
+* any hysteretic behaviour? (DOC over time by event)
+* was there a relationship between rain event intensity/duration and DOC?
+* use RF to determine relative importance of watershed characteristics as DOC predictors
+* use RF to in-fill missing NOM absorbance data based on relationship with DOC??? Like Yeonuk did for CH4 flux
+
+
+ 
+
 ### Conculsions
+
+* establishing connectivity among nested catchments as a baseline for experimental treatments (future)

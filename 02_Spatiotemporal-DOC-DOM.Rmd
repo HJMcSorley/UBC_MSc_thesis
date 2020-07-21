@@ -18,23 +18,27 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 ### Introduction
 
 Drinking water in Canada is primarily sourced from surface water supplies.
-Over 85% of Canadians, and approximately 80% of British Columbias depend on drinking water that originates from forested headwaters [@Pike2010]. Climate, weather, and physical characteristics of a watershed lead to variations in surface water quality, and runoff links surface water sources to the landscape by introducing terrestrial sediments, nutrients, and organic matter into solution [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015; @Matilainen2010]. 
+Over 85% of Canadians, and approximately 80% of British Columbians depend on drinking water that originates from forested headwaters [@Pike2010]. Climate, weather, and physical characteristics of a watershed lead to variations in surface water quality, and runoff links surface water sources to the landscape by introducing terrestrial sediments, nutrients, and organic matter into solution [@Pike2010; @Johnson1997; @Delpla2016; @HealthCanada2019; @Yang2015; @Matilainen2010]. 
 
 ####   Aqueous natural organic matter in source water supply
 
-Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997 ;@Aiken2011; @Matilainen2011]. NOM can be introduced to a water body from terrestrial sources (i.e., allochthonous NOM) or generated through in-stream processes (i.e., autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
+Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997 ;@Aiken2011; @Matilainen2011; @Ruhala2017]. NOM can be introduced to a water body from terrestrial sources (i.e., allochthonous NOM) or generated through in-stream processes (i.e., autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
 
 \  
 
-NOM concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM in drinking source water have different disinfection by-product formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010].  
+NOM concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM in drinking source water have different disinfection by-product formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008], and different aquatic ecosystem roles [@Cory2011]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010].  
 
 \  
 
-Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen and are composed primarily of carbon; thus, organic carbon (OC) is often quantified as a proxy for NOM concentration [@HealthCanada2019; @Matilainen2010; @MWH2014]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively) which are typically distinguished based on separation by a 0.45-micron filter [@StdMet5310; @Aiken2011]. Generally, DOC is the predominant fraction of TOC in surface water, and the amount of DBPs in treated water is proportional to raw water DOC concentration [@Weishaar2003; @Chow2008]. 
+Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen and are composed primarily of carbon; thus, organic carbon (OC) is often quantified as a proxy for NOM concentration [@Cory2011; @HealthCanada2019; @Matilainen2010; @MWH2014]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively) which are typically distinguished based on separation by a 0.45-micron filter [@StdMet5310; @Aiken2011]. Generally, DOC is the predominant fraction of TOC in surface water, and the amount of DBPs in treated water is proportional to raw water DOC concentration [@Weishaar2003; @Ruhala2017; @Chow2008]. 
 
 \  
 
-In addition to acting as a precursor for DBPs, DOC has been called a master variable due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Zarnetske2018]. NOM is an energy source for aquatic heterotrophic microbes, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes; which, in turn, effect aquatic microbial communities [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012]. DOC is an important source water quality parameter to monitor and guidelines in British Columbia specify that drinking source water TOC should remain below 4 mg/L, primarily to reduce the production of trihalomethanes (e.g., chloroform, a common DBP) in treated drinking water [@BC2019]. Aside from DBPs, monitoring source water DOC is important for addressing other operational issues associated with NOM and drinking water treatment challenges. Within a watershed, the characteristics and concentrations of NOM (and therefore DOC) naturally fluctuate over space and through time, creating dynamic treatability conditions [@Li2014; @Yang2015].
+In addition to acting as a precursor for DBPs, DOC (thus NOM) has been called a master variable due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Zarnetske2018; @Ruhala2017]. NOM is an energy source for aquatic heterotrophs, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes; which, in turn, effect aquatic microbial communities [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012; @Cory2011]. 
+
+\  
+
+DOC is an important source water quality parameter to monitor and guidelines in British Columbia specify that drinking source water TOC should remain below 4 mg/L, primarily to reduce the production of trihalomethanes (e.g., chloroform, a common DBP) in treated drinking water [@BC2019]. Aside from DBPs, monitoring source water DOC is important for addressing other operational issues associated with NOM and drinking water treatment challenges. Within a watershed, the characteristics and concentrations of NOM (and therefore DOC) naturally fluctuate over space and through time, creating dynamic conditions and potential treatability concerns [@Li2014; @Yang2015].
 
 #### Surface water sampling strategies
 
@@ -45,11 +49,20 @@ methods of collecting samples...
 -temporal representation
 influence of seasonality 
 
-##### Event-based sampling
 
-Synoptic grab sampling can cover a wide area over a relatively short period of time, but it can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short durations of rapid runoff (@Harmel2003). 
+While a discrete sample can not tell a complete story of water quality dynamics in a hydrologic system, it can provide information about specific attributes of the water in a certain place at a given time. 
 
-Water samples from the rising limb of the hydrograph have been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. The dynamic changes that occur during events are of interest for understanding water quality variation and ranges, however it is logistically challenging and potentially dangerous to manually collect standard grab samples during high flows across multiple sites (@Graczyk2000; @Mackay2012).
+Collection of water samples must be done consistently and carefully to avoid sample contamination or sampling errors which would generate unreliable analytical results [@CCME2011]. 
+
+A discrete water sample should accurately represent the body from which it was collected. Non-representative sampling techniques will lead to non-representative analytical results and ultimately to erroneous conclusions [@CCME2011].
+
+In a carbon-based world, sample contamination must be a crucial and constant consideration when sampling for NOM [@CCME2011; @Cory2011]. 
+
+The basis of a water quality monitoring network is the collection of representative quantitative data for physical, chemical or biological parameters that help to characterize a hydrologic system over time [@Strobl2008a]. The sampling program design of a monitoring network should reflect research objectives and physical realities (e.g., spatiotemporal heterogeneity) of the system while being cost-effective and practical [@Strobl2008a; @Kirchner2006]. 
+
+Grab-sampling is a standard method of collecting whole-water samples for laboratory or stream-side analysis [@CCME2011; @Ruhala2017]. Grab sampling can be completed at a number of sites over a short period of time (i.e., synoptic sampling) to assess spatial variations, however there is often a lack of temporal resolution due to scheduled, convenient or opportunistic sampling at relatively low frequencies [@Ruhala2017].  
+
+It can be difficult to schedule a synoptic sampling campaign for specific weather and flow conditions, especially for short duration of rapid runoff (@Harmel2003). Flow changes in response to precipitation or melt events are of interest for NOM studies as the rising limb of the hydrograph have been shown to have higher DOC concentration that non-storm flow [@Yang2015; @Raymond2016; @Raymond2010]. It is logistically challenging and potentially dangerous to manually collect standard grab samples during high flows across multiple sites in order to capture the dynamic changes that occur during event (@Graczyk2000; @Mackay2012).
 
 \  
 
@@ -80,7 +93,11 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_all_sit
 
 #####    Synoptic sampling 
 
-Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). All samples were refrigerated while they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of *12* samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration & acidification. Samples for NOM spectroscopy were confirmed to have zero turbidity, were measured unfiltered and un-acidified. 
+Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). 
+
+\  
+
+Samples were collected from within 2 meters of the same location at each sampling site, at the safest proximity to channel center, from approximately 10 cm below water surface. All samples were refrigerated while they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of a dozen samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration & acidification. Samples for NOM spectroscopy were not acidified, they were confirmed to have zero turbidity and measured unfiltered. 
 
 #####    Monitoring & sampling stations 
 
@@ -92,11 +109,15 @@ The Leech watershed system responds quickly to rainfall, and the logistics of gr
 
 \  
 
-Siphon sampling bottles were used on vertical sampling racks as a cost-effective, logistically practical and reliable method of passive event-based sampling that enhanced the synoptic sampling program. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage and air/water temperatures (using HOBO TidbiT v2 Temperature Data Loggers, Onset, USA). 
+Siphon sampling bottles were used on vertical sampling racks as a cost-effective, logistically practical, reliable and consistent method of passive event-based sampling that enhanced the synoptic sampling program. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage and air/water temperatures (using HOBO TidbiT v2 Temperature Data Loggers, Onset, USA). 
 
 \  
 
-Each vertical sampling rack included a central stilling well (3.81 cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held siphon sampler bottles (Figure \@ref(fig:verticalRack)). Custom-built siphon sampler bottles used in this research were based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). Screw caps for 250 mL amber HDPE wide-mouth bottles were augmented to include two 1/4" (O.D.) stainless steel tubes that created the siphon system; one tube was longer than the other, both had a 180$^\circ$ bend at the top end. Marine epoxy was used on the outside of siphon caps to ensure a water-tight seal around the inlet and exhaust (lower and upper tubes, respectively), and inert silicone sealant was added to the inside of lids to ensure watertightness and clean sample containment. The siphon samplers collected river water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice).  
+Each vertical sampling rack included a central stilling well (3.81 cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held siphon sampler bottles (Figure \@ref(fig:verticalRack)). 
+
+\  
+
+Custom-built siphon sampler bottles used in this research were based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). Screw caps for 250 mL amber HDPE wide-mouth bottles were augmented to include a siphon system made of two 1/4" (O.D.) stainless steel tubes, each with a 180$^\circ$ bend at the top end; the longer tube formed an air vent, the shorter acted as a water inlet. The sample bottle filled when river water reached the top of the inlet tube bend (Figure \@ref(fig:verticalRack)). Marine epoxy was applied to the outside of siphon caps to ensure a water-tight seal around the inlet and exhaust tubes, and inert silicone sealant was added to the inside of lids to ensure watertightness and clean sample containment. The siphon samplers collected river water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice). Sampled water filled each siphon bottle with approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
 
 ```{r verticalRack, fig.cap = fig_cap}
 fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2).*"
@@ -106,11 +127,11 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 \  
 
-Each time a monitoring site was visited, empty acid-washed sample bottles with siphon lids were set out on vertical racks. The stage at which each siphon bottle filled was recorded; this was the height on the stilling-well measuring tape that corresponded to the top of each siphon intake tube bend. Samples were passively collected in my absence as rivers responded to precipitation, and I retrieved them on subsequent field trips (at which point the filling-stage was double checked). 
+Each time a monitoring site was visited, empty acid-washed sample bottles with siphon lids were set out on vertical racks. Sampling bottles could be placed at any height, and were generally staggered at 10-20 cm intervals. The stage at which each siphon bottle filled was recorded -- this was the observed height on the stilling-well measuring tape that corresponded to the top of each siphon intake tube bend (filling-stage). Samples were passively collected in my absence as rivers responded to precipitation, and I retrieved them on subsequent field trips (at which point the filling-stage was double checked). 
 
 \  
 
-During data analysis, the observed stage at which each siphon bottle filled was references to level-logger data to determine the date and time of collection for each rising-stage sample. To the best of my knowledge, this project was the first to combine vertically staggered passive siphon samplers with observed and continuously recorded stage to obtain time-stamps of sample collection. The time-stamps were used to asses temporal variability in DOC & NOM (details in Chapter 3) and to inform quality management of samples (below).   
+During data analysis, each siphon bottle's filling-stage was references to level-logger data to determine the date and time of collection for each rising-stage sample. To the best of my knowledge, this project was the first to combine vertically staggered passive siphon samplers with observed and continuously recorded stage to obtain time-stamps of sample collection. The time-stamps were used to asses temporal variability in DOC & NOM (details in Chapter 3) and to inform quality management of samples (below).   
 
 ######    Siphon sampler assumptions
 
@@ -150,7 +171,7 @@ To assess the molecular character of NOM, samples were analyzed by UV-Vis spectr
 
 \  
 
-For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the electronic structure of a molecule. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e., a chromophore) in the molecule, which is common in aromatic molecules. The suite of molecules that comprise NOM generally have more aromatic than aliphatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at longer wavelengths, and a more concentrated sample will lead to greater absorption intensity; therefore, the UV-Vis spectrum of a sample can provide valuable information about relative weights and aromaticity of aqueous NOM [@Helms2008; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration estimated from UV-Vis absorbance is a proxy measure that represents the chromophoric component of NOM, which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
+For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the electronic structure of a molecule. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e., a chromophore) in the molecule, which is common in aromatic molecules. In a forested watershed, the suite of molecules that comprise NOM generally have more aromatic than aliphatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at shorter wavelengths (shorter wavelength, higher energy), and a more concentrated sample will lead to greater absorption intensity; therefore, the UV-Vis spectrum of a sample can provide valuable information about relative weights, aromaticity and relative concentrations of aqueous NOM [@Helms2008; @cory2011; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration estimated from UV-Vis absorbance is a proxy measure that represents the chromophoric component of NOM, which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
 
 ###### Sample analysis
 
@@ -243,6 +264,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_
   knitr::kable(caption = "*Summary of samples collected*") 
 ```
 
+
 \  
 
 #### Vertical rack sampling quality control
@@ -273,7 +295,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 ```{r HoldTimeTtests}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
-  knitr::kable(caption = "*Results comparing hold-time sample sets*") 
+  knitr::kable(caption = "*Results comparing three vertical-rack hold-time sets*") 
 ```
 _Note:_ one star (*) indicates significant difference at 90% confidence (p < 0.1), 
 two stars (**) indicates significant difference at 95% confidence (p < 0.05)
@@ -349,8 +371,8 @@ As the Leech River Tunnel will be the point of diversion for future inter-basin 
 Similarly, from a headwaters perspective, Weeks and ChrisCrk (sites 1 & 2) are integrated at LeechHead (site 3), which is just below the headwaters' confluence. And Jarvis and Lazar creeks are ultimately integrated at CraggCrk site; however, there was a greater distance between CraggCrk and its headwaters' sampling sites compared to LeechHead and its headwaters' locations (see Figure \@ref(fig:sampleSitesMap)). With respect to evaluating sampling methods among nested catchments of the Leech watershed, three comparisons were made to asses whether including a Rack sampler at a site downstream of a confluence captured the same range in DOC concentrations as synoptic grab sampling at the upstream sites (Figure \@ref(fig:abcDOCbox)). 
 \  
 
-```{r abcDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:abcDOCbox} *Comparison of results from synoptic grab sampling at upstream locations to results from both vertical rack and grab sampling below the confluence of upstream sites. Plots A and B show grab samples from headwater (HW) locations compared to downstream (DS) monitoring sites, and plot C shows upstream river sites (US) compared to the mainstem monitoring site located downstream (DS).*"
+```{r abcDOCbox, fig.cap = fig_cap}
+fig_cap = "\\label{fig:abcDOCbox} *Comparison of DOC in synoptic Grab samples colelcted at upstream locations to samples collected by Rack and Grab below the confluence of upstrea sites. A and B show grab samples from headwater (HW) locations compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to downstream at the mainstem monitoring.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_up-down_metcompar.png")
 ```
@@ -392,6 +414,8 @@ fig_cap = "\\label{fig:wetSeasonDOC} *DOC from each monitoring site split by col
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
+
+\  
 
 ```{r wetDOCcountInstallsites}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH2_seasonal-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
@@ -436,7 +460,18 @@ __RQ.1.__   What are the ranges for DOC concentration and NOM character between 
 
 __Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
 
+* method evaluation: more samples, valuable samples, some danger of not being able to collect them in time, 
+* rack samples were important for capturing (1) more samples and (2) concentrations that were not captured by synoptic grab sampling alone
+* relative changes comparable over time among sites, but the magnitude of concentrations was different (higher in the head lower at the mouth)
+* DOC scaling from upstream to down stream -- comparable to JimButtle Turkey Lakes studies
+* upstream to downstream attenuation is a good thing for drinking water supply
+
 
 ### Conclusions and future directions 
 
 describe observed spatiotemporal patterns in DOC concentration and NOM character.
+
+* an expanded hold time experiment with replicates would be useful
+* mathched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading (future)
+
+Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g., nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding.    

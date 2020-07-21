@@ -47,48 +47,50 @@ Overall, the hydrology of the LWSA is poorly understood, as are water quality dy
 
 Six sites were selected across the Leech Water Supply Area. The six research sites represent five nested catchments and the entire water supply area basin defined from the point of (future) diversion, the Leech Tunnel. 
 
-___Weeks Outlet___
+___Weeks Creek (site 1)___
 
-The Weeks Outlet research site monitors water draining approximately 16 km^2^ of the northwest Leech River watershed, including a wetland (Jordan Meadows fen) and Weeks Lake (approximately 27 ha) [@Ussery2015]. Jordan Meadows wetland drains to the east and joins the outflow of Weeks Lake (south end of the lake). The wetland and lake outflow streams join and flow east to Research Site #1, "Weeks Outlet", which is a third order stream (Strahler) of the western headwaters of Leech River. The channel is fairly straight and bed material is primarily silt/clay. The water at this site was noteabley tannin-coloured.  This research site was located about 0.4 km west (upstream) of the confluence with Chris Creek. 
+The Weeks Creek (on Weeks Main) research site monitored water draining approximately 16 km^2^ of the northwest Leech River watershed, including a wetland (Jordan Meadows fen) and Weeks Lake (approximately 27 ha) [@Ussery2015]. Jordan Meadows wetland drains to the east and joins the outflow of Weeks Lake (south end of the lake). The wetland and lake outflow streams join and flow east to Research Site #1, "Weeks", which is a third order stream (Strahler) of the western headwaters of Leech River. The channel is fairly straight, with bed and bank material appearing to be primarily silt/clay (fine grain, easily suspended). The water at this site was notably tannin-coloured. This research site was located about 0.4 km west (upstream) of the confluence with Chris Creek. 
     
-A large culvert upstream of the monitoring site was replace with a bridge in August of 2019. The culvert had been perched above the streambed level and was obstructing the movement of fish and water flow. Prior to the culvert removal, several groundwater seeps were observed downstream; these seeps maintained base flow of summer waters in this low-relief stream reach.  There were high levels of iron (above guidlines for aesthetic objectives) in the water downstream of the culvert, possibly due to culvert rust. 
+\  
+
+A large culvert upstream of the monitoring site was replace with a bridge in August of 2019. The culvert had been perched above the streambed level and was obstructing the movement of fish and water flow. Prior to the culvert removal, several groundwater seeps were observed downstream; these seeps maintained base flow of summer waters in this low-relief stream reach.  There were high levels of iron (above Guideline aesthetic objectives) in the water downstream of the culvert, possibly due to culvert rust. 
 
 \ 
 
-___Chris Creek___
+___Chris Creek (site 2)___
 
-Chris Creek is the western headwaters of Leech River. This research site is approximately 0.2 km east (upstream) of the confluence with the Weeks Outlet stream. The study site on Chris Creek monitors waters draining from approximately 9.6 km^2^ of forested land, including Worley Lake (approximately 3.5 ha) [@Ussery2015]. The monitoring site of Chris Creek was downstream of a bridge, on a slightly sinuous reach with boulders and bedrock dominated morphology and turbulent cascading step-pools. There is a brige that passes over Chris Creek and a large collection of coarse woody debris downstream of the bridge, upstream of the monitoring site.   
-
-\  
-
-___Leech Head___
-
-Research site 3 was approxiamtely 1.4 km downstream of the confluence of Weeks Outlet stream and Chris Creek. The "Leech Head" study site was in a deep pool between riffles, it's a 4th order stream with predominantly Schist bedrock and fairly low relief (~2%) and relatively straight morphology. The water at this site was often coloured by tannins (likely from the Weeks outlet stream contributions).  There once was a logging bridge across the river at this site, and some rip-rap remains on either bank. 
+Chris Creek is the western headwaters of Leech River. This research site was approximately 0.2 km east (upstream) of the confluence with Site 1, Weeks Creek. The study site on Chris Creek monitored waters draining from approximately 9.6 km^2^ of forested land, including Worley Lake (approximately 3.5 ha) [@Ussery2015]. The monitoring site of Chris Creek was downstream of a bridge, on a slightly sinuous reach with boulders and bedrock and turbulent cascading step-pool morphology. Coarse woody debris was observed upstream of the Chris Creek monitoring site, with obvious new deposits on the banks following a high intensity rain event and assoicated flooding in January 2020.   
 
 \  
 
-___Cragg Creek___
+___Leech Head (site 3)___
 
-Cragg Creek is a mainstem river that originates in the northeast of the Leech River watershed. Cragg Creek is a 4th order stream and this research site location has a drainage area of approximately 37 km^2^, which includes Jarvis Lake (15 ha). The Cragg Creek research station was installed upstream of a road bridge, at a CRD hydrological monitoring site (installed over the span of this thesis project). The bed morphology at this site is Schist bedrock and the stream is straight channel with fairly high width-to-depth ratio. Upstream of the bridge Cragg Creek flows turbulently along a low slope, and downstream of the bridge it cascades into several deep pools. From the Cragg Creek research site, the river flows approximately 4.5 km through a steep revine to confluence with the Leech River (this confluence is around 6 km downstream of the Leech Head site, site #3).   
-
-\  
-
-___West Leech___
-
-Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitors a drainage area of approximately 35 km^2^ which includes a small lake (Boulder lake) at the southwest of Leech watershed. This reasearch site has boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approxiamtely 120m upstream of the confluence with Leech mainstem (~1.5km downstream of the confluence of Cragg Creek with Leech River).
+Research site 3 was approximately 1.4 km downstream of the confluence of Weeks and Chris Creeks. The "Leech Head" study site, a 4th order stream, was in a pool between riffles with predominantly Schist bedrock and fairly low relief (~2%) and relatively straight morphology. The water at this site was often coloured by tannins (likely from Weeks, upstream). There once was a logging bridge across the river at this site; rip-rap remains on either bank. 
 
 \  
 
-___Leech Tunnel___
+___Cragg Creek (site 4)___
 
-This research site is at the point of future diversion, the Leech Tunnel. The Leech River is 5th order, and this research site has a drainage area of approximately 99 km^2^. The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised, but overall the river is wider than is is deep. The Tunnel site is approximately 1km downstream of the West Leech confluence. 
+Cragg Creek is a mainstem river that originates in the northeast of the Leech River watershed. Cragg Creek site, a 4th order stream, had a drainage area of approximately 37 km^2^ that included Jarvis Lake (15 ha). The Cragg Creek research station was installed upstream of a bridge, at a CRD hydrological monitoring site (installed over the span of this thesis project). The bed morphology at this site is Schist bedrock and the stream is straight channel with fairly high width-to-depth ratio. Upstream of the bridge Cragg Creek flows turbulently along a low slope, and downstream of the bridge it cascades into several deep pools. From the Cragg Creek research site, the river flows approximately 4.5 km through a steep ravine to confluence with the Leech River (this confluence is around 6 km downstream of the Leech Head site, site #3).   
+
+\  
+
+___West Leech (site 5)___
+
+Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River).
+
+\  
+
+___Leech Tunnel (site 6)___
+
+This research site was at the point of future diversion, the Leech River Tunnel. The Leech is a 5th order river, and this research site had a drainage area of approximately 96 km^2^ (the entire watershed above the point of diversion). The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised, but overall the river is wider than is is deep. The Tunnel site was approximately 1 km downstream of the West Leech confluence. 
+
+\  
 
 
 #######   Sampling methods extended
 
-In riverine systems, peak flows are critical times for mass transport of dissolved and suspended materials. Therefore water quality sampling should include proportional representation of stormflow pulses relative to between-storm flows and baseflow. Sampling programs can range from low-cost synoptic grab sampling campaigns to high-cost programmable pump samplers (e.g. ISCO). Synoptic grab sampling was completed across the six primary Leech research sites, as well as four supplemental sites. In addition to synoptic sampling, passive sampling techniques were employed to collect stormflow samples.  
-
-Siphon sampler background -- separate from vertical rack? Mark's suggestion
+In river systems, peak flows are critical times for mass transport of dissolved and suspended materials. Therefore water quality sampling should include proportional representation of stormflow pulses relative to between-storm flows and baseflow. Sampling programs can range from low-cost synoptic grab sampling campaigns to high-cost programmable pump samplers (e.g. ISCO). Synoptic grab sampling was completed across the six primary Leech research sites, as well as four supplemental sites. In addition to synoptic sampling, passive sampling techniques were employed to collect stormflow samples.  
 
 ___Vertical racks___
 

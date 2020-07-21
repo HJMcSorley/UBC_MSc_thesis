@@ -1711,6 +1711,7 @@ sampleresults <- sampleresults %>%
 sampleresults$site <- fct_recode(sampleresults$site, Deception = "Deception-crk",
              Deception = "Deception-res")
 
+
 ```
 
 add QA-QC flags to data
@@ -1975,38 +1976,38 @@ n_totalSamples_UV <- sampleresults %>%
 
 # how many synoptic samples were grabbed?
 n_SynopticGrabs_UV_OK <- synopticfilter %>% 
-  dplyr::filter(sample_type == "Grab", QAQC_flag == "OK", !is.na(pseudo_SUVA)) %>%
+  dplyr::filter(sample_type == "Grab", QAQC_flag == "OK", !is.na(E2E3)) %>%
   #group_by(site = forcats::fct_explicit_na(site)) %>% # to see which sites are included
   summarise(grab_sample_count = n()) %>% 
   filter(grab_sample_count > 2) %>% pull()
 # how many grab samples were grabbed (<2 per site)?
 n_Grabs_UV_OK <- sampleresults %>% 
-  dplyr::filter(sample_type == "Grab", analysis == "DOC", QAQC_flag == "OK", !is.na(pseudo_SUVA)) %>%
+  dplyr::filter(sample_type == "Grab", analysis == "DOC", QAQC_flag == "OK", !is.na(E2E3)) %>%
   summarise(grab_sample_count = n()) %>%  pull()
 # how many of each sample_type are there at the 6 main sites?
 n_subbbasinSamples_UV_OK <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab", !is.na(pseudo_SUVA)) %>%
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab", !is.na(E2E3)) %>%
   summarise(number_of_samples = n()) %>% pull()
 # Grab samples
 n_installGrabSamples_UV_OK <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Grab", !is.na(pseudo_SUVA)) %>% 
+  dplyr::filter(sample_type == "Grab", !is.na(E2E3)) %>% 
   summarise(number_of_samples = n()) %>% pull()
 # Rack samples
 n_installRackSamples_UV_OK <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(E2E3)) %>% 
   summarise(number_of_samples = n()) %>% pull() 
 # Rack samples -- all including flags
 n_installRackSamples_total_UV_OK <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(E2E3)) %>% 
   summarise(number_of_samples = n()) %>% pull() 
 # Rack samples -- QA-QC OK
 n_installRackSamples_UV_OK <- sixfilter_ok %>% 
-  dplyr::filter(sample_type == "Rack", !is.na(pseudo_SUVA)) %>% 
+  dplyr::filter(sample_type == "Rack", !is.na(E2E3)) %>% 
   summarise(number_of_samples = n()) %>% pull() 
 # How many samples were collected overall
 n_totalSamples_UV_OK <- sampleresults %>% 
   dplyr::filter(sample_type == "Rack" | sample_type == "Grab",
-                QAQC_flag == "OK", analysis == "DOC", !is.na(pseudo_SUVA)) %>%
+                QAQC_flag == "OK", analysis == "DOC", !is.na(E2E3)) %>%
   summarise(sample_count = n()) %>% pull()
 
 # --- 
@@ -2168,7 +2169,7 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
                    rel_heights = c(1,1,1,5))
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot.png",
-       width = 6, height = 9, units = "in")
+       width = 6, height = 8.5, units = "in")
 
 ```
 
@@ -2198,7 +2199,7 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-         width = 6, height = 9, units = "in")
+         width = 6, height = 8.5, units = "in")
 
 # --- baby mega plot
 
@@ -2230,7 +2231,7 @@ cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event
                    ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
-         width = 6, height = 9, units = "in")
+         width = 6, height = 8.5, units = "in")
 
 
 # --- river sample plot
@@ -2260,7 +2261,7 @@ stage_samples %>%
          shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
-         width = 5, height = 8, units = "in")
+         width = 5, height = 8.5, units = "in")
 ```
 
 
@@ -2377,7 +2378,7 @@ cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot,
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
-       width = 7.5, height = 9.25, units = "in")
+       width = 6, height = 8.5, units = "in")
 ```
 
 
@@ -3093,7 +3094,7 @@ synopticfilter %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_DOC-loess-trend.png", width = 4, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_DOC-loess-trend.png", width = 6, height = 4, units = "in")
 
 # E2:E3
 d <- synopticfilter %>%
@@ -3115,7 +3116,7 @@ d <- synopticfilter %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_E2E3-loess-trend.png", width = 4, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_E2E3-loess-trend.png", width = 6, height = 4, units = "in")
 
 # DOC and E2E3 are interesting
 # insufficient data for SUVA and SAC254

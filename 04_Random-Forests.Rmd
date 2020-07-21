@@ -38,7 +38,20 @@ The R package RandomForest was built on Breiman's Random Forests algorithm. Rand
 
 * ref: [@Breiman2001]
 
+
+
+* does forest harvest history play a large role in predicting DOC?
+ 
 ### Methods
+
+
+include: 
+* antecedent 7 day / 14 day / 21 day / 28 day / 35 day temperature & rain
+* what are key fire risk parameters -- is there a link between fire weather risk and inceased NOM or DOC?
+* include event data (rain intensity, amount, duration)
+* include antecedent rain amounts
+* include antecedent snow also
+
 
 __*add__
 
