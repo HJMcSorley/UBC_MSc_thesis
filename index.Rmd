@@ -9,7 +9,7 @@ output:
     lot: true
     toc: true
     fig_caption: true
-    reference_docx: UBC-ThesisTemplate_HMc.docx
+    reference_docx: UBC-RC_ThesisTemplate_V9_HMc-Template.docx
 bibliography: library.bib
 link-citations: yes
 ---

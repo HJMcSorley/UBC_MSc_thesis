@@ -2378,7 +2378,7 @@ cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot,
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
-       width = 6, height = 8.5, units = "in")
+       width = 7, height = 9, units = "in")
 ```
 
 
@@ -2413,12 +2413,12 @@ a <- synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
-  scale_fill_viridis(discrete = TRUE)+
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
   scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
   theme_bw() +
-  theme(legend.position = "top",
+  theme(legend.position = "none",
         text = element_text(size = 12),
         axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
   guides(fill = FALSE,
@@ -2426,17 +2426,17 @@ a <- synopticfilter %>%
   labs(x = "", y = "DOC (mg/L)", shape = "sample collection method:")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_allSites-allSamples.png", width = 6.5, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-boxplot_allSites-allSamples.png", width = 6.5, height = 4, units = "in")
 
 # all sites -- all samples SAC254
 b <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +  # pseudo254
-  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
-  scale_fill_viridis(discrete = TRUE)+
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
   scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
@@ -2449,12 +2449,13 @@ b <- synopticfilter %>%
 # all sites -- all samples SUVA
 c <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
+  filter(SUVA < 9) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = SUVA, fill = site)) + #  pseudo_SUVA
-  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
-  scale_fill_viridis(discrete = TRUE)+
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
   scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
@@ -2467,15 +2468,15 @@ c <- synopticfilter %>%
 # all sites -- all samples E2E3
 d <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>%
-  filter(between(E2E3, 2.5, 15)) %>% 
+  filter(between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = E2E3, fill = site)) +
-  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
-  scale_fill_viridis(discrete = TRUE)+
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
   scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
   theme_bw() +
-  theme(legend.position = "none",
+  theme(legend.position = "bottom",
         text = element_text(size = 12),
         axis.text.x = element_text(angle = 30, hjust = 1)) +
   guides(fill = FALSE,
@@ -2484,10 +2485,10 @@ d <- synopticfilter %>%
 
 # arrange as combo
 syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
-                   rel_heights = c(1.25, 1, 1, 1.3))
+                   rel_heights = c(1, 1, 1, 1.5))
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
 
 
 ```
@@ -2546,7 +2547,7 @@ d <- synopticfilter %>%
 syn_ridge <- cowplot::plot_grid(a,b,c,d, ncol = 2)
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_ridgeplot_allParams-allSites-allSamples.png")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_ridgeplot_allParams-allSites-allSamples.png")
 ```
 
 
@@ -2625,12 +2626,54 @@ b <- synopticfilter %>%
 
 # tag totals summary onto site summary
 bind_rows(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/CH1_DOC-Synoptic-summary.csv", col_names = T)
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", col_names = T)
 
 
 ```
 
+## table: NOM Mean/Min/Max synoptic sites 
+```{r, Grab-synoptic-table}
 
+# synoptic grab samples by site
+# SAC254 and E2E3
+a <- synopticfilter %>%
+  filter(QAQC_flag == "OK",
+         !is.na(pseudo254)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, description) %>% 
+  summarize(count = n(), 
+            SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
+            SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            SAC254min = min(SAC254_Abs.m, na.rm = T), 
+            SAC254max = max(SAC254_Abs.m, na.rm = T),
+            # E2E3
+            E2E3mean = mean(E2E3, na.rm = T), 
+            E2E3sd = sd(E2E3, na.rm = T),
+            E2E3min = min(E2E3, na.rm = T), 
+            E2E3max = max(E2E3, na.rm = T))  
+
+# all together  
+b <- synopticfilter %>% 
+  filter(QAQC_flag == "OK",
+         !is.na(pseudo254)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  summarize(site = "all sites", description = "summary",
+            count = n(), 
+            SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
+            SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            SAC254min = min(SAC254_Abs.m, na.rm = T), 
+            SAC254max = max(SAC254_Abs.m, na.rm = T),
+            # E2E3
+            E2E3mean = mean(E2E3, na.rm = T), 
+            E2E3sd = sd(E2E3, na.rm = T),
+            E2E3min = min(E2E3, na.rm = T), 
+            E2E3max = max(E2E3, na.rm = T)) 
+
+# tag totals summary onto site summary
+bind_rows(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_NOM-Synoptic-summary.csv", col_names = T)
+
+```
 ## nested catchment approach
 is rack sampling downstream of a confluence the same as synoptic grab sampling upstream?
 
@@ -2705,12 +2748,12 @@ a <- pseudo_synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(site == "Weeks crk (HW)" | site == "Chris crk (HW)" | site == "Leech Head (DS)") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle 
   geom_boxplot(alpha = 0.5, outlier.shape = 4) +
   scale_fill_manual(values = c("Weeks crk (HW)" = "#440154FF",
                                "Chris crk (HW)" =  "#482677FF",
                                "Leech Head (DS)" = "#404788FF")) +
-  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
-  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
@@ -2724,12 +2767,12 @@ b <- pseudo_synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(site == 'Jarvis crk (HW)' | site == 'Lazar crk (HW)' | site == "Cragg crk (DS)") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
   geom_boxplot(alpha = 0.5, outlier.shape = 4) +
   scale_fill_manual(values = c('Jarvis crk (HW)' = "#1F968BFF",
                                'Lazar crk (HW)' =  "#29AF7FFF",
                                "Cragg crk (DS)" = "#55C667FF")) +
-  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
-  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 12),
@@ -2743,13 +2786,13 @@ c <- pseudo_synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(site == 'Leech Head (US)' | site == 'Cragg crk (US)' | site == 'West Leech (US)' | site == "Tunnel (DS)") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
   geom_boxplot(alpha = 0.5, outlier.shape = 4) +
   scale_fill_manual(values = c("Leech Head (US)" = "#404788FF", 
                                "Cragg crk (US)" = "#55C667FF",
                                "West Leech (US)" = "#95D055FF",
                                "Tunnel (DS)" = "#FDE725FF")) +
-  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
-  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
   theme_bw() +
   theme(legend.position = "right",
         text = element_text(size = 12),
@@ -2766,14 +2809,78 @@ abc <- cowplot::plot_grid(ab, c, ncol = 1, rel_heights = c(1, 1.25),
 
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch1_DOC-boxplot_up-down_metcompar.png", width = 6, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-boxplot_up-down_metcompar.png", width = 6, height = 6, units = "in")
+
+```
+
+#### Levene's 
+
+test for homoscedasticity in DOC
+--
+An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
+
+If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+```{r}
+## check variance
+
+#### Weeks / Chris / LeechHead
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Weeks" | site == "ChrisCrk" | site == "LeechHead") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Weeks" ~ "up",
+    site == "ChrisCrk" ~ "up",
+    site == "LeechHead" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+a <- dat %>% 
+  car::leveneTest(NPOC_ppm ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+
+#### Jarvis / Lazar / Cragg
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Jarvis-crk" | site == "Lazar-crk" | site == "CraggCrk") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Jarvis-crk" ~ "up",
+    site == "Lazar-crk" ~ "up",
+    site == "CraggCrk" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+b <- dat %>% 
+  car::leveneTest(NPOC_ppm ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
 
 
+#### upstream rivers and Tunnel  
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "LeechHead" | 
+           site == "CraggCrk" | 
+           site == "WestLeech" | 
+           site == "Tunnel") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "LeechHead" ~ "up",
+    site == "CraggCrk" ~ "up",
+    site == "WestLeech" ~ "up",
+    site == "Tunnel" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+c <- dat %>% 
+  car::leveneTest(NPOC_ppm ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
 ```
 
 
 
-### spatial variance DOC Samples
+### Ch3? spatial variance DOC Samples
 
 *table + boxplot: Mean/Min/Max DOC 
 
@@ -3094,7 +3201,7 @@ synopticfilter %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_DOC-loess-trend.png", width = 6, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-loess-trend.png", width = 6, height = 4, units = "in")
 
 # E2:E3
 d <- synopticfilter %>%
@@ -3116,7 +3223,7 @@ d <- synopticfilter %>%
         text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_E2E3-loess-trend.png", width = 6, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-loess-trend.png", width = 6, height = 4, units = "in")
 
 # DOC and E2E3 are interesting
 # insufficient data for SUVA and SAC254
@@ -3259,7 +3366,7 @@ insetSAC <- synopticfilter %>%
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m)) +
-  geom_jitter(aes(fill = rain_seasons, shape = rain_seasons), size = 1, alpha = 0.8) +
+  geom_jitter(aes(fill = rain_seasons, shape = rain_seasons), size = 2, alpha = 0.8) +
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
@@ -3269,7 +3376,7 @@ insetSAC <- synopticfilter %>%
   theme_bw() +
   guides(fill = guide_legend("Sample season:"),
          shape = guide_legend("Sample season:"))+
-  theme(text = element_text(size = 10),
+  theme(text = element_text(size = 9),
         legend.position = "none")
 #save image
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-DOC_seasonal_1-1.png", height = 3.5, width = 5, units = "in") 
@@ -3285,7 +3392,7 @@ cowplot::ggdraw() +
             height = .3, # Inset height
             scale = 1) # Inset scale (1 = none)
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_DOC-CDOM_seasonal_with-Inset.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-CDOM_seasonal_with-Inset.png",
        height = 5, width = 5, units = "in")
 
 
@@ -3368,7 +3475,7 @@ synopticfilter %>%
                 DOCmedian = median(NPOC_ppm, na.rm = T), 
                 DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
       ungroup()) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH2_seasonal-samples-DOC-summary.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-samples-DOC-summary.csv")
 
 # in only the LWSA monitoring sites...
 # how many samples were collected seasonally?
@@ -3398,7 +3505,7 @@ sixfilter %>%
                 DOCmedian = median(NPOC_ppm, na.rm = T), 
                 DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
       ungroup()) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH2_seasonal-InstallSamples-DOC-summary.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-InstallSamples-DOC-summary.csv")
 
 ```
 
@@ -3448,7 +3555,7 @@ sixfilter %>%
              labeller = labeller(sample_type = label)) +  
   labs(x = "", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_subbasin_GvsR_WETseason-boxplot.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-boxplot.png",
        width = 5, height = 3.5, unit = "in") 
 
 # try ridges
@@ -3469,7 +3576,7 @@ sixfilter %>%
   labs(y = "", x = "DOC (mg/L)")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_subbasin_GvsR_WETseason-ridgeplot.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridgeplot.png",
        width = 5, height = 4, unit = "in") 
 
 
