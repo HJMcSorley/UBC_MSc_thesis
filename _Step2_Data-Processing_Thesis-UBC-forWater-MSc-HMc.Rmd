@@ -2384,27 +2384,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplo
 
 # CH2 RESULTS
 
-plot: synoptic box, all sites
-```{r, grab-only-DOC-synoptic}
-
-# all sites -- grab only
-synopticfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  dplyr::filter(sample_type == "Grab") %>%  
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  scale_fill_viridis(discrete = TRUE)+
-  geom_jitter(aes(fill = site), alpha = 0.6, shape = 21) +
-  theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 12),
-        axis.text.x = element_text(angle = 30, hjust = 1)) +
-  labs(#caption = glue::glue("DOC concentrations in grab samples across 13 sites over 16 months (", {n_SynopticGrabs}, " samples)"), 
-    x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_syn_13sites_boxplots.png", width = 6.5, height = 4, units = "in")
-```
-
 ## boxplots - all sites all samples
 ```{r}
 
@@ -2431,6 +2410,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-boxplot_allSites-allSampl
 # all sites -- all samples SAC254
 b <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
+  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +  # pseudo254
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2449,7 +2429,7 @@ b <- synopticfilter %>%
 # all sites -- all samples SUVA
 c <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
-  #filter(SUVA < 9) %>% 
+  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = SUVA, fill = site)) + #  pseudo_SUVA
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2468,7 +2448,7 @@ c <- synopticfilter %>%
 # all sites -- all samples E2E3
 d <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>%
-  #filter(between(E2E3, 3.6, 15)) %>% 
+  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = E2E3, fill = site)) +
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2597,39 +2577,6 @@ b <- synopticfilter %>%
 bind_rows(a, b) %>% 
   write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", col_names = T)
 
-
-# --- only grab samples
-# synoptic DOC concs by site
-a <- synopticfilter %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab") %>% 
-  group_by(site, description) %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = round((DOCsd/DOCmean)*100, 0),
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T))  
-
-# all together  
-b <- synopticfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab") %>% 
-  summarize(site = "all sites", description = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = round((DOCsd/DOCmean)*100, 0),
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) 
-
-# tag totals summary onto site summary
-bind_rows(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic-grab_summary.csv", col_names = T)
-
-
 ```
 
 ## table: NOM Mean/Min/Max synoptic sites 
@@ -2639,8 +2586,8 @@ bind_rows(a, b) %>%
 # SAC254 and E2E3
 a <- synopticfilter %>%
   filter(QAQC_flag == "OK",
-         #SUVA<9, between(E2E3, 3.6, 15),
-         !is.na(pseudo254)) %>% 
+         !is.na(pseudo254)) %>%
+  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, description) %>% 
   summarize(count = n(), 
@@ -2657,8 +2604,8 @@ a <- synopticfilter %>%
 # all together  
 b <- synopticfilter %>% 
   filter(QAQC_flag == "OK",
-         #SUVA<9, between(E2E3, 3.6, 15),
          !is.na(pseudo254)) %>% 
+  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   summarize(site = "all sites", description = "summary",
             count = n(), 
