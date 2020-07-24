@@ -2449,7 +2449,7 @@ b <- synopticfilter %>%
 # all sites -- all samples SUVA
 c <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
-  filter(SUVA < 9) %>% 
+  #filter(SUVA < 9) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = SUVA, fill = site)) + #  pseudo_SUVA
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2468,7 +2468,7 @@ c <- synopticfilter %>%
 # all sites -- all samples E2E3
 d <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>%
-  filter(between(E2E3, 3.6, 15)) %>% 
+  #filter(between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = E2E3, fill = site)) +
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2566,38 +2566,7 @@ synopticfilter <- synopticfilter %>%
     site == "Deception" ~ "outlet of Leech Tunnel, SWSA"
   ))
 
-# synoptic grab samples DOC concs by site
-a <- synopticfilter %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab") %>% 
-  group_by(site, description) %>% 
-  summarize(count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = round((DOCsd/DOCmean)*100, 0),
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T))  
 
-# all together  
-b <- synopticfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab") %>% 
-  summarize(site = "all sites", description = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = round((DOCsd/DOCmean)*100, 0),
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) 
-
-# tag totals summary onto site summary
-bind_rows(a, b) %>% 
-  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic-grab_summary.csv", col_names = T)
-
-
-# --- same but not JUST Grabs, all samples
 # synoptic grab samples DOC concs by site
 a <- synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
@@ -2629,6 +2598,38 @@ bind_rows(a, b) %>%
   write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", col_names = T)
 
 
+# --- only grab samples
+# synoptic DOC concs by site
+a <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab") %>% 
+  group_by(site, description) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T))  
+
+# all together  
+b <- synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab") %>% 
+  summarize(site = "all sites", description = "summary",
+            count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) 
+
+# tag totals summary onto site summary
+bind_rows(a, b) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Synoptic-grab_summary.csv", col_names = T)
+
+
 ```
 
 ## table: NOM Mean/Min/Max synoptic sites 
@@ -2638,6 +2639,7 @@ bind_rows(a, b) %>%
 # SAC254 and E2E3
 a <- synopticfilter %>%
   filter(QAQC_flag == "OK",
+         #SUVA<9, between(E2E3, 3.6, 15),
          !is.na(pseudo254)) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, description) %>% 
@@ -2655,6 +2657,7 @@ a <- synopticfilter %>%
 # all together  
 b <- synopticfilter %>% 
   filter(QAQC_flag == "OK",
+         #SUVA<9, between(E2E3, 3.6, 15),
          !is.na(pseudo254)) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   summarize(site = "all sites", description = "summary",
