@@ -2674,6 +2674,13 @@ synopticfilter %>%
         text = element_text(size = 12)) +
   labs(x = expression(SAC[254]~(m^-1)), y = "")+
   facet_wrap(~rain_season)
+
+
+# what about just those algae samples collected in CraggCrk Nov 2019?
+sixfilter %>% 
+  filter(site == "CraggCrk", sample == "Algae") %>% 
+  select(NPOC_ppm, SAC254_Abs.m, E2E3, SUVA)
+# High SAC254, 
 ```
 
 redundant plot: synoptic ridge, all sites
