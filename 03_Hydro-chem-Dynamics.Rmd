@@ -471,3 +471,10 @@ Increasing DOC on the rising limb indicates that source material is not limited 
 ### Conculsions
 
 * establishing connectivity among nested catchments as a baseline for experimental treatments (future)
+
+
+Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
+
+future:
+
+* matched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading (future)

@@ -75,6 +75,16 @@ Cragg Creek is a mainstem river that originates in the northeast of the Leech Ri
 
 \  
 
+A fall algae bloom was observed in Cragg Creek November 2019, and was also observed in most of the streams and creeks draining the east side of Survey Mountain. The Algae was identified by CRD microbiologist Huy Nguyen as Draparnaldia, a green-algal species, that occurs mostly in clean, cool (often spring-fed) streams (personal communication ***REF***).  
+
+```{r Draparnaldia, fig.cap = fig_cap}
+fig_cap = "\\label{fig:Draparnaldia} *Draparnaldia species of green algae (nic-named 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019*"
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCrk_2019-11-13.png")
+```
+
+\  
+
 ___West Leech (site 5)___
 
 Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River).
@@ -345,6 +355,34 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
 fig_cap = "\\label{fig:HoboFWxLinearReg}*Linear regression relationships between mean daily air temperature recorded at each monitoring site compared to mean LWSA air temperature recorded by Chris Creek and Martin's Gulch fire weather stations*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
+```
+
+####### Results extended
+
+######## NOM sampling in nested catchments (from Ch.2)
+
+\  
+
+```{r NOMnesty, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:NOMnesty}*Grab sample SAC~254~ at upstream locations compared to Rack and Grab sample SAC~254~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-boxplot_up-down_metcompar.png")
+
+Ch2_E2E3-boxplot_up-down_metcompar.png
+```
+
+\  
+
+Below the confluences of headwaters sites (Figure \@ref(fig:NOMnesty), plots A & B), the combination of Rack and Grab sampling did not capture the ranges of SAC~254~ observed in upstream Grab samples alone. At both sets of headwater sites, the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value =  0.0174). At higher order rivers, the combination of Rack and Grab samples at the Leech Tunnel site did capture the SAC~254~ ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:NOMnesty), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in SAC~254~ variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.105). 
+
+\  
+
+No apparent trend was seen in the E~2~:E~3~ characteristic for aromaticity/molecular size (Figure \@ref(fig:aroma)). There were similar variances in E~2~:E~3~ values across all groupings (Levene's p-values 0.1225, 0.09551, 0.09298 for sets A, B, C). 
+
+```{r aroma, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:aroma}*Grab sample E~2~:E~3~ at upstream locations compared to Rack and Grab sample E~2~:E~3~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot_up-down_metcompar.png")
 ```
 
 

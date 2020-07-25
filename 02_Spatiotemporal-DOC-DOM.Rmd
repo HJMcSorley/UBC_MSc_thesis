@@ -303,7 +303,7 @@ Each hold-time set included ten replicate samples, each collected at the same ti
 
 \  
 
-```{r HoldTimeBoxPlot, out.width = "100%", fig.cap = fig_cap}
+```{r HoldTimeBoxPlot, fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoldTimeBoxPlot}*Sample DOC concentrations and UV absorbance at 254nm contrasting  hold-time samples from collection of grab samples to retrieval of held samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
@@ -350,7 +350,7 @@ LWSA rain data were used to define rain events using the USGS _Rainmaker_ packag
 
 \  
 
-```{r seasonalMegaPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```{r seasonalMegaPlot, fig.cap = fig_cap}
 fig_cap = "\\label{fig:seasonalMegaPlot}*Plot of LWSA weather, stream response and sample collection at the six monitoring sites across the LWSA. Seasons were separated by stream responses and conditions that initiated or ceased rack sample collection.*" 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
@@ -392,8 +392,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allP
 ```{r synopticNOMdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_NOM-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 2, 2, 1, 1, 2, 2), 
-               caption = "*Dissolved organic carbon concentrations across twelve synoptically sampled river sites*")
-
+               caption = "*Spectral properties of natural organic matter (NOM) character across twelve synoptically sampled river sites*",
+               col.names = c("Site", "Description", "Count", 
+                             "Mean SAC~254~ (m^-1^)", "sd (±)", 
+                             "SAC~254~ Min. (m^-1^)", "SAC~254~ Max. (m^-1^)",
+                             "Mean E~2~E~3~", "sd (±)", 
+                             "E~2~E~3~ Min.", "E~2~E~3~ Max."))
 ``` 
 
 \ 
@@ -422,7 +426,7 @@ Below the confluences of headwaters sites, the combination of Rack and Grab samp
 
 \  
 
-When higher order rivers were examined in a similar upstream-Grab/downstream-Rack'n'Grab comparison, the combination of Rack and Grab samples at the Leech Tunnel site did capture the DOC ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in DOC variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.165).  
+When higher order rivers were examined in a similar upstream-Grab/downstream-Rack'n'Grab comparison, the combination of Rack and Grab samples at the Leech Tunnel site did capture the DOC ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in DOC variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.165). Similar trends were seen for SAC~254~ but not E~2~:E~3~ (Appendix ####).  
 
 \  
 
@@ -447,43 +451,44 @@ While there was an apparent sinusoidal trend in DOC over the seasons sampled (Fi
 ```{r seasonDOCcount}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(0,0,2,2,0,1,1,1),
-               caption = "*Seasonal sample collection and DOC summary from twelve synoptic sampling sites*")
+               caption = "*Seasonal sample collection and DOC summary from twelve synoptic sampling sites*",
+               col.names = c("Season", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
 ```
 
 \  
 
-The wet season was most heavily sampled at the six monitoring sites, where Rack samplers more than doubled the number of samples that would have been collected through Grab sampling alone. Isolating DOC results to the six monitoring sites during only the wet season allows for comparison of Vertical Rack sampling methods to standard synoptic Grab sampling (Figure \@ref(fig:wetSeasonDOC, Table \@ref(tab:wetDOCcountInstallsites)). 
+The wet season was most heavily sampled at the six monitoring sites, where Rack samplers more than doubled the number of samples that would have been collected through Grab sampling alone. Isolating DOC results to the six monitoring sites during only the wet season allows for comparison of Vertical Rack sampling methods to standard synoptic Grab sampling (Figure \@ref(fig:wetSeasonDOC), Table \@ref(tab:wetDOCcountInstallsites)). 
 
 \  
 
 ```{r wetDOCcountInstallsites}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(0,0,2,2,0,1,1,1),
-               caption = "*DOC summary by sample collection method during the wet season at the six monitoring sites*")
+               caption = "*Wet season DOC by sample collection method at the six monitoring sites*")
 ```
 
 \  
 
 ```{r wetSeasonDOC, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetSeasonDOC} *DOC from each monitoring site split by collection method.*"
+fig_cap = "\\label{fig:wetSeasonDOC} *DOC from each monitoring site grouped by collection method (synoptic Grab vs. Vertical Rack samples).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
 
 \  
 
-Vertical Racks captured higher DOC concentrations than synoptic Grab sampling alone and the two methods collected samples with comparable variance . These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]). 
+Vertical Racks captured higher DOC concentrations than synoptic Grab sampling alone and the two methods collected samples with comparable variance (Table \@ref(tab:wetDOCcountInstallsites)). These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]). 
 
 \  
 
 ##### Seasonal changes in NOM character
 
-Molecular aromaticity is associated with chromophores which are responsible for UV-Vis absorbance in aqueous NOM, therefore more aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules. To evaluate if (and when) molecular character of river samples shifted, DOC concentrations (NPOC) were compared to absorbance-based DOC estimates from the specto::lyser (Figure \@ref(fig:seasonalDOCest)). 
+Molecular aromaticity is associated with chromophores which are responsible for UV-Vis absorbance in aqueous NOM, therefore more aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules. To evaluate if (and when) molecular character of river samples shifted, DOC concentrations (NPOC) were compared to absorbance-based DOC estimates from the spectro::lyser (Figure \@ref(fig:seasonalDOCest)). 
 
 \  
 
-```{r seasonalDOCest, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalDOCest} *Dissolved organic carbon measured directly (as NPOC) plotted against concentration estimated via UV-Vis spectroscopy. The dashed lined indicates best fit (1:1), and the inset shows the relationship between NPOC and SAC at 254 nm, a key absorbance that informs the UV-estimated DOC concentration.*"
+```{r seasonalDOCest, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalDOCest} *Dissolved organic carbon measured directly (as NPOC) plotted against concentration estimated via UV-Vis spectroscopy, grouped by sampling season. The dashed lined indicates best fit (1:1), and the inset shows the relationship between NPOC and SAC at 254 nm, a key absorbance that informs the UV-estimated DOC concentration.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-CDOM_seasonal_with-Inset.png")
 ```
@@ -498,7 +503,7 @@ The concentration of NOM in a sample is proportional to the intensity of absorba
 
 \  
 
-```{r seasonalSUVADOC, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```{r seasonalSUVADOC, fig.cap = fig_cap}
 fig_cap = "\\label{fig:seasonalSUVADOC} *Dissolved organic carbon plotted against specific UV absorbance at 254 nm, showing greater aromaticity (more humic-like organic matter) in wet season samples.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUVA-NPOC.png")
@@ -506,51 +511,34 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_seasonal_SUV
 
 \  
 
+\  
+
 ### Discussion
 
-The objective of this work was to design a sampling strategy to measure the ranges of DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy designed was a combination of Vertical Rack sampling at select monitoring sites in the Leech water supply area (LWSA) and synoptic Grab sampling across those sites and an additional six sites in the Greater Victoria water supply area. 
+The objective of this work was to design a sampling strategy to measure the ranges of DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech water supply area (LWSA). 
 
-Vertical Racks passively collected event-based samples and more than doubled the number of samples that would have been collected through Grab sampling alone. The Racks proved important for capturing higher DOC concentrations which were not observed through Grab sampling alone.  
+\  
 
-Spatially, DOC concentrations typically decreased from upstream to downstream...
+Vertical Racks proved important for passively capturing higher DOC concentrations which were not observed through Grab sampling alone. These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]). Rack sampling more than doubled the number of samples that would have been collected through Grab sampling alone. Therefore, the Vertical Rack method was a useful tool for collection of event-based samples with increased sampling frequency. Questionable sample hold-times resulted in a few occasions when logistics or high water limited safe immediate retrieval of Vertical Rack samples. However, the Vertical Rack method employed in this project allowed for calculation of sample hold-times, quality-control evaluation or data for processing of acceptable samples only.  
 
+\  
 
+From 366 quality controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L. The relative standard deviation for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. Overall, DOC decreased in concentration from upstream to downstream and followed a sinusoidal trend over time.  
 
-spatial and temporal variation of DOC concentration and NOM character.
+\  
 
-then describe spatiotemporal patterns that were observed.
+Seasonality was evaluated by operationally separating time into wet and dry seasons, where the wet season corresponded with weather events that generated streamflow response sufficient enough for Vertical Racks to collect samples and the dry season was confined to Grab sampling only (no river responses). While the absolute magnitude of DOC varied between sites, the general temporal trends were similar across the study area. DOC was highest in the early wet season, then progressively decreased through the wet season. DOC was lowest during the coldest periods, and concentrations of DOC increased over the summer. Spectroscopic analyses indicated that the wet season NOM was predominantly humic (i.e., aromatic) content and the summer carbon was derived from more aliphatic NOM sources. These observations support a shift in NOM source pools from autochthonous in the dry (summer) period to allochthonous in the wet season when the landscape was more connected to the river systems. 
 
-From 366 quality controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L. The relative standard deviation for DOC in each of the thirteen synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. Overall, DOC decreased in concentration from upstream to downstream, 
+\ 
 
-#### Sampling method evaluation
+At the future point of diversion (5th order river), it was found that the combination of Vertical Rack and Grab samples collected the same variance in DOC that was observed in Grab samples upstream across three 4th order river sites (LeechHead, CraggCrk, WestLeech). This indicates that well-represented water quality monitoring for the LWSA could achieved by combining event-based (i.e. Vertical Rack) sampling with standard Grab sampling at the future point of diversions. In the headwaters, however, Racks combined with Grab samples at 4th order streams did not capture the variance in DOC observed upstream in Grab samples from 3rd order (headwater) stream samples. The longitudinal attenuation of DOC observed in the LWSA is promising for experimental forest fuel treatments (e.g. prescribed burning) in the headwaters, and is a positive indication for future inter-basin transfers and drinking water treatability.  
 
-
-
-At the future point of diversion, it was found that the combination of Vertical Rack and Grab samples collected the same variance in DOC that was observed by collecting only Grab samples at three river sites upstream (LeechHead, CraggCrk, WestLeech).
-
-
-
-
-
-
-
-__RQ.1.__   What are the ranges for DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments in this water supply area, and what influence does seasonality have on concentration of DOC and character of NOM?
-
-__Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
-
-* method evaluation: more samples, valuable samples, some danger of not being able to collect them in time, 
-* rack samples were important for capturing (1) more samples and (2) concentrations that were not captured by synoptic grab sampling alone
-* relative changes comparable over time among sites, but the magnitude of concentrations was different (higher in the head lower at the mouth)
 * DOC scaling from upstream to down stream -- comparable to JimButtle Turkey Lakes studies
-* upstream to downstream attenuation is a good thing for drinking water supply
 
 \  
 
 ### Conclusions and future directions 
 
-describe observed spatiotemporal patterns in DOC concentration and NOM character.
+Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites as was a seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season. The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing. 
 
-* an expanded hold time experiment with replicates would be useful
-* matched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading (future)
-
-Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding.    
+:)

@@ -2448,7 +2448,7 @@ c <- synopticfilter %>%
 # all sites -- all samples E2E3
 d <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>%
-  filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
+  filter(SUVA < 9, between(E2E3, 3.6, 20)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>%  
   ggplot(aes(x = site, y = E2E3, fill = site)) +
   geom_jitter(aes(shape = sample_type), alpha = 0.6) +
@@ -2471,6 +2471,209 @@ syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
 
 
+```
+
+### boxplots - wet season all sites
+```{r}
+dat <- synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "wet") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") 
+    
+# all sites -- all samples DOC
+a <- dat %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "DOC (mg/L)", shape = "sample collection method:")
+
+# all sites -- all samples SAC254
+b <- dat %>%  
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +  # pseudo254
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(SAC[254]~(m^-1)), 
+       shape = "sample collection method:") 
+
+# all sites -- all samples SUVA
+c <- dat %>% 
+  ggplot(aes(x = site, y = SUVA, fill = site)) + #  pseudo_SUVA
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(SUVA[254]),
+       shape = "sample collection method:")
+
+# all sites -- all samples E2E3
+d <- dat %>% 
+  filter(between(E2E3, 3.6, 20)) %>% 
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "bottom",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(E[2]:E[3]), shape = "sample collection method:")
+
+# arrange as combo
+syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
+                   rel_heights = c(1, 1, 1, 1.5))
+
+# save
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
+
+```
+
+### boxplots - dry season all sites
+```{r}
+dat <- synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "dry") %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") 
+    
+# all sites -- all samples DOC
+a <- dat %>% 
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "DOC (mg/L)", shape = "sample collection method:")
+
+# all sites -- all samples SAC254
+b <- dat %>%  
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +  # pseudo254
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(SAC[254]~(m^-1)), 
+       shape = "sample collection method:") 
+
+# all sites -- all samples SUVA
+c <- dat %>% 
+  ggplot(aes(x = site, y = SUVA, fill = site)) + #  pseudo_SUVA
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_blank())+ #element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(SUVA[254]),
+       shape = "sample collection method:")
+
+# all sites -- all samples E2E3
+d <- dat %>% 
+  filter(between(E2E3, 3.6, 20)) %>% 
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "bottom",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(E[2]:E[3]), shape = "sample collection method:")
+
+# arrange as combo
+syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
+                   rel_heights = c(1, 1, 1, 1.5))
+
+# save
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
+
+
+```
+
+spectral by season
+```{r}
+# E2E3
+synopticfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  filter(QAQC_flag == "OK") %>% 
+  ggplot(aes(y = fct_rev(site), x = NPOC_ppm)) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(x = "DOC (mg/L)", y = "")+
+  facet_wrap(~rain_season)
+
+# E2E3
+synopticfilter %>% 
+  filter(between(E2E3, 3.6, 15)) %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  filter(QAQC_flag == "OK") %>% 
+  ggplot(aes(y = fct_rev(site), x = E2E3)) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(x = expression(E[2]:E[3]), y = "")+
+  facet_wrap(~rain_season)
+
+# SAC 254
+synopticfilter %>% 
+  filter(between(E2E3, 3.6, 15)) %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  filter(QAQC_flag == "OK") %>% 
+  ggplot(aes(y = fct_rev(site), x = SAC254_Abs.m)) +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_viridis(discrete = TRUE)+
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12)) +
+  labs(x = expression(SAC[254]~(m^-1)), y = "")+
+  facet_wrap(~rain_season)
 ```
 
 redundant plot: synoptic ridge, all sites
@@ -2512,7 +2715,7 @@ c <- synopticfilter %>%
   labs(x = expression(SUVA[254]), y = "")
 # E2:E3
 d <- synopticfilter %>% 
-  filter(between(E2E3, 2.5, 15)) %>% 
+  filter(between(E2E3, 3.6, 15)) %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   filter(QAQC_flag == "OK") %>% 
   ggplot(aes(y = fct_rev(site), x = E2E3)) +
@@ -2828,7 +3031,281 @@ c <- dat %>%
   pull("p.value") %>% first()
 ```
 
+##### SAC254 comparison - upstrm grab to dwnstrm rack + grab
+```{r}
+# compare synoptic grab sampling upstream to vertical rack sampling below confluence
 
+# for weeks/chris and Leech head
+a <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(site == "Weeks crk (HW)" | site == "Chris crk (HW)" | site == "Leech Head (DS)") %>% 
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle 
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c("Weeks crk (HW)" = "#440154FF",
+                               "Chris crk (HW)" =  "#482677FF",
+                               "Leech Head (DS)" = "#404788FF")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression( SAC[254] ~ (m^-1) ), shape = "sample collection method:")
+
+# for Jarvis/Lazar and Cragg
+b <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(site == 'Jarvis crk (HW)' | site == 'Lazar crk (HW)' | site == "Cragg crk (DS)") %>% 
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c('Jarvis crk (HW)' = "#1F968BFF",
+                               'Lazar crk (HW)' =  "#29AF7FFF",
+                               "Cragg crk (DS)" = "#55C667FF")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression( SAC[254] ~ (m^-1) ), shape = "sample collection method:")
+
+# for mainstems and Tunnel
+c <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(site == 'Leech Head (US)' | site == 'Cragg crk (US)' | site == 'West Leech (US)' | site == "Tunnel (DS)") %>% 
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c("Leech Head (US)" = "#404788FF", 
+                               "Cragg crk (US)" = "#55C667FF",
+                               "West Leech (US)" = "#95D055FF",
+                               "Tunnel (DS)" = "#FDE725FF")) +
+  theme_bw() +
+  theme(legend.position = "right",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24))) +
+  labs(x = "", y = expression( SAC[254] ~ (m^-1) ), shape = "sample:")
+
+# arrange the plots together
+ab <- cowplot::plot_grid(a, b, nrow = 1, align = "h", 
+                         labels = c("A", "B"), label_size = 12)
+abc <- cowplot::plot_grid(ab, c, ncol = 1, rel_heights = c(1, 1.25), 
+                          labels = c("", "C"), label_size = 12)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-boxplot_up-down_metcompar.png", width = 6, height = 6, units = "in")
+
+
+#### Levene's 
+
+#test for homoscedasticity in SAC254
+
+#An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
+
+#If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+## check variance
+
+#### Weeks / Chris / LeechHead
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Weeks" | site == "ChrisCrk" | site == "LeechHead") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Weeks" ~ "up",
+    site == "ChrisCrk" ~ "up",
+    site == "LeechHead" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+a <- dat %>% 
+  car::leveneTest(SAC254_Abs.m ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+
+#### Jarvis / Lazar / Cragg
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Jarvis-crk" | site == "Lazar-crk" | site == "CraggCrk") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Jarvis-crk" ~ "up",
+    site == "Lazar-crk" ~ "up",
+    site == "CraggCrk" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+b <- dat %>% 
+  car::leveneTest(SAC254_Abs.m ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+
+
+#### upstream rivers and Tunnel  
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "LeechHead" | 
+           site == "CraggCrk" | 
+           site == "WestLeech" | 
+           site == "Tunnel") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "LeechHead" ~ "up",
+    site == "CraggCrk" ~ "up",
+    site == "WestLeech" ~ "up",
+    site == "Tunnel" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+c <- dat %>% 
+  car::leveneTest(SAC254_Abs.m ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+  
+```
+
+##### E2E3 comparison - upstrm grab to dwnstrm rack + grab
+```{r}
+# compare synoptic grab sampling upstream to vertical rack sampling below confluence
+
+# for weeks/chris and Leech head
+a <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(site == "Weeks crk (HW)" | site == "Chris crk (HW)" | site == "Leech Head (DS)") %>% 
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle 
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c("Weeks crk (HW)" = "#440154FF",
+                               "Chris crk (HW)" =  "#482677FF",
+                               "Leech Head (DS)" = "#404788FF")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression( E[2]:E[3] ), shape = "sample collection method:")
+
+# for Jarvis/Lazar and Cragg
+b <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(E2E3 < 20) %>% 
+  filter(site == 'Jarvis crk (HW)' | site == 'Lazar crk (HW)' | site == "Cragg crk (DS)") %>% 
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c('Jarvis crk (HW)' = "#1F968BFF",
+                               'Lazar crk (HW)' =  "#29AF7FFF",
+                               "Cragg crk (DS)" = "#55C667FF")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression( E[2]:E[3] ), shape = "sample collection method:")
+
+# for mainstems and Tunnel
+c <- pseudo_synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(site == 'Leech Head (US)' | site == 'Cragg crk (US)' | site == 'West Leech (US)' | site == "Tunnel (DS)") %>% 
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(shape = sample_type), alpha = 0.6) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle  
+  geom_boxplot(alpha = 0.5, outlier.shape = 4) +
+  scale_fill_manual(values = c("Leech Head (US)" = "#404788FF", 
+                               "Cragg crk (US)" = "#55C667FF",
+                               "West Leech (US)" = "#95D055FF",
+                               "Tunnel (DS)" = "#FDE725FF")) +
+  theme_bw() +
+  theme(legend.position = "right",
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24))) +
+  labs(x = "", y = expression( E[2]:E[3] ), shape = "sample:")
+
+# arrange the plots together
+ab <- cowplot::plot_grid(a, b, nrow = 1, align = "h", 
+                         labels = c("A", "B"), label_size = 12)
+abc <- cowplot::plot_grid(ab, c, ncol = 1, rel_heights = c(1, 1.25), 
+                          labels = c("", "C"), label_size = 12)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot_up-down_metcompar.png", width = 6, height = 6, units = "in")
+
+```
+
+```{r}
+
+#### Levene's 
+
+#test for homoscedasticity in SAC254
+
+#An alternative to the Bartlett’s test that is less sensitive to departures from normality. Test for Ho, homoscedasticity (homogeneity of variance). 
+
+#If p-value is less than significance level (e.g. 0.05 for 95% confidence) the differences are unlikely to have been caused randomly and it's concluded that there is a difference between variances.
+
+## check variance
+
+#### Weeks / Chris / LeechHead
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Weeks" | site == "ChrisCrk" | site == "LeechHead") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Weeks" ~ "up",
+    site == "ChrisCrk" ~ "up",
+    site == "LeechHead" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+a <- dat %>% 
+  car::leveneTest(E2E3 ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+
+#### Jarvis / Lazar / Cragg
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "Jarvis-crk" | site == "Lazar-crk" | site == "CraggCrk") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "Jarvis-crk" ~ "up",
+    site == "Lazar-crk" ~ "up",
+    site == "CraggCrk" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+b <- dat %>% 
+  car::leveneTest(E2E3 ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+
+
+#### upstream rivers and Tunnel  
+dat <- synopticfilter %>%
+  filter(QAQC_flag == "OK") %>%
+  filter(site == "LeechHead" | 
+           site == "CraggCrk" | 
+           site == "WestLeech" | 
+           site == "Tunnel") %>% 
+  ungroup() %>% 
+  mutate(UPDWN = case_when(
+    site == "LeechHead" ~ "up",
+    site == "CraggCrk" ~ "up",
+    site == "WestLeech" ~ "up",
+    site == "Tunnel" ~ "down")) %>% 
+  mutate(UPDWN = factor(UPDWN))
+# check for homoscedasticity
+c <- dat %>% 
+  car::leveneTest(E2E3 ~ UPDWN, data = .) %>% 
+  tidy() %>% 
+  pull("p.value") %>% first()
+  
+```
 
 ### Ch3? spatial variance DOC Samples
 
@@ -3526,8 +4003,7 @@ sixfilter %>%
   labs(y = "", x = "DOC (mg/L)")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridgeplot.png",
-       width = 5, height = 4, unit = "in") 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridgeplot.png", width = 5, height = 4, unit = "in") 
 
 
 ```
