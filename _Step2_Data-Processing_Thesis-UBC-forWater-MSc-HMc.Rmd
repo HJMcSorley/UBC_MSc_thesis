@@ -2199,7 +2199,7 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-         width = 6, height = 8.5, units = "in")
+         width = 6, height = 7.5, units = "in")
 
 # --- baby mega plot
 
@@ -2231,17 +2231,20 @@ cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event
                    ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
-         width = 6, height = 8.5, units = "in")
+         width = 6, height = 7.5, units = "in")
 
+```
 
+### Ch3 sample stage with rain events
+```{r}
 # --- river sample plot
 
-# plot stage, rain events, samples (by sample type) all sites - no weather
-stage_samples %>% 
+# plot stage, rain events, samples (by sample type) all sites - Rain only
+stg_sample_plot <- stage_samples %>% 
   ggplot(aes(x = DateTime))+
   # start of rain events
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ 
+  geom_vline(colour = "#0072B2", linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ #forWater_colours1["MainBlue"]
   # river stage
   geom_line(aes(y = corr_stage_cm), size = 0.5) +
   theme_bw()+
@@ -2256,16 +2259,20 @@ stage_samples %>%
   labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
   theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
-        legend.position = "top")+
+        legend.position = "bottom")+
   guides(fill = guide_legend("Sample method:"), 
          shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
+
+# add rain 
+cowplot::plot_grid(subbasin_meanrain_plot, stg_sample_plot, ncol = 1, align = "v",
+                   rel_heights = c(1,7))
 # save 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png",
-         width = 5, height = 8.5, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png",
+         width = 6, height = 7.5, units = "in")
 ```
 
 
-## Seasonal megaplot
+## Ch2 Seasonal megaplot
 ```{r}
 # --- junior megaplot: megaplot 2 with lines indicating seasons
 
@@ -3943,56 +3950,15 @@ sixfilter %>%
 
 ```
 
-```{r}
-
-# ridgeplot?
-# wrap by sample_type -- wet season only
-label <- c(wet = "Wet season", dry = "Dry season")
-
-synopticfilter %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(y = NPOC_ppm, x = site, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  scale_fill_viridis(discrete = TRUE) +
-  theme_bw()+
-  theme(legend.position = "none",
-        text = element_text(size = 12)) +
-  facet_wrap(~rain_season) 
-
-
-```
-
 
 ###### wet season only
 
-boxplots of G/R   
+boxplots of G/R wet season only  
 ```{r}
 # wrap by sample_type -- wet season only
 label <- c(Grab = "Grab samples, wet season", Rack = "Rack samples, wet season")
 
-# Boxplot with jitter scatter 
-# site vs DOC, facet wrap by sample type
-sixfilter %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(rain_season == "wet") %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
-  geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle = 40, hjust = 1),
-        text = element_text(size = 12)) +
-  facet_wrap(~sample_type, ncol = 2, nrow = 1,
-             labeller = labeller(sample_type = label)) +  
-  labs(x = "", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-boxplot.png",
-       width = 5, height = 3.5, unit = "in") 
-
-# try ridges
+# density ridge plot
 sixfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(rain_season == "wet") %>% 
@@ -4014,25 +3980,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridge
 
 
 ```
-
-
-* table: wet G/R DOC means/min/max
-```{r, summaryDOC-table}
-# DOC summary table -- Grab vs Rack
-sixfilter %>% 
-  dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
-                rain_season == "wet") %>% 
-  group_by(site, sample_type) %>% 
-  summarize(DOC_mean = mean(NPOC_ppm, na.rm = T),
-            DOC_sd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOC_sd/DOC_mean)*100,
-            DOC_min = min(NPOC_ppm, na.rm = T),
-            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
-
-```
-
 
 
 sample counts and DOC mean/min/max (wet season only)
@@ -4178,6 +4125,41 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 
 # CH3 RESULTS
 
+## Events
+
+```{r}
+# events_table
+
+# for wet season filter out ID = NA
+eventsample_table <- right_join(events_table,
+  sixfilter %>% 
+  filter(QAQC_flag == "OK") %>%
+  filter(!is.na(event_ID)) %>% 
+  group_by(event_ID) %>% 
+  summarise("Samples collected" = n(),
+            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T),
+            mean_SAC254 = mean(SAC254_Abs.m, na.rm = T),
+            "mean SUVA" = mean(SUVA, na.rm = T) ,
+            "mean E2E3" = mean(E2E3, na.rm = T), 
+            mean_pseudo254 = mean(pseudo254, na.rm = T)
+            #mean_pseudoSUVA = mean(pseudo_SUVA, na.rm = T)
+            ) %>%  
+  mutate(mean_pseudo254 = as.character(mean_pseudo254)) %>% 
+  mutate(mean_SAC254 = case_when(
+    event_ID == "1" ~ mean_pseudo254[[1]],
+    event_ID == "2" ~ mean_pseudo254[[2]],
+    event_ID == "3" ~ mean_pseudo254[[3]],
+    TRUE ~ as.character(mean_SAC254)  )) %>%
+    mutate(mean_SAC254 = as.numeric(mean_SAC254)),
+  # attach to event table
+  by = c("Major event no." = "event_ID" )) %>% 
+  # rename things
+  select(-c("Storm number", mean_pseudo254)) %>%
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv")
+  
+
+```
+
 ## DOC Boxplot: LWSA monitoring sites DOC 
 ```{r}
 # Boxplots with jitter scatter
@@ -4189,14 +4171,18 @@ sixfilter_sub %>%
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
   geom_boxplot(alpha = 0.5) +
-  geom_jitter(aes(fill = site), alpha = 0.8, shape = 21) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
   scale_fill_brewer(palette="Set2") +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
   theme_bw() +
-  theme(legend.position = "none",
-        text = element_text(size = 11)) +
+  theme(legend.position = "top",
+        text = element_text(size = 12)) +
+  guides(shape = guide_legend("Sample method:", override.aes = list(size=2.5)))+
   labs(x = "", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin_boxplots.png",
        width = 5, height = 4, units = "in")
 
 ```
@@ -4230,10 +4216,10 @@ sixfilter %>%
   labs(y = "DOC (mg/L)", shape = "Sample type:", 
        x = "") +
   theme(legend.position = "top",
-        text = element_text(size = 11),
+        text = element_text(size = 12),
         axis.text.x = element_text(angle = 30, hjust = 1)) 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH3_DOC-seasonal-subbasin_boxplots.png", width = 5, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-seasonal-subbasin_boxplots.png", width = 6, height = 4, units = "in")
 
 ```
 
@@ -4269,35 +4255,69 @@ sixfilter %>%
 
 ```
 
-
-## Events
-
-add sample counts to events summary table
+#### wet season only
 ```{r}
+# wrap by sample_type -- wet season only
+label <- c(Grab = "Grab samples, wet season", Rack = "Rack samples, wet season")
 
-# events_table
-
-# for wet season filter out ID = NA
-eventsample_table <- right_join(events_table,
-  sixfilter %>% 
-  filter(QAQC_flag == "OK") %>%
-  filter(!is.na(event_ID)) %>% 
-  group_by(event_ID) %>% 
-  summarise("Samples collected" = n(),
-            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T),
-            "mean SAC254" = mean(SAC254_Abs.m, na.rm = T),
-            "mean SUVA" = mean(SUVA, na.rm = T) #,
-            #mean_E2E3 = mean(E2E3, na.rm = T) 
-            ), 
-  # attach to event table
-  by = c("Major event no." = "event_ID" )) %>% 
-  # rename things
-  select(-"Storm number") %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv")
-  
-
+# Boxplot with jitter scatter 
+# site vs DOC, facet wrap by sample type
+sixfilter %>%
+  filter(QAQC_flag == "OK") %>% 
+  filter(rain_season == "wet") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 40, hjust = 1),
+        text = element_text(size = 12)) +
+  facet_wrap(~sample_type, ncol = 2, nrow = 1,
+             labeller = labeller(sample_type = label)) +  
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "DOC (mg/L)", shape = "Sample collection method:")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png",  width = 5, height = 4, unit = "in") 
 ```
 
+* table: wet G/R DOC means/min/max
+```{r, summaryDOC-table}
+# DOC summary table -- Grab vs Rack by site
+a <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
+                rain_season == "wet") %>% 
+  group_by(site, sample_type) %>% 
+  summarize(count = n(),
+            DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup() 
+
+# DOC summary table -- Grab vs Rack
+b <- sixfilter %>% 
+  dplyr::filter(sample_type == "Grab" | sample_type == "Rack",
+                rain_season == "wet") %>% 
+  group_by(sample_type) %>% 
+  summarize(site = "All",
+            count = n(),
+            DOC_mean = mean(NPOC_ppm, na.rm = T),
+            DOC_sd = sd(NPOC_ppm, na.rm = T),
+            RSD = (DOC_sd/DOC_mean)*100,
+            DOC_min = min(NPOC_ppm, na.rm = T),
+            DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
+  ungroup() 
+  
+# make table
+bind_rows(a, b)  %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
+
+```
 
 ## River Stage 
 
@@ -4955,9 +4975,12 @@ stage_response %>%
            time_to_peak_hr_min, time_to_peak_hr_max,  
            stage_change_cm_min, stage_change_cm_max,  
            stage_response_cmhr_min, stage_response_cmhr_max)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv")
+
+```
 
 
+```{r}
 # plot rate of stream response with storm intensity -- not very interesting
 stage_response %>%
   mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
@@ -5443,9 +5466,8 @@ narrow_results %>%
 ```
 
 
-# CH4 RESULTS
 
-## Random Forest
+# Random Forest
 
 filter data
 

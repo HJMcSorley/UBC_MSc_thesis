@@ -68,7 +68,7 @@ In this project, six river locations in the Leech water supply area (in the Grea
 
 ####    Leech River Watershed
 
-The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the majority of the ~2000 mm per year falls as rain (i.e. pluvial hydroclimatic regime) [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
+The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the predominant hydroclimatic regime is pluvial and most of the ~2000 mm per year falls as rain [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
 
 \  
 
@@ -86,7 +86,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasi
 
 \ 
 
-Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with preNOMinantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials, and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is preNOMinantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
+Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
 
 \  
 
@@ -124,7 +124,7 @@ The time-stamps of event-based river samples collected near-simultaneously at si
 
 ####   Sample analysis
 
-Water samples were collected in acid-wached 250mL HDPE wide-mouth amber bottles and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). DOC samples were filtered (0.45-micron PES filters) and acidified (pH < 2), spectroscopy samples were not filtered nor acidified but were ensured to have zero turbidity. Descriptions of sample preparation and quality control are detailed in Chapter 2. DOC was quantified via Method 5310-B on a Shimadzu TOC-V [@StdMet5310], and UV-Vis measurements were completed on a spectro::lyser spectrophotometer (S::can, Vienna, Austria)
+Water samples were collected in acid-washed 250 mL HDPE wide-mouth amber bottles and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). DOC samples were filtered (0.45-micron PES filters) and acidified (pH < 2), spectroscopy samples were not filtered nor acidified but were ensured to have zero turbidity. Descriptions of sample preparation and quality control are detailed in Chapter 2. DOC was quantified via Method 5310-B on a Shimadzu TOC-V [@StdMet5310], and UV-Vis measurements were completed on a spectro::lyser spectrophotometer (S::can, Vienna, Austria)
 
 \  
 
@@ -136,7 +136,19 @@ ___this is the same as in Chapter 2___
 
 The R package _Rainmaker_ (USGS, github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to sampling campaigns and to distinguish between seasons. The pluvial hydroclimatic regime on the coast of BC is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for vertical racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for rack sampler collection.
 
-#### RF
+#### Random Forests for variable importance
+
+The R package RandomForest was built on Breiman’s Random Forests (RF) algorithm. RandomForest was used to determine the relative importance of watershed characteristics and conditions in determining DOC concentrations and DOM character in across the six sites of the LWSA [@Breiman2001].
+
+\  
+
+RF is useful for solving practical statistical problems with real-world data and has been widely published in hydrologic and water resouce research in recent years [@Tyralis2019]. 
+
+\  
+
+The capability to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. Variable importance measure is a powerful part of Random Forests that evaluates the impact of each predictor variable on predicting a response variable; however, the variable importance measure shows bias towards correlated predictor variables [@Strobl2008]. Spurious correlations can be generated when 
+
+___EXPLAIN WHICH VARIBLES YOU USED AND WHY___
 
 include: 
 * antecedent 7 day / 14 day / 21 day / 28 day / 35 day temperature & rain
@@ -145,41 +157,43 @@ include:
 * include antecedent rain amounts
 * include antecedent snow also
 
+\  
+
 ### Results
 
-####   Rain events 
+####   Rain events and sampling
 
-LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, and 18 events that were classified as major events that corresponded to sample collection by the vertical racks (i.e. events large enough to trigger substantial river responses). Major rain events were defined by precipitation accumulating to 50mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, with 18 that were classified as major events which corresponded to sample collection by the Vertical Racks (i.e. events large enough to trigger substantial river responses). Major rain events were defined by precipitation accumulating to 50 mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
 
 \  
 
 ```{r EventsTable3}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv") %>%  
-  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2), 
-               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*")
+  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2,2), 
+               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*",
+               col.names = c("Major event no.", "Start Date", "Duration (days)", "Rainfall (mm)", "Intensity (mm/hr)", "Samples collected", "mean DOC (mg/L)", "mean SAC~254~", "mean SUVA~254~", "mean E~2~:E~3~"))
 ```
 
 \  
 
-An intense (category 3-4) atmospheric river event hit the LWSA January 29-31 (Event 17) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the vertical racks (greater than 2m tall) and ripped the level-loggers out of their stilling wells [^2]. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Figure \@ref(fig:EventsPlot) shows stream level at each monitored sub-basin along with events and samples collected. Eight of these events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified and are summarized in Table \@ref(tab:MinMaxEvents).   
-
-[^2]:   Following major event 17 (Jan 29-31), changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+An intense (category 3-4) atmospheric river event hit the LWSA January 29-31 (Event 17) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following major event 17 (Jan 29-31), changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
 
 \  
 
-```{r EventsPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:EventsPlot}*Plot of Precipitation, rain events (as vertical lines), stream rise and sample collection at six sites across the LWSA.*" 
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png")
-```
+Stream levels at each monitoring site were matched to the stage that Vertical Rack samples were collected, or the date and time of Grab sample collection, and grouped by events (Figure \@ref(fig:ch3megaplot)). 
 
 \  
  
-```{r megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:megaplot} *Rain events, stream response and sample collection across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events and points indicate the timing and stage of river samples collected.*"
+```{r ch3megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:ch3megaplot} *Rain events, stream response and sample collection across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events and points indicate the timing and stage of river samples collected.*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot_sampletype.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png")
 ```
+
+\  
+
+
+Eight of the 18 events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified (Table \@ref(tab:MinMaxEvents)).   
 
 \  
 
@@ -191,9 +205,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
 
 \  
 
+
 #### Spatial patterns in DOC & NOM
 
-Samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, with the exception of Leech River head (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
+Samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, except for the head of Leech River (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
 
 \  
 
@@ -206,19 +221,19 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.
 
 \  
 
-Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed, including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was similar to CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
+Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was somewhat between that at WestLeech and CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
 
 \  
 
 ```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon (DOC) concentrations across the Leech watershed over sixteen months, collected by standard grab sampling and on vertical racks (318 samples total).*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_boxplots.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin_boxplots.png")
 ```
 
 \  
 
-##### Spatial and temporal patterns in DOC & NOM
+##### Spatiotemporal patterns in DOC & NOM
 
 ```{r DOCloess, fig.cap = fig_cap}
 fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples. Trend line represents locally weighted smoothing (loess, local polynomial regression).*"
@@ -226,6 +241,7 @@ fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrati
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
 ```
 
+\  
 
 Figure \@ref(fig:seasonalDOC)
 
@@ -235,7 +251,11 @@ fig_cap = "\\label{fig:seasonalDOC} *Contrasting DOC from samples collected acro
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH3_DOC-seasonal-subbasin_boxplots.png")
 ```
 
+\  
+
 Table \@ref(tab:seasonalsamples) 
+
+\  
 
 ```{r seasonalsamples}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>% 
@@ -244,44 +264,47 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_seasonal-samples-DOC-summary
                caption = "*Seasonal comparison of sample DOC results*")
 ```
 
+\  
 
 #### River response in relation to DOC & NOM
 
 Figure \@ref(fig:stageRelations)
 
+\  
+
 ```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales*"
+fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png")
 ```
 
-
+\  
 
 #### spatial and temporal variance and synchrony in stage 
 
-Across the LWSA, fluctuations in river stage were temporally synchronized. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 ranNOMizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
+Across the LWSA, fluctuations in river stage were temporally synchronized over the sixteen month study period. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
 \  
-
-* _needs work:_ 
-* Rates of stream response (times to peak): Table \@ref(tab:stageResponse)
+Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the Tunnel (site 6) and smallest at the Weeks headwater creek (site 1) which drains Weeks Lake and surrounding wetlands. 
 
 \  
 
 ```{r stageResponse}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = 1, 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,1,1,1,1,2,1), 
                col.names = c("site", 
                              "shortest time to peak stage (hr)", 
                              "longest time to peak stage (hr)", 
                              "smallest change in stage (cm)", 
                              "largest change in stage (cm)", 
-                             "fastest rate of stage change (cm/hr)", 
-                             "slowest rate of stage change (cm/hr)"),
+                             "minimum rate of stage change (cm/hr)", 
+                             "maximum rate of stage change (cm/hr)"),
                caption = "*Summary of stream response to precipitation events across the LWSA.*")
 ```
 
-####   Rising stage & NOM dynamics
+\  
+
+####  ? Rising stage & NOM dynamics
 
 The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season is more relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
 
@@ -290,8 +313,23 @@ The wet season was better represented than the dry by sample number and was ther
 ```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 109) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 170).*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_subbasin_GvsR_boxplot.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png")
 ```
+
+\  
+
+```{r wetDOCtable}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,0,1,0,0,2,2), 
+               col.names = c("Site", 
+                             "Sample type",
+                             "Sample count",
+                             "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", 
+                             "Min. (mg/L)", "Max. (mg/L)"),
+               caption = "*Wet-season dissolved organic carbon concentrations by sample collection method across six monitoring sites in the LWSA.*")
+
+```
+""
 
 \  
 
