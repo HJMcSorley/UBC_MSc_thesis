@@ -8,7 +8,8 @@ output:
     lof: true
     lot: true
     toc: true
-    fig_caption: true
+    toc-depth: 4
+    fig_caption: yes
     reference_docx: UBC-RC_ThesisTemplate_V9_HMc-Template.docx
 bibliography: library.bib
 link-citations: yes

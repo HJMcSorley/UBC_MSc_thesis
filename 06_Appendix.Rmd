@@ -368,7 +368,6 @@ fig_cap = "\\label{fig:NOMnesty}*Grab sample SAC~254~ at upstream locations comp
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-boxplot_up-down_metcompar.png")
 
-Ch2_E2E3-boxplot_up-down_metcompar.png
 ```
 
 \  

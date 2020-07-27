@@ -358,7 +358,7 @@ LWSA_meanWx <- precip_data %>%
   distinct(DateTime, .keep_all = TRUE)  # keep only individual days (duplicates from multi- stations)
 
 # check seasons visually
-LWSA_meanWx %>% 
+a <- LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   filter(date >= "2018-10-23") %>% 
   ggplot(aes(x = DateTime, y = Rn_1_mean)) +
@@ -401,9 +401,9 @@ mean_rainplot <- LWSA_meanWx %>%
 mean_snowplot <- LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime)) %>% 
   group_by(date) %>% 
-  dplyr::summarise(daily_Snowmean = mean(SnowDepth_mean, na.rm = TRUE)) %>% 
+  dplyr::summarise(daily_SnowMax = max(SnowDepth_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
-  ggplot(aes(x = date, y = daily_Snowmean)) +
+  ggplot(aes(x = date, y = daily_SnowMax)) +
   geom_col(colour = "grey60") +
   labs(x = "", y = 'Snow (m/day)') +
   theme_bw() +
@@ -442,7 +442,7 @@ mean_tempplot <- LWSA_meanWx %>%
 cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, ncol = 1, rel_heights = c(3,3,4), align = "v")
 
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 6, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 5, height = 4, units = "in")
 ```
 
 table: mean Wx
@@ -2073,16 +2073,16 @@ event_ID_labels <- events$ID
 
 Plot stage, precip, temp and snow and then create a one-page mega plot of all combined.
 ```{r, Wx-stage-megas-plots}
-# 1 - plot snow
+# 1 - plot snow -- use 'SnowDepth' not 'SnowDep' (clean data)
 # LWSA (Chris crk and Martin's Gulch FWx stns)
 subasin_snow_plot <- LWSA_meanWx %>% 
   mutate(date = lubridate::as_date(DateTime),
          Snow = factor("Snow")) %>% 
   group_by(date, Snow) %>% 
-  dplyr::summarise(daily_meansnow = mean(SnowDep_mean, na.rm = TRUE)) %>% 
+  dplyr::summarise(daily_maxsnow = max(SnowDepth_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
   filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
-  ggplot(aes(x = date, y = daily_meansnow)) +
+  ggplot(aes(x = date, y = daily_maxsnow)) +
   geom_col(aes(colour = Snow), colour = "grey40") +
   labs(x = "", y = "m /day") +
   theme_bw() +
@@ -2201,8 +2201,8 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
          width = 6, height = 7.5, units = "in")
 
-# --- baby mega plot
 
+# --- baby mega plot
 # with precipitation (not temp)
 # add event lines 
 # and simple sample points
@@ -2233,42 +2233,6 @@ cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
          width = 6, height = 7.5, units = "in")
 
-```
-
-### Ch3 sample stage with rain events
-```{r}
-# --- river sample plot
-
-# plot stage, rain events, samples (by sample type) all sites - Rain only
-stg_sample_plot <- stage_samples %>% 
-  ggplot(aes(x = DateTime))+
-  # start of rain events
-  geom_vline(colour = "#0072B2", linetype = "twodash", 
-             xintercept = c(event_starts), size = 0.5, show.legend = TRUE)+ #forWater_colours1["MainBlue"]
-  # river stage
-  geom_line(aes(y = corr_stage_cm), size = 0.5) +
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), 
-             na.rm = TRUE, size = 1.5)+
-  scale_shape_manual(breaks = c("Grab", "Rack"), 
-                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
-  scale_fill_manual(breaks = c("Grab", "Rack"), 
-                    values = c("Grab" = forWater_colours2[["MyOrange"]], 
-                              "Rack" = forWater_colours2[["MyOrange"]]))+
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
-  labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
-  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
-        legend.position = "bottom")+
-  guides(fill = guide_legend("Sample method:"), 
-         shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
-
-# add rain 
-cowplot::plot_grid(subbasin_meanrain_plot, stg_sample_plot, ncol = 1, align = "v",
-                   rel_heights = c(1,7))
-# save 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png",
-         width = 6, height = 7.5, units = "in")
 ```
 
 
@@ -2384,8 +2348,76 @@ season_meantemp_plot <- subasin_meantemp_plot +
 cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
 
 # save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", 
-       width = 7, height = 9, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", width = 7, height = 9, units = "in")
+```
+
+## Ch3 sample stage, rain events, seasons
+```{r}
+
+# plot stage, rain events, samples (by sample type) all sites - Rain only
+stg_sample_plot <- stage_samples %>% 
+  ggplot(aes(x = DateTime))+
+  # start of rain events
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+             xintercept = c(event_starts), size = 0.45, show.legend = TRUE)+ 
+  # river stage
+  geom_line(aes(y = corr_stage_cm), size = 0.5) +
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type, fill = sample_type), 
+             na.rm = TRUE, size = 1.5)+
+  scale_shape_manual(breaks = c("Grab", "Rack"), 
+                     values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
+  scale_fill_manual(breaks = c("Grab", "Rack"), 
+                    values = c("Grab" = forWater_colours2[["MyOrange"]], 
+                              "Rack" = forWater_colours2[["MyOrange"]]))+
+  # seasons
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = start_dry2019, size = 0.55)+
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = start_FF2019, size = 0.55)+
+    facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = "bottom")+
+  guides(fill = guide_legend("Sample method:"), 
+         shape = guide_legend("Sample method:", override.aes = list(size=2.5))) 
+
+
+# update rain plot
+ch3rainplot <- subbasin_meanrain_plot + 
+  # start of rain events
+  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash",  
+             xintercept = as.Date(c(event_starts)), size = 0.45, show.legend = TRUE)+ 
+  # add seasons
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.55)+
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.55) +
+  # add text labels
+  annotate("text", label = "wet season", x = as.Date(start_dry2019)-65, 
+           y = 125)+
+  annotate("text", label = "dry season", x = as.Date(start_dry2019)+65, 
+           y = 125)+
+  annotate("text", label = "wet", x = as.Date(start_FF2019)+15, 
+           y = 125)
+
+
+# update snow plot with season lines
+ch3snowplot <- subasin_snow_plot + 
+  # add seasons
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = as.Date(start_dry2019), size = 0.55)+
+  geom_vline(colour = "magenta", linetype = "solid", 
+             xintercept = as.Date(start_FF2019), size = 0.55) 
+
+  
+# plot grid 
+cowplot::plot_grid(ch3snowplot, ch3rainplot, stg_sample_plot, 
+                   ncol = 1, align = "v", rel_heights = c(1,1,7))
+
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png",  width = 6, height = 7, units = "in")
 ```
 
 
@@ -3796,9 +3828,6 @@ DOCNPOC <- synopticfilter %>%
          shape = guide_legend("Sample season:"))+
   theme(text = element_text(size = 11),
         legend.position = "top")
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_DOC-CDOM_seasonal.png",
-       height = 5, width = 5, units = "in")
 
 # ---
 # SAC254 vs NPOC by season
@@ -3819,9 +3848,6 @@ insetSAC <- synopticfilter %>%
          shape = guide_legend("Sample season:"))+
   theme(text = element_text(size = 9),
         legend.position = "none")
-#save image
-#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-DOC_seasonal_1-1.png", height = 3.5, width = 5, units = "in") 
-
 
 # inset the SAC254 plot into the NPOC DOCest plot
 cowplot::ggdraw() +
@@ -4160,7 +4186,9 @@ eventsample_table <- right_join(events_table,
 
 ```
 
-## DOC Boxplot: LWSA monitoring sites DOC 
+## DOC spatial boxplot
+
+LWSA monitoring sites DOC 
 ```{r}
 # Boxplots with jitter scatter
 
@@ -4223,39 +4251,76 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-seasonal-subbasin_boxplot
 
 ```
 
-seasonal sample count and DOC summary
+##### table: seasonal sample count and summary
 ```{r}
 # how many samples were collected seasonally?
-sixfilter %>%
-  filter(QAQC_flag == "OK") %>% 
+# what were the mean +/- sd values at each site?
+a <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  group_by(rain_season) %>% 
+  group_by(site, rain_season) %>% 
   summarize(count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = round((DOCsd/DOCmean)*100, 0),
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>%
+            DOCsd = sd(NPOC_ppm, na.rm = T)) %>%
   ungroup() %>% 
   bind_rows(
     sixfilter %>%
       filter(QAQC_flag == "OK") %>%
       filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-      summarize(rain_season = "All",
+      group_by(rain_season) %>% 
+      summarize(site = "all sites",
                 count = n(), 
                 DOCmean = mean(NPOC_ppm, na.rm = T), 
-                DOCsd = sd(NPOC_ppm, na.rm = T), 
-                RSD = round((DOCsd/DOCmean)*100, 0),
-                DOCmin = min(NPOC_ppm, na.rm = T), 
-                DOCmedian = median(NPOC_ppm, na.rm = T), 
-                DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-      ungroup()) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_seasonal-samples-DOC-summary.csv")
+                DOCsd = sd(NPOC_ppm, na.rm = T)) %>% 
+      ungroup()) 
+
+
+# SAC254 and E2E3
+b <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  #filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(site, rain_season) %>% 
+  summarize(#NOMcount = n(),
+            # SAC254
+            SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
+            SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            # SUVA
+            SUVAmean = mean(SUVA, na.rm = T), 
+            SUVAsd = sd(SUVA, na.rm = T),
+            # E2E3
+            E2E3mean = mean(E2E3, na.rm = T), 
+            E2E3sd = sd(E2E3, na.rm = T))
+            
+
+# all together  
+c <- sixfilter %>% 
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  #filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  group_by(rain_season) %>% 
+  summarize(site = "all sites", 
+            #NOMcount = n(),
+            # SAC254
+            SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
+            SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            # SUVA
+            SUVAmean = mean(SUVA, na.rm = T), 
+            SUVAsd = sd(SUVA, na.rm = T),
+            # E2E3
+            E2E3mean = mean(E2E3, na.rm = T), 
+            E2E3sd = sd(E2E3, na.rm = T))
+
+# tag totals summary onto site summary
+left_join(a, bind_rows(b, c), by = c("site", "rain_season")) %>% 
+  write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_NOM-seasonal-summary.csv", col_names = T)
 
 ```
 
-#### wet season only
+### wet season only
 ```{r}
 # wrap by sample_type -- wet season only
 label <- c(Grab = "Grab samples, wet season", Rack = "Rack samples, wet season")
@@ -4282,6 +4347,186 @@ sixfilter %>%
   labs(x = "", y = "DOC (mg/L)", shape = "Sample collection method:")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png",  width = 5, height = 4, unit = "in") 
+
+```
+
+### boxplots: all parameters split by seasons
+```{r}
+
+# wrap by season
+label <- c(dry = "Dry season", wet = "Wet season")
+
+# all parameters together
+a <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        axis.text.x = element_blank(),
+        text = element_text(size = 11)) +
+  facet_wrap(~rain_season, ncol = 2, nrow = 1,
+             labeller = labeller(rain_season = label),
+             scales = "free_y") +  
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "DOC (mg/L)", shape = "Sample collection method:")
+
+
+#### NOM wet season only
+
+# SAC254
+b <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>%  
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        text = element_text(size = 11),
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  facet_wrap(~rain_season, ncol = 2, nrow = 1,
+             labeller = labeller(rain_season = label),
+             scales = "free_y") +  
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression( SAC[254]~(m^-1) ), shape = "Sample collection method:")
+
+# make an inset that doesn't include Weeks
+# change colours manually: brewer.pal(n = 6, name = 'Set2')
+bb <- sixfilter %>%
+  filter(site != "Weeks") %>% 
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  filter(rain_season == "dry") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_manual(values = c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        text = element_text(size = 10))+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
+        plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "", shape = "Sample collection method:")
+  
+
+# inset 
+B <- cowplot::ggdraw() +
+  draw_plot(b) +
+  draw_plot(plot = bb,
+            x = .2, # x location of inset placement
+            y = .3, # y location of inset placement
+            width = .3, # Inset width
+            height = .62, # Inset height
+            scale = 1) # Inset scale (1 = none)
+
+  
+# SUVA
+c <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  filter(SUVA < 9) %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = SUVA, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        text = element_text(size = 11),
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  facet_wrap(~rain_season, ncol = 2, nrow = 1,
+             labeller = labeller(rain_season = label),
+             scales = "free_y") +  
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(SUVA[254]), shape = "Sample collection method:")
+
+# make an inset that doesn't include Weeks
+# change colours manually: brewer.pal(n = 6, name = 'Set2')
+cc <- sixfilter %>%
+  filter(site != "Weeks") %>% 
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  filter(rain_season == "dry") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = SUVA, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_manual(values = c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        text = element_text(size = 10))+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
+        plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "", shape = "Sample collection method:")
+  
+
+# inset 
+C <- cowplot::ggdraw() +
+  draw_plot(c) +
+  draw_plot(plot = cc,
+            x = .2, # x location of inset placement
+            y = .4, # y location of inset placement
+            width = .3, # Inset width
+            height = .52, # Inset height
+            scale = 1) # Inset scale (1 = none)
+
+# E2E3
+d <- sixfilter %>%
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  filter(E2E3 > 3.6) %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = E2E3, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 40, hjust = 1),
+        text = element_text(size = 11),
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  facet_wrap(~rain_season, ncol = 2, nrow = 1,
+             labeller = labeller(rain_season = label),
+             scales = "free_y") +  
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = expression(E[2]:E[3]), shape = "Sample collection method:")
+
+# plot grid
+cowplot::plot_grid(a,B,C,d, ncol = 1, axis = "tb", 
+                   rel_widths = c(1,1,1,1),
+                   rel_heights = c(3,2,2,3))
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_NOM-DOC_boxplots-by-season.png",  width = 6, height = 7.5, unit = "in") 
+
 ```
 
 * table: wet G/R DOC means/min/max
@@ -4318,6 +4563,10 @@ bind_rows(a, b)  %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
 
 ```
+
+
+
+
 
 ## River Stage 
 
@@ -4637,7 +4886,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
 
 ```
 
-### temporal loess
+## temporal - loess plot
 
 ```{r DOC_overtime-by-site}
 
@@ -4663,7 +4912,7 @@ sixfilter_sub %>%
   facet_wrap(~subbasin_type, ncol = 1, strip.position = "right", scales = "free_y")+
   theme(axis.text.x = element_text(angle = 30, hjust = 1), 
         legend.position = "top",
-        text = element_text(size = 11))+
+        text = element_text(size = 12))+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png", width = 6, height = 6, units = "in") 

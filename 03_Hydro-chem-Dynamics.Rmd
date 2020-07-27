@@ -24,7 +24,7 @@ __Objective 2.0:__   Search for a mechanistic relationship between river stage a
 __Objective 2.1:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
 
 
-Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more alliphatic molecules, the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae). Concentrations and character vary over space and time. The river continuum concept (RCC) predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The RCC explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
+Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
 
 \  
 
@@ -52,29 +52,33 @@ The pulse shunt concept (PSC) explains DOC transport with major hydrologic event
 
 \  
 
-A collection of decision trees is a Random Forest, which play an important role for both predictive modeling and inference purposes. The Breiman's Random Forests (RF) is a machine learning algorithm for practical applications, which is popular for its accuracy in real-world systems [@Tyralis2019; @Biau2016]. In RF, a set of predictor variables (features) are used to predict the outcome of another variable (the predictant) through supervised learning algorithms, grouped as either regression or classification, depending on whether the variables are quantitative (i.e. numeric) or qualitative [@Breiman2001; @Tyralis2019]. 
+A collection of decision trees is a Random Forest, which play an important role for both predictive modeling and inference purposes. The Breiman's Random Forests (RF) is a machine learning algorithm for practical applications, which is popular for its accuracy in real-world systems [@Tyralis2019; @Biau2016]. In RF, a set of predictor variables (features) are used to predict the outcome of another variable (the predictant) through supervised learning algorithms, grouped as either regression or classification, depending on whether the variables are quantitative (i.e. numeric) or qualitative [@Breiman2001; @Tyralis2019]. RF is useful for solving practical statistical problems with real-world data and has been widely published in hydrologic and water resource research in recent years [@Tyralis2019].
 
 \  
 
-The RF algorithm learns from many independent Classification And Regression Trees (CARTs) which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision tree area created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the forest prediction is the average of the individual trees predictions [@Tyralis2019; @Biau2016]. The relative importance of each feature is determined by assessing the accuracy of how well the predictant variable is anticipated in the absence or presence of that feature. 
+The RF algorithm learns from many independent Classification And Regression Trees (CARTs) which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision trees are created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the forest prediction is the average of the individual trees predictions [@Tyralis2019; @Biau2016]. The relative importance of each feature is determined by assessing the accuracy of how well the predictant variable is anticipated in the absence or presence of that feature. 
+
+\  
+
+The capability to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. Variable importance measure is a powerful part of Random Forests that evaluates the impact of each predictor variable on predicting a response variable; however, the variable importance measure shows bias towards correlated predictor variables [@Strobl2008]. 
 
 \  
 
 ### Methods
 
-In this project, six river locations in the Leech water supply area (in the Greater Victoria water supply area, BC) were set up as monitoring sites. Water samples were collected synoptically (standard grab sampling) and passively on the rising limb of the hydrograph (via siphon samplers). Concentrations of dissolved organic carbon (DOC) were quantified and molecular characteristics of natural organic matter (NOM) were evaluated with UV-Vis spectroscopy. Samples were related to river stage at each site, and relationships between stage and DOC/NOM were evaluated. Random Forests were used to determine the relative importance of watershed characteristics and conditions in determining DOC concentrations and NOM character across the six sites of the LWSA [@Breiman2001].   
+Six river locations in the Leech water supply area (Greater Victoria, BC) were set up as monitoring sites. Water samples were collected synoptically (standard grab sampling) and passively on the rising limb of the hydrograph via siphon samplers. Concentrations of dissolved organic carbon (DOC) were quantified and molecular characteristics of natural organic matter (NOM) were evaluated with UV-Vis spectroscopy. Samples were related to river stage at each site, and relationships between stage and DOC/NOM were evaluated. Random Forests  [@Breiman2001] were used to determine the relative importance of watershed characteristics and conditions in determining DOC concentrations and NOM character across the six sites of the LWSA.   
 
 \  
 
 ####    Leech River Watershed
 
-The Leech River watershed and Sooke water supply area are in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the predominant hydroclimatic regime is pluvial and most of the ~2000 mm per year falls as rain [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
+The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the predominant hydroclimatic regime is pluvial and most of the ~2000 mm per year falls as rain [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
 
 \  
 
 #### Monitoring sites and sub-basin characteristics
 
-Six locations across the Leech Water Supply Area (LWSA) were set up as monitoring sites where vertical racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events (Figure \@ref(fig:subbasinMap)). Nested catchments of the Leech River system included two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5) and the entire LWSA drainage area above the point of diversion, Leech Tunnel (Site 6).	
+At each site, Vertical Racks were installed to measure continuous stage and collect water samples as the rivers rose in response to precipitation events. Nested catchments of the Leech River system included two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two mainstem rivers that feed the Leech (Cragg Creek and West Leech, sites 4 & 5), and Leech Tunnel (site 6) encompassed the entire LWSA drainage area above the point of diversion (Figure \@ref(fig:subbasinMap)).	
 
 \  
 
@@ -100,15 +104,15 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_study-sites_basin-charact
 
 ___this is essentially the same method section as in chapter 2___
 
-At each of the six monitoring sites, a vertical sampling rack was installed. These racks collect discrete water samples during the rising limb of stormflow, without employing costly pump-samplers. Each vertical rack also included a water level logger that recorded continuous stage (at ten-minute intervals). Vertical sampling racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e. sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Vertical racks collected samples during flows that would otherwise be difficult or unsafe to access and were supplemented with standard grab samples between storm events and during summer baseflow.
+Each Vertical Rack collected discrete water samples during the rising limb of stormflow and included a water level logger that recorded continuous stage at ten-minute intervals. Vertical Racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e. sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Standard Grab samples were collected manually between storm events and during dry season baseflow.
 
 \  
 
-The passive sampling bottles employ principles of a siphon design to collect river water as it reaches pre-determined levels on a vertical sampling rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE widemouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end.
+The passive sampling bottles employed principles of a siphon design to collect river water as it reaches pre-determined levels the Rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE wide-mouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end.
 
 \  
 
-Each rack included a central stilling well (3.81 cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. Each rack also included sensors (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) that recorded air and water temperatures (Figure \@ref(fig:verticalRack)). By combining the height at which each siphon bottle filled with observed stage (stilling-well measuring tape) and level-logger data, the date and time for collection of each rising-stage sample was determined. 
+Each rack included a central stilling well (3.81 cm (1.5")) PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. Each rack also included temperature sensors (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) that recorded air and water temperatures (Figure \@ref(fig:verticalRack)). By combining the height at which each siphon bottle filled with observed stage (stilling-well measuring tape) and level-logger data, the date and time for collection of each rising-stage sample was determined. 
 
 \  
 
@@ -120,7 +124,9 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 \  
 
-The time-stamps of event-based river samples collected near-simultaneously at sites across a watershed were used to inform stage-concentration relationships, and to tease-out insights about relative hydrologic pulse responses across nested catchments.
+The timestamps of event-based river samples collected near-simultaneously at sites across a watershed were used to inform stage-concentration relationships, and to tease out insights about relative hydrologic pulse responses across nested catchments.
+
+\  
 
 ####   Sample analysis
 
@@ -128,25 +134,23 @@ Water samples were collected in acid-washed 250 mL HDPE wide-mouth amber bottles
 
 \  
 
-Molecular character of NOM in water samples was assessed through specific ultraviolet absorbance at 254nm (SUVA~254~) and the spectral quotient E~2~:E~3~. SUVA~254~ is UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254 nm wavelength, normalized to the samples DOC concentration [@Weishaar2003], it correlates with NOM aromaticity [@Weishaar2003; @Helms2008; @Chow2008]. E~2~:E~3~ is the ratio of absorbance at wavelengths 250 nm and 365 nm, and is inversely related to aquatic humic solute aromaticity and molecular size  [@Peuravuori1997; @Helms2008].
+Molecular character of NOM in water samples was assessed through specific ultraviolet absorbance at 254nm (SUVA~254~) and the spectral quotient E~2~:E~3~. SUVA~254~ is UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254 nm wavelength, normalized to the samples DOC concentration [@Weishaar2003], it correlates with NOM aromaticity [@Weishaar2003; @Helms2008; @Chow2008]. E~2~:E~3~ is the ratio of absorbance at wavelengths 250 nm and 365 nm, and is inversely related to aquatic humic solute aromaticity and molecular size  [@Peuravuori1997; @Helms2008]. Additional details can be found in Chapter 2.
 
-#### Defining events
+\  
+
+#### Defining rain events and seasons
 
 ___this is the same as in Chapter 2___
 
 The R package _Rainmaker_ (USGS, github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to sampling campaigns and to distinguish between seasons. The pluvial hydroclimatic regime on the coast of BC is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for vertical racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for rack sampler collection.
+
+\  
 
 #### Random Forests for variable importance
 
 The R package RandomForest was built on Breiman’s Random Forests (RF) algorithm. RandomForest was used to determine the relative importance of watershed characteristics and conditions in determining DOC concentrations and DOM character in across the six sites of the LWSA [@Breiman2001].
 
 \  
-
-RF is useful for solving practical statistical problems with real-world data and has been widely published in hydrologic and water resouce research in recent years [@Tyralis2019]. 
-
-\  
-
-The capability to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. Variable importance measure is a powerful part of Random Forests that evaluates the impact of each predictor variable on predicting a response variable; however, the variable importance measure shows bias towards correlated predictor variables [@Strobl2008]. Spurious correlations can be generated when 
 
 ___EXPLAIN WHICH VARIBLES YOU USED AND WHY___
 
@@ -163,7 +167,7 @@ include:
 
 ####   Rain events and sampling
 
-LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 151 rain events, with 18 that were classified as major events which corresponded to sample collection by the Vertical Racks (i.e. events large enough to trigger substantial river responses). Major rain events were defined by precipitation accumulating to 50 mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 18 major rain events which corresponded to sample collection by the Vertical Racks (i.e. events large enough to trigger substantial river responses). The 18 Rack sampling rain events were defined by precipitation accumulating to 50 mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
 
 \  
 
@@ -176,24 +180,19 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv") %>%
 
 \  
 
-An intense (category 3-4) atmospheric river event hit the LWSA January 29-31 (Event 17) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following major event 17 (Jan 29-31), changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
-
-\  
-
-Stream levels at each monitoring site were matched to the stage that Vertical Rack samples were collected, or the date and time of Grab sample collection, and grouped by events (Figure \@ref(fig:ch3megaplot)). 
+The study period was separated into "wet" and "dry" seasons based on detectable river response at each monitoring site, which was primarily based on the presence or absence of major rain events and included a period of snowmelt late in the 2018/2019 wet season (Figure \@ref(fig:ch3megaplot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, where the period from late January (event 8, Table \@ref(tab:EventsTable3)) to mid-May had streamflow changes governed by snowmelt rather than rainfall. The 2019 dry sampling season spanned from mid-May to late-September, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable3)) and extended to the end of the field study period (Feb 20, 2020). Stream levels at each monitoring site were matched to the stage that Vertical Rack samples were collected to obtain date-time of sample collection, and the date-time of each Grab sample collection was matched to recorded stage (Figure \@ref(fig:ch3megaplot)). 
 
 \  
  
-```{r ch3megaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:ch3megaplot} *Rain events, stream response and sample collection across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events and points indicate the timing and stage of river samples collected.*"
+```{r ch3megaplot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:ch3megaplot} *Rain events, stream response, sample collection and seasons across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events, points indicate the timing and stage of river samples collected, and pink vertical lines delineate seasons.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png")
 ```
 
 \  
 
-
-Eight of the 18 events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified (Table \@ref(tab:MinMaxEvents)).   
+Eight of the 18 rain events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified (Table \@ref(tab:MinMaxEvents)).   
 
 \  
 
@@ -205,10 +204,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
 
 \  
 
+An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+
+\  
 
 #### Spatial patterns in DOC & NOM
 
-Samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, except for the head of Leech River (*'LeechHead'*, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
+Samples with maximum DOC concentrations were captured by vertical racks at five of the six sites, except for the head of Leech River (LeechHead, site 3) where peak DOC happened to be collected as a Grab sample (Table \@ref(tab:SixDOCsummarySampleType)).
 
 \  
 
@@ -221,11 +223,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-sixsite_summary_sample-type.
 
 \  
 
-Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (*'Weeks'*, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (*'CraggCrk'*, site 4), a mainstem river that drains the east sub-basin of the Leech watershed including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (*'Tunnel'*, site 6) was somewhat between that at WestLeech and CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
+Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (Weeks, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (CraggCrk, site 4), a mainstem river that drains the east sub-basin of the Leech watershed including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (Tunnel, site 6) was somewhat between that at WestLeech and CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
 
 \  
 
-```{r subbasinDOCbox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+```{r subbasinDOCbox, fig.cap = fig_cap}
 fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon (DOC) concentrations across the Leech watershed over sixteen months, collected by standard grab sampling and on vertical racks (318 samples total).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin_boxplots.png")
@@ -235,36 +237,53 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin
 
 ##### Spatiotemporal patterns in DOC & NOM
 
+DOC concentrations followed similar sinusoidal trends over time at each site, with amplitude of variation decreasing from upstream to downstream sites (Figure \@ref(fig:DOCloess)).     
+
 ```{r DOCloess, fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area (n = 323: 153 grab samples, 170 vertical rack samples. Trend line represents locally weighted smoothing (loess, local polynomial regression).*"
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area. Trend lines represents locally weighted smoothing ('loess' method of local polynomial regression).*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
 ```
 
 \  
 
-Figure \@ref(fig:seasonalDOC)
+Longer wet season periods relative to dry season and collection of event-based samples lead to the wet season being more heavily sampled (Table \@ref(tab:seasonalsamples)). Despite seasonal sample count differences, interesting seasonal differences emerged when sample results were grouped by season (Figure \@ref(fig:seasonalNOM)). 
 
-```{r seasonalDOC, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalDOC} *Contrasting DOC from samples collected across wet (n = 279) and dry (n = 39) seasons by both synoptic grab and vertical rack sampling*"
+DOC concentrations decreased from headwaters to mouth (Tunnel) in both the wet and dry seasons, with the greatest variance at the head (Weeks) and mouth. 
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH3_DOC-seasonal-subbasin_boxplots.png")
-```
+NOM molecular character was ......
 
-\  
-
-Table \@ref(tab:seasonalsamples) 
+aromaticity was judged with specific UV-absorbance at 254 nm (SAC~254~), SUVA~254~ (L mg^-1^ m^-1^), and the quotient E~2~:E~3~ (unitless); these indices indicated that Weeks (site 1) had much greater dry-season aromaticity compared to the other sites. Aside from Weeks, which may have had higher summer aromaticity due to drainage from Weeks Lake and surrounding wetlands, aromatic character of NOM decreased from head to mouth during the dry season.   
 
 \  
 
 ```{r seasonalsamples}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,0,2,2,0,2,2,1), 
-               #col.names = c(),
-               caption = "*Seasonal comparison of sample DOC results*")
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_NOM-seasonal-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,0,1,1,1,1,1,1,2,2), 
+               col.names = c("Site", "season", "count", 
+                             "mean DOC (mg/L)", "sd (±)",
+                             "mean SAC~254~ (m^-1^)", "sd (±)", 
+                             "mean SUVA~254~ (L mg^-1^ m^-1^)", "sd (±)",
+                             "mean E~2~E~3~", "sd (±)"),
+               caption = "*Seasonal comparison of sample results by monitoring site*")
 ```
 
 \  
+
+```{r seasonalNOM, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalNOM} *Sample results over the dry and wet seasons for DOC (as NPOC, mg/L) concentrations and indicators of NOM aromaticity and molecular size: SAC~254~(m^-1^), SUVA (L mg^-1^ m^-1^), E~2~:E~3~.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_NOM-DOC_boxplots-by-season.png")
+```
+
+\  
+
+
+
+
+\  
+
+
 
 #### River response in relation to DOC & NOM
 
@@ -304,7 +323,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
 
 \  
 
-####  ? Rising stage & NOM dynamics
+\  
+
+
+
+\  
+
+####  Wet season sampling results 
 
 The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season is more relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
 
@@ -329,9 +354,8 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_Mean
                caption = "*Wet-season dissolved organic carbon concentrations by sample collection method across six monitoring sites in the LWSA.*")
 
 ```
-""
 
-\  
+#### Rising stage dynamics
 
 A trend in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018]. While not every river response pulse was full sampled across, the vertical racks collected samples at progressively higher stage in each site. Figure \@ref(fig:RisingLimbPlot) shows DOC concentrations in rising limb sample across rain events. Generally, DOC increased with increasing river stage; however, the trend was not linear in each event response.
 
