@@ -541,4 +541,8 @@ At the future point of diversion (5th order river), it was found that the combin
 
 Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites as was a seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season. The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing. 
 
+\  
+
+Expanded comparisons between the Leech Tunnel site, Rithet Creek and Judge Creek would be interesting from a source water perspective, particularly if conducted in conjunction with Sooke Reservoir water balance and residence time studies.  
+
 :)

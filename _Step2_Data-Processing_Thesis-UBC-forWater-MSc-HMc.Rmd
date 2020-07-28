@@ -4425,6 +4425,28 @@ bb <- sixfilter %>%
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
   labs(x = "", y = "", shape = "Sample collection method:")
+
+# just Cragg, West and Tunnel  
+bbb <- sixfilter %>%
+  filter(site != "Weeks" & site != "ChrisCrk" & site != "LeechHead") %>% 
+  filter(QAQC_flag == "OK",
+         sample != "Algae") %>% 
+  filter(rain_season == "dry") %>% 
+  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
+  ggplot(aes(x = site, y = SAC254_Abs.m, fill = site)) +
+  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
+  geom_boxplot(alpha = 0.5) +
+  scale_fill_manual(values = c("#E78AC3", "#A6D854", "#FFD92F")) +
+  theme_bw() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        text = element_text(size = 10))+
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
+        plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
+  guides(fill = FALSE,
+         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
+  labs(x = "", y = "", shape = "Sample collection method:")
   
 
 # inset 
@@ -4435,6 +4457,15 @@ B <- cowplot::ggdraw() +
             y = .3, # y location of inset placement
             width = .3, # Inset width
             height = .62, # Inset height
+            scale = 1) # Inset scale (1 = none)
+# inset on the inset!
+BB <- cowplot::ggdraw() +
+  draw_plot(B) +
+  draw_plot(plot = bbb,
+            x = .3, # x location of inset placement
+            y = .5, # y location of inset placement
+            width = .2, # Inset width
+            height = .42, # Inset height
             scale = 1) # Inset scale (1 = none)
 
   
@@ -4521,7 +4552,7 @@ d <- sixfilter %>%
   labs(x = "", y = expression(E[2]:E[3]), shape = "Sample collection method:")
 
 # plot grid
-cowplot::plot_grid(a,B,C,d, ncol = 1, axis = "tb", 
+cowplot::plot_grid(a, B, C, d, ncol = 1, axis = "tb", 
                    rel_widths = c(1,1,1,1),
                    rel_heights = c(3,2,2,3))
 # save
@@ -4832,7 +4863,7 @@ d <- stage_samples_norm %>%
   scale_y_continuous(breaks = c(0.5, 1))+
   scale_x_continuous(breaks = c(0.5, 1)) +
   facet_wrap(~site, scales = "free_x", ncol = 1)+
-  theme(legend.position = "none", text = element_text(size=11),
+  theme(legend.position = "none", text = element_text(size=12),
         strip.background = element_blank(), strip.text = element_blank())+
   labs(y = "Normalized Stage", x = "DOC (mg/L)")
 
@@ -4847,9 +4878,9 @@ u <- stage_samples_norm %>%
   scale_y_continuous(breaks = c(0.5, 1))+
   scale_x_continuous(breaks = c(0.5, 1)) +
   facet_wrap(~site, scales = "free_x", ncol = 1)+
-  theme(legend.position = "none", text = element_text(size=11),
+  theme(legend.position = "none", text = element_text(size=12),
         strip.background = element_blank(), strip.text = element_blank())+
-  labs(y = "", x = "Abs. at 254nm")
+  labs(y = "", x = expression(SAC[254]) )
 
 # plot stage vs UV254
 s <- stage_samples_norm %>% 
@@ -4861,7 +4892,7 @@ s <- stage_samples_norm %>%
   scale_y_continuous(breaks = c(0.5, 1))+
   scale_x_continuous(breaks = c(0.5, 1)) +
   facet_wrap(~site, scales = "free_x", ncol = 1, strip.position = "right")+
-  theme(legend.position = "none", text = element_text(size=11),
+  theme(legend.position = "none", text = element_text(size=12),
         strip.background = element_blank(), strip.text = element_blank())+
   labs(y = "", x = expression(SUVA[254]))
 
@@ -4875,13 +4906,13 @@ e <- stage_samples_norm %>%
   scale_y_continuous(breaks = c(0.5, 1))+
   scale_x_continuous(breaks = c(0.5, 1)) +
   facet_wrap(~site, scales = "free_x", ncol = 1, strip.position = "right")+
-  theme(legend.position = "none", text = element_text(size=11))+
+  theme(legend.position = "none", text = element_text(size=12))+
   labs(y = "", x = expression(E[2]:E[3]))
 
 # group
 cowplot::plot_grid(d,u,s,e, nrow = 1, rel_widths = c(1,1,1,1.075))
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DOC-NOM.png",
        width = 6, height = 7.5, units = "in")
 
 ```
@@ -5835,17 +5866,22 @@ RF_plot_relimp_MSE <- randomForest::importance(RF_NPOC, type = 1) %>%
                                 "logging history (1980-2011)" = "logging_percent_FROMnineteeneightyTOtwentyeleven", 
                                 "QA-QC (random numbers)" = "QA_randomNumbers" ),
          MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
-         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>%  
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) 
+
+# make a plot
+RF_plot_relimp_MSE %>%  
   ggplot(aes(predictor, MSE_percent)) +
   coord_flip()+
-  geom_bar(stat = "identity", position = "dodge", color = "black", 
-           fill= forWater_colours2["DeepBlue"]) +
+  geom_bar(stat = "identity", position = "dodge", 
+           color = "black")+ #, 
+           #fill= forWater_colours2["DeepBlue"]) +
+  scale_fill_viridis()+
   theme_bw() +
-  labs(y = "variable importance (%)", x = "", size = 11, 
+  labs(y = "variable importance (%)", x = "", size = 12, 
        caption = "Variable importance for predicting DOC, measured by type 1 (mean square errors, \n ie., mean decrease in accuracy when variable was omitted).")
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-type1-relimp_MSE.png", 
-       width = 5, height = 4, units = "in")
+       width = 6, height = 5, units = "in")
 
 ## relative importance of features in predicting DOC
 # type 2 = mean decrease in node impurity
@@ -5878,12 +5914,12 @@ RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC, type = 2) %>%
   geom_bar(stat = "identity", aes(), position="dodge", color = "black", 
            fill = forWater_colours2["DeepBlue"]) +
   theme_bw() +
-  labs(y = "variable importance (%)", x = "", size = 11, 
+  labs(y = "variable importance (%)", x = "", size = 12, 
        caption = 
          "Variable importance for predicting DOC, measured by type 2 (residual sum of squares, \n ie., mean decrease in node impurity when variable was omitted).")
 # save this one too 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-type2-relimp_RSS.png",
-       width = 5, height = 4, units = "in")
+       width = 6, height = 5, units = "in")
 
 
 # randomForestExplainer to describe results of RF model

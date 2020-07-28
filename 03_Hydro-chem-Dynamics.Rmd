@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Hydrochemical dynamics: river, DOC & NOM event responses
+##	Leech monitoring sites and hydro-dynamics
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -18,11 +18,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Introduction
 
-__RQ.2.__ Are hydrological processes the main driver for DOC transport and variation in the LWSA or is another watershed characteristic more important for predicting DOC and NOM dynamics?
-
-__Objective 2.0:__   Search for a mechanistic relationship between river stage and DOC or NOM by relating DOC concentrations and NOM character with stage, particularly paying attention to differences between baseflow and storm events.
-__Objective 2.1:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
-
+\  
 
 Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
 
@@ -61,6 +57,10 @@ The RF algorithm learns from many independent Classification And Regression Tree
 \  
 
 The capability to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. Variable importance measure is a powerful part of Random Forests that evaluates the impact of each predictor variable on predicting a response variable; however, the variable importance measure shows bias towards correlated predictor variables [@Strobl2008]. 
+
+\  
+
+This chapter sets out to determine whether hydrological processes were the main driver for DOC and NOM dynamics and variation in the LWSA or if other watershed characteristics were more important for predicting DOC and NOM dynamics. The objective was to identify a mechanistic relationship between river stage and DOC or NOM by relating DOC concentrations and NOM character with stage (with attention to differences between baseflow and storm events). An additional objective was to assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
 
 \  
 
@@ -235,7 +235,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin
 
 \  
 
-##### Spatiotemporal patterns in DOC & NOM
+##### Seasonal patterns in DOC & NOM
 
 DOC concentrations followed similar sinusoidal trends over time at each site, with amplitude of variation decreasing from upstream to downstream sites (Figure \@ref(fig:DOCloess)).     
 
@@ -247,13 +247,33 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin
 
 \  
 
-Longer wet season periods relative to dry season and collection of event-based samples lead to the wet season being more heavily sampled (Table \@ref(tab:seasonalsamples)). Despite seasonal sample count differences, interesting seasonal differences emerged when sample results were grouped by season (Figure \@ref(fig:seasonalNOM)). 
+The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season water quality is most relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
 
-DOC concentrations decreased from headwaters to mouth (Tunnel) in both the wet and dry seasons, with the greatest variance at the head (Weeks) and mouth. 
+\  
 
-NOM molecular character was ......
+```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 109) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 170).*"
 
-aromaticity was judged with specific UV-absorbance at 254 nm (SAC~254~), SUVA~254~ (L mg^-1^ m^-1^), and the quotient E~2~:E~3~ (unitless); these indices indicated that Weeks (site 1) had much greater dry-season aromaticity compared to the other sites. Aside from Weeks, which may have had higher summer aromaticity due to drainage from Weeks Lake and surrounding wetlands, aromatic character of NOM decreased from head to mouth during the dry season.   
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png")
+```
+
+\  
+
+```{r wetDOCtable}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,0,1,0,0,2,2), 
+               col.names = c("Site", 
+                             "Sample type",
+                             "Sample count",
+                             "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", 
+                             "Min. (mg/L)", "Max. (mg/L)"),
+               caption = "*Wet-season dissolved organic carbon concentrations by sample collection method across six monitoring sites in the LWSA.*")
+
+```
+
+\  
+
+More samples were collected over the wet seasons than during the dry season due to event-based sampling and the relatively longer wet season period compared to dry (Table \@ref(tab:seasonalsamples)). Despite seasonal sample count differences, interesting spatial differences emerged when sample results were grouped by season (Figure \@ref(fig:seasonalNOM)). NOM molecular character was judged through a combination of specific UV-absorbance at 254 nm (SAC~254~, an indicator of chromophoric NOM) and SUVA~254~ (L mg^-1^ m^-1^) which indicates aromaticity relative to DOC concentrations. The quotient E~2~:E~3~ (unitless) is inversely proportional to aromaticity and/or molecular weight of aqueous NOM. 
 
 \  
 
@@ -278,33 +298,17 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_NOM-DOC_boxp
 
 \  
 
-
-
-
-\  
-
-
-
-#### River response in relation to DOC & NOM
-
-Figure \@ref(fig:stageRelations)
+The spectral indices indicated that, during the dry-season, Weeks (site 1) had much greater aromaticity compared to the other sites -- this may have been due to inputs from Weeks Lake and its surrounding wetlands. Aside from the highly aromatic character of NOM observed at Weeks in the dry months, E~2~:E~3~ suggests that aqueous NOM increased in aromaticity from upstream to downstream; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the trend was less pronounced and there was a larger difference between ChrisCrk and LeechHead in SAC~254~ than in E~2~:E~3~. SUVA~254~, as could be expected, displayed a combination of DOC and SAC~254~ trends. DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest variance at the head (Weeks) and mouth (Tunnel). 
 
 \  
 
-```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/StageNorm_DOC-abs-SUVA.png")
-```
+In the wet season, there was a spatial decrease in NOM aromaticity from headwaters to the Tunnel. In the headwater streams (sites 1 & 2), wet season NOM character was more aromatic at Weeks but had a broader range in spectral indices values at ChrisCrk. The River continuum concept predicts greater NOM diversity in headwaters than in higher order streams; these results only partially agree with that RCC concept and it appears that the wetland-dominated sub-basin (Weeks) had much more consistent NOM character than the ChrisCrk headwater stream. The longitudinal decrease in aromatic NOM character could have been an affect of dilution during the wet season. Of the main tributaries to the Leech River mainstem, CraggCrk had less aromatic character than WestLeech.   
 
 \  
 
-#### spatial and temporal variance and synchrony in stage 
+#### Rising stage and NOM dynamics
 
-Across the LWSA, fluctuations in river stage were temporally synchronized over the sixteen month study period. River responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
-
-\  
-Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the Tunnel (site 6) and smallest at the Weeks headwater creek (site 1) which drains Weeks Lake and surrounding wetlands. 
+Across the LWSA, fluctuations in river stage were temporally synchronized over the sixteen-month study period. Overall river responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
 
 \  
 
@@ -323,54 +327,15 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
 
 \  
 
-\  
-
-
+Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the Tunnel (site 6) and smallest at the Weeks headwater creek (site 1) which drains Weeks Lake and surrounding wetlands. 
 
 \  
-
-####  Wet season sampling results 
-
-The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season is more relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
-
-\  
-
-```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 109) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 170).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png")
-```
-
-\  
-
-```{r wetDOCtable}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,0,0,1,0,0,2,2), 
-               col.names = c("Site", 
-                             "Sample type",
-                             "Sample count",
-                             "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", 
-                             "Min. (mg/L)", "Max. (mg/L)"),
-               caption = "*Wet-season dissolved organic carbon concentrations by sample collection method across six monitoring sites in the LWSA.*")
-
-```
-
-#### Rising stage dynamics
-
-A trend in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018]. While not every river response pulse was full sampled across, the vertical racks collected samples at progressively higher stage in each site. Figure \@ref(fig:RisingLimbPlot) shows DOC concentrations in rising limb sample across rain events. Generally, DOC increased with increasing river stage; however, the trend was not linear in each event response.
-
-___Fix___
-To get a better idea of stream surge NOM dynamics, well sampled rising limb stream surges were examined... 
-* mid wet 2018
-Trip 4 // rain event 3 [for sites 1-5] 
-Trip 5 // rain event 4 for Tunnel
-
-* earlier 2019
-rain events 10 & 11 (maybe)
-
-
 
 ####   Spatiotemporal synchrony in local extrema: river stage and DOC
+
+A trend in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018].
+
+\  
 
 Streams responded harmoniously to precipitation across the LWSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC or spectral properties? Aqueous DOC was quantified from discrete river samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. However, each river sample was matched to stage and had a corresponding time-stamp, therefore temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?). Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
 
@@ -384,7 +349,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simu
 
 \  
 
-Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. Figure \@ref(fig:extremaplot) shows the extrema samples with stage at each site.
+Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships (Figure \@ref(fig:extremaplot)).
 
 \  
 
@@ -396,11 +361,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-
 
 \  
 
-
-
-__needs work:__ 
-* DOC changes in stormflow
-* range of DOC in each event: \@ref(tab:DOCResponse) 
+Changes in DOC during events varied from a little more than 1% DOC change to nearly 100% change during event response (Table \@ref(tab:DOCResponse)).
 
 \  
 
@@ -413,6 +374,70 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
 ```
 
 \
+
+#### River stage, DOC & NOM
+
+In general, DOC concentrations increases with increasing stage across the LWSA, thought the trends were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear (Figure \@ref(fig:stageRelations)).
+
+\  
+
+```{r stageRelations, fig.cap = fig_cap}
+fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DOC-NOM.png")
+```
+
+\  
+
+#### Random Forests for variable importance 
+
+RF With all seasons data: (Figure \@ref(fig:allRF). 
+
+```{r allRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:allRF} *All seasons data included in RF (LWSA monitoring sites)*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-type1-relimp_MSE.png")
+```
+
+\ 
+
+Dry season data only: (Figure \@ref(fig:dryRF). 
+
+```{r dryRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:dryRF} **"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC_type1-dry-relimp_MSE.png")
+```
+
+Wet season data only: (Figure \@ref(fig:wetRF). 
+
+```{r wetRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:wetRF} *Wet seasons data included in RF (LWSA monitoring sites)*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC_type1-wet-relimp_MSE.png")
+```
+
+RF With all seasons data: (Figure \@ref(fig:allRF). 
+
+```{r allRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:allRF} *All seasons data included in RF (LWSA monitoring sites)*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-type1-relimp_MSE.png")
+```
+
+\ 
+
+### Remove until you fix this
+
+___this section is a bit whacky -- needs attention to Fix___
+To get a better idea of stream surge NOM dynamics, well sampled rising limb stream surges were examined... 
+* mid wet 2018
+Trip 4 // rain event 3 [for sites 1-5] 
+Trip 5 // rain event 4 for Tunnel
+
+* earlier 2019
+rain events 10 & 11 (maybe)
+
 
 To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis (highlighted in Figure \@ref(fig:extremaplot) and expanded in Figure \@ref(fig:subsetExtremaplot)). The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.
 
@@ -462,37 +487,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-
 
 \  
 
-#### RF Results
+___end whacky section___
 
-___Note:___ these results are based only on the LWSA monitoring site data, I will update with the full synoptic sites watershed characteristics shortly. 
-
-Dry season data only: (Figure \@ref(fig:dryRF). 
-
-```{r dryRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:dryRF} **"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC_type1-dry-relimp_MSE.png")
-```
-
-Wet season data only: (Figure \@ref(fig:wetRF). 
-
-```{r wetRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetRF} *Wet seasons data included in RF (LWSA monitoring sites)*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC_type1-wet-relimp_MSE.png")
-```
-
-RF With all seasons data: (Figure \@ref(fig:allRF). 
-
-```{r allRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:allRF} *All seasons data included in RF (LWSA monitoring sites)*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/RF_NPOC-type1-relimp_MSE.png")
-```
-
-\ 
-
-
+\
 
 ### Discussion
 
