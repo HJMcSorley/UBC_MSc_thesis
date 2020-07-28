@@ -395,7 +395,7 @@ mean_rainplot <- LWSA_meanWx %>%
              colour = brewer.pal(8, "Dark2")[4],
              linetype = "dashed", size = 0.75) +
   annotate("text", label = "Project start", angle = 90, colour = brewer.pal(8, "Dark2")[8],
-           x = as_date("2018-10-23")-20, y = 100)
+           x = as_date("2018-10-23")-20, y = 90)
 
 # plot LWSA snow
 mean_snowplot <- LWSA_meanWx %>% 
@@ -442,7 +442,7 @@ mean_tempplot <- LWSA_meanWx %>%
 cowplot::plot_grid(mean_rainplot, mean_snowplot, mean_tempplot, ncol = 1, rel_heights = c(3,3,4), align = "v")
 
 # save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 5, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png", width = 6, height = 5, units = "in")
 ```
 
 table: mean Wx
@@ -5808,6 +5808,10 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
            geo_SookeGabbro_percent, geo_igneous_percent, 
            slope_med_degrees, slope_max_degrees,
            logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) 
+```
+
+## RF : variable selection
+```{r}
 # remove features that seems to disrupt the algorithm by overshadowing 
 
 # remove unnecessary variables for RF
@@ -5821,7 +5825,9 @@ RF_sixPhysiog <- sixfilter_physiographic %>%
 # view(cor(RF_sixPhysiog))
 
 
+# ---
 ## filter for cross-correlation which biases the importance ranking
+
 # subset for subsurface attributes (geological / parent material)
 RF_sixPhysiog_subsurface <- RF_sixPhysiog %>% 
   select(c(NPOC_ppm, antecedent_7day_rain, geo_metamorphic_percent, geo_metasedimentary_percent, geo_metaSedimentaryVolcanic_percent, geo_igneous_percent, latitude, longitude, QA_randomNumbers))
@@ -5829,10 +5835,11 @@ RF_sixPhysiog_subsurface <- RF_sixPhysiog %>%
 # view(cor(RF_sixPhysiog_subsurface))
  
  
+# --- 
 # subset for surface attributes (land-cover attributes)
 RF_sixPhysiog_select <- RF_sixPhysiog %>% 
   select(-c(HoldTime_days,
-           antecedent_7day_rain, # strongly correlated to stage 
+           #antecedent_7day_rain, # strongly correlated to stage (but not necessarily sampling stage?) 
             strahler_order, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent,  latitude, longitude))
 # check for correlations
 # view(cor(RF_sixPhysiog_surface))
@@ -5864,6 +5871,7 @@ RF_plot_relimp_MSE <- randomForest::importance(RF_NPOC, type = 1) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -5905,6 +5913,7 @@ RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC, type = 2) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -5953,7 +5962,7 @@ RF_sixPhysiog_wet <- sixfilter_physiographic %>%
   mutate(QA_randomNumbers = sample(200, size = nrow(.), replace = TRUE)) %>% 
   # subset 
   select(-c(HoldTime_days,
-           antecedent_7day_rain, # strongly correlated to stage 
+           #antecedent_7day_rain, # strongly correlated to stage 
             strahler_order, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent,  latitude, longitude))
 # check for correlations
 # view(cor(RF_sixPhysiog_wet))
@@ -5984,6 +5993,7 @@ RF_plot_relimp_MSE <- randomForest::importance(RF_NPOC_wet, type = 1) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -6024,6 +6034,7 @@ RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC_wet, type = 2) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -6063,7 +6074,7 @@ RF_sixPhysiog_dry <- sixfilter_physiographic %>%
   mutate(QA_randomNumbers = sample(200, size = nrow(.), replace = TRUE)) %>% 
   # subset 
   select(-c(HoldTime_days,
-           antecedent_7day_rain, # strongly correlated to stage 
+           #antecedent_7day_rain, # strongly correlated to stage 
             strahler_order, geo_WarkGneiss_percent, geo_ArgilliteMetagreywacke_percent, geo_ChertArgilliteVolcanic_percent, geo_Metagreywacke_percent, geo_MetchosinVolcanics_percent, geo_SookeGabbro_percent,  latitude, longitude))
 # check for correlations
 # view(cor(RF_sixPhysiog_wet))
@@ -6094,6 +6105,7 @@ RF_plot_relimp_MSE <- randomForest::importance(RF_NPOC_dry, type = 1) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -6134,6 +6146,7 @@ RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC_dry, type = 2) %>%
   mutate(predictor = fct_recode(predictor,
                                 "sampling stage" = "sampleStage_normalized",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "darainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "forest cover" = "forest_percent",
@@ -6160,7 +6173,7 @@ RF_plot_relimp_RSE <- randomForest::importance(RF_NPOC_dry, type = 2) %>%
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3A_RF_NPOC_type2-dry-relimp_RSS.png", 
-       width = 5, height = 4, units = "in")
+       width = 6, height = 5, units = "in")
 
 ```
 

@@ -72,6 +72,8 @@ In this project, a sampling strategy was developed to quantify the ranges of DOC
 
 To measure the ranges of dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character over space and time, river sampling was conducted from October 2018 to February 2020. Water samples were collected and analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The river sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech River watershed. Results of synoptic sampling analyses were used to elucidate spatial and temporal patterns in NOM and DOC.  
 
+\  
+
 ####    Sampling sites 
 
 Most of sampling sites were in the Leech WSA and a few key rivers in the Sooke WSA were also included (Figure \@ref(fig:sampleSitesMap)). Rithet Creek is the largest tributary to Sooke Reservoir and Judge Creek is the second largest. Deception (gulch) is a small tributary to Deception Reservoir and the Leech River Tunnel (currently deactivated) terminates at Deception gulch. Thus, Deception Reservoir is a likely balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. 
@@ -268,8 +270,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 Coastal BC climate is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for Vertical Racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for Rack sampler collection. The R package _Rainmaker_ (github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to Rack sampling, which helped to distinguish between seasons. Snow was qualitatively considered when defining seasons, as it did not contribute to event definitions but did contribute to stream levels at each monitoring site. 
 
 \  
-
-\    
 
 ### Results
 

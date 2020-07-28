@@ -23,6 +23,8 @@ Aqueous natural organic matter (NOM) can lead to issues of objectionable taste, 
 \  
 
 In addition to operational impediments, NOM is partly responsible for unintended chemical contaminants in treated drinking water. When source water is chlorinated, chemical reactions with NOM can form a variety of chlorinated organic compounds which are broadly classified as disinfection by-products (DBPs) [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet5310]. A number of chlorinated carbonaceous DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their possible or known health affects (i.e. possible genotoxicity or carcinogenicity) [@Richardson2007; @BC2019; @HealthCanada2019].
+
+\  
  
 ####   Watershed processes and water quality
 	
@@ -64,7 +66,7 @@ The provincial Drinking Water Protection Act and Drinking Water Protection Regul
 
 \  
 
-In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased an additional 96.28 km^2^ (9,628 hectares) of land in 2007 and 2010. This area includes about 92% of the Leech River watershed (~96 km^2^) which was designated as the Leech Water Supply Area (LWSA) for future supplemental source water. In the future (possibly by 2050), inter-basin transfer will move water from the LWSA through a diversion tunnel to supplement Sooke Reservoir (Figure \@ref(fig:GVWSAoverview)). Approximately 92% of the Leech River watershed above the point of diversion (Leech Tunnel) is protected as WSA . 
+In anticipation of future water demands and uncertainty related to rainfall and climate change, the Capital Regional District (CRD) purchased an additional 96.28 km^2^ (9,628 hectares) of land in 2007 and 2010. This area includes about 92% of the Leech River watershed (~96 km^2^) which was designated as the Leech Water Supply Area (LWSA) for future supplemental source water. In the future (possibly by 2050), inter-basin transfer will move water from the LWSA through a diversion tunnel to supplement Sooke Reservoir (Figure \@ref(fig:GVWSAoverview)). Approximately 92% of the Leech River watershed above the point of diversion (Leech Tunnel) is protected as WSA. 
 
 \  
 
@@ -89,6 +91,8 @@ The LWSA was privately managed forest land which was extensively harvested over 
 \  
 
 Establishing an understanding of baseline water quality dynamics and hydrologic forces in the LWSA will help to inform forest management strategies and evaluate the effects of fire fuel management on water supply. Furthermore, developing relationships between event-based water quality dynamics and establishing hydrochemical ranges across the LWSA will help to anticipate possible treatment challenges that may accompany future inter-basin transfer from the LWSA to the Sooke WSA.
+
+\  
 
 ###   Research questions and objectives
 
