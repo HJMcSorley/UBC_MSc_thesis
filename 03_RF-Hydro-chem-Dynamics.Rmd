@@ -394,43 +394,36 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DO
 
 #### Random Forests for variable importance 
 
-Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7 day temperatures and antecedent 7 day rain, river stage and sampling season as possible predictor variables for DOC concentrations. The variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evauated for the entire study period (Figure \@ref(fig:allRF)), dry season (Figure \@ref(fig:dryRF)) and wet season (Figure \@ref(fig:wetRF)). 
+
+Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7-day temperatures and antecedent 30-day rain, river stage and sampling season as possible predictor variables for DOC concentrations. The variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evaluated for the entire study period with all variables included (Figure \@ref(fig:allRF)), and for each of three variable groups: conditions (e.g. weather), basin surface characteristics (e.g. landcover), and basin subsurface cahracteristics (i.e. parent material). 
 
 \  
 
 ```{r allRF, fig.cap = fig_cap}
 fig_cap = "\\label{fig:allRF} *Variable importance for predicting DOC over the full study period, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted).*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_NPOC-type1-relimp_MSE.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all.png")
 ```
 
 \ 
 
-When the entire sixteen month study period was evaluated, the greatest relative importance in predicting DOC concentration was determined to be antecedent 7-day air temperature and antecedent 7-day rain, followed by land cover: wetland, open-water and forest percent cover. Sampling stage was almost as important as metamorphic parent material (i.e. Wark-Gneiss), which was slightly more important than median basin slope and drainage area (Figure \@ref(fig:allRF)). Logging history (area clear-cut between 1980 and 2011), was found to be a relatively poor predictor for DOC, along with other parent materials (e.g. meta-sedimentary, igneous, and combinations thereof).   
+With all variables included, the greatest relative importance in predicting DOC concentration was determined to be
+....... ___updates to accuracy___
+antecedent 7-day air temperature and antecedent 7-day rain, followed by land cover: wetland, open-water and forest percent cover. Sampling stage was almost as important as metamorphic parent material (i.e. Wark-Gneiss), which was slightly more important than median basin slope and drainage area . Logging history (area clear-cut between 1980 and 2011), was found to be a relatively poor predictor for DOC, along with other parent materials (e.g. meta-sedimentary, igneous, and combinations thereof).   
+...
+
+Variables were grouped and each group was evaluated independently (Figure \@ref(fig:groupedRF))... which agreed//?
 
 \  
 
-```{r wetRF, fig.cap = fig_cap}
+```{r groupedRF, fig.cap = fig_cap}
 fig_cap = "\\label{fig:wetRF} *Variable importance for predicting DOC during wet season (only), measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted)*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_NPOC_type1-wet-relimp_MSE.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups.png")
 ```
 
 \  
 
-Oddly, in the wet season antecedent 7-day rain was not found to be an important predictor for DOC but antecedent 7-day air temperature was still the most important predictor variable, followed by forest, open-water and wetland cover before metamorphic parent material again (Figure \@ref(fig:wetRF)). Maybe in the wet season, antecedent rain matters less than year-round because the watershed is near saturation and though rain generates stream response the variable NOM source areas are already highly connected to the streams. 
-
-\  
-
-```{r dryRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:dryRF} *Variable importance for predicting DOC during dry season (only), measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_NPOC_type1-dry-relimp_MSE.png")
-```
-
-\  
-
-Looking only at the dry season, antecedent 7-day air temperature was once again the primary predictor for DOC concentrations, followed by land-cover (open-water, wetland cover) and basin slope was found to be more important than forest cover for dry season DOC.  
 
 \  
 
