@@ -395,14 +395,16 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DO
 #### Random Forests for variable importance 
 
 
-Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7-day temperatures and antecedent 30-day rain, river stage and sampling season as possible predictor variables for DOC concentrations. The variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evaluated for the entire study period with all variables included (Figure \@ref(fig:allRF)), and for each of three variable groups: conditions (e.g. weather), basin surface characteristics (e.g. landcover), and basin subsurface cahracteristics (i.e. parent material). 
+Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7-day temperatures and antecedent 30-day rain, river stage and sampling season as possible predictor variables for DOC concentrations. The variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evaluated for the entire study period with all variables included (Figure \@ref(fig:DOCallRF) & Figure \@ref(fig:E2E3allRF)). Variables were subset into three variable groups: conditions (e.g. weather) which included dynamic numeric measurements; basin surface characteristics (e.g. land-cover) which included static watershed characteristics unique to each sampling basin; and parent material which included static subsurface characteristics of each sampling basin. Surface and subsurface characteristics were separated because... 
+
+##### Variable importance in predicting DOC 
 
 \  
 
-```{r allRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:allRF} *Variable importance for predicting DOC over the full study period, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted).*"
+```{r DOCallRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCallRF} *Variable importance for predicting DOC over the full study period, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted).*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_DOC.png")
 ```
 
 \ 
@@ -412,22 +414,50 @@ With all variables included, the greatest relative importance in predicting DOC 
 antecedent 7-day air temperature and antecedent 7-day rain, followed by land cover: wetland, open-water and forest percent cover. Sampling stage was almost as important as metamorphic parent material (i.e. Wark-Gneiss), which was slightly more important than median basin slope and drainage area . Logging history (area clear-cut between 1980 and 2011), was found to be a relatively poor predictor for DOC, along with other parent materials (e.g. meta-sedimentary, igneous, and combinations thereof).   
 ...
 
-Variables were grouped and each group was evaluated independently (Figure \@ref(fig:groupedRF))... which agreed//?
+Variables were grouped and each group was evaluated independently (Figure \@ref(fig:DOCgroupedRF))... which agreed//?
 
 \  
 
-```{r groupedRF, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetRF} *Variable importance for predicting DOC during wet season (only), measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted)*"
+```{r DOCgroupedRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCgroupedRF} *Variable importance for predicting DOC concentrations based on grouped variables, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted)*"
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_DOC.png")
+```
+
+\  
+
+##### Variable importance in predicting E~2~:E~3~ 
+
+\  
+
+(Figure \@ref(fig:E2E3allRF))
+
+\  
+
+```{r E2E3allRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:E2E3allRF} *Variable importance for predicting spectral quotient E~2~:E~3~ including all variables, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_E2E3.png")
+```
+
+\ 
+
+  
+...
+
+Variables were grouped and each group was evaluated independently (Figure \@ref(fig:E2E3groupedRF))... which agreed//?
+
+\  
+
+```{r E2E3groupedRF, fig.cap = fig_cap}
+fig_cap = "\\label{fig:E2E3groupedRF} *Variable importance for predicting spectral quotient E~2~:E~3~ based on grouped variables, with importance measured by type 1: mean square errors (i.e. mean decrease in accuracy when variable was omitted)*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_E2E3.png")
 ```
 
 \  
 
 
-\  
-
-___Do this for SAC~254~ and E~2~:E~3~ also___
 
 ### Remove until you fix this
 

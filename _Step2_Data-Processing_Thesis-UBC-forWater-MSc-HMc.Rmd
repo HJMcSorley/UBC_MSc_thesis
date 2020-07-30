@@ -4813,7 +4813,7 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
   #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(RF_subSurfaceCharacteristics_NPOC))
+# view(cor(AllVariables_NPOC))
 
 
 ## Run RF
