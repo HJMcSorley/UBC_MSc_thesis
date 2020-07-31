@@ -305,6 +305,7 @@ a <- precip_data %>%
             temp_sd = sd(Temp, na.rm = TRUE),
             annual_min_temp = min(TMin, na.rm = TRUE),
             annual_max_temp = max(TMax, na.rm = TRUE)) %>% 
+  ungroup() %>% 
   dplyr::rename("year" = Year,
                 "station name" = StationName, 
                 "annual rain. (mm)" = total_rain_mm,
@@ -4749,7 +4750,10 @@ antecedent_Wx <- LWSA_meanWx %>%
   arrange(Date) %>% 
   # add a 7 day antecedent rain for each day
   mutate(antecedent_30day_rain = as.double(zoo::rollsum(daily_rain, k = 30, align = "right", fill = NA)),
-         antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA)))
+         antecedent_7day_rain = as.double(zoo::rollsum(daily_rain, k = 7, align = "right", fill = NA)),
+         antecedent_30day_temp = as.double(zoo::rollmean(daily_mean_T, k = 30, align = "right", fill = NA)),
+         antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA))
+         )
   # note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
 
 # join sample results with normalized stage and antecedent 7 day rain
@@ -4795,16 +4799,18 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
   # change rain season to numbers {1 = wet, 0 = dry}
   mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(NPOC_ppm, # predict DOC
-           event_ID,               
+           #event_ID,               
            sampleStage_normalized, 
-           antecedent_30day_rain,   
-           antecedent_7day_temp,  
+           antecedent_30day_rain, # relatively more important than 7-day 
+           #antecedent_7day_rain,
+           antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
+           # antecedent_30day_temp,
            HoldTime_days,
            geo_metamorphic_percent,
-           geo_metasedimentary_percent, 
-           geo_metaSedimentaryVolcanic_percent, 
-           geo_igneous_percent,
-           rain_season, 
+           #geo_metasedimentary_percent, 
+           #geo_metaSedimentaryVolcanic_percent, 
+           #geo_igneous_percent,
+           #rain_season, 
            drainage_area_km2, 
            slope_med_degrees,
            forest_percent, # correlated with wetland and open water (all land-cover)
@@ -4841,6 +4847,8 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
                                 #"QA-QC (random numbers)" = "QA_RandNum",
                                 "rain event number" = "event_ID",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day air temp" = "antecedent_30day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
                                 "Hold-time days" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
@@ -4862,8 +4870,10 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
   mutate(variable_group = case_when(
     # conditions:
     predictor == "rain event number" | 
-       predictor == "antecedent 7-day air temp" | 
-       predictor == "antecedent 30-day rain" | 
+       predictor == "antecedent 7-day air temp" |
+       predictor == "antecedent 30-day air temp" |
+       predictor == "antecedent 7-day rain" |
+      predictor == "antecedent 30-day rain" | 
        predictor == "Hold-time days" | 
        predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
@@ -4918,16 +4928,18 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
   # change rain season to numbers {1 = wet, 0 = dry}
   mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(E2E3, # predict E2E3
-           event_ID,               
+           #event_ID,               
            sampleStage_normalized, 
-           antecedent_30day_rain,   
-           antecedent_7day_temp,  
+           antecedent_30day_rain, # relatively more important than 7-day 
+           #antecedent_7day_rain,
+           antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
+           # antecedent_30day_temp,
            HoldTime_days,
            geo_metamorphic_percent,
-           geo_metasedimentary_percent, 
-           geo_metaSedimentaryVolcanic_percent, 
-           geo_igneous_percent,
-           rain_season, 
+           #geo_metasedimentary_percent, 
+           #geo_metaSedimentaryVolcanic_percent, 
+           #geo_igneous_percent,
+           #rain_season, 
            drainage_area_km2, 
            slope_med_degrees,
            forest_percent, # correlated with wetland and open water (all land-cover)
@@ -4936,7 +4948,7 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
   #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(RF_subSurfaceCharacteristics_E2E3))
+# view(cor(AllVariables_E2E3))
 
 
 ## Run RF
@@ -4964,6 +4976,8 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
                                 #"QA-QC (random numbers)" = "QA_RandNum",
                                 "rain event number" = "event_ID",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day air temp" = "antecedent_30day_temp",
+                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
                                 "Hold-time days" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
@@ -4985,8 +4999,10 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
   mutate(variable_group = case_when(
     # conditions:
     predictor == "rain event number" | 
-       predictor == "antecedent 7-day air temp" | 
-       predictor == "antecedent 30-day rain" | 
+       predictor == "antecedent 7-day air temp" |
+       predictor == "antecedent 30-day air temp" |
+       predictor == "antecedent 7-day rain" |
+      predictor == "antecedent 30-day rain" | 
        predictor == "Hold-time days" | 
        predictor == "sampling stage" ~ "Conditions",
     # surface characteristics

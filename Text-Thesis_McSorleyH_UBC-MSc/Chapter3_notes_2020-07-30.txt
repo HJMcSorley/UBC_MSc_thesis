@@ -1,0 +1,21 @@
+RF
+
+although sampling stage was directly related to rain conditions, in that more rain generated greater stream rise, rain was relatively more important as a predictor for DOC concentration than sampling stage was... this indicates that it may not have been the stage at which samples were collected, but rather at the antecedent wetness conditions (if you consider rain a proxy for wetness, which seems reasonable). 
+
+RF can sometimes find biased VIM if predictor variables are cross-correlated, and rain and stage were correlated (0.61 Pearson correlation coefficient), so RF VIM was run with only sampling stage, and with only antecedent 30-day rain and in both scenarios, each variable ranked at the same relative importance for predicting DOC.
+
+different periods of time were considered for antecedent conditions, and 30-day antecedent rain was a more important predictor for DOC than 7 day rain
+
+antecedent 30-day rain MSE % = 12.87  // without stage: 13.5234 % MSE 
+antecedent 7-day rain MSE % = 11.66  // without stage: 12.0837 % MSE
+
+*these differences aren't huge but the change switched relative importance between rain and hold-time. 
+
+this indicates that greater saturation, which may be indicative of the connectivity between streams and the terrestrial environment, was more important than precipitation inputs in general.
+
+similarly for temp:
+antecedent 7-day air temp 14.515475 % MSE
+antecedent 30-day air temp 14.477188 % MSE
+
+using the same parameters tuned for DOC prediction for VIM E2E3 -- temperature was not important but rain was. 
+ 
