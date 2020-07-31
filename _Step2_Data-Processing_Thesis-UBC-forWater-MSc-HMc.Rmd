@@ -4730,7 +4730,7 @@ synch_PeaksSumm_stage <- tibble(
 
 # Random Forest
 
-O## RF data
+## RF data
 
 * add antecedent conditions data
 * combine analytical results with stage and weather
@@ -4850,7 +4850,7 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
                                 "antecedent 30-day air temp" = "antecedent_30day_temp",
                                 "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
+                                "Sample Hold-time" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
                                 "rain season" = "rain_season",
                                 "darainage area" = "drainage_area_km2",
@@ -4874,7 +4874,7 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
        predictor == "antecedent 30-day air temp" |
        predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-       predictor == "Hold-time days" | 
+       predictor == "Sample Hold-time" | 
        predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "rain season" | 
@@ -4898,7 +4898,7 @@ fills <- c("Conditions" = forWater_colours2[["SkyBlue"]],
            "Surface characteristics" = forWater_colours2[["Green"]])
 
 # VIM plot
-RFplot_all <- RF_DOC_allChrc_RelImp1_MSE %>% 
+RFplot_all_DOC <- RF_DOC_allChrc_RelImp1_MSE %>% 
   ggplot(aes(x = predictor, y = MSE_percent)) +
   coord_flip()+
   geom_bar(aes(fill = variable_group), alpha = 0.8,
@@ -4910,7 +4910,7 @@ RFplot_all <- RF_DOC_allChrc_RelImp1_MSE %>%
                                "Parent material")) +
   theme_bw() +
   theme(legend.position = "top", text = element_text(size = 11))+
-  labs(y = "variable importance in predicting DOC (%)", x = "", fill = "Predictor variable group") +
+  labs(y = "Relative importance in predicting DOC (%)", x = "", fill = "Predictor variable group") +
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # save it
@@ -4919,7 +4919,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_DOC.png",
 
 ```
 
-##### E2E3 all vars
+
+#### RF : E2E3 all vars
 ```{r}
 
 # select surface & subsurface predictor variables
@@ -4931,15 +4932,15 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
            #event_ID,               
            sampleStage_normalized, 
            antecedent_30day_rain, # relatively more important than 7-day 
-           #antecedent_7day_rain,
-           antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
+           # antecedent_7day_rain,
+           antecedent_7day_temp, # relatively more important than 30-day
            # antecedent_30day_temp,
            HoldTime_days,
            geo_metamorphic_percent,
            #geo_metasedimentary_percent, 
            #geo_metaSedimentaryVolcanic_percent, 
            #geo_igneous_percent,
-           #rain_season, 
+           # rain_season, # correlated with temp
            drainage_area_km2, 
            slope_med_degrees,
            forest_percent, # correlated with wetland and open water (all land-cover)
@@ -4979,7 +4980,7 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
                                 "antecedent 30-day air temp" = "antecedent_30day_temp",
                                 "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
+                                "Sample Hold-time" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
                                 "rain season" = "rain_season",
                                 "darainage area" = "drainage_area_km2",
@@ -5003,7 +5004,7 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
        predictor == "antecedent 30-day air temp" |
        predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-       predictor == "Hold-time days" | 
+       predictor == "Sample Hold-time" | 
        predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "rain season" | 
@@ -5039,12 +5040,31 @@ RFplot_all_E2E3 <- RF_E2E3_allChrc_RelImp1_MSE %>%
                                "Parent material")) +
   theme_bw() +
   theme(legend.position = "top", text = element_text(size = 11))+
-  labs(y = "variable importance in predicting E2:E3 (%)", x = "", fill = "Predictor variable group") +
+  labs(y = expression('Relative importance in predicting'~E[2]:E[3]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_E2E3.png", 
        width = 6, height = 6, units = "in")
+
+```
+
+##### RF summary plot
+```{r}
+
+# stack DOC and E2E3 plots
+cowplot::plot_grid(RFplot_all_DOC, (
+  RFplot_all_E2E3 + 
+    theme(legend.position = "none") ),
+  ncol = 1, rel_heights = c(2, 1.4) )
+ 
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot-summary_DOC-E2E3.png", 
+       width = 6, height = 7, units = "in")
+
+```
 
 ```
 RF can generate biased VIM (variable importance measure) when different types of predictant data are used (e.g. numeric and categorical). 
@@ -5982,11 +6002,10 @@ RF_DOC_chrc_SubSurf_RelImp1_MSE_DRY <- randomForest::importance(RF_DOC_chrc_SubS
 ```
 
 
-### RF key plots
-```{r}
+# maybe don't need all these:
 # DOC ---
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all.png":
-RFplot_all
+RFplot_all_DOC
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions.png":
 a <- RFplot_condit +
@@ -6008,17 +6027,13 @@ RFplot_summary <- cowplot::plot_grid(a, b, c,
                    label_size = 11, hjust = 0, label_fontface = "plain")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_DOC.png", 
-       width = 6, height = 5, units = "in")
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_DOC.png", width = 6, height = 5, units = "in")
 
 # add with all?
-bigboi <- cowplot::plot_grid(RFplot_all, RFplot_summary, ncol = 2)
+bigboi <- cowplot::plot_grid(RFplot_all_DOC, RFplot_summary, ncol = 2)
 
 # save for landscape page layout
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_summary-by_variable-groups_DOC.png", 
-       width = 9, height = 6, units = "in")
-
-
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_summary-by_variable-groups_DOC.png", width = 9, height = 6, units = "in")
 
 # --- E2E3
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all.png":
@@ -6044,15 +6059,13 @@ RFplot_summary_E2E3 <- cowplot::plot_grid(a, b, c,
                    label_size = 11, hjust = 0, label_fontface = "plain")
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_E2E3.png", 
-       width = 6, height = 5, units = "in")
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_E2E3.png", width = 6, height = 5, units = "in")
 
 # add with all?
 bigboi <- cowplot::plot_grid(RFplot_all_E2E3, RFplot_summary_E2E3, ncol = 2)
 
 # save for landscape page layout
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_summary-by_variable-groups_E2E3.png", 
-       width = 9, height = 6, units = "in")
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_summary-by_variable-groups_E2E3.png", width = 9, height = 6, units = "in")
 
 ```
 

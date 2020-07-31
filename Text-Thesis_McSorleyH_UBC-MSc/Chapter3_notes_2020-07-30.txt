@@ -18,4 +18,17 @@ antecedent 7-day air temp 14.515475 % MSE
 antecedent 30-day air temp 14.477188 % MSE
 
 using the same parameters tuned for DOC prediction for VIM E2E3 -- temperature was not important but rain was. 
+Like DOC predictions, 30-day antecedent rain was relatively more important predictor variable for E~2~:E~3~ than 7-day rain (15.3% vs. 12.8%). For E~2~:E~3~, 7-day antecedent air temperatures were more important than 30-day air temperatures (8.5% vs. 6.5%). Relatively short term temperatures and relatively long term rain were most important for predicting DOC concentrations. 
+Relatively long term rain was most important for predicitng E~2~:E~3~, and sample hold-time was also an important predictor in NOM character. Logging history (percent of basin harvested from 1980-2011) and basin parent material was more important in predicting NOM character than concentration. 
+
+E2E3
+
+antecedent 30-day rain MSE = 16.440 %
+antecedent 30-day air temp MSE = 6.525875 % 
+
+antecedent 30-day rain MSE = 15.330895 %
+antecedent 7-day air temp MSE = 8.486056 % 
+
+antecedent 7-day rain MSE = 12.786768 % 
+antecedent 7-day air temp MSE = 9.834241 %
  
