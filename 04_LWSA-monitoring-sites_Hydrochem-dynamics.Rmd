@@ -169,46 +169,9 @@ included:
 
 ### Results
 
-####   Rain events and sampling
-
-LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 18 major rain events which corresponded to sample collection by the Vertical Racks (i.e. events large enough to trigger substantial river responses). The 18 Rack sampling rain events were defined by precipitation accumulating to 50 mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
-
 \  
 
-```{r EventsTable3}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv") %>%  
-  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2,2), 
-               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*",
-               col.names = c("Major event no.", "Start Date", "Duration (days)", "Rainfall (mm)", "Intensity (mm/hr)", "Samples collected", "mean DOC (mg/L)", "mean SAC~254~", "mean SUVA~254~", "mean E~2~:E~3~"))
-```
-
-\  
-
-The study period was separated into "wet" and "dry" seasons based on detectable river response at each monitoring site, which was primarily based on the presence or absence of major rain events and included a period of snowmelt late in the 2018/2019 wet season (Figure \@ref(fig:ch3megaplot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, where the period from late January (event 8, Table \@ref(tab:EventsTable3)) to mid-May had streamflow changes governed by snowmelt rather than rainfall. The 2019 dry sampling season spanned from mid-May to late-September, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable3)) and extended to the end of the field study period (Feb 20, 2020). Stream levels at each monitoring site were matched to the stage that Vertical Rack samples were collected to obtain date-time of sample collection, and the date-time of each Grab sample collection was matched to recorded stage (Figure \@ref(fig:ch3megaplot)). 
-
-\  
- 
-```{r ch3megaplot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:ch3megaplot} *Rain events, stream response, sample collection and seasons across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events, points indicate the timing and stage of river samples collected, and pink vertical lines delineate seasons.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png")
-```
-
-\  
-
-Eight of the 18 rain events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified (Table \@ref(tab:MinMaxEvents)).   
-
-\  
-
-```{r MinMaxEvents}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %>% 
-  knitr::kable(digits = c(0,1,1,1,1,2,1),
-               caption = "*Minimum and maximum rain event values *")
-```
-
-\  
-
-An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+...
 
 \  
 

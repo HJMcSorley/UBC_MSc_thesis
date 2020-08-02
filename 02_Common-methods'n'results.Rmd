@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Common Methods & Research Area
+##	Common Methods 
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -15,17 +15,19 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
-___Get into details about study design, location and methods used.___
+### Introduction
+
+Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA).Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech WSA. 
 
 \  
 
-Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA).Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech WSA. Results of synoptic sampling analyses were used to elucidate spatial and temporal patterns in NOM and DOC.
+This chapter details methods used and presents foundational results that informed all data analysis, interpretation and evaluation of results discussed in subsequent chapters.
 
 \  
 
 ###    Sampling sites 
 
-Most of sampling sites were in the Leech WSA and a few key rivers in the Sooke WSA were also included to facilitate preliminary comparison between the two WSAs (Figure \@ref(fig:sampleSitesMap), Table \@ref(tab:siteCharacteristics)). Rithet Creek is the largest tributary (11.12 km^2 basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2 basin). Deception (gulch) is a small tributary (4.02 km^2 basin) to Deception Reservoir and the Leech River Tunnel (currently deactivated) terminates at Deception gulch. Thus, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. 
+Most of sampling sites were in the Leech WSA and a few key streams in the Sooke WSA were included to facilitate preliminary comparison between the two WSAs for reference to future diversion scenarios (Figure \@ref(fig:sampleSitesMap), Table \@ref(tab:siteCharacteristics)). Rithet Creek is the largest tributary (11.12 km^2 basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2 basin). Deception (gulch) is a small tributary (4.02 km^2 basin) to Deception Reservoir and the Leech River Tunnel (currently deactivated) terminates at Deception gulch. Thus, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. 
 
 \  
 
@@ -59,21 +61,21 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_all_sit
 
 ####    Synoptic sampling 
 
-Synoptic sampling involved collecting grab samples of river water at as many sites as possible over a relatively short time period (e.g. 1 day). River water was collected in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (an indicator of NOM character). Synoptic samples were collected every two to four weeks from October 2018 to February 2020. 
+Synoptic sampling was generally compelted over a one- to two-day period. Surface water was collected manually in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance. Synoptic samples were collected every two to four weeks from October 2018 to February 2020. 
 
 \  
 
-Samples were collected (via wading) from within 2 meters of the same location at each sampling site, at the safest proximity to channel center, from approximately 10 cm below water surface. All samples were refrigerated while they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of a dozen samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration and acidification. Samples for NOM spectroscopy were not acidified, they were confirmed to have zero turbidity and measured unfiltered. 
+Samples were collected (via wading) from within 2 meters of the same location at each sampling site, at the safest proximity to channel center, from approximately 10 cm below water surface. All samples were refrigerated while they were held between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of a dozen samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration and acidification. Samples for NOM spectroscopy were not acidified, they were confirmed to have zero turbidity (measured as FTU with spectrophotometer) and measured unfiltered. 
 
 \  
 
 ####    Monitoring & sampling stations 
 
-Six of the sampling sites in the LWSA were selected for more intensive monitoring (numbered sites in Figure \@ref(fig:sampleSitesMap)). These sites represent the drainage area upstream of the Leech River Tunnel and five sub-basins nested within the Leech Tunnel catchment. Site 6 included the drainage area for the entire LWSA and was located at the Leech River Tunnel. The five sub-basin sites represented important portions of the Leech River system: two headwater streams, Weeks and Chris Creek (sites 1 & 2) and the head of Leech River below their confluence (site 3); and two major tributaries that feed the Leech River, Cragg Creek and West Leech (sites 4 & 5). Monitoring at these sites included Vertical Racks to measure river stage, air and water temperatures, and collect surface water samples with passive siphon samplers. 
+Six of the sampling sites in the LWSA were selected for more intensive monitoring (numbered sites in Figure \@ref(fig:sampleSitesMap)). These sites represent the drainage area upstream of the Leech River Tunnel and five sub-basins nested within the Leech Tunnel catchment. Site 6 included the drainage area for the entire LWSA and was located at the Leech River Tunnel. The five sub-basin sites represented important portions of the Leech River system: two headwater streams, Weeks and Chris Creek (sites 1 & 2) and the head of Leech River below their confluence (site 3); and two major tributaries that feed the Leech River, Cragg Creek and West Leech (sites 4 & 5). Monitoring at these sites included Vertical Racks to measure river stage, air and water temperatures, and collect surface water samples with passive siphon samplers. Monitoring sites were selected based on year-round access, suitability for installing Vertical Rack structures and safety considerations for sample and data collection.  
 
 \  
 
-Streamflow events were primarily generated by rain in the Leech WSA, with the watershed responding rapidly to inputs. Synoptic sampling was conducted every two to four weeks, but relying only scheduled synoptic sampling could miss events. Furthermore, the logistics of Grab sampling through events at multiple sites would have been challenging for one person to accomplish, could have been dangerous due to high flows, and would have required site access beyond safe working hours (i.e. not logistically feasible). however, it was important to sample across the hydrograph to capture sample-sets that represented variation in DOC and NOM that occurred during changing flow conditions (i.e. within storm variability). Based on cost, logistical considerations and curiosity, siphon sampling strategies were employed at the monitoring sites across the LWSA. 
+Streamflow events were primarily generated by rain in the Leech WSA, with the watershed responding rapidly to inputs. Synoptic sampling was conducted every two to four weeks, but relying only scheduled synoptic sampling could miss interesting NOM changes during the rising limb of the hydrograph. Furthermore, the logistics of Grab sampling through events at multiple sites would have been challenging for one person to accomplish, could have been dangerous due to high flows, and would have required site access beyond safe working hours (i.e. not logistically feasible). However, it was important to sample across the hydrograph to capture sample-sets that represented variation in DOC and NOM that occurred during changing flow conditions (i.e. within storm variability). Based on cost, logistical considerations and curiosity, siphon sampling strategies were employed at the monitoring sites across the LWSA. 
 
 \  
 
@@ -243,3 +245,133 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 ```
 
 \  
+
+
+### Foundational Results
+
+Presented here are the results of Hold-time experiments for Vertical Rack sampling method development as well as seasonal delineation.
+
+\  
+
+#### Vertical Rack sampling quality control
+
+Hold-time experiments were conducted at the Tunnel site to assess stability of river water samples held in siphon bottles on the vertical rack. Three sets of samples were used in hold-time experiments, each set included samples held on the rack for different periods and the timing and air temperatures for each set were assessed (Figure \@ref(fig:HoldTimeAirPlot)).
+
+\  
+
+```{r HoldTimeAirPlot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoldTimeAirPlot}*Plot of air temperature during vertical rack hold-time experiments. Red horizontal lines indicate the 0-7°C range of a typical laboratory refrigerator and dashed vertical lines separate the three sets of hold-time samples from collection of grab samples to retrieval of held samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png")
+```
+
+\  
+
+Each hold-time set included ten replicate samples, each collected at the same time in the same way from the same location. For each hold-time set, five samples were returned to the lab for immediate quantification of DOC and measurement of UV-Vis absorbance ("fresh" samples) and five were placed on the vertical rack, capped with siphon lids to simulate rack samples, and collected at a later date for analysis ("held" samples). All samples were analyzed to quantify DOC and characterized NOM properties (Figure \@ref(fig:HoldTimeBoxPlot)), and the fresh and held samples of hold-time set were compared using two-sided paired Wilcoxon signed rank tests (a.k.a 'Mann-Whitney' test, non-parametric paired difference test that does not assume normally distributed data). For a wider margin of error, a 90% confidence level (rather than 95% or 99%) was used to evaluate the comparisons between fresh and held samples. Results of hold-time comparisons considered the timing of sample collection, the number of days the rack samples were held, the mean air temperature over that period, and the percent change in analytical results (Table \@ref(tab:HoldTimeTtests)).
+
+\  
+
+```{r HoldTimeBoxPlot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoldTimeBoxPlot}*Sample DOC concentrations and UV absorbance at 254nm contrasting  hold-time samples from collection of grab samples to retrieval of held samples.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
+```
+
+\ 
+
+```{r HoldTimeTtests}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
+  knitr::kable(caption = "*Results comparing three vertical-rack hold-time sets*") 
+```
+_Note:_ one star (*) indicates significant difference at 90% confidence (p < 0.1), 
+two stars (**) indicates significant difference at 95% confidence (p < 0.05)
+
+\  
+
+There was a significant change in DOC concentration (at 90% confidence, p-value = 0.063) for hold-time set-A, where mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples. While there was no change in UV absorbance (i.e. SAC~254~ and E~2~:E~3~) for samples from hold-time set-A, the change in DOC generated a significant difference in SUVA~254~. Samples collected for hold-time set-A were DOC-rich "first flush" samples, and the Rack samples were held for 11 days at average temperature of 7° C (slightly above laboratory refrigerator temperatures). 
+
+\  
+
+Set-B had a hold-time of 20 days with average air temperature of 6° C. There were no significant changes to DOC concentrations or E~2~:E~3~ values between fresh and rack-held samples for this set. Wilcoxon tests for set-B showed that the 8% change in SAC~254~ was statistically significant (at 90% confidence). However, the SAC~254~ difference in set-B was determined to be caused by an outlier which could be rejected with 99% confidence by Dixon's Q-test (Q~exp~ = 0.941 > Q~crit~ = 0.821). Therefore, it was concluded that, despite the measured difference (Figure \@ref(fig:HoldTimeBoxPlot), Table \@ref(tab:HoldTimeTtests)) there was not truly a reliable change in SAC~254~ (or SUVA~254~, which relies on SAC~254~) for hold-time set-B. 
+
+\  
+
+Hold-time set-C included samples held for 34 days at an average of 4.4° C, including a period of sub-zero temperatures. While set-C did not yield statistically significant changes in DOC concentration (23% DOC reduction from fresh to held), there were significant changes to SAC~254~ (34% decrease in absorbance), and E~2~:E~3~ (14% decrease). In addition to the change in absorbance, rack-held set-C samples had greater variability for both all variables compared to the fresh sample counterparts. 
+
+\  
+
+Results of these hold-time experiments suggest that early-season ("first flush") samples may contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character; and while DOC concentrations were not statistically altered, there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in NOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10% (Table \@ref(tab:samplecount)). 
+
+\  
+
+Hold-times were calculated for each sample as the time between sample collection and analysis. Any sample that remained held for fewer than 20 days at temperatures between 0-7° C were flagged as acceptable for further data analysis; Rack samples that were held for 20 days or longer were flagged for exceeding a reliable hold-time; and samples identified as early-wet-season ("first-flush") that had a hold-time of 7 days or longer were flagged as unacceptable and not included in further data analysis. Because of possible freeze-thaw changes to DOC and NOM, any sample that underwent suspected or confirmed freezing was also flagged for temperature effects. Hold-time temperatures (daily means) at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression (Appendix ###). 
+
+\  
+
+####   Seasonal delineation  
+
+Wet seasons were defined by conditions that generated significant stream responses and Vertical Rack sample collection, and the dry season was defined by baseflow conditions with no detectable stream responses at the Vertical Racks.
+
+\  
+
+LWSA rain data were used to define rain events using the USGS _Rainmaker_ package in R ('RMevents' function), which determined there were 18 major events that corresponded to Vertical Rack sample collection. The conditions that defined major rain events were precipitation accumulating to 50 mm or more, with a period of at least 14 hours passing between 50 mm events. As major rain events were defined based on Rack sampling responses, they were the primary method of delineating seasons, where the wet season was defined by the presence of major rain events and the dry season was defined by their absence. However, there was a period of surprising snowfall in the winter of 2018/2019, during which time rainfall runoff subsided but the eventual melt generated streamflow response across the monitoring sites. Therefore, that period of snow accumulation and melt was included when defining wet seasons, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)).
+
+\  
+
+```{r seasonalMegaPlot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalMegaPlot}*Plot of LWSA weather, stream response and sample collection at the six monitoring sites across the LWSA. Seasons were separated by stream responses and conditions that initiated or ceased rack sample collection.*" 
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
+```
+
+\  
+
+While seasons were defined by river responses at the six monitoring sites, it was assumed that seasonality was equal across the GVWSA, and wet and dry seasons were consistent among the twelve synoptic sampling sites. 
+\  
+
+
+___...from hydro-chem...___
+
+####   Rain events and sampling
+
+LWSA mean FWx precipitation data were used to define rain events using the USGS *Rainmaker* package in R ('RMevents' function). During the study period there were 18 major rain events which corresponded to sample collection by the Vertical Racks (i.e. events large enough to trigger substantial river responses). The 18 Rack sampling rain events were defined by precipitation accumulating to 50 mm or more, where the events were separated from each other by a period of 14 hours or longer (Table \@ref(tab:EventsTable3)). 
+
+\  
+
+```{r EventsTable3}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv") %>%  
+  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2,2), 
+               caption = "*Rain events defined by a threshold of 50mm with 14-hour inter-event period*",
+               col.names = c("Major event no.", "Start Date", "Duration (days)", "Rainfall (mm)", "Intensity (mm/hr)", "Samples collected", "mean DOC (mg/L)", "mean SAC~254~", "mean SUVA~254~", "mean E~2~:E~3~"))
+```
+
+\  
+
+The study period was separated into "wet" and "dry" seasons based on detectable river response at each monitoring site, which was primarily based on the presence or absence of major rain events and included a period of snowmelt late in the 2018/2019 wet season (Figure \@ref(fig:ch3megaplot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, where the period from late January (event 8, Table \@ref(tab:EventsTable3)) to mid-May had streamflow changes governed by snowmelt rather than rainfall. The 2019 dry sampling season spanned from mid-May to late-September, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable3)) and extended to the end of the field study period (Feb 20, 2020). Stream levels at each monitoring site were matched to the stage that Vertical Rack samples were collected to obtain date-time of sample collection, and the date-time of each Grab sample collection was matched to recorded stage (Figure \@ref(fig:ch3megaplot)). 
+
+\  
+ 
+```{r ch3megaplot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:ch3megaplot} *Rain events, stream response, sample collection and seasons across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events, points indicate the timing and stage of river samples collected, and pink vertical lines delineate seasons.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png")
+```
+
+\  
+
+Eight of the 18 rain events were captured in the 2019 water year (2018-2019 wet season), the other ten in the 2020 water year. For each calender year in the study period, major rain events' minimum and maximum values of depth, duration and intensity were identified (Table \@ref(tab:MinMaxEvents)).   
+
+\  
+
+```{r MinMaxEvents}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %>% 
+  knitr::kable(digits = c(0,1,1,1,1,2,1),
+               caption = "*Minimum and maximum rain event values *")
+```
+
+\  
+
+An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+
+\  
+

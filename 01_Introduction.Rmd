@@ -165,3 +165,7 @@ __Objective 3:__   Provide context of how results can be used to inform watershe
 \  
 
 Results of this research will contribute to baseline understanding for further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. Understanding source water quality in relation to hydrology is an essential component to multiple barrier approach to ensuring clean drinking water. 
+
+#### Thesis structure outline
+
+Chapter 2 introduces details of the study site, and explains methods used for surface water sampling, laboratory analyses, data handling. Chapter 2 also includes results that were foundational for data analysis and were applied consistently through Chapters 3 & 4 which explore results from two perspectives. Chapter 3 interprets synoptic sampling results to elucidate broad spatial and temporal patterns in NOM and DOC across twelve sites in the GVWSA, while Chapter 4 interprets results from six monitoring sites in the Leech WSA to evaluate watershed drivers for DOC and NOM dynamics. Subsequent chapters....say...soemthing
