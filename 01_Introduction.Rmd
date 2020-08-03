@@ -25,11 +25,11 @@ Natural organic matter (NOM) comprises a dynamic collection of molecules that or
 
 \  
 
-NOM concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM in drinking source water have different disinfection by-product formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008], and different aquatic ecosystem roles [@Cory2011]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010].  
+NOM concentration and character vary widely in source water depending on source material, hydrology, and biogeochemical factors [@Aiken2011; @Abbott2018; @Zarnetske2018; @Matilainen2010]. Molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM in drinking source water have different disinfection by-product formation potentials (DBP-FPs) [@Delpla2016; @Yang2015; @HealthCanada2019; @Chow2008], and different aquatic ecosystem roles [@Cory2011]. Furthermore, different species of NOM vary in molecular size, structure and charge distribution, which determine requirements for effective treatment and removal [@Jacangelo1995; @Matilainen2010]. The molecular structure of NOM can be assessed through spectrophotometry (discussed below). 
 
 \  
 
-Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen and are composed primarily of carbon; thus, organic carbon (OC) is often quantified as a proxy for NOM concentration [@Cory2011; @HealthCanada2019; @Matilainen2010; @MWH2014]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively) which are typically distinguished based on separation by a 0.45-micron filter [@StdMet5310; @Aiken2011]. Generally, DOC is the predominant fraction of TOC in surface water, and the amount of DBPs in treated water is proportional to raw water DOC concentration [@Weishaar2003; @Ruhala2017; @Chow2008]. 
+Molecular structures of NOM can contain nitrogen, silica, oxygen and hydrogen and are composed primarily of carbon; thus, organic carbon is often quantified as a proxy for NOM concentration [@Cory2011; @HealthCanada2019; @Matilainen2010; @MWH2014]. Total organic carbon (TOC) is operationally divided into particulate and dissolved fractions (POC and DOC, respectively) which are typically distinguished based on separation by a 0.45-micron filter [@StdMet5310; @Aiken2011]. Generally, DOC is the predominant fraction of TOC in surface water, and the amount of DBPs in treated water is proportional to raw water DOC concentration [@Weishaar2003; @Ruhala2017; @Chow2008]. 
 
 \  
 
@@ -52,6 +52,31 @@ Aqueous natural organic matter (NOM) can lead to issues of objectionable taste, 
 In addition to operational impediments, NOM is partly responsible for unintended chemical contaminants in treated drinking water. When source water is chlorinated, chemical reactions with NOM can form a variety of chlorinated organic compounds which are broadly classified as disinfection by-products (DBPs) [@Richardson2007; @Delpla2016; @HealthCanada2019; @Yang2015; @Hua2015; @StdMet5310]. A number of chlorinated carbonaceous DBPs are included in Health Canada's drinking water quality guidelines, and have maximum allowable concentrations in treated water due to their possible or known health affects (i.e. possible genotoxicity or carcinogenicity) [@Richardson2007; @BC2019; @HealthCanada2019].
 
 \  
+ 
+##### Measuring NOM
+
+
+\  
+
+For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the electronic structure of a molecule. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e. a chromophore) in the molecule, which is common in aromatic molecules. In a forested watershed, the suite of molecules that comprise NOM generally have more aromatic than aliphatic character [@Weishaar2003]. Increasing aromaticity will lead to greater absorbance at shorter wavelengths (shorter wavelength, higher energy), and a more concentrated sample will lead to greater absorption intensity; therefore, the UV-Vis spectrum of a sample can provide valuable information about relative weights, aromaticity and relative concentrations of aqueous NOM [@Helms2008; @Cory2011; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration estimated from UV-Vis absorbance is a proxy measure that represents the chromophoric component of NOM, which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
+
+\  
+
+...
+
+
+
+Specific ultraviolet absorbance at 254 nm (SUVA~254~) is a widely adopted indicator of NOM character that measures the aromatic content of a sample per unit concentration of organic carbon (e.g. @Weishaar2003; @Chow2008), it is the ratio of SAC~254~ normalized to the samples DOC concentration. SUVA~254~ was calculated by dividing SAC~254~ by DOC concentration (mgL^-1^ as NPOC) and is reported in units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m) [@Weishaar2003; @Karanfil2003]. SUVA~254~ has been shown to correlate strongly with aromaticity and also with chemical reactivity [@Weishaar2003; @Helms2008; @Chow2008]. 
+
+\  
+
+With respect to SUVA~254~ and drinking water treatability, it's important to consider the diversity of DOM and DBP species and the heterogeneous character contained in a water sample. While SUVA~254~ may indicate reactivity, it is not necessarily a strong indicator of disinfection by-product formation potentials (DBP-FPs) [@Weishaar2003; @Chow2008]. This is because some DBP precursor NOM components which have negligible absorptivity in the UV-Vis range (e.g. aliphatic components) may contribute to DBPs but not SUVA~254~ [@Owen1995]; additionally, not all NOM with measurable SUVA~254~ will create DBPs [@Weishaar2003]. Therefore, SUVA~254~ should be interpreted primarily as an indicator of molecular aromaticity and size. Aside from DBPs, aromaticity and size are important when considering other treatability factors such as biofouling, filter clogging and interference with UV disinfection.
+
+\  
+
+A sample with high SUVA (relatively great UV absorption at 254 nm for the amount of DOC in the sample) indicates more aromatic, larger (higher molecular weight) NOM components, and a lower SUVA value (e.g. below 3 L/mg-m) corresponds to a sample with lower molecular weight, more aliphatic and hydrophilic, less humic NOM [@Karanfil2002]. Because allochthonous NOM (i.e. humic substances) are more aromatic than aliphatic, SUVA~254~ is a good indicator of terrestrial sources of NOM [@Weishaar2003; @Vidon2008; @Abbott2018].
+
+ 
  
 ####   Watershed processes and water quality
 	

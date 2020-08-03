@@ -583,6 +583,7 @@ majEvents_summary <- events %>%
          duration_days = as.numeric(difftime(EndDate, StartDate, units = "days")),
          duration_hours = as.numeric(NumberXtract(duration)),
          intensity_mmhr = rain/duration_hours,
+         intensity_mm24hr = rain/duration_days,
          startDate = as_date(StartDate),
          endDate = as_date(EndDate)) %>% 
   mutate(ID = as_factor(ID))
@@ -595,7 +596,7 @@ events_table <- majEvents_summary %>%
          'Start Date' = startDate,
          'Duration (days)' = duration_days,
          'Rainfall (mm)' = rain,
-         'Intensity (mm/hr)' = intensity_mmhr) %>%
+         'Intensity (mm/24-hr)' = intensity_mm24hr) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
 
@@ -2843,11 +2844,13 @@ a <- synopticfilter %>%
   summarize(count = n(), 
             SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
             SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            rsdSAC = round((SAC254sd/SAC254mean)*100, 0),
             SAC254min = min(SAC254_Abs.m, na.rm = T), 
             SAC254max = max(SAC254_Abs.m, na.rm = T),
             # E2E3
             E2E3mean = mean(E2E3, na.rm = T), 
             E2E3sd = sd(E2E3, na.rm = T),
+            rsdE2E3 = round((E2E3sd/E2E3mean)*100, 0),
             E2E3min = min(E2E3, na.rm = T), 
             E2E3max = max(E2E3, na.rm = T))  
 
@@ -2861,11 +2864,13 @@ b <- synopticfilter %>%
             count = n(), 
             SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
             SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+            rsdSAC = round((SAC254sd/SAC254mean)*100, 0),
             SAC254min = min(SAC254_Abs.m, na.rm = T), 
             SAC254max = max(SAC254_Abs.m, na.rm = T),
             # E2E3
             E2E3mean = mean(E2E3, na.rm = T), 
             E2E3sd = sd(E2E3, na.rm = T),
+            rsdE2E3 = round((E2E3sd/E2E3mean)*100, 0),
             E2E3min = min(E2E3, na.rm = T), 
             E2E3max = max(E2E3, na.rm = T)) 
 
@@ -3815,7 +3820,7 @@ DOCNPOC <- synopticfilter %>%
   dplyr::filter(sample_type == "Rack" | 
                   sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
-  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8)+
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 2, alpha = 0.8)+
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
@@ -3827,8 +3832,8 @@ DOCNPOC <- synopticfilter %>%
        x = "DOC (mg/L)")+
   guides(fill = guide_legend("Sample season:"),
          shape = guide_legend("Sample season:"))+
-  theme(text = element_text(size = 11),
-        legend.position = "top")
+  theme(text = element_text(size = 9),
+        legend.position = "none")
 
 # ---
 # SAC254 vs NPOC by season
@@ -3837,7 +3842,7 @@ insetSAC <- synopticfilter %>%
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = NPOC_ppm, y = SAC254_Abs.m)) +
-  geom_jitter(aes(fill = rain_seasons, shape = rain_seasons), size = 2, alpha = 0.8) +
+  geom_jitter(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8) +
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
@@ -3847,8 +3852,8 @@ insetSAC <- synopticfilter %>%
   theme_bw() +
   guides(fill = guide_legend("Sample season:"),
          shape = guide_legend("Sample season:"))+
-  theme(text = element_text(size = 9),
-        legend.position = "none")
+  theme(text = element_text(size = 11),
+        legend.position = "top")
 
 # inset the SAC254 plot into the NPOC DOCest plot
 cowplot::ggdraw() +
@@ -3860,7 +3865,20 @@ cowplot::ggdraw() +
             height = .3, # Inset height
             scale = 1) # Inset scale (1 = none)
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-CDOM_seasonal_with-Inset.png",
+#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-CDOM_seasonal_with-Inset.png", height = 5, width = 5, units = "in")
+
+
+# inset the DOC est plot into the NPOC-SAC254 plot 
+cowplot::ggdraw() +
+  draw_plot(insetSAC) +
+  draw_plot(plot = DOCNPOC,
+            x = .67, # x location of inset placement
+            y = .2, # y location of inset placement
+            width = .3, # Inset width
+            height = .3, # Inset height
+            scale = 1) # Inset scale (1 = none)
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-SAC254_seasonal_with-Inset.png",
        height = 5, width = 5, units = "in")
 
 
