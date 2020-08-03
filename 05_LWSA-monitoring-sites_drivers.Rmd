@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Leech monitoring sites and hydro-dynamics
+##	Leech Monitoring Sites & Driving Forces of DOC and NOM Dynamics
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -16,31 +16,25 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 ```
 
 
-### Introduction
+### Introduction / synopsis
 
-Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
+*__RQ.2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in DOC and NOM in the Leech watershed?
 
-\  
+*__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between DOC, NOM and key variables, including differences between baseflow and storm events.
 
-The Pulse Shunt Concept (PSC) supplements temporal aspects of the RCC by describing how hydrologic events drive the magnitude, timing and spatial extent of NOM fluxes and therefore are ultimately responsible for NOM concentrations in streams over time [@Abbott2018; @Creed2015; @Zarnetske2018; @Raymond2016]. The RCC relies on in-stream biogeochemical processing to explain longitudinal attenuation of NOM character, and the PSC shows that intense hydrologic pulses (related to precipitation or melt events) override the rate of biogeochemical processing and force mass transport events. 
-
-\  
-
-##### Event based sampling 
-
-Given that brief flood events are often responsible for most of the DOC transport in a river system [@Raymond2016], event-based water sampling is an important part of a water quality monitoring program. The rising limb of the hydrograph has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. The change in DOC concentration across the rising limb is indicative of source pools of NOM, where increasing rising limb DOC indicates that source material is unlimited and flux is driven by hydrologic connectivity; whereas NOM is likely source-limited if DOC concentration decreases on the rising limb [@Zarnetske2018]. Therefore, the collection of event-based river samples is important for clarifying the magnitude and direction of water quality changes in response to precipitation, and providing information about solute supply and hydrologic connectivity to the landscape [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
+Chapter 4 showed decreasing DOC concentrations and aromaticity from headwaters to mouth of the Leech WSA
 
 \  
 
-Pump samplers are effective for automatic event-based sampling that can be set up in the field and programmed to collect a set of water samples based on time intervals or changes in conditions (@Harmel2003). However, pump samplers can be prohibitively expensive ($2K-3K CAD), and also require a reliable power source which can pose logistical challenged for setting up at multiple sites in remote or difficult to access locations (@Mackay2012). 
+...
+intro section needs to lay out the problem you are trying to solve ie what are the drivers of DOC and NOM in the watershed and highlight some studies that have done this, and maybe the methods they have used.  
+...
 
 \  
 
-A low-cost, customizable alternative to a pump sampler is a passive siphon sampler that automatically and effectively collects discrete water samples on the rising limb of the hydrograph (e.g.: @Mackay2012; @Graczyk2000; @Diehl2007). Siphon samplers are limited to sampling a single event and cannot yet collect water samples on the falling hydrograph limb [@Newham2001].
 
-\  
 
-#### Random Forests
+#### Methods -- ? Random Forests
 
 The pulse shunt concept (PSC) explains DOC transport with major hydrologic events and the river continuum concept (RCC) explains NOM character changes through a combination of watershed processes and characteristics, but how can the relative importance of these attributes be determined? Random Forests are a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Strobl2009].   
 
@@ -68,11 +62,6 @@ Six river locations in the Leech water supply area (Greater Victoria, BC) were s
 
 \  
 
-####    Leech River Watershed
-
-The Leech River watershed is in the Coastal Western Hemlock biogeoclimatic zone (CWH), with forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). The Leech watershed also includes the moist and dry maritime sub-zones of the CWH (Montane moist 43%, submontane moist 38%, xeric 19%) [@Ussery2015]. While some precipitation occurs as snow at higher elevations, the predominant hydroclimatic regime is pluvial and most of the ~2000 mm per year falls as rain [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry.
-
-\  
 
 #### Monitoring sites and sub-basin characteristics
 
@@ -95,54 +84,10 @@ Weeks Creek (site 1), had the greatest proportion of wetland and open water comp
 ```{r WTScharacterSubbasinTable}
 options(knitr.kable.NA = '')
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_study-sites_basin-characteristics.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "*Watershed characteristics summary for study sites*")
+  knitr::kable(caption = "Summary of Leech Watershed Characteristics for Monitoring Site Sub-basins")
 ```
 
 \ 
-
-___this is essentially the same method section as in chapter 2___
-
-Each Vertical Rack collected discrete water samples during the rising limb of stormflow and included a water level logger that recorded continuous stage at ten-minute intervals. Vertical Racks achieved advanced synoptic sampling within stormflow by providing synchronized spatial sampling resolution that would otherwise be difficult to achieve (i.e. sampling multiple sites across the watershed at approximately the same time). Simultaneous stormflow sample collection can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]. Standard Grab samples were collected manually between storm events and during dry season baseflow.
-
-\  
-
-The passive sampling bottles employed principles of a siphon design to collect river water as it reaches pre-determined levels the Rack. Siphon sampler bottles were based on a USGS single stage sediment sampler design (US U-59, 1961) which passively collect discrete water samples at a fixed stage on the rising limb of the hydrograph [@Graczyk2000]. The siphon samplers built for this research were 250 mL amber HDPE wide-mouth bottles with augmented screw caps. The caps were fit with two 1/4" (OD) stainless steel tubes, one longer than the other, both with a 180$^\circ$ bend at the top end.
-
-\  
-
-Each rack included a central stilling well (3.81 cm (1.5")) PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand); and on either side of the central stilling well was a slotted offset angle bar onto which hose clamps held sample bottles fit with custom siphon lids. Each rack also included temperature sensors (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) that recorded air and water temperatures (Figure \@ref(fig:verticalRack)). By combining the height at which each siphon bottle filled with observed stage (stilling-well measuring tape) and level-logger data, the date and time for collection of each rising-stage sample was determined. 
-
-\  
-
-```{r verticalRackCH3, out.width = "30%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2).*"
-
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
-```
-
-\  
-
-The timestamps of event-based river samples collected near-simultaneously at sites across a watershed were used to inform stage-concentration relationships, and to tease out insights about relative hydrologic pulse responses across nested catchments.
-
-\  
-
-####   Sample analysis
-
-Water samples were collected in acid-washed 250 mL HDPE wide-mouth amber bottles and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance (indicator of NOM character). DOC samples were filtered (0.45-micron PES filters) and acidified (pH < 2), spectroscopy samples were not filtered nor acidified but were ensured to have zero turbidity. Descriptions of sample preparation and quality control are detailed in Chapter 2. DOC was quantified via Method 5310-B on a Shimadzu TOC-V [@StdMet5310], and UV-Vis measurements were completed on a spectro::lyser spectrophotometer (S::can, Vienna, Austria)
-
-\  
-
-Molecular character of NOM in water samples was assessed through specific ultraviolet absorbance at 254nm (SUVA~254~) and the spectral quotient E~2~:E~3~. SUVA~254~ is UV absorption (spectral absorbance coefficient, SAC, m^-1^) at 254 nm wavelength, normalized to the samples DOC concentration [@Weishaar2003], it correlates with NOM aromaticity [@Weishaar2003; @Helms2008; @Chow2008]. E~2~:E~3~ is the ratio of absorbance at wavelengths 250 nm and 365 nm, and is inversely related to aquatic humic solute aromaticity and molecular size  [@Peuravuori1997; @Helms2008]. Additional details can be found in Chapter 2.
-
-\  
-
-#### Defining rain events and seasons
-
-___this is the same as in Chapter 2___
-
-The R package _Rainmaker_ (USGS, github.com/USGS-R/Rainmaker) was used with LWSA rain data (average of Chris Creek and Martin's Gulch FWx stations) to define events that corresponded to sampling campaigns and to distinguish between seasons. The pluvial hydroclimatic regime on the coast of BC is characterized by a predominantly wet season and dry season and while the dry season often includes periods of drought there is generally some rainfall throughout the entire year (Figure \@ref(fig:meanWxLWSA)). For this research, seasons were operationally defined by sampling method restrictions such that the "wet" season was defined as the period when rainfall generated stream response significant enough for vertical racks to collect rising limb samples, and the "dry" season was defined by the absence of rainfall response substantial enough for rack sampler collection.
-
-\  
 
 #### Random Forests for variable importance
 
@@ -166,6 +111,23 @@ included:
 * include antecedent snow also
 
 \  
+
+Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7-day temperatures and antecedent 30-day rain, river stage and sampling season as possible predictor variables for DOC concentrations. Variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. 
+
+\  
+
+Parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evaluated for the entire study period (Figure \@ref(fig:RFplot)). 
+
+Variables were subset into three variable groups: conditions (e.g. weather) which included dynamic numeric measurements; basin surface characteristics (e.g. land-cover) which included static watershed characteristics unique to each sampling basin; and parent material which included static subsurface characteristics of each sampling basin. Surface and subsurface characteristics were separated because... 
+
+\  
+
+#### evaluating local extrema
+
+Aqueous DOC was quantified from discrete stream samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. However, each river sample was matched to stage and had a corresponding time-stamp, therefore temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?).
+
+\  
+
 
 ### Results
 
@@ -206,7 +168,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events-annual_min-max.csv") %
 
 \  
 
-An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across Vancouver Island and most of the south coast of BC). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across southern Vancouver Island). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
 
 \  
 
@@ -279,7 +241,12 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_Mean
 
 \  
 
-More samples were collected over the wet seasons than during the dry season due to event-based sampling and the relatively longer wet season period compared to dry (Table \@ref(tab:seasonalsamples)). Despite seasonal sample count differences, interesting spatial differences emerged when sample results were grouped by season (Figure \@ref(fig:seasonalNOM)). NOM molecular character was judged through a combination of specific UV-absorbance at 254 nm (SAC~254~, an indicator of chromophoric NOM) and SUVA~254~ (L mg^-1^ m^-1^) which indicates aromaticity relative to DOC concentrations. The quotient E~2~:E~3~ (unitless) is inversely proportional to aromaticity and/or molecular weight of aqueous NOM. 
+More samples were collected over the wet seasons than during the dry season due to event-based sampling and the relatively longer wet season period compared to dry (Table \@ref(tab:seasonalsamples)). Despite seasonal sample count differences, interesting spatial differences emerged when sample results were grouped by season (Figure \@ref(fig:seasonalNOM)). 
+
+
+___what was interesting???___
+
+ 
 
 \  
 
@@ -308,7 +275,7 @@ The spectral indices indicated that, during the dry-season, Weeks (site 1) had m
 
 \  
 
-In the wet season, there was a spatial decrease in NOM aromaticity from headwaters to the Tunnel. In the headwater streams (sites 1 & 2), wet season NOM character was more aromatic at Weeks but had a broader range in spectral indices values at ChrisCrk. The River continuum concept predicts greater NOM diversity in headwaters than in higher order streams; these results only partially agree with that RCC concept and it appears that the wetland-dominated sub-basin (Weeks) had much more consistent NOM character than the ChrisCrk headwater stream. The longitudinal decrease in aromatic NOM character could have been an affect of dilution during the wet season. Of the main tributaries to the Leech River mainstem, CraggCrk had less aromatic character than WestLeech.   
+In the wet season, there was a spatial decrease in NOM aromaticity from headwaters to the Tunnel. In the headwater streams (sites 1 & 2), wet season NOM character was more aromatic at Weeks but had a broader range in spectral indices values at ChrisCrk. 
 
 \  
 
@@ -339,11 +306,14 @@ Rates of change in stream response were calculated for each site to evaluate the
 
 ####   Spatiotemporal synchrony in local extrema: river stage and DOC
 
-A trend in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018].
+
 
 \  
 
-Streams responded harmoniously to precipitation across the LWSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC or spectral properties? Aqueous DOC was quantified from discrete river samples, and therefore the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. However, each river sample was matched to stage and had a corresponding time-stamp, therefore temporal synchrony in DOC could be inferred based on relationships between peak DOC and stage. To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sampled stage), synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?). Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
+Streams responded ___harmoniously___ to precipitation across the LWSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC or spectral properties? 
+
+
+ Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
 
 \  
 
@@ -359,6 +329,18 @@ Most samples showed congruence between highs and lows of DOC with stage. West Le
 
 \  
 
+...
+
+\ 
+
+In general DOC concentations were lowest at the beginning of events and increased with a rise in stage.  Then identify instances where this was not the case and if you noticed dilution affects as the season progressed – you could just make a simple plot of stage vs DOC (ie x vs y plot) at each site and see how they group and see if this grouping changes through the season.
+
+\  
+
+...
+
+\  
+
 ```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
 fig_cap = "\\label{fig:extremaplot} *Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely.*"
 
@@ -371,23 +353,27 @@ Changes in DOC during events varied from a little more than 1% DOC change to nea
 
 \  
 
+___This table provides some useful info.  I would tru to look at individual events and pull out interesting facts like during this event, DOC concentration tripled or doubled or etc.  And then maybe present mean differences among events:___
+
+\  
+
 ```{r DOCResponse}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = 1, 
                col.names = c("site", "lowest DOC in stormflow (mg/L)", "highest DOC in stormflow (mg/L)", "smallest change in DOC (mg/L)", "largest change in DOC (mg/L)", "smallest difference in DOC during stormflow (%)", "largest difference in DOC during stormflow (%)"),
-               caption = "*Summary of DOC changes within stormflow response to precipitation events across the LWSA (samples from wet season only).*")
+               caption = "Summary of DOC Changes Within Stormflow Response to Precipitation Events Across the Leech WSA (Samples from Wet Season Only).*")
 ```
 
 \
 
 #### River stage, DOC & NOM
 
-In general, DOC concentrations increases with increasing stage across the LWSA, thought the trends were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear (Figure \@ref(fig:stageRelations)).
+In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear (Figure \@ref(fig:stageRelations)). ...___I don’t actually see that pattern at all in those figures – not sure you can do hysteresis plots with the data you have, but you should try___....
 
 \  
 
 ```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample content and character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship*"
+fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample DOC concentrations and NOM character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship. None of the relationships were were linear, some had more large variance and some variables remained consistent with changing stage.*"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DOC-NOM.png")
 ```
@@ -396,21 +382,14 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DO
 
 #### Random Forests for variable importance 
 
-
-Watershed characteristics for each of the six monitoring sites (Figure \@ref(fig:subbasinMap), Table \@ref(tab:WTScharacterSubbasinTable)) were included with antecedent 7-day temperatures and antecedent 30-day rain, river stage and sampling season as possible predictor variables for DOC concentrations. Variable importance was assessed using the R package randomForest, the backbone of which is Breiman’s Random Forests (RF) algorithm [@Breiman2001]. 
-
-\  
-
-Parameters were filtered as much as possible to remove those that could cause spurious correlations (i.e. cross-correlated variables) and the RF variable importance measure (VIM) was evaluated for the entire study period (Figure \@ref(fig:RFplot)). 
-
-Variables were subset into three variable groups: conditions (e.g. weather) which included dynamic numeric measurements; basin surface characteristics (e.g. land-cover) which included static watershed characteristics unique to each sampling basin; and parent material which included static subsurface characteristics of each sampling basin. Surface and subsurface characteristics were separated because... 
+...
 
 \  
 
 ```{r RFplot, fig.cap = fig_cap}
 fig_cap = "\\label{fig:RFplot} *Variable importance measure for predicting NOM concentration (as DOC) and molecular character (as E~2~:E~3~). Variable importance measures were extracted from randomForest (R) and determined by mean decrease in accuracy (mean square errors with predictor variable omitted from permuting data, i.e. type 1 importance measure).*"
 
-knitr::include_graphics(R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot-summary_DOC-E2E3.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot-summary_DOC-E2E3.png")
 ```
 
 
@@ -494,6 +473,10 @@ Increasing DOC on the rising limb indicates that source material is not limited 
 
 
 \   
+
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018].
+
+\  
 
 ### Conculsions
 

@@ -23,6 +23,10 @@ Surface water samples were collected between October 2018 and February 2020 to m
 
 ###    Sampling sites 
 
+Sampling sites were located across the GVWSA which is located in the Coastal Western Hemlock biogeoclimatic zone (CWH). The Sooke WSA is primarily within the dry subzones of the CWH and the Leech WSA is mainly within the moist and dry maritime sub-zones (Montane moist 43%, submontane moist 38%, xeric 19%) of the CWH [@CRD; @Ussery2015]. The Coastal Western Hemlock biogeoclimatic zone has forests dominated by Douglas-fir (Pseudotsuga menziesii), western hemlock (Tsuga heterophylla) and western red cedar (Thuja plicata); subspecies include white pine (Pinus monticola), amabalis fir (Abies amabilis), alder (Alnus rubra), broad-leaf maple (Acer macrophyllum) and arbutus (Arbutus menziesii). While some precipitation occurs as snow at higher elevations, the predominant hydroclimatic regime is pluvial and most of the ~2000 mm per year falls as rain [@CRD2020]. Like much of the south coast of BC, the water year can be broadly divided into wet and dry seasons, where approximately October through April are wet while May through September are relatively dry [@CRD].
+
+\  
+
 Most of sampling sites were in the Leech WSA and a few key streams in the Sooke WSA were included to facilitate preliminary comparison between the two WSAs for reference to future diversion scenarios (Figure \@ref(fig:sampleSitesMap)). Rithet Creek is the largest tributary (11.12 km^2 basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2 basin). Deception (gulch) is a small tributary (4.02 km^2 basin) to Deception Reservoir and the Leech River Tunnel (currently deactivated) terminates at Deception gulch. Thus, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. 
 
 \  
@@ -169,6 +173,10 @@ The spectro::lyser is pre-calibrated with an internal Global calibration file (G
 \  
 
 Molecular aromaticity is associated with chromophores which are responsible for UV-Vis absorbance in aqueous NOM, therefore more aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules. 
+
+\  
+
+NOM molecular character was judged through a combination of specific UV-absorbance at 254 nm (SAC~254~, an indicator of chromophoric NOM) and SUVA~254~ (L mg^-1^ m^-1^) which indicates aromaticity relative to DOC concentrations. The quotient E~2~:E~3~ (unitless) is inversely proportional to aromaticity and/or molecular weight of aqueous NOM.
 
 \  
 
