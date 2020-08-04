@@ -4773,6 +4773,8 @@ synch_PeaksSumm_stage <- tibble(
 ```
 
 
+
+
 # Random Forest
 
 ## RF data
@@ -4834,6 +4836,62 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
 
 ```
 
+## one to one
+
+```{r}
+
+# DOC with 7-day temp
+sixfilter_RF %>% 
+  #filter(rain_season == "wet") %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = NPOC_ppm)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() +
+  facet_wrap(~rain_season, scales = "free_x")
+
+# E2E3 with 7-day temp
+sixfilter_RF %>% 
+  filter(E2E3 > 2.5) %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = E2E3)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() +
+  facet_wrap(~rain_season, scales = "free_x")
+
+# ---
+# DOC with 30-day rain
+sixfilter_RF %>% 
+  #filter(rain_season == "wet") %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() #+
+  #facet_wrap(~rain_season, scales = "free_x")
+  
+# E2E3 with 30-day rain
+sixfilter_RF %>% 
+  filter(E2E3 > 2.5) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = E2E3)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() #+
+  #facet_wrap(~rain_season, scales = "free_x")
+
+# ---
+# DOC with 30-day rain
+sixfilter_RF %>% 
+  #filter(rain_season == "wet") %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() #+
+  #facet_wrap(~rain_season, scales = "free_x")
+  
+# E2E3 with 30-day rain
+sixfilter_RF %>% 
+  filter(E2E3 > 2.5) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = E2E3)) + 
+  geom_point(aes(colour = site)) +
+  geom_smooth() #+
+  #facet_wrap(~rain_season, scales = "free_x")
+
+
+```
 
 #### RF : DOC All variables together
 
