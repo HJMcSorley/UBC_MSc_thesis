@@ -2860,17 +2860,18 @@ b <- synopticfilter %>%
          !is.na(pseudo254)) %>% 
   filter(SUVA < 9, between(E2E3, 3.6, 15)) %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ungroup() %>% 
   summarize(site = "all sites", description = "summary",
             count = n(), 
             SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
             SAC254sd = sd(SAC254_Abs.m, na.rm = T),
-            rsdSAC = round((SAC254sd/SAC254mean)*100, 0),
+            rsdSAC = (SAC254sd/SAC254mean)*100,
             SAC254min = min(SAC254_Abs.m, na.rm = T), 
             SAC254max = max(SAC254_Abs.m, na.rm = T),
             # E2E3
             E2E3mean = mean(E2E3, na.rm = T), 
             E2E3sd = sd(E2E3, na.rm = T),
-            rsdE2E3 = round((E2E3sd/E2E3mean)*100, 0),
+            rsdE2E3 = (E2E3sd/E2E3mean)*100,
             E2E3min = min(E2E3, na.rm = T), 
             E2E3max = max(E2E3, na.rm = T)) 
 
@@ -3837,7 +3838,7 @@ DOCNPOC <- synopticfilter %>%
 
 # ---
 # SAC254 vs NPOC by season
-insetSAC <- synopticfilter %>% 
+SAC <- synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
   dplyr::filter(analysis == "DOC", 
                 sample_type == "Grab" | sample_type == "Rack") %>% 
@@ -3847,6 +3848,15 @@ insetSAC <- synopticfilter %>%
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
   scale_shape_manual(values = c("wet"=23, "first flush"=22, "dry"=21))+
+  #geom_smooth(aes(colour = rain_seasons, group = rain_seasons), method = "lm") +
+  #scale_colour_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
+  #                             "dry" = forWater_colours2[["MyOrange"]], 
+  #                             "first flush" = cbPalette[["grey"]]))+
+  # equations
+  #ggpmisc::stat_poly_eq(formula = y ~ x, 
+  #            aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+  #            parse = TRUE, rr.digits = 4) +
+
   labs(y = expression(SAC[254]~(m^-1)),
        x = "DOC (mg/L)")+
   theme_bw() +
@@ -3858,7 +3868,7 @@ insetSAC <- synopticfilter %>%
 # inset the SAC254 plot into the NPOC DOCest plot
 cowplot::ggdraw() +
   draw_plot(DOCNPOC) +
-  draw_plot(plot = insetSAC,
+  draw_plot(plot = SAC,
             x = .1, # x location of inset placement
             y = .575, # y location of inset placement
             width = .3, # Inset width
@@ -3870,7 +3880,7 @@ cowplot::ggdraw() +
 
 # inset the DOC est plot into the NPOC-SAC254 plot 
 cowplot::ggdraw() +
-  draw_plot(insetSAC) +
+  draw_plot(SAC) +
   draw_plot(plot = DOCNPOC,
             x = .67, # x location of inset placement
             y = .2, # y location of inset placement
@@ -3991,7 +4001,24 @@ sixfilter %>%
                 DOCmedian = median(NPOC_ppm, na.rm = T), 
                 DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
       ungroup()) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-InstallSamples-DOC-summary.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-InstallSamples-DOC-summary.csv")
+
+# by site
+sixfilter %>%
+  ungroup() %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  filter(rain_season == "wet") %>%
+  group_by(site, sample_type) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T), 
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>%
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-site-InstallSamples-DOC-summary.csv")
+
 
 ```
 

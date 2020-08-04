@@ -169,7 +169,7 @@ Results of this research will contribute to baseline understanding and could be 
 
 #### Thesis structure outline
 
-Chapter 2 outlines common methods that were used to generate results discussed in chapters 4 and 5; it introduces details of the study site, and explains methods used for surface water sampling, laboratory analyses and data handling. Chapter 3 includes results that were foundational for further data analysis (including quality control) and were used to build subsequent chapters. Chapter 4 interprets synoptic sampling results to elucidate broad spatial and temporal patterns in NOM and DOC across twelve sites in the GVWSA, and Chapter 5 interprets results from six monitoring sites in the Leech WSA to evaluate watershed drivers for DOC and NOM dynamics. A comprehensive summary and discussion follows 
+Chapter 2 outlines common methods that were used to generate results discussed in later chapters; it introduces details of the study site, and explains methods used for surface water sampling, laboratory analyses and data handling. Chapter 2 also includes foundational results upon which all subsequent data analysis relied. Chapters 3 interprets synoptic sampling results to elucidate broad spatial and temporal patterns in NOM and DOC across twelve sites in the GVWSA, and Chapter 4 interprets results from six monitoring sites in the Leech WSA to evaluate watershed drivers for DOC and NOM dynamics. A comprehensive summary and discussion follows0 
 
 \  
 
