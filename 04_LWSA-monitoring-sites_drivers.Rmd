@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Leech Monitoring Sites & Driving Forces of DOC and NOM Dynamics
+##	Leech Watershed Monitoring Sites & Driving Forces for Dynamics of Aqueous Natural Organic Matter
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
+\ 
 
 ### Introduction / synopsis
 
@@ -471,7 +472,7 @@ Increasing DOC on the rising limb indicates that source material is not limited 
 * use RF to determine relative importance of watershed characteristics as DOC predictors
 * use RF to in-fill missing NOM absorbance data based on relationship with DOC??? Like Yeonuk did for CH4 flux
 
-
+* 
 \   
 
 A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018].

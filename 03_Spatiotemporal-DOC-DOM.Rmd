@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Spatial and Temporal Patterns in DOC & NOM across the GVWSA
+##	Spatial and Temporal Patterns in DOC & NOM across the Greater Victoria Water Supply Area
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -15,6 +15,8 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
+\  
+
 ### Synopsis
 
 The methods defined in Chapter 2 were used to collect and analyze surface water samples with the objective of describing spatial and temporal patterns and variation of dissolved organic carbon (DOC) concentrations and natural organic matter (NOM) character across the Greater Victoria water supply area (GVWSA, refer to Chapter 2, Figure \@ref(fig:sampleSitesMap) for map). Additionally, sampling results were interpreted with the goal of clarifying the influence of seasonality on concentration of DOC and character of NOM. 
@@ -25,7 +27,7 @@ DOC and NOM results were evaluated by comparing results from low- to high-order 
 
 \  
 
-### Results
+### Sampling Results
 
 From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed for NOM by UV-Vis (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and instrument-sharing limitations. Of the samples collected and analyzed, DOC data were filtered and reduced by 9.2% (to 387 samples) during Hold-time quality control checks (described in Chapter 2) and UV-Vis data were reduced by 19.5% (to 256 samples). Quality control resulted in a 9% reduction in UV-Vis data and an additional 10.5% data loss was unfortunately caused during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10.8% (n=20).  
 
@@ -39,13 +41,15 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_
 
 \  
 
+\  
+
 Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
 
 \  
 
 #### Spatial patterns in DOC & NOM 
 
-From 366 quality controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. 
+From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. 
 
 \  
 
@@ -60,7 +64,7 @@ Mean DOC concentrations were similar between the Sooke WSA main tributaries of J
 ```{r synopticDOCdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 1, 1),
-               caption = "Dissolved Organic Carbon Concentrations (DOC) Across Twelve Synoptically Sampled River Sites in the Greater Vistoria Water Supply Area",
+               caption = "Dissolved Organic Carbon Concentrations (DOC) Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "Count", 
                              "Mean DOC (mg/L)", "sd (±)", "Relative sd (± %)", 
                              "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)"))
@@ -69,14 +73,14 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", c
 
 \  
 
-Similar to DOC, there was an overall reduction in NOM aromaticity and/or molecular size From upstream to downstream sites (Figure \@ref(fig:synopticBox)). The absolute lowest measurement for NOM aromaticity occurred at the Cragg crk site (SAC~254~ 4.69 m^-1^, E~2~:E~3~ of 5.03). Cragg crk had among the lowest mean aromaticity also, though it tied with Judge crk (mean E~2~:E~3~ of 4.59), which were very close to Lazar crk (mean E~2~:E~3~ of 4.55, and mean SAC~254~ 10.6 m^-1^). Surprisingly, while the Cragg crk site recorded the lowest absolute (and had among the lowest average) aromaticity, it's headwater sites (Jarvis and Lazar creeks) had samples with the most aromatic character. Lazar crk had one of the most aromatic samples of all measured samples (lowest recorded E~2~:E~3~, 3.77), and the other headwater creek in Cragg basin, Jarvis creek, had the other most aromatic sample measured by SAC~254~ (41.7 m^-1^). So, Lazar crk had the lowest aromatic NOM on average, but it also had one of the most aromatic samples of all (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Indeed, Lazar had the greatest range in E~2~:E~3~ values with 9% RSD. Overall, the most diversity in aromaticity measured by SAC~254~ were recorded in samples from the headwater sites of Chris crk (50% RSD), Jarvis (47% RSD) and Lazar(45% RSD). And the site with the greatest average aromaticity was Weeks crk (mean SAC~254~ 30.3 m^-1^, mean E~2~:E~3~ 4.27).
+Similar to DOC, there was an overall reduction in NOM aromaticity and/or molecular size from upstream to downstream sites (Figure \@ref(fig:synopticBox)). The absolute lowest measurement for NOM aromaticity occurred at the Cragg crk site (SAC~254~ 4.69 m^-1^, E~2~:E~3~ of 5.03). Cragg crk had among the lowest mean aromaticity also, though it tied with Judge crk (mean E~2~:E~3~ of 4.59), which were very close to Lazar crk (mean E~2~:E~3~ of 4.55, and mean SAC~254~ 10.6 m^-1^). Surprisingly, while the Cragg crk site recorded the lowest absolute (and had among the lowest average) aromaticity, it's headwater sites (Jarvis and Lazar creeks) had samples with the most aromatic character. Lazar crk had one of the most aromatic samples of all measured samples (lowest recorded E~2~:E~3~, 3.77), and the other headwater creek in Cragg basin, Jarvis creek, had the other most aromatic sample measured by SAC~254~ (41.7 m^-1^). So, Lazar crk had the lowest aromatic NOM on average, but it also had one of the most aromatic samples of all (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Indeed, Lazar had the greatest range in E~2~:E~3~ values with 9% RSD. Overall, the most diversity in aromaticity measured by SAC~254~ were recorded in samples from the headwater sites of Chris crk (50% RSD), Jarvis (47% RSD) and Lazar (45% RSD). And the site with the greatest average aromaticity was Weeks crk (mean SAC~254~ 30.3 m^-1^, mean E~2~:E~3~ 4.27).
 
 \  
 
 ```{r synopticNOMdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_NOM-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2, 2, 0, 2, 2), 
-               caption = "*Spectral properties of natural organic matter (NOM) character across twelve synoptically sampled river sites*",
+               caption = "Spectral Properties of Natural Organic Matter (NOM) Character Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "Count", 
                              "Mean SAC~254~ (m^-1^)", "sd (±)", "Relative sd (± %)",
                              "SAC~254~ Min. (m^-1^)", "SAC~254~ Max. (m^-1^)",
@@ -95,20 +99,20 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allP
 
 \ 
 
-The Leech River Tunnel is the effective outlet of the LWSA, where runoff from each nested catchment is integrated. Similarly, from a headwaters perspective, runoff from Weeks and Chris crk sub-basins is integrated at the Leech-Head site, and Jarvis and Lazar creek sub-basins are ultimately integrated at the CraggCrk site. There was a greater distance between the Cragg crk site and its headwaters' sampling sites compared to Leech-Head and its headwaters' locations (see Figure \@ref(fig:sampleSitesMap)). Within these nested catchments, sampling methods were evaluated to assess whether a Rack sampler combined with Grab sampling downstream of a confluence captured the same range in DOC as synoptic Grab sampling at upstream sites. Synoptic Grab samples from the headwater sites of Weeks and Chris crk were compared to Rack and Grab samples from below their confluence at Leech-Head (Figure \@ref(fig:abcDOCbox), plot A). Similarly, Grab samples collected at the headwaters of Cragg crk, Jarvis and Lazar, were compared to all samples at the Cragg crk monitoring site (Figure \@ref(fig:abcDOCbox), plot B). Higher order rivers were also examined in a similar way, comparing Rack and Grab samples at the Leech Tunnel to Grab samples collected upstream at Leech-Head, Cragg crk and West Leech sites (Figure \@ref(fig:abcDOCbox), plot C).
+The Leech River Tunnel is the effective outlet of the LWSA, where runoff from each nested catchment is integrated. Similarly, from a headwater's perspective, runoff from Weeks and Chris crk sub-basins is integrated at the Leech-Head site, and Jarvis and Lazar creek sub-basins are ultimately integrated at the Cragg crk site. There was a greater distance between the Cragg crk site and its headwaters' sampling sites compared to Leech-Head and its headwaters' locations (see Figure \@ref(fig:sampleSitesMap)). Within these nested catchments, sampling methods were evaluated to assess whether a Rack sampler combined with Grab sampling downstream of a confluence captured the same range in DOC as synoptic Grab sampling at upstream sites. Synoptic Grab samples from the headwater sites of Weeks and Chris crk were compared to Rack and Grab samples from below their confluence at Leech-Head (Figure \@ref(fig:abcDOCbox), plot A). Similarly, Grab samples collected at the headwaters of Cragg crk, Jarvis and Lazar, were compared to all samples at the Cragg crk monitoring site (Figure \@ref(fig:abcDOCbox), plot B). Higher order rivers were also examined in a similar way, comparing Rack and Grab samples at the Leech Tunnel to Grab samples collected upstream at Leech-Head, Cragg crk and West Leech sites (Figure \@ref(fig:abcDOCbox), plot C).
 
 \    
 
-Below the confluence of headwaters sites, the combination of Rack and Grab sampling did not capture the ranges of DOC observed in upstream Grab samples alone. Leech-Head, below the confluence of Weeks and Chris crk, collected DOC concentrations that were close to the average of the two headwaters (Figure \@ref(fig:abcDOCbox), plot A); the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value = 3.8 x 10^-5^). Similarly, Rack and Grab samples collected at Cragg crk did not cover the same DOC variance as Grab sampling at the headwaters Jarvis and Lazar (Levene's p-value 0.0011). Unlike Leech-Head, which had moderate DOC concentrations relative to it's two headwaters, samples collected at Cragg crk had DOC that was lower than concentrations in either of it's headwater sites (Figure \@ref(fig:abcDOCbox), plot B). The differences in DOC attenuation between these two headwater sets can be attributed to different reach lengths between headwaters' confluence and the downstream monitoring sites; where Leech-Head was very close to the headwaters' confluence and Cragg crk was considerably further from it's headwaters' sampling locations.
+Below the confluence of headwaters sites, the combination of Rack and Grab sampling did not capture the ranges of DOC observed in upstream Grab samples alone. Leech-Head, below the confluence of Weeks and Chris crk, collected DOC concentrations that were close to the average of the two headwaters (Figure \@ref(fig:abcDOCbox), plot A); the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value = 3.8 x 10^-5^). Similarly, Rack and Grab samples collected at Cragg crk did not cover the same DOC variance as Grab sampling at the headwaters Jarvis and Lazar (Levene's p-value 0.0011). Unlike Leech-Head, which had moderate DOC concentrations relative to its two headwaters, samples collected at Cragg crk had DOC that was lower than concentrations in either of its headwater sites (Figure \@ref(fig:abcDOCbox), plot B). The differences in DOC attenuation between these two headwater sets can be attributed to different reach lengths between headwaters' confluence and the downstream monitoring sites; where Leech-Head was very close to the headwaters' confluence and Cragg crk was considerably further from its headwaters' sampling locations.
 
 \  
 
-When higher order rivers were examined in a similar upstream-Grab/downstream-Rack'n'Grab comparison, the combination of Rack and Grab samples at the Leech Tunnel site did capture the DOC ranges observed in Grab samples at three upstream sites (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in DOC variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.165). Similar trends were seen for SAC~254~ but not E~2~:E~3~ (Appendix ####).  
+When higher order rivers were examined in a similar upstream Grab to downstream Rack & Grab comparison, the combination of Rack and Grab samples at the Leech Tunnel site did capture the DOC ranges observed in Grab samples at three upstream sites (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in DOC variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.165). Similar trends were seen for SAC~254~ but not E~2~:E~3~ (Appendix ####).  
 
 \  
 
 ```{r abcDOCbox, fig.cap = fig_cap}
-fig_cap = "\\label{fig:abcDOCbox}  Comparison of dissolved organic carbon concentrations colelcted by Grab sampling at upstream sites compared to results obtained from both Vertical Rack and Grab sampling below their confluence(s). Plots A and B show Grab samples from headwater (HW) sites compared to Rack & Grab at downstream (DS) monitoring sites. Plot C shows DOC from Grab samples collected at upstream sites (US) compared to Rack & Grab at the mainstem monitoring site."
+fig_cap = "\\label{fig:abcDOCbox}  Comparison of dissolved organic carbon concentrations collected by Grab sampling at upstream sites compared to results obtained from both Vertical Rack and Grab sampling below their confluence(s). Plots A and B show Grab samples from headwater (HW) sites compared to Rack & Grab at downstream (DS) monitoring sites. Plot C shows DOC from Grab samples collected at upstream sites (US) compared to Rack & Grab at the mainstem monitoring site."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-boxplot_up-down_metcompar.png")
 ```
@@ -126,7 +130,7 @@ From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across t
 \  
 
 ```{r DOCloessAll, fig.cap = fig_cap}
-fig_cap = "\\label{fig:DOCloessAll} Dissolved organic carbon concentrations over sixteen months (Oct 2018 - Feb 2020) at twelve sites across the Greater Victoria Water Supply Area. Trend line shows locally weighted smoothing (loess method, local polynomial regression).*"
+fig_cap = "\\label{fig:DOCloessAll} Dissolved organic carbon concentrations over sixteen months (Oct 2018 - Feb 2020) at twelve sites across the Greater Victoria Water Supply Area. Trend line shows locally weighted smoothing (loess method, local polynomial regression)."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-loess-trend.png")
 ```
@@ -146,6 +150,8 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-samples-DOC-summary
 
 \  
 
+\  
+
 The wet season was most heavily sampled at the six monitoring sites in the Leech WSA, where Rack samplers more doubled the number of samples that would have been collected through Grab sampling alone. Isolating DOC results to the six monitoring sites during only the wet season allows for further comparison of Vertical Rack sampling methods to standard synoptic Grab sampling (Table \@ref(tab:wetDOCcountInstallsites)). Across the six sites, Rack samples contained higher DOC concentrations on average that Grab samples (6.8 mg/L compared to 5.2 mg/L). Surprisingly, a slightly greater variance was captured through Grab sampling (53% RSD) compared to Rack sampling (41% RSD). 
 
 \  
@@ -159,7 +165,9 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-InstallSamples-DOC-summa
 
 \  
 
-Weeks had the highest DOC overall, and slightly higher concentrations during events (Rack samples). Each of the sites had elevated DOC collected by Rack sampling in events (Table \@ref(tab:wetDOCcountInstallsites)). West Leech showed the greatest difference between DOC collected as Grab samples (4.2	± 1.9) and Rack-based event samples (6.7 ± 2.2 mg/L). This suggests that hydrologic pulses in the West Leech sub-basin create considerably different DOC transport than non-stormflow in that sub-basin (Figure \@ref(fig:wetSeasonDOC)). 
+\  
+
+All of the sites had higher mean DOC collected by Rack sampling in events compared to DOC mean in Grab samples (Table \@ref(tab:wetDOCcountInstallsites)). Weeks crk had the highest DOC overall, with slightly higher concentrations occurring during stream rise (10.3 mg/L). Interestingly, Rack samples at Weeks crk captured both the highest and lowest DOC concentrations (min of 3.8 mg/L, max of 19.1 mg/L).  West Leech showed the greatest difference between DOC collected as Grab samples (4.2	± 1.9) and Rack-based event samples (6.7 ± 2.2 mg/L). This suggests that hydrologic pulses in the West Leech sub-basin create considerably different DOC transport than non-stormflow in that sub-basin (Figure \@ref(fig:wetSeasonDOC)). 
 
 \  
 
@@ -180,95 +188,82 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_Gvs
 
 \  
 
-___Bill: what else do you see in these figures?  It looks to be Crag and Chris are very similar, and Weeks, Leach head and West Leach are very different from each other, and the Chris, Cragg, West leach and the tunnel___ 
+A similar range in DOC concentrations were collected by both Grab and Rack sampling at Weeks, though Rack sampling collected a greater representation of all concentrations. Leech head was the only site where the maximum DOC concentration was obtained by Grab sampling (11.6 mg/L), rather than Rack (max 10.6 mg/L).
 
 \  
 
 ##### Seasonal changes in NOM character
 
-To evaluate if (and when) molecular character of river samples shifted, DOC concentrations (NPOC) were compared to specific absorbance coefficients at 254 nm (SAC~254~, used by the spectro::lyser to estimate DOC). DOC concentration was well correlated with SAC~254~ during the wet season, but the relationship was not as tight in the dry season or during the transition from dry to wet seasons in the first-flush event. Characteristics of wet-season samples caused positive bias in absorbance-based DOC estimates, while dry-season sample characteristics lead to negative bias in UV-based DOC estimates (Figure \@ref(fig:seasonalDOCest)). The separation of wet and dry season samples suggests that river NOM had more aromatic character (more humic-like, allochthonous NOM) during the wet-season than during the dry-season.
+To evaluate if (and when) molecular character of synoptic stream samples shifted, DOC concentrations (as NPOC) were compared to specific absorbance coefficients at 254 nm (SAC~254~, used by the spectro::lyser to estimate DOC). DOC concentration was well correlated with SAC~254~ during the wet season, but the relationship was not as tight in the dry season or during the transition from dry to wet seasons in the first-flush event (Figure \@ref(fig:seasonalDOCest)). The separation of wet and dry season samples NOM character suggests that aqueous NOM in the GVSWA had more aromatic character (more humic-like, allochthonous NOM) during the wet-season than during the dry-season. NOM in  the dry season had comparable concentrations to the wet season but the absorbance at 254 nm was not as strongly elated, leading to weaker NOM spectral absorbance relationships.
 
 \  
 
 ```{r seasonalDOCest, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalDOCest} Dissolved organic carbon concentration (DOC, as NPOC) plotted against spectral absorbance coefficient at 254 nm (SAC~254~, m^-1^) with results grouped by sampling season. The inset shows DOC (as NPOC) plotted against esatimated DOC concentration output by the spectro::lyser through UV-Vis spectroscopy with an internal calibration file references to SAC~254~, and the dashed lined indicates best fit (1:1)."
+fig_cap = "\\label{fig:seasonalDOCest} Dissolved organic carbon concentration (DOC) plotted against spectral absorbance coefficient at 254 nm (SAC~254~, m^-1^) with results grouped by sampling season. The inset shows DOC (as NPOC) plotted against DOC estimated by the spectro::lyser with an internal calibration file referenced to SAC~254~, where the dashed lined indicates best fit (1:1)."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-SAC254_seasonal_with-Inset.png")
 ```
 
 \  
 
-### Discussion -- needs to be rearranged
+\  
+
+These results show a seasonal shift in NOM character, from more aliphatic NOM in the dry season to more aromatic NOM in the wet season. The wet-season NOM character caused positive bias in absorbance-based DOC estimates and dry-season sample characteristics lead to negative bias in UV-based DOC estimates. This suggests that spectral estimates of DOC should be evaluated carefully and that a season-specific site-based calibration should be conducted if DOC is to be estimated by UV-Vis absorbance.     
+
+\  
+
+
+### Discussion 
+
+```
+-- needs to be rearranged
 
 ___This section is pretty thin…. You need to look at the dataset and results and pull out what is interesting, what is  in the norm and what his means – how does this compare to the literature? Other areas across BC, the country etc, what appears to drive variation, possible differences etc.  What do you think is happening to DOC as it moves from US to DS.  How could this be further investigated and then set the story up for the next chapter.___
-
+```
 
 
 \  
 
-Vertical Racks were a consistent and comparable method of reproducible sample collection that proved important for passively capturing higher DOC concentrations which were not observed through Grab sampling alone. These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]). Rack sampling more than doubled the number of samples that would have been collected through Grab sampling alone. Therefore, the Vertical Rack method was a useful tool for collection of event-based samples with increased sampling frequency. Questionable sample hold-times resulted in a few occasions when logistics or high water limited safe immediate retrieval of Vertical Rack samples. However, the Vertical Rack method employed in this project allowed for calculation of sample hold-times, quality-control evaluation or data for processing of acceptable samples only.  
+Vertical Racks proved important for measuring event-based DOC concentrations which were 26% higher, on average, than those observed through Grab sampling alone. These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]).
+While higher mean DOC was observed in event-based samples, Rack sample results did not have greater variance in concentrations compared to Grab samples, which was surprising. Perhaps hydrologic pulses transport higher concentrations that remain relatively stable throughout the rising limb of the hydrograph. In a west coast small-basins (< 1 km^2^) study in the H. J. Andrews Experimental Forest (Oregon, CA) pre-storm DOC was measured as 1-2 mg/L with increases to 5-7 mg/L (~200% increase) during events [@Hood2006]. Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes would allow for a more detailed understanding of relationships between streamflow and NOM dynamics. 
 
 \  
 
-Overall, DOC decreased in concentration from upstream to downstream and followed a sinusoidal trend over time.  
+Rack sampling also more than doubled the number of samples that would have been collected through Grab sampling alone. Therefore, the Vertical Rack method was a useful tool for collection of event-based samples with increased sampling frequency. Questionable sample hold-times resulted in a few occasions when logistics or high water limited safe immediate retrieval of Vertical Rack samples. However, the method employed in this project allowed for calculation of sample hold-times and quality-control evaluation for data processing of acceptable samples only.  
 
 \  
 
-Spectroscopic analyses indicated that the wet season NOM was predominantly humic (i.e., aromatic) content and the summer carbon was derived from more aliphatic NOM sources. These observations support a shift in NOM source pools from autochthonous in the dry (summer) period to allochthonous in the wet season when the landscape was more connected to the river systems. The seasonal shifts observed in this project agree with the shift from autochthonous to allochthonous NOM that is predicted by the river continuum concept [@Vannote1980; @Meyer1983]. 
+Spatially, DOC concentrations and NOM aromaticity decreased from upstream to downstream sampling sites. And there was greater variation in NOM character (i.e. aromaticity) at the headwater sites than the higher-order streams. This spatial reduction in NOM molecular diversity from lower-order to higher-order streams agrees with predictions of the river continuum concept [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. Weeks crk, which drains from Weeks Lake and surrounding wetlands, had the greatest average aromaticity and highest DOC concentrations of all GVWSA synoptic sampling sites. This was to be expected as wetlands have been linked to high concentrations of aromatic-rich NOM [e.g. @Helms2008; @Agren2008; @Aiken1995].   
+
+\  
+
+Of the main tributaries to the Leech River mainstem, Cragg crk had the lowest DOC and least aromatic character while West Leech DOC was higher and more aromatic. West Leech also showed greater range in DOC and NOM character during event-based sampling, which suggests that theories of the pulse shunt concept could be particularly relevant in the West Leech River sub-basin (more in next chapter).  
+
+\  
+
+The longitudinal attenuation of DOC concentration and NOM character suggests that there is a downstream dilution effect, which implies that if a disturbance in headwater systems were to affect NOM (as well as related water quality parameters), the effect would be greatly reduced at the Leech Tunnel. This is encouraging for possible experimental forest fuel treatments (e.g. prescribed burning) in the Leech WSA headwaters. The scaling of DOC from upstream to downstream also bodes well for future inter-basin transfers and drinking water treatability, as lower DOC concentrations typically result in fewer DBPS being generated, lower risk of biofouling and more effective disinfection with oxidants. Similar DOC concentrations observed at Rithet crk (primary tributary to Sooke Reservoir) and Leech River at the Tunnel is promising from a source water perspective for future supplemental supply from the Leech.
 
 \ 
 
-The River continuum concept predicts greater NOM diversity in headwaters than in higher order streams; these results only partially agree with that RCC concept and it appears that the wetland-dominated sub-basin (Weeks) had much more consistent NOM character than the ChrisCrk headwater stream. The longitudinal decrease in aromatic NOM character could have been an affect of dilution during the wet season. Of the main tributaries to the Leech River mainstem, CraggCrk had less aromatic character than WestLeech.   
+Temporally, DOC concentrations across the GVWSA followed a sinusoidal pattern over time. The differences between seasonal DOC means were negligible; both wet and dry seasons had mean DOC of approximately 6 mg/L. This was higher than the recommended 4 mg/L TOC for source water quality [@BC2019]. DOC concentrations in the GVWSA were similar to concentrations measured in Malcolm Knapp Research Forest near Maple Ridge on the lower mainland (near Vancouver, BC), where Emily Mistick found a forested basin (0.97 km^2^) to have mean baseflow DOC of 4.3 ± 0.8 mg/L with approximately 2 mg/L increase during events [@Mistick2019].
 
 \  
 
-In agreement with RCC, results showed greater diversity in NOM character (i.e. aromaticity) in headwater sites than at higher order streams. 
-
-\  
-
-
-
-\  
-
-Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites as was a seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season. The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing. 
-
-\  
-
-The longitudinal attenuation of DOC observed in the LWSA .  
-...
-
-Results suggest that there is a downstream dilution of DOC concentrations, which implies that if a disturbance in headwater systems were to affect DOC concentrations (and related water quality parameters) the effect would be greatly reduced at the Leech Tunnel. This is encouraging for possible experimental forest fuel treatments (e.g. prescribed burning) in the headwaters, and bodes well for future inter-basin transfers and drinking water treatability.
-
-\  
-
-* DOC scaling from upstream to down stream -- comparable to JimButtle Turkey Lakes studies
-
-* Low DOC at Rithet and Leech Tunnel sub-basin sites is good news from a source water perspective, as lower DOC concentrations typically result in fewer DBPS being generated, lower risk of biofouling and more effective disinfection with oxidants.  
-
-* "Vertical Racks captured higher DOC concentrations than synoptic Grab sampling alone and the two methods collected samples with comparable variance (Table \@ref(tab:wetDOCcountInstallsites))." These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]). 
-
-* Racks collected higher DOC on average, compared to Grabs -- but did not have greater variance... which was surprising. 
-
+Seasonal changes in the relationship between DOC and spectral absorbance coefficients at 254 nm (SAC~254~) were observed across the GVWSA, and indicated that wet-season NOM was predominantly humic content and dry-season NOM was more aliphatic. These observations support a shift in NOM source pools from autochthonous in the dry (summer) period to allochthonous in the wet season, when the landscape was more connected to the river systems. The seasonal shifts observed in this project agree with the shift from autochthonous to allochthonous NOM that is predicted by the river continuum concept [@Vannote1980; @Meyer1983].
 
 \  
 
 ### Conclusions and future directions 
 
-
-```
-Here, highlight the most interesting results and primary discussion point and if you met the objectives and answered the research question, and then identify any problems with the methods, data etc that could be fixed with future research and any questions that still need to be answered.
-```
-
-___maybe some version of this in the summary:___ _The objective of this work was to design a sampling strategy to measure the ranges of DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech water supply area (LWSA)._ 
-
-
+The objective of this work was to design a sampling strategy to measure the ranges NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of DOC concentrations and NOM aromaticity, and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams, though West Leech also had relatively high aromaticity compared to other higher-order streams.
 
 \  
 
-While the absolute magnitude of DOC varied between sites, the general temporal trends were similar across the study area. DOC was highest in the early wet season, then progressively decreased through the wet season. DOC was lowest during the coldest periods, and concentrations of DOC increased over the summer. 
+While the absolute magnitude of DOC varied between sites, the general temporal trends were similar across the study area. DOC was highest in the early wet season, then progressively decreased with lows during the coldest periods. DOC concentrations increased over the summer, reaching highs for the start of the wet season. 
 
 \  
 
-Expanded comparisons between the Leech Tunnel site, Rithet Creek and Judge Creek would be interesting from a source water perspective, particularly if conducted in conjunction with Sooke Reservoir water balance and residence time studies.  
+The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method is capable of achieving good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be interesting to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Such an expanded comparisons between the Leech Tunnel site, with Rithet and Judge creeks would be particularly interesting if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegredation of NOM).  
 
-:)
+\  
+

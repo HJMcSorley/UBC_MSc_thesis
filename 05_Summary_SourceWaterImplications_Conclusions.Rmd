@@ -37,31 +37,34 @@ __Objective 4:__   Provide context of how results can be used to inform watershe
   * UV degradation is likely in lakes
   * while river water quality will not identify source water quality (pre-treatment) it is important to know IN TANDEM with Sooke Res limnology to anticipate potnetial problems based on conditions in each & knowledge of likely or possible interactions
   
+  
+***
+\  
+
+Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites as was a seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season. The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing. 
+
+***
+  
 ###	Concluding remarks
 
 ___answer all these questions in summary___
 
-__RQ.1.__   What are the ranges for DOC concentration and NOM character between adjacent drainage basins and among nested sub-catchments in this water supply area, and what influence does seasonality have on concentration of DOC and character of NOM?
+*__Research Question 1.__   How do DOC concentrations and NOM character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have on concentration of DOC and character of NOM?
 
-__Objective 1:__   Design a sampling strategy to measure the spatial and temporal variation of DOC concentration and NOM character, then describe spatiotemporal patterns that were observed.
-
-\  
-
-__RQ.2.__   Are hydrological processes the main driver for DOC transport and variation in the LWSA and is there a mechanistic relationship between river stage and DOC or NOM?
-
-__Objective 2:__   Relate water sample results to river stage and report on the relationships between DOC concentrations and NOM character with stage, particularly paying attention to differences between baseflow and storm events.
+*__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of DOC concentrations and NOM character.
 
 \  
 
-__RQ.3.__   Are some watershed characteristics more important than others for influencing DOC and NOM dynamics?
+*__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in DOC and NOM in the Leech watershed?
 
-__Objective 3:__   Assess the importance of watershed characteristics and conditions as explanatory variables for DOC and DOM patterns.
+*__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between DOC, NOM and key variables.
 
 \  
 
-__RQ.4.__   What are the implications for watershed management and future drinking water supply?
+__Research Question 3.__   What are the implications for watershed management and future drinking water supply?
 
-__Objective 4:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+__Objective 3:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+
 
 *******************
 
