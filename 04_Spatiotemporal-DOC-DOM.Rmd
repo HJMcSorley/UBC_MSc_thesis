@@ -17,12 +17,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Synopsis
 
-The first objective for the surface water sampling methods defined in Chapter 2 was to describe spatial and temporal patterns and variation of DOC concentrations and NOM character across the Greater Victoria water supply area (GVWSA, refer to Chapter 2, Figure \@ref(fig:sampleSitesMap) for map), and to identify the influence of seasonality on concentration of DOC and character of NOM.
-
-
-*__RQ.1.__   How do DOC concentrations and NOM character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have on concentration of DOC and character of NOM?
-
-*__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of DOC concentrations and NOM character.
+The methods defined in Chapter 2 were used to collect and analyze surface water samples with the objective of describing spatial and temporal patterns and variation of DOC concentrations and NOM character across the Greater Victoria water supply area (GVWSA, refer to Chapter 2, Figure \@ref(fig:sampleSitesMap) for map). Additionally, interpretation of results saught to identify the influence of seasonality on concentration of DOC and character of NOM.
 
 \  
 
