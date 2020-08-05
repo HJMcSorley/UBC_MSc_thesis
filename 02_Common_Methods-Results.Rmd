@@ -49,11 +49,10 @@ Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl
 \  
 
 ```{r siteCharacteristics}
-fig_cap = "\\label{fig:sampleSitesMap} *River sampling sites across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC.*"
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics.csv", col_names = TRUE) %>%
   knitr::kable(digits = 1,
-               caption = "*River sampling sites across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC.*")
+               caption = "Watershed Characteristics of Twelve Synoptic Sampling Sites Across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC")
 ```  
 
 \  
@@ -83,7 +82,7 @@ Siphon sampling bottles were used on vertical sampling racks as a cost-effective
 Each Vertical Rack included a central stilling well (3.81 cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). 
 
 ```{r verticalRack, fig.cap = fig_cap}
-fig_cap = "\\label{fig:verticalRack} *Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2).*"
+fig_cap = "\\label{fig:verticalRack} Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2)."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
 ```  
@@ -170,7 +169,7 @@ NOM molecular character was judged through a combination of specific UV-absorban
 
 \  
 
-###### Spectral indicies of NOM character
+###### Spectral indices of NOM character
 
 More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Similarly, specific ultraviolet absorbance (SUVA~254~) is an indicator of NOM aromaticity relative to concentration. SUVA~254~ is calculated by dividing SAC~254~ by DOC concentration (mgL^-1^ as NPOC) and has units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m). The concentration of NOM in a sample is proportional to the intensity of absorbance (based on the Beer-Lambert law) which is why SUVA~254~ (specific UV absorbance at 254 nm) is widely used as indicator of sample aromaticity (concentration-relative character).
 

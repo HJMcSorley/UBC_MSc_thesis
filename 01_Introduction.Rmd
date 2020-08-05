@@ -91,8 +91,6 @@ It's possible that changing climatic conditions could lead to increases in hydro
 
 ### Surface water sampling strategies
 
-\  
-
 A discrete water sample cannot tell a complete story of a hydrologic system's water quality dynamics but it can provide information about specific attributes of the water in a given place at a certain time -- so long as that sample accurately represent the body from which it was collected. Non-representative sampling techniques will lead to non-representative analytical results and ultimately to erroneous conclusions [@CCME2011]. Collection of water samples must be done consistently and carefully to avoid sample contamination or sampling errors which would generate unreliable analytical results [@CCME2011]. In a carbon-based world, sample contamination must be a crucial and constant consideration when sampling for NOM [@CCME2011; @Cory2011]. 
 
 \  

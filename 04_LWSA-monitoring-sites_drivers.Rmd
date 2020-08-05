@@ -138,7 +138,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summa
 
 \  
 
-Rain was important for each of the three variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table @\ref(tab:EventsTab)), while SAC~254~ peaked slightly after in the 2019/2020 wet season (events 10 & 11, Table @\ref(tab:EventsTab)). E~2~:E~3~ indicated maximum aromaticity and molecular size occured in late-season events (events 3 & 17, Table @\ref(tab:EventsTab)).
+Rain was important for each of the three variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked slightly after in the 2019/2020 wet season (events 10 & 11, Table \@ref(tab:EventsTab)). E~2~:E~3~ indicated maximum aromaticity and molecular size occurred in late-season events (events 3 & 17, Table \@ref(tab:EventsTab)).
 
 \  
 
@@ -179,7 +179,7 @@ Antecedent 7-day air temperature was calculated to have the greatest relative im
 
 ```{r DOC1, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} Antecedent 7-day air temperature as a predictor variable for concentrations of dissolved organice carbon in the wet and dry seasons of the Leech Water Supply Area (including loess trend line)."
+fig_cap = "\\label{fig:RFplot} Antecedent 7-day air temperature as a predictor variable for concentrations of dissolved organic carbon in the wet and dry seasons of the Leech Water Supply Area (including loess trend line)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-1-temp.png")
 ```
@@ -192,7 +192,7 @@ For DOC, antecedent 30-day rain accumulation had the second greatest relative pr
 
 ```{r DOC2, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:RFplot} Antecedent 30-day rain as a predictor variable for concentrations of dissolved organic carbon at six sites across the Leech Water Supply Area (including loess trend line). "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-2-rain.png")
 ```
@@ -205,7 +205,7 @@ The third ranking predictor variable for DOC was metamorphic parent material, of
 
 ```{r DOC3, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:RFplot} Metamorphic parent material (Wark-Gneiss) as a predictor variable for concentrations of dissolved organic carbon (DOC) in the Leech Water Supply Area"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-3-gneiss.png")
 ```
@@ -218,7 +218,7 @@ Sub-basin slope ranked fourth in importance as a predictor fpr DOC. The relation
 
 ```{r DOC4, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:RFplot} : Median basin slope as a predictor variable for concentrations of dissolved organic carbon in the Leech Water Supply Area "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4-slope.png")
 ```
@@ -237,7 +237,7 @@ For predicting SAC~254~, the stage at which each stream sample was collected was
 
 ```{r SAC1, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:SAC1} Sampling stage as a predictor variable for SAC~254~ in the Leech Water Supply Area (including loess trend line)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-1-stage.png")
 ```
@@ -250,7 +250,7 @@ The second ranking predictor variable for SAC~254~ was antecedent 7-day air temp
 
 ```{r SAC2, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:SAC2} Antecedent 7-day air temperature as a predictor variable for SAC~254~ in the Leech Water Supply Area (including loess trend line)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-2-temp.png")
 ```
@@ -263,7 +263,7 @@ Antecedent 30-day rain was ranked third most important for predicting SAC~254~, 
 
 ```{r SAC3, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:SAC3} Antecedent 30-day rain as a predictor variable for of SAC~254~ in the Leech Water Supply Area (including loess trend line) "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-3-rain.png")
 ```
@@ -275,7 +275,7 @@ Ranking fourth for predicting SAC~254~ was metamorphic parent material. Like DOC
 \  
 
 ```{r SAC4, fig.cap = fig_cap}
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:SAC4} Metamorphic parent material (Wark-Gneiss) as a predictor variable of SAC~254~ in the Leech Water Supply Area"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-4-metamorphic.png")
 ```
@@ -294,7 +294,7 @@ As a predictor for E~2~:E~3~, antecedent 30-day rain was ranked most important. 
 
 ```{r E1, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:E1} Antecedent 30-day rain as a predictor variable for of E~2~:E~3~ in the Leech Water Supply Area (including loess trend line)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-1-rain.png")
 ```
@@ -307,7 +307,7 @@ The second most important predictor was sampling stage which was inversely relat
 
 ```{r E2, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:E2} Sampling stage as a predictor variable for E~2~:E~3~ in the Leech Water Supply Area (including loess trend line)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-2-stage.png")
 ```
@@ -320,9 +320,9 @@ Ranking third for variable importance in predicting E~2~:E~3~ was average tree a
 
 ```{r E3n4, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:E3n4} "
+fig_cap = "\\label{fig:E3n4} Average tree age and percent basin area harvested as predictors for E~2~:E~3~ in the Leech Water Supply Area "
 
-knitr::include_graphics("Ch4_RF_E2E3-predictor-3n4-Trees-Logging")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-3n4-Trees-Logging.png")
 ```
 
 \  
@@ -333,7 +333,7 @@ Metamorphic parent material ranked fifth in importance for predicting E~2~:E~3~,
 
 ```{r E5, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplot} "
+fig_cap = "\\label{fig:E5} Metamorphic parent material (Wark-Gneiss) as a predictor variable of E~2~:E~3~ in the Leech Water Supply Area"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-5-metamorphic.png")
 ```
@@ -342,11 +342,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-pred
 
 \  
 
-___...not sure about this section... perhaps try a similar local extrema thing with SAC~254~ and or E~2~:E~3~??...___
-
-#### Rising stage and NOM dynamics
+### Rising stage and NOM dynamics
 
 Across the LWSA, fluctuations in river stage were temporally synchronized over the sixteen-month study period. Overall river responses among the six sites were confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
+
+\  
+
+Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks creek.
 
 \  
 
@@ -360,50 +362,30 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
                              "largest change in stage (cm)", 
                              "minimum rate of stage change (cm/hr)", 
                              "maximum rate of stage change (cm/hr)"),
-               caption = "*Summary of stream response to precipitation events across the LWSA.*")
+               caption = "Summary of Stream Response to Rain Events Across Six Monitoring sites in the Leech Water Supply Area.")
 ```
 
 \  
 
-Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the Tunnel (site 6) and smallest at the Weeks headwater creek (site 1) which drains Weeks Lake and surrounding wetlands. 
+While streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage, to determine is a similar harmony was present for fluctuations in DOC or spectral properties, the proportion of common DOC and stage extrema samples were calcualted (Table \@ref(tab:synchDOCstage). A proportion of 1 indicates perfect agreement between samples of extreme DOC and sample stage, and zero indicates complete asynchrony between DOC and stage highs and lows. Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. 
 
-\  
-
-####   Spatiotemporal synchrony in local extrema: river stage and DOC
-
-\  
-
-Streams responded harmoniously to precipitation across the Leech WSA, with synchronous changes in stage, but was a similar harmony present for fluctuations in DOC or spectral properties? 
-Table \@ref(tab:synchDOCstage) summarizes proportions of common DOC and stage extrema samples, where 1 indicates perfect agreement between samples of extreme DOC and sample-stage, and zero indicates complete asynchrony between DOC and stage highs and lows. 
 
 \  
 
 ```{r synchDOCstage}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0,3,3),
-               caption = "*Proportion of samples for which peak DOC was found in the highest sample stage.*")
+               caption = "Proportion of Samples for Which Peak Dissolved Organic Carbon (DOC) was Collected at the Highest Sample Stage.")
 ```
 
 \  
 
-Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. Overall, each site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships (Figure \@ref(fig:extremaplot)).
-
-\  
-
-...
-
-\ 
-
-In general DOC concentations were lowest at the beginning of events and increased with a rise in stage.  Then identify instances where this was not the case and if you noticed dilution affects as the season progressed – you could just make a simple plot of stage vs DOC (ie x vs y plot) at each site and see how they group and see if this grouping changes through the season.
-
-\  
-
-...
+Each of the six site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. In general DOC concentrations were lowest at the beginning of events and increased with a rise in stage (Figure \@ref(fig:extremaplot)). 
 
 \  
 
 ```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:extremaplot} *Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely.*"
+fig_cap = "\\label{fig:extremaplot} Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
 ```
@@ -414,7 +396,7 @@ Changes in DOC during events varied from a little more than 1% DOC change to nea
 
 \  
 
-___This table provides some useful info.  I would tru to look at individual events and pull out interesting facts like during this event, DOC concentration tripled or doubled or etc.  And then maybe present mean differences among events:___
+* Still to do:___look at individual events and pull out interesting facts (during this event, DOC concentration tripled or doubled, etc)... + differences among events___
 
 \  
 
@@ -427,10 +409,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
 
 \
 
-
-
 ### Discussion
 
+Random Forest variable importance measure showed that conditions ranked among the most important for predicting DOC, SAC~254 and E~2~:E~3~. 
+
+\  
 
 Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
 
@@ -439,7 +422,6 @@ Increasing DOC on the rising limb indicates that source material is not limited 
 * source versus transport limitations -- DOC in rising limb
 * any hysteretic behaviour? (DOC over time by event)
 * was there a relationship between rain event intensity/duration and DOC?
-* use RF to determine relative importance of watershed characteristics as DOC predictors
 * use RF to in-fill missing NOM absorbance data based on relationship with DOC??? Like Yeonuk did for CH4 flux
 
 * 
@@ -449,15 +431,21 @@ A pattern in DOC concentration during rising stage can provide information about
 
 \  
 
+___Future directions:___
+
+\  
+
 With additional Fire-weather data, it would be interesting to explore whether the variables for fire risk (humidity) were also predictors for increased NOM or DOC.
+
+\  
+
+* matched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading... 
+
+Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
+
+\  
 
 ### Conculsions
 
 * establishing connectivity among nested catchments as a baseline for experimental treatments (future)
 
-
-Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
-
-future:
-
-* matched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading (future)

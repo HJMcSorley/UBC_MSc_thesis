@@ -103,7 +103,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DO
 
 \  
 
+\  
+ 
+```{r seasonMegaplot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonMegaplot} *Rain events, stream response, sample collection and seasons across the Leech Water Supply Area. Dashed vertical lines indicate the start of rain events, points indicate the timing and stage of river samples collected, and pink vertical lines delineate seasons.*"
 
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_Wx-stage-subbasins_megaplot_sampletype.png")
+```
 
 ### Remove until you fix this
 
