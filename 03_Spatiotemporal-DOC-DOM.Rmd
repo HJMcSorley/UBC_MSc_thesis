@@ -215,13 +215,6 @@ These results show a seasonal shift in NOM character, from more aliphatic NOM in
 
 ### Discussion 
 
-```
--- needs to be rearranged
-
-___This section is pretty thin…. You need to look at the dataset and results and pull out what is interesting, what is  in the norm and what his means – how does this compare to the literature? Other areas across BC, the country etc, what appears to drive variation, possible differences etc.  What do you think is happening to DOC as it moves from US to DS.  How could this be further investigated and then set the story up for the next chapter.___
-```
-
-
 \  
 
 Vertical Racks proved important for measuring event-based DOC concentrations which were 26% higher, on average, than those observed through Grab sampling alone. These results are in agreement with other studies that found higher DOC concentration on the rising limb of the hydrograph compared to non-event samples (e.g. [@Yang2015; @Raymond2016; @Raymond2010]).

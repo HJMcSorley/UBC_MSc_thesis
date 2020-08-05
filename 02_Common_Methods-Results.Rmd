@@ -190,13 +190,13 @@ Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) wer
 
 \  
 
-## Foundational Results
+### Foundational Results
 
 This chapter presents results used to informed all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and it's application in seasonal delineation and quality control for Vertical Rack sampling method development. 
 
 \
 
-### CRD Weather data
+#### CRD Weather data
 
 The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech water supply area (LWSA). Chris Creek weather station was near the headwaters of the Leech watershed and Martin's Gulch was located near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in defining sampling seasons and air temperature data were used in quality control assessments of Vertical Rack sample hold-times. 
 
@@ -231,7 +231,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 
 \  
 
-### Seasonal delineation  
+#### Seasonal delineation  
 
 
 Wet seasons were defined by conditions that generated stream responses significant enough to collect Vertical Rack samples, and the dry season was defined by baseflow conditions where stream response was not detected at the Vertical Racks. There were 18 rain events of sufficient magnitude for Vertical Rack sample collection; the conditions that corresponded to these major rain events were precipitation accumulating to 50 mm or more with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)). 
@@ -261,9 +261,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 \  
 
-### Vertical Rack sampling quality control
+#### Vertical Rack sampling quality control
 
-#### Assumptions of mixing
+##### Assumptions of mixing
 
 Trail cameras were installed at four sites (data not included) and observation of streamflow during Rack sample collection showed highly turbulent flows, thus the assumption of well-mixed water was accepted. 
 
@@ -273,7 +273,7 @@ Discrete sample collection was validated in lab using food colouring and a flow-
 
 \  
 
-#### Hold-time experiments
+##### Hold-time experiments
 
 Hold-time experiments included three sets of 10 samples, each set compared 5 samples held on the Vertical Rack to 5 replicate samples analyzed immediately after collection ("fresh"). For each set, the number of days that samples remained held on the Rack were used with air temperatures during the hold-period to assess Rack sample stability (Figure \@ref(fig:HoldTimeAirPlot)). Results were used to flag data as suspect or acceptable for inclusion in further data analysis.
 
@@ -321,7 +321,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 \  
 
-### Results summary 
+#### Results summary 
 
 Results of hold-time experiments suggest that early-wet-season ("first flush") samples may contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character; and while DOC concentrations were not statistically altered, there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in NOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%. 
 

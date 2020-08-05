@@ -4,3 +4,167 @@ Aqueous forms of NOM in freshwater play important ecological roles but can be pr
 
 
 Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
+
+\  
+
+An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across southern Vancouver Island). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+
+\  
+
+The wet season was better represented than the dry by sample number and was therefore more interesting in terms of DOC concentration patterns. Additionally, the wet season water quality is most relevant with respect to water supply because that is when flows are great enough to allow diversion for inter-basin transfer. High flows during the wet season also showed increased DOC concentrations relative to low flows; stormflow samples collected on vertical Racks showed higher DOC than Grab samples manually collected across wet seasons (Figure \@ref(fig:subbasinSampletypeBox). 
+
+\  
+
+```{r subbasinSampletypeBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinSampletypeBox} *Wet-season dissolved organic carbon concentrations grouped by site and sample collection method, where Grab samples were manually obtained (n = 109) and Rack samples were collected passively on vertical racks fit with siphon sampler bottles (n = 170).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxplot.png")
+```
+
+\  
+
+```{r wetDOCtable}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,0,1,0,0,2,2), 
+               col.names = c("Site", 
+                             "Sample type",
+                             "Sample count",
+                             "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", 
+                             "Min. (mg/L)", "Max. (mg/L)"),
+               caption = "*Wet-season dissolved organic carbon concentrations by sample collection method across six monitoring sites in the LWSA.*")
+
+```
+
+\  
+
+\  
+
+```{r seasonalsamples}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_NOM-seasonal-summary.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,0,1,1,1,1,1,1,2,2), 
+               col.names = c("Site", "season", "count", 
+                             "mean DOC (mg/L)", "sd (±)",
+                             "mean SAC~254~ (m^-1^)", "sd (±)", 
+                             "mean SUVA~254~ (L mg^-1^ m^-1^)", "sd (±)",
+                             "mean E~2~E~3~", "sd (±)"),
+               caption = "*Seasonal comparison of sample results by monitoring site*")
+```
+
+
+___...repeat section , cut or change...___
+
+
+
+...
+
+\  
+
+### Spatial & temporal patterns in DOC & NOM
+
+Highest concentrations and variance in DOC occurred at the Weeks Main creek headwater site (Weeks, site 1), a sub-basin in the northwest of the Leech watershed which includes Weeks Lake and surrounding wetlands. Lowest average concentration and variance in DOC was recorded at Cragg Creek (CraggCrk, site 4), a mainstem river that drains the east sub-basin of the Leech watershed including Jarvis Lake and the western slopes of Survey Mountain. DOC concentration and variance at Leech River Tunnel (Tunnel, site 6) was somewhat between that at WestLeech and CraggCrk (Figure \@ref(fig:subbasinDOCbox)).
+
+\  
+
+```{r subbasinDOCbox, fig.cap = fig_cap}
+fig_cap = "\\label{fig:subbasinDOCbox} *Dissolved organic carbon (DOC) concentrations across the Leech watershed over sixteen months, collected by standard grab sampling and on vertical racks (318 samples total).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC_subbasin_boxplots.png")
+```
+
+\  
+
+DOC concentrations followed similar sinusoidal trends over time at each site, with amplitude of variation decreasing from upstream to downstream sites (Figure \@ref(fig:DOCloess)).     
+
+```{r DOCloess, fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCloess} *Trends in dissolved organic carbon concentrations over sixteen months (Oct 2018 to Feb 2020) at six sites across the Leech water supply area. Trend lines represents locally weighted smoothing ('loess' method of local polynomial regression).*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess.png")
+```
+
+\  
+
+
+
+
+
+-----
+
+#### River stage, DOC & NOM
+
+In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear (Figure \@ref(fig:stageRelations)). ...___I don’t actually see that pattern at all in those figures – not sure you can do hysteresis plots with the data you have, but you should try___....
+
+\  
+
+```{r stageRelations, fig.cap = fig_cap}
+fig_cap = "\\label{fig:stageRelations} *Relationships between river stage and sample DOC concentrations and NOM character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship. None of the relationships were were linear, some had more large variance and some variables remained consistent with changing stage.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DOC-NOM.png")
+```
+
+\  
+
+
+
+### Remove until you fix this
+
+___this section is a bit whacky -- needs attention to Fix___
+To get a better idea of stream surge NOM dynamics, well sampled rising limb stream surges were examined... 
+* mid wet 2018
+Trip 4 // rain event 3 [for sites 1-5] 
+Trip 5 // rain event 4 for Tunnel
+
+* earlier 2019
+rain events 10 & 11 (maybe)
+
+
+To better understand how timing of peak DOC varied among sites during the wet season, a subset of samples was selected for closer analysis (highlighted in Figure \@ref(fig:extremaplot) and expanded in Figure \@ref(fig:subsetExtremaplot)). The subset included samples from rain events 10-12; a subset deemed to be representative of DOC concentrations and rain events across the wet seasons, as there were no significant differences between DOC concentrations or rain events (amount and intensity) for this subset of samples compared to the rest of the study period (Table \@ref(tab:subbsetWilcox)). There were significant differences in UV~254~ absorbance for events 10-12 compared to the rest of the study period, therefore this subset was not considered representative of spectral trends overall and was only examined for DOC trends.
+
+\  
+
+```{r subbsetWilcox}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = c(0,0,4),
+               caption = "*p-values from Wilcoxon tests comparing the subset of rain events 10-12 and those samples' DOC results to all other sampled rain events, showing no significant difference between the groups.*")
+```
+
+\  
+
+* Rates of stream response (times to peak): Table \@ref(tab:stageResponsesubset)
+
+\  
+
+```{r stageResponsesubset}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "max. rain intensity (mm/hr)", "min. rain intensity (mm/hr)", "shortest time to peak stage (hr)", "fastest time to peak stage (hr)", "smallest change in stage (cm)", "largest change in stage (cm)", "fastest time to peak (cm/hr)", "slowest time to peak (cm/hr)"),
+               caption = "*Summary of stream response to precipitation events 10-12 across the LWSA.*")
+```
+
+\  
+
+* DOC changes in stormflow
+* range of DOC in each event: Table \@ref(tab:DOCResponsesubset) 
+
+\  
+
+```{r DOCResponsesubset}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary_subset.csv", col_names = TRUE) %>% 
+  knitr::kable(digits = 1, 
+               col.names = c("site", "lowest DOC in stormflow (mg/L)", "highest DOC in stormflow (mg/L)", 
+                             "smallest change in DOC (mg/L)", "largest change in DOC (mg/L)", "smallest difference in DOC during stormflow (%)", "largest difference in DOC during stormflow (%)"),
+               caption = "*Summary of DOC changes within stormflow response to precipitation events 10-12 across the LWSA.*")
+```
+
+\  
+
+```{r subsetExtremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:subsetExtremaplot} *Stage and samples collected for the subset of samples collected over rain events 9-12, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png")
+```
+
+\  
+
+___end whacky section___
+
+\
