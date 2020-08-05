@@ -26,7 +26,7 @@ Surface water samples were collected between October 2018 and February 2020 to m
 
 \  
 
-###    Synoptic Sampling sites 
+###   Sampling sites 
 
 Twelve sites were selected across the GVWSA, most of which were in the Leech WSA. A few key streams in the Sooke WSA were included to facilitate preliminary comparison between the two WSAs for reference to future diversion scenarios. The three Sooke WSA sites were: Rithet, Judge, and Deception creeks. The nine Leech WSA sites were: Weeks, Chris, Jarvis, and Lazar creeks (headwaters), Leech River at the head (below of the confluence of headwaters), Cragg Creek, West Leech River, Leech River at the beach below confluence of West Leech, and the Leech River at the Tunnel (Figure \@ref(fig:sampleSitesMap)).
 
@@ -147,7 +147,7 @@ Calibration was completed each time the zero-air gas cylinder was replaced, and 
 
 \  
 
-#### Characterization of NOM (natural organic matter)
+#### Characterizing NOM (natural organic matter)
 
 To assess the molecular character of NOM, samples were analyzed by UV-Vis spectroscopy (ultraviolet-visible light) using a spectro::lyser (s::can, Vienna, Austria). The spectro::lyser is a self-contained spectrophotometer and data-logger (with external power source) that measures turbidity and UV-Vis absorbance (i.e. light attenuation) across the wavelength range of 200 nm to 750 nm (recorded at 2.5 nm intervals). While the spectro::lyser is a field-deployable instrument, it was used in a laboratory setting for these analyses. 
 
@@ -195,7 +195,7 @@ This chapter presents results used to informed all subsequent data analysis, int
 
 \
 
-#### CRD Weather data
+#### CRD weather data
 
 The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech water supply area (LWSA). Chris Creek weather station was near the headwaters of the Leech watershed and Martin's Gulch was located near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in defining sampling seasons and air temperature data were used in quality control assessments of Vertical Rack sample hold-times. 
 
@@ -320,7 +320,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 \  
 
-#### Results summary 
+#### Foundational Results summary 
 
 Results of hold-time experiments suggest that early-wet-season ("first flush") samples may contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character; and while DOC concentrations were not statistically altered, there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in NOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%. 
 

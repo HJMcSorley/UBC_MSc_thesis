@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Spatial and Temporal Patterns in DOC & NOM across the Greater Victoria Water Supply Area
+##	Spatial and Temporal Patterns in DOC & NOM across Greater Victoria Water Supply Areas
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 

@@ -5264,6 +5264,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC25
 
 ## plots: predictors to predictants: one to one
 
+### DOC
 ```{r}
 
 # 1 DOC with 7-day temp
@@ -5327,9 +5328,11 @@ d <- sixfilter_physiographic %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4-slope.png",
        width = 4, height = 4, units = "in")
 
+```
 
-# --- SAC254
+###  SAC254
 
+```{r}
 # 1 SAC254 with sampling stage
 aa <- sixfilter_physiographic %>% 
   ggplot(aes(x = sampleStage_normalized, y = SAC254_Abs.m)) +
@@ -5353,7 +5356,7 @@ bb <- sixfilter_physiographic %>%
   scale_fill_brewer(palette="Set2") +
   theme(legend.position = "top",
         text = element_text(size = 11)) +
-  #facet_wrap(~rain_season, scales = "free_x") +
+  # facet_wrap(~rain_season, scales = "free_x") + # doesn't clarify much
   labs(x = "Antecedent 7-day air temp. (°C)", y = expression(SAC[254]~(mg/L)) ) 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-2-temp.png",
@@ -5388,10 +5391,12 @@ dd <- sixfilter_physiographic %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_SAC254-predictor-4-metamorphic.png",
        width = 4, height = 4, units = "in")
+```
 
 
-# --- E2E3
+### E2E3
 
+```{r}
 # 1 E2E3 with 30-day rain
 aaa <- sixfilter_physiographic %>% 
   filter(E2E3 > 2.5) %>% 
