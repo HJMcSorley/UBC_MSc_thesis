@@ -233,7 +233,11 @@ Rack sampling also more than doubled the number of samples that would have been 
 
 \  
 
-Spatially, DOC concentrations and NOM aromaticity decreased from upstream to downstream sampling sites. And there was greater variation in NOM character (i.e. aromaticity) at the headwater sites than the higher-order streams. This spatial reduction in NOM molecular diversity from lower-order to higher-order streams agrees with predictions of the river continuum concept [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. Weeks crk, which drains from Weeks Lake and surrounding wetlands, had the greatest average aromaticity and highest DOC concentrations of all GVWSA synoptic sampling sites. This was to be expected as wetlands have been linked to high concentrations of aromatic-rich NOM [e.g. @Helms2008; @Agren2008; @Aiken1995].   
+Spatially, DOC concentrations and NOM aromaticity decreased from upstream to downstream sampling sites. And there was greater variation in NOM character (i.e. aromaticity) at the headwater sites than the higher-order streams. This spatial reduction in NOM molecular diversity from lower-order to higher-order streams agrees with predictions of the river continuum concept [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. Weeks crk, which drains from Weeks Lake and surrounding wetlands, had the greatest average aromaticity and highest DOC concentrations of all GVWSA synoptic sampling sites. This was to be expected as wetlands have been linked to high concentrations of aromatic-rich NOM [e.g. @Helms2008; @Agren2008; @Aiken1995]. 
+
+\  
+
+NOM character at the West Leech site had high aromaticity compared to other higher-order streams, and showed considerable event-based changes in NOM character and concentration, but it's not clear why. The West Leech sub-basin (20.85 km^2^) was of similar size to Leech-head (20.59 km^2^) and Cragg creek sub-basin (28.06 km^2^), with lower percent wetland cover (0.4% compared to 2.6% and 1.6% at Leech-head and Cragg creek sub-basins). The West Leech sub-basin was the only synoptically sampled sub-basin that did not have metamorphic parent-material, it would be interesting to evaluate watershed features to identify possible drivers for NOM dynamics.         
 
 \  
 
@@ -255,7 +259,7 @@ Seasonal changes in the relationship between DOC and spectral absorbance coeffic
 
 ### Conclusions and future directions 
 
-The objective of this work was to design a sampling strategy to measure the ranges NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of DOC concentrations and NOM aromaticity, and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams, though West Leech also had relatively high aromaticity compared to other higher-order streams.
+The objective of this work was to design a sampling strategy to measure the ranges NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration of DOC and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of DOC concentrations and NOM aromaticity, and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams.
 
 \  
 
