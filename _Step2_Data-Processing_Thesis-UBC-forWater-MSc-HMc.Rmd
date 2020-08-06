@@ -1268,8 +1268,8 @@ HT <- QAQC %>%
     HoldTime_set == "C" & HoldTime_rep == c(6:10) ~ "CR", # third set rack, 2019-12-16 (trip 20)
   )) 
 #%>% 
- # filter(sample != "HoldTime-B6") %>% 
-  #filter(!is.na(sample))  # -----------------change
+# filter(sample != "HoldTime-B6") %>% 
+#filter(!is.na(sample))  # -----------------change
 
 # how many days passed between collecting fresh and held samples?
 a <- HT %>% 
@@ -1361,10 +1361,10 @@ d <- HT %>%
 #cowplot::plot_grid(a, b, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6))  
 
 # without estimated DOC
-cowplot::plot_grid(a, b, d, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6, 1.6))  
+cowplot::plot_grid(a, b, c, align = "v", ncol = 1, rel_heights = c(2, 1.6, 1.6))  
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png", 
-       height = 7, width = 6, units = "in")
+       height = 5, width = 6, units = "in")
 
 ```
 
@@ -1383,7 +1383,7 @@ a <- HT %>%
              scales = "free_y")
 # QQ plot
 aa <- ggpubr::ggqqplot(data = HT, x = "NPOC_ppm",
-                 color = "HoldTime_set")
+                       color = "HoldTime_set")
 
 # Tests UV254 abs for normality 
 b <- HT %>% 
@@ -1396,7 +1396,7 @@ b <- HT %>%
              scales = "free_y")
 # QQ plot
 bb <- ggpubr::ggqqplot(data = HT, x = "SAC254_Abs.m",
-                 color = "HoldTime_set")
+                       color = "HoldTime_set")
 
 # Tests DOC estimate abs for normality 
 c <- HT %>% 
@@ -1409,7 +1409,7 @@ c <- HT %>%
              scales = "free_y")
 # QQ plot
 cc <- ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
-                 color = "HoldTime_set")
+                       color = "HoldTime_set")
 # ---
 # Wilcoxon tests (not normally distributed + small sample size)
 # null hypothesis: there is no difference between the means
@@ -1420,7 +1420,7 @@ cc <- ggpubr::ggqqplot(data = HT, x = "DOCeq_ppm",
 # run tests and compile results
 # paired (before and after)
 HT_Wilcoxon_tests <- bind_rows(
-## NPOC ---
+  ## NPOC ---
   # set A
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "AG"], HT$NPOC_ppm[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "NPOC_ppm"),
@@ -1430,7 +1430,7 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$NPOC_ppm[HT$group == "CG"], HT$NPOC_ppm[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "NPOC_ppm"),
-## UV-254 ---
+  ## UV-254 ---
   # set A
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "AG"], HT$SAC254_Abs.m[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "SAC254_Abs.m"),
@@ -1440,7 +1440,7 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$SAC254_Abs.m[HT$group == "CG"], HT$SAC254_Abs.m[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "SAC254_Abs.m"), 
-## SUVA ---
+  ## SUVA ---
   # set A
   tidy(wilcox.test(HT$SUVA[HT$group == "AG"], HT$SUVA[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "SUVA"),
@@ -1450,7 +1450,7 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$SUVA[HT$group == "CG"], HT$SUVA[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "SUVA"),
-## E2:E3 ---
+  ## E2:E3 ---
   # set A
   tidy(wilcox.test(HT$E2E3[HT$group == "AG"], HT$E2E3[HT$group == "AR"], paired = TRUE)) %>% 
     mutate(Set = "A", Analysis = "E2:E3"),
@@ -1460,7 +1460,7 @@ HT_Wilcoxon_tests <- bind_rows(
   # set C
   tidy(wilcox.test(HT$E2E3[HT$group == "CG"], HT$E2E3[HT$group == "CR"], paired = TRUE)) %>% 
     mutate(Set = "C", Analysis = "E2:E3")) %>% 
-# pull values  
+  # pull values  
   select(Analysis, Set, p.value) %>% 
   # pull values of interest to summarize
   mutate(sig.diff = case_when(p.value < 0.01 ~ "***",
@@ -1574,23 +1574,28 @@ HT_tests_summary <- HT_Wilcoxon_tests %>%
                     group_by(HoldTime_set) %>% 
                     summarise(lapse = last(lapse)))$lapse) %>% 
   full_join(change, by = c("Set" = "set")) %>% 
+  select(-c(percent_change_SUVA, sig.diff_SUVA, p.value_SUVA)) %>% # drop SUVA, focus on SAC254
+  # change % change values to character & rename E2:E3 to remove colon
+  mutate(percent_change_DOC = as.character(round(percent_change_DOC, 0)),
+         percent_change_UV254 = as.character(round(percent_change_UV254, 0)),
+         percent_change_E2E3 = as.character(round(percent_change_E2E3, 0)) ) %>% 
+  rename(sig.diff_E2E3 = 'sig.diff_E2:E3') %>% 
+  # combine * from significance with % change (tidier table)
+  mutate(percent_change_DOC = case_when(
+    sig.diff_NPOC_ppm != "NA" ~ paste0(percent_change_DOC,  sig.diff_NPOC_ppm), TRUE ~ percent_change_DOC),
+    percent_change_UV254 = case_when(
+      sig.diff_SAC254_Abs.m != "NA" ~ paste0(percent_change_UV254,  sig.diff_SAC254_Abs.m), TRUE ~ percent_change_UV254),
+    percent_change_E2E3 = case_when(
+      sig.diff_E2E3 != "NA" ~ paste0(percent_change_E2E3,  sig.diff_E2E3), TRUE ~ percent_change_E2E3)) %>% 
+  select(-c(sig.diff_NPOC_ppm, sig.diff_SAC254_Abs.m, sig.diff_E2E3)) %>% 
   mutate("Air temp." = c(A_temp, B_temp, C_temp)) %>% 
   select(Set, "Days held" = lapse, 
          "Air temp.",
          "DOC change (%)" = percent_change_DOC, # rename: new = old
-         "sig. diff (DOC)" = sig.diff_NPOC_ppm,  
          "p-value (DOC)" = p.value_NPOC_ppm,
-         
          "SAC254 change (%)" = percent_change_UV254,
-         "sig. diff (SAC254)" = sig.diff_SAC254_Abs.m, 
          "p-value (SAC254)" = p.value_SAC254_Abs.m,
-         
-         "SUVA254 change (%)" = percent_change_SUVA,
-         "sig. diff (SUVA254)" = sig.diff_SUVA, 
-         "p-value (SUVA254)" = p.value_SUVA,
-         
          "E2:E3 change (%)" = percent_change_E2E3,
-         "sig. diff (E2:E3)" = 'sig.diff_E2:E3', 
          "p-value (E2:E3)" = 'p.value_E2:E3') %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv")
 
@@ -1709,9 +1714,9 @@ sampleresults <- sampleresults %>%
     TRUE ~ "synoptic")) %>% 
   mutate(site_type = factor(site_type),
          DateTime_sampled = as.POSIXct(DateTime_sampled, tz = TZ)) 
- 
+
 sampleresults$site <- fct_recode(sampleresults$site, Deception = "Deception-crk",
-             Deception = "Deception-res")
+                                 Deception = "Deception-res")
 
 
 ```
@@ -2201,7 +2206,7 @@ cowplot::plot_grid(subasin_snow_plot, subasin_meantemp_plot, subbasin_meanrain_p
 
 # save megaplot
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_megaplot2.png",
-         width = 6, height = 7.5, units = "in")
+       width = 6, height = 7.5, units = "in")
 
 
 # --- baby mega plot
@@ -2233,7 +2238,7 @@ cowplot::plot_grid(subasin_snow_plot, subbasin_meanrain_plot, stage_sample_event
                    ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,6)) 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTemp.png",
-         width = 6, height = 7.5, units = "in")
+       width = 6, height = 7.5, units = "in")
 
 ```
 
@@ -2371,13 +2376,13 @@ stg_sample_plot <- stage_samples %>%
                      values = c("Grab" = 24, "Rack" = 21))+ #triangle, circle
   scale_fill_manual(breaks = c("Grab", "Rack"), 
                     values = c("Grab" = forWater_colours2[["MyOrange"]], 
-                              "Rack" = forWater_colours2[["MyOrange"]]))+
+                               "Rack" = forWater_colours2[["MyOrange"]]))+
   # seasons
   geom_vline(colour = "magenta", linetype = "solid", 
              xintercept = start_dry2019, size = 0.55)+
   geom_vline(colour = "magenta", linetype = "solid", 
              xintercept = start_FF2019, size = 0.55)+
-    facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
   labs(y = "River Stage (cm)", x = "", shape = "Sample method:")+
   scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months")+
   theme(text = element_text(size = 11), axis.text.x = element_text(angle = 30, hjust = 1),
@@ -2413,7 +2418,7 @@ ch3snowplot <- subasin_snow_plot +
   geom_vline(colour = "magenta", linetype = "solid", 
              xintercept = as.Date(start_FF2019), size = 0.55) 
 
-  
+
 # plot grid 
 cowplot::plot_grid(ch3snowplot, ch3rainplot, stg_sample_plot, 
                    ncol = 1, align = "v", rel_heights = c(1,1,7))
@@ -2505,11 +2510,11 @@ d <- synopticfilter %>%
   labs(x = "", y = expression(E[2]:E[3]), shape = "sample collection method:")
 
 # arrange as combo
-syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
-                   rel_heights = c(1, 1, 1, 1.5))
+syn_box <- cowplot::plot_grid(a,b,d, ncol = 1, align = "v", labels = "AUTO",
+                              rel_heights = c(1, 1, 1.4))
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
 
 
 ```
@@ -2520,7 +2525,7 @@ dat <- synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(rain_season == "wet") %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") 
-    
+
 # all sites -- all samples DOC
 a <- dat %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
@@ -2586,7 +2591,7 @@ d <- dat %>%
 
 # arrange as combo
 syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
-                   rel_heights = c(1, 1, 1, 1.5))
+                              rel_heights = c(1, 1, 1, 1.5))
 
 # save
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
@@ -2599,7 +2604,7 @@ dat <- synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(rain_season == "dry") %>% 
   dplyr::filter(sample_type == "Grab" | sample_type == "Rack") 
-    
+
 # all sites -- all samples DOC
 a <- dat %>% 
   ggplot(aes(x = site, y = NPOC_ppm, fill = site)) +
@@ -2665,7 +2670,7 @@ d <- dat %>%
 
 # arrange as combo
 syn_box <- cowplot::plot_grid(a,b,c,d, ncol = 1, align = "v", labels = "AUTO",
-                   rel_heights = c(1, 1, 1, 1.5))
+                              rel_heights = c(1, 1, 1, 1.5))
 
 # save
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png", width = 5, height = 8, units = "in")
@@ -3217,7 +3222,7 @@ c <- dat %>%
   car::leveneTest(SAC254_Abs.m ~ UPDWN, data = .) %>% 
   tidy() %>% 
   pull("p.value") %>% first()
-  
+
 ```
 
 ##### E2E3 comparison - upstrm grab to dwnstrm rack + grab
@@ -3357,7 +3362,7 @@ c <- dat %>%
   car::leveneTest(E2E3 ~ UPDWN, data = .) %>% 
   tidy() %>% 
   pull("p.value") %>% first()
-  
+
 ```
 
 ### Ch3? spatial variance DOC Samples
@@ -3432,36 +3437,36 @@ b <- sixfilter_sub %>%
             DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup() %>% 
   bind_rows( #  grouped by headwaters / mainstem / outlet
-sixfilter_sub %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack",
-         subbasin_type != "outlet") %>% 
-  group_by(subbasin_type) %>% 
-  summarize(site = "summary",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T),
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
-  ungroup()) %>% 
+    sixfilter_sub %>%
+      filter(QAQC_flag == "OK") %>% 
+      filter(sample_type == "Grab" | sample_type == "Rack",
+             subbasin_type != "outlet") %>% 
+      group_by(subbasin_type) %>% 
+      summarize(site = "summary",
+                count = n(), 
+                DOCmean = mean(NPOC_ppm, na.rm = T), 
+                DOCsd = sd(NPOC_ppm, na.rm = T),
+                RSD = (DOCsd/DOCmean)*100,
+                DOCmin = min(NPOC_ppm, na.rm = T), 
+                DOCmedian = median(NPOC_ppm, na.rm = T), 
+                DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+      select(site, subbasin_type, count, DOCmean, DOCsd, RSD, DOCmin, DOCmedian, DOCmax) %>%  # reorder
+      ungroup()) %>% 
   bind_rows( # nested catchment summary
-sixfilter_sub %>%
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  filter(subbasin_type != "outlet") %>% 
-  summarize(site = "summary",
-            subbasin_type = "all nested catchments (sites 1-5)",
-            count = n(), 
-            DOCmean = mean(NPOC_ppm, na.rm = T), 
-            DOCsd = sd(NPOC_ppm, na.rm = T), 
-            RSD = (DOCsd/DOCmean)*100,
-            DOCmin = min(NPOC_ppm, na.rm = T), 
-            DOCmedian = median(NPOC_ppm, na.rm = T), 
-            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
-  ungroup()) %>%
+    sixfilter_sub %>%
+      filter(QAQC_flag == "OK") %>% 
+      filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+      filter(subbasin_type != "outlet") %>% 
+      summarize(site = "summary",
+                subbasin_type = "all nested catchments (sites 1-5)",
+                count = n(), 
+                DOCmean = mean(NPOC_ppm, na.rm = T), 
+                DOCsd = sd(NPOC_ppm, na.rm = T), 
+                RSD = (DOCsd/DOCmean)*100,
+                DOCmin = min(NPOC_ppm, na.rm = T), 
+                DOCmedian = median(NPOC_ppm, na.rm = T), 
+                DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+      ungroup()) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = T)
 
 ```
@@ -3643,17 +3648,17 @@ UPDS <- dat %>% filter(site == "LeechHead" | site == "CraggCrk" | site == "WestL
 ```
 # write a summary table
 Levenes_DOC <- tibble::tibble(
-  "Comparison Group" = c("headwaters to Leech", "headwaters to Cragg", "mainstem to outlet"),
-  "Site Comparison" = c("Weeks & Chris creeks (HW) and LeechHead (DS)", 
-                        "Jarvis & Lazar creeks (HW) and CraggCrk (DS)", 
-                        "LeechHead & CraggCrk & WestLeech (US) and Tunnel (DS)"),
-  "DOC p-value" = c(HWL, HWC, UPDS)) %>% 
-  mutate("Significance" = # (confidence level: ***99%, **95%, *90%)
-           case_when("DOC p-value" < 0.01 ~ "***",
-                     "DOC p-value" < 0.05 ~ "**",
-                     "DOC p-value" < 0.1 ~ "*",
-                     "DOC p-value" > 0.1 ~ "homoscedastic")) 
-  #write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = T)
+"Comparison Group" = c("headwaters to Leech", "headwaters to Cragg", "mainstem to outlet"),
+"Site Comparison" = c("Weeks & Chris creeks (HW) and LeechHead (DS)", 
+"Jarvis & Lazar creeks (HW) and CraggCrk (DS)", 
+"LeechHead & CraggCrk & WestLeech (US) and Tunnel (DS)"),
+"DOC p-value" = c(HWL, HWC, UPDS)) %>% 
+mutate("Significance" = # (confidence level: ***99%, **95%, *90%)
+case_when("DOC p-value" < 0.01 ~ "***",
+"DOC p-value" < 0.05 ~ "**",
+"DOC p-value" < 0.1 ~ "*",
+"DOC p-value" > 0.1 ~ "homoscedastic")) 
+#write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = T)
 
 ```
 
@@ -3856,7 +3861,7 @@ SAC <- synopticfilter %>%
   #ggpmisc::stat_poly_eq(formula = y ~ x, 
   #            aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
   #            parse = TRUE, rr.digits = 4) +
-
+  
   labs(y = expression(SAC[254]~(m^-1)),
        x = "DOC (mg/L)")+
   theme_bw() +
@@ -3922,7 +3927,7 @@ sampleresults %>%
 synopticfilter %>% 
   filter(QAQC_flag == "OK") %>% 
   filter(analysis == "DOC", 
-                sample_type == "Grab" | sample_type == "Rack") %>% 
+         sample_type == "Grab" | sample_type == "Rack") %>% 
   ggplot(aes(x = NPOC_ppm, y = SUVA)) +
   geom_jitter(aes(fill = rain_seasons, shape = rain_seasons), size = 3.5, alpha = 0.8) +
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
@@ -4117,25 +4122,25 @@ I think this is garbage and that the peak DOC-stage analysis I did makes more se
 ```
 # calculate trend with linear model
 DOC_rack_trends_lm <- sixfilter %>%
-  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-         sample_type == "Rack", 
-         sample != "Algae",      # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK",      # remove samples with extended hold-time  
-         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
-         NPOC_ppm != 0) %>%  # drop NAs
-  group_by(site, trip) %>% 
-  summarise(yint_DOC = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[1],
-            slope = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[2],
-            r_sq = summary(lm(formula = NPOC_ppm ~ sampleStage_cm))$r.squared,
-            n = n(),
-            range_DOC = max(NPOC_ppm, na.rm = TRUE) - min(NPOC_ppm, na.rm = TRUE),
-            DOC_min = sample[which.min(NPOC_ppm)],
-            DOC_max = sample[which.max(NPOC_ppm)],
-            first_event = first(event_ID),
-            last_event = last(event_ID),
-            first_rack = first(sample, order_by = DateTime_sampled),
-            last_rack = last(sample, order_by = DateTime_sampled)) 
+filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+sample_type == "Rack", 
+sample != "Algae",      # remove sample containing whole algae (high DOC)
+QAQC_flag == "OK",      # remove samples with extended hold-time  
+sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
+!is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm),
+NPOC_ppm != 0) %>%  # drop NAs
+group_by(site, trip) %>% 
+summarise(yint_DOC = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[1],
+slope = coefficients(lm(formula = NPOC_ppm ~ sampleStage_cm))[2],
+r_sq = summary(lm(formula = NPOC_ppm ~ sampleStage_cm))$r.squared,
+n = n(),
+range_DOC = max(NPOC_ppm, na.rm = TRUE) - min(NPOC_ppm, na.rm = TRUE),
+DOC_min = sample[which.min(NPOC_ppm)],
+DOC_max = sample[which.max(NPOC_ppm)],
+first_event = first(event_ID),
+last_event = last(event_ID),
+first_rack = first(sample, order_by = DateTime_sampled),
+last_rack = last(sample, order_by = DateTime_sampled)) 
 
 ```
 
@@ -4182,12 +4187,12 @@ sixfilter %>%
   scale_colour_viridis(option = "plasma")+
   theme_bw()+
   theme(#axis.text.x = element_text(angle = 45, hjust = 1),
-        text = element_text(size = 11),
-        legend.position = "top")+
+    text = element_text(size = 11),
+    legend.position = "top")+
   labs(y = "Sampling Rack Position", x = "Rain event ID", size = "DOC (mg/L):", colour = "")+
   facet_wrap(~site, ncol = 1, strip.position = "right", scales = "free_y")
 #+
- # guides(size = guide_legend("DOC (mg/L)"), colour = guide_legend("DOC (mg/L)"))
+# guides(size = guide_legend("DOC (mg/L)"), colour = guide_legend("DOC (mg/L)"))
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png", 
@@ -4204,31 +4209,31 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 
 # for wet season filter out ID = NA
 eventsample_table <- right_join(events_table,
-  sixfilter %>% 
-  filter(QAQC_flag == "OK") %>%
-  filter(!is.na(event_ID)) %>% 
-  group_by(event_ID) %>% 
-  summarise("Samples collected" = n(),
-            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T),
-            mean_SAC254 = mean(SAC254_Abs.m, na.rm = T),
-            "mean SUVA" = mean(SUVA, na.rm = T) ,
-            "mean E2E3" = mean(E2E3, na.rm = T), 
-            mean_pseudo254 = mean(pseudo254, na.rm = T)
-            #mean_pseudoSUVA = mean(pseudo_SUVA, na.rm = T)
-            ) %>%  
-  mutate(mean_pseudo254 = as.character(mean_pseudo254)) %>% 
-  mutate(mean_SAC254 = case_when(
-    event_ID == "1" ~ mean_pseudo254[[1]],
-    event_ID == "2" ~ mean_pseudo254[[2]],
-    event_ID == "3" ~ mean_pseudo254[[3]],
-    TRUE ~ as.character(mean_SAC254)  )) %>%
-    mutate(mean_SAC254 = as.numeric(mean_SAC254)),
-  # attach to event table
-  by = c("Major event no." = "event_ID" )) %>% 
+                                sixfilter %>% 
+                                  filter(QAQC_flag == "OK") %>%
+                                  filter(!is.na(event_ID)) %>% 
+                                  group_by(event_ID) %>% 
+                                  summarise("Samples collected" = n(),
+                                            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T),
+                                            mean_SAC254 = mean(SAC254_Abs.m, na.rm = T),
+                                            "mean SUVA" = mean(SUVA, na.rm = T) ,
+                                            "mean E2E3" = mean(E2E3, na.rm = T), 
+                                            mean_pseudo254 = mean(pseudo254, na.rm = T)
+                                            #mean_pseudoSUVA = mean(pseudo_SUVA, na.rm = T)
+                                  ) %>%  
+                                  mutate(mean_pseudo254 = as.character(mean_pseudo254)) %>% 
+                                  mutate(mean_SAC254 = case_when(
+                                    event_ID == "1" ~ mean_pseudo254[[1]],
+                                    event_ID == "2" ~ mean_pseudo254[[2]],
+                                    event_ID == "3" ~ mean_pseudo254[[3]],
+                                    TRUE ~ as.character(mean_SAC254)  )) %>%
+                                  mutate(mean_SAC254 = as.numeric(mean_SAC254)),
+                                # attach to event table
+                                by = c("Major event no." = "event_ID" )) %>% 
   # rename things
   select(-c("Storm number", mean_pseudo254)) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv")
-  
+
 
 ```
 
@@ -4330,16 +4335,16 @@ b <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(site, rain_season) %>% 
   summarize(#NOMcount = n(),
-            # SAC254
-            SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
-            SAC254sd = sd(SAC254_Abs.m, na.rm = T),
-            # SUVA
-            SUVAmean = mean(SUVA, na.rm = T), 
-            SUVAsd = sd(SUVA, na.rm = T),
-            # E2E3
-            E2E3mean = mean(E2E3, na.rm = T), 
-            E2E3sd = sd(E2E3, na.rm = T))
-            
+    # SAC254
+    SAC254mean = mean(SAC254_Abs.m, na.rm = T), 
+    SAC254sd = sd(SAC254_Abs.m, na.rm = T),
+    # SUVA
+    SUVAmean = mean(SUVA, na.rm = T), 
+    SUVAsd = sd(SUVA, na.rm = T),
+    # E2E3
+    E2E3mean = mean(E2E3, na.rm = T), 
+    E2E3sd = sd(E2E3, na.rm = T))
+
 
 # all together  
 c <- sixfilter %>% 
@@ -4493,7 +4498,7 @@ bbb <- sixfilter %>%
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
   labs(x = "", y = "", shape = "Sample collection method:")
-  
+
 
 # inset 
 B <- cowplot::ggdraw() +
@@ -4514,7 +4519,7 @@ BB <- cowplot::ggdraw() +
             height = .42, # Inset height
             scale = 1) # Inset scale (1 = none)
 
-  
+
 # SUVA
 c <- sixfilter %>%
   filter(QAQC_flag == "OK",
@@ -4561,7 +4566,7 @@ cc <- sixfilter %>%
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
   labs(x = "", y = "", shape = "Sample collection method:")
-  
+
 
 # inset 
 C <- cowplot::ggdraw() +
@@ -4643,7 +4648,7 @@ b <- sixfilter %>%
             DOC_min = min(NPOC_ppm, na.rm = T),
             DOC_max = max(NPOC_ppm, na.rm = T)) %>% 
   ungroup() 
-  
+
 # make table
 bind_rows(a, b)  %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC_wet-season_subbasin_MeanMinMax-SampleType.csv", col_names = TRUE)
@@ -4809,8 +4814,8 @@ antecedent_Wx <- LWSA_meanWx %>%
          antecedent_7day_rain = as.double(zoo::rollsum(daily_rain, k = 7, align = "right", fill = NA)),
          antecedent_30day_temp = as.double(zoo::rollmean(daily_mean_T, k = 30, align = "right", fill = NA)),
          antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA))
-         )
-  # note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
+  )
+# note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
 
 # join sample results with normalized stage and antecedent 7 day rain
 sixfilter_RF <- sixfilter %>%
@@ -4849,31 +4854,37 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
 
 ```{r}
 
-# select surface & subsurface predictor variables
+# select surface & subsurface predictor variables -- some removed due to cross-correlation
+# values removed were cross-correlated at 0.65 or greater
 AllVariables_NPOC <- sixfilter_physiographic %>% 
   # change rain season to numbers {1 = wet, 0 = dry}
   mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(#event_ID, 
     #antecedent_7day_rain,
     # antecedent_30day_temp,
-    # geo_metasedimentary_percent,  # correlated to meta and logging!? 
-    #geo_metaSedimentaryVolcanic_percent,
+    #geo_metasedimentary_percent,  # correlated to meta and logging!? 
+    #geo_metaSedimentaryVolcanic_percent, # correlated to meta etc 
     #rain_season, 
-    #wetland_percent, correlated to slope + forest
+    # wetland_percent, # correlated to slope + forest
     #forest_percent, # correlated with wetland and open water (all land-cover) + slope
+    #HoldTime_days,
+    geo_metamorphic_percent,
+    geo_igneous_percent,
+    #"geo_ArgilliteMetagreywacke_percent", 
+    # geo_ChertArgilliteVolcanic_percent",
+    #"geo_MetchosinVolcanics_percent",
     NPOC_ppm, # predict DOC
     sampleStage_normalized, 
     antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
     antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
-    #HoldTime_days,
-    geo_metamorphic_percent,
-    geo_igneous_percent,
     drainage_area_km2,
     slope_median_degrees,
     tree_age_average,
+    #geo_WarkGneiss_percent,
+    #geo_Metagreywacke_percent,
     logging_percent_1980to2011)) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_NPOC))
@@ -4883,14 +4894,14 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 DOC_allVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = AllVariables_NPOC, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                             data = AllVariables_NPOC, 
+                                             replace = FALSE, # improve VIM
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), # no. of features
+                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -4919,8 +4930,6 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
                                 "slope (median, degrees)" = "slope_median_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
-                                "meta-sedimentary (%)" = "geo_metasedimentary_percent", 
-                                "meta-sedimentary-volcanic (%)" = "geo_metaSedimentaryVolcanic_percent", 
                                 "igneous (%)" = "geo_igneous_percent"),
          MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
@@ -4928,27 +4937,25 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
   mutate(variable_group = case_when(
     # conditions:
     predictor == "rain event number" | 
-       predictor == "antecedent 7-day air temp" |
-       predictor == "antecedent 30-day air temp" |
-       predictor == "antecedent 7-day rain" |
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day air temp" |
+      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-       predictor == "Sample Hold-time" | 
-       predictor == "sampling stage" ~ "Conditions",
+      predictor == "Sample Hold-time" | 
+      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-    predictor == "rain season" | 
-       predictor ==  "drainage area" | 
-       predictor == "sample site elevation" | 
-       predictor == "forest cover" | 
-       #predictor == "wetland cover" | 
-       #predictor == "open water" | 
-       predictor == "slope (median, degrees)" | 
-       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+      predictor == "rain season" | 
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      #predictor == "wetland cover" | 
+      #predictor == "open water" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" | 
-       predictor == "meta-sedimentary (%)" | 
-       predictor == "meta-sedimentary-volcanic (%)" | 
-       predictor ==  "igneous (%)" ~ "Parent material") ) %>%
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group)) 
 
 # named colour vector
@@ -4988,26 +4995,22 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
   # change rain season to numbers {1 = wet, 0 = dry}
   mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(E2E3, # predict E2E3
-           #event_ID, 
-    #antecedent_7day_rain,
-    # antecedent_30day_temp,
-    # geo_metasedimentary_percent,  # correlated to meta and logging!? 
-    #geo_metaSedimentaryVolcanic_percent,
-    #rain_season, 
-    #wetland_percent, correlated to slope + forest
-    #forest_percent, # correlated with wetland and open water (all land-cover) + slope
-    sampleStage_normalized, 
-    antecedent_30day_rain, # relatively more important than 7-day 
-    antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
-    #HoldTime_days,
-    geo_metamorphic_percent,
+           geo_metamorphic_percent,
     geo_igneous_percent,
+    #"geo_ArgilliteMetagreywacke_percent", 
+    # geo_ChertArgilliteVolcanic_percent",
+    #"geo_MetchosinVolcanics_percent",
+    sampleStage_normalized, 
+    antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
     drainage_area_km2,
     slope_median_degrees,
     tree_age_average,
+    #geo_WarkGneiss_percent,
+    #geo_Metagreywacke_percent,
     logging_percent_1980to2011)) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_E2E3))
@@ -5017,14 +5020,14 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 E2E3_allVars_RF <- randomForest::randomForest(E2E3 ~ ., 
-                                      data = AllVariables_E2E3, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                              data = AllVariables_E2E3, 
+                                              replace = FALSE, # improve VIM
+                                              na.action = randomForest::na.roughfix,
+                                              mtry = ceiling(length(data)/2), # no. of features
+                                              ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                              importance = TRUE,
+                                              proximity = TRUE,
+                                              corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting E2E3
@@ -5053,8 +5056,6 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
                                 "slope (median, degrees)" = "slope_median_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
-                                "meta-sedimentary (%)" = "geo_metasedimentary_percent", 
-                                "meta-sedimentary-volcanic (%)" = "geo_metaSedimentaryVolcanic_percent", 
                                 "igneous (%)" = "geo_igneous_percent"),
          MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
@@ -5062,27 +5063,25 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
   mutate(variable_group = case_when(
     # conditions:
     predictor == "rain event number" | 
-       predictor == "antecedent 7-day air temp" |
-       predictor == "antecedent 30-day air temp" |
-       predictor == "antecedent 7-day rain" |
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day air temp" |
+      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-       predictor == "Sample Hold-time" | 
-       predictor == "sampling stage" ~ "Conditions",
+      predictor == "Sample Hold-time" | 
+      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-    predictor == "rain season" | 
-       predictor ==  "drainage area" | 
-       predictor == "sample site elevation" | 
-       predictor == "forest cover" | 
-       #predictor == "wetland cover" | 
-       #predictor == "open water" | 
-       predictor == "slope (median, degrees)" | 
-       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+      predictor == "rain season" | 
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      #predictor == "wetland cover" | 
+      #predictor == "open water" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" | 
-       predictor == "meta-sedimentary (%)" | 
-       predictor == "meta-sedimentary-volcanic (%)" | 
-       predictor ==  "igneous (%)" ~ "Parent material") ) %>%
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
 
 # named colour vector
@@ -5123,26 +5122,22 @@ AllVariables_SAC254 <- sixfilter_physiographic %>%
   # change rain season to numbers {1 = wet, 0 = dry}
   mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(SAC254_Abs.m, # predict SAC254
-           #event_ID, 
-    #antecedent_7day_rain,
-    # antecedent_30day_temp,
-    # geo_metasedimentary_percent,  # correlated to meta and logging!? 
-    #geo_metaSedimentaryVolcanic_percent,
-    #rain_season, 
-    #wetland_percent, correlated to slope + forest
-    #forest_percent, # correlated with wetland and open water (all land-cover) + slope
-    sampleStage_normalized, 
-    antecedent_30day_rain, # relatively more important than 7-day 
-    antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
-    #HoldTime_days,
-    geo_metamorphic_percent,
+           geo_metamorphic_percent,
     geo_igneous_percent,
+    #"geo_ArgilliteMetagreywacke_percent", 
+    # geo_ChertArgilliteVolcanic_percent",
+    #"geo_MetchosinVolcanics_percent",
+    sampleStage_normalized, 
+    antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
     drainage_area_km2,
     slope_median_degrees,
     tree_age_average,
+    #geo_WarkGneiss_percent,
+    #geo_Metagreywacke_percent,
     logging_percent_1980to2011)) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_SAC254))
@@ -5152,14 +5147,14 @@ AllVariables_SAC254 <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 SAC254_allVars_RF <- randomForest::randomForest(SAC254_Abs.m ~ ., 
-                                      data = AllVariables_SAC254, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                data = AllVariables_SAC254, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting SAC254
@@ -5188,8 +5183,6 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
                                 "slope (median, degrees)" = "slope_median_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
-                                "meta-sedimentary (%)" = "geo_metasedimentary_percent", 
-                                "meta-sedimentary-volcanic (%)" = "geo_metaSedimentaryVolcanic_percent", 
                                 "igneous (%)" = "geo_igneous_percent"),
          MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
@@ -5197,27 +5190,25 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
   mutate(variable_group = case_when(
     # conditions:
     predictor == "rain event number" | 
-       predictor == "antecedent 7-day air temp" |
-       predictor == "antecedent 30-day air temp" |
-       predictor == "antecedent 7-day rain" |
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day air temp" |
+      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-       predictor == "Sample Hold-time" | 
-       predictor == "sampling stage" ~ "Conditions",
+      predictor == "Sample Hold-time" | 
+      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-    predictor == "rain season" | 
-       predictor ==  "drainage area" | 
-       predictor == "sample site elevation" | 
-       predictor == "forest cover" | 
-       #predictor == "wetland cover" | 
-       #predictor == "open water" | 
-       predictor == "slope (median, degrees)" | 
-       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+      predictor == "rain season" | 
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      #predictor == "wetland cover" | 
+      #predictor == "open water" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" | 
-       predictor == "meta-sedimentary (%)" | 
-       predictor == "meta-sedimentary-volcanic (%)" | 
-       predictor ==  "igneous (%)" ~ "Parent material") ) %>%
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
 
 # named colour vector
@@ -5255,8 +5246,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_SAC254.png",
 cowplot::plot_grid(RFplot_all_DOC, 
                    (RFplot_all_SAC254 + theme(legend.position = "none") ),
                    (RFplot_all_E2E3 + theme(legend.position = "none") ),
-                   ncol = 1, rel_heights = c(2, 1.4, 1.4) )
- 
+                   ncol = 1, rel_heights = c(2, 1.3, 1.3) )
+
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC254.png", 
        width = 6, height = 7.5, units = "in")
@@ -5501,7 +5492,7 @@ dat <- odyssey_data %>%
   filter(rain_season == "wet", # remove baseflow
          !is.na(corr_stage_cm)) %>%  
   filter(Date >= "2018-12-06", Date <= "2020-01-31") # overlapping date ranges
-  
+
 
 # check for normality
 dat %>% 
@@ -5713,22 +5704,22 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 # do the same but for stage
 # at all of the six sites (DOC over time) -- not a very good plot
 odyssey_data %>%
-  ggplot(aes(x = DateTime, y = corr_stage_cm)) +
-  theme_bw() +
-  geom_smooth(aes(group = source, 
-                  colour = source, 
-                  linetype = subbasin_type), se = FALSE)+ 
-  scale_colour_manual(values = timetrendcolours1)+
-  scale_linetype_manual(values = c(3, 1, 2))+
-  labs(y = "DOC (mg/L)", fill = "Sample type:", x = "") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-        text = element_text(size = 11), 
-        legend.position = "top", legend.box="vertical")+
-  scale_x_datetime(date_labels = "%Y %b %d",
-                   date_breaks = "2 months",
-                   date_minor_breaks = "1 months")+
-  guides(colour = guide_legend("Site:"),
-         linetype = guide_legend("Basin type:", override.aes = list(colour = "black")))  
+ggplot(aes(x = DateTime, y = corr_stage_cm)) +
+theme_bw() +
+geom_smooth(aes(group = source, 
+colour = source, 
+linetype = subbasin_type), se = FALSE)+ 
+scale_colour_manual(values = timetrendcolours1)+
+scale_linetype_manual(values = c(3, 1, 2))+
+labs(y = "DOC (mg/L)", fill = "Sample type:", x = "") +
+theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+text = element_text(size = 11), 
+legend.position = "top", legend.box="vertical")+
+scale_x_datetime(date_labels = "%Y %b %d",
+date_breaks = "2 months",
+date_minor_breaks = "1 months")+
+guides(colour = guide_legend("Site:"),
+linetype = guide_legend("Basin type:", override.aes = list(colour = "black")))  
 # --- yeah no.
 ```
 
@@ -5995,7 +5986,7 @@ stage_response <- full_join(max_stage, min_stage, by = c("site", "trip", "event_
   group_by(site) %>% 
   # add the rain events summary
   left_join(., (majEvents_summary %>% 
-                select(ID, intensity_mmhr) ), by = c("event_ID" = "ID")  )
+                  select(ID, intensity_mmhr) ), by = c("event_ID" = "ID")  )
 
 
 # summarize all
@@ -6130,35 +6121,35 @@ response_full %>%
 
 # subset stage response
 stage_response_subset <- stage_response %>% 
-  ungroup() %>% 
-  filter(!is.na(stage_change_cm), time_to_peak_hr > 0,
-         event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>%
-  select(c(site, event_ID, intensity_mmhr, stage_max, stage_min, time_to_peak_hr, stage_change_cm, stage_response_cmhr)) %>% 
-  group_by(site) %>% 
-  summarise_all(list(~max(.), ~min(.))) %>% 
-  select(c(site, intensity_mmhr_min, intensity_mmhr_max,   
-           time_to_peak_hr_min, time_to_peak_hr_max,  
-           stage_change_cm_min, stage_change_cm_max,  
-           stage_response_cmhr_min, stage_response_cmhr_max)) %>% 
-  ungroup() %>% 
-  #mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
-  arrange(site) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.csv")
+ungroup() %>% 
+filter(!is.na(stage_change_cm), time_to_peak_hr > 0,
+event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>%
+select(c(site, event_ID, intensity_mmhr, stage_max, stage_min, time_to_peak_hr, stage_change_cm, stage_response_cmhr)) %>% 
+group_by(site) %>% 
+summarise_all(list(~max(.), ~min(.))) %>% 
+select(c(site, intensity_mmhr_min, intensity_mmhr_max,   
+time_to_peak_hr_min, time_to_peak_hr_max,  
+stage_change_cm_min, stage_change_cm_max,  
+stage_response_cmhr_min, stage_response_cmhr_max)) %>% 
+ungroup() %>% 
+#mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+arrange(site) %>% 
+write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_stage-summary_subset.csv")
 
 # subset DOC differences
 DOC_response_subset <- DOC_change %>% 
-  ungroup() %>% 
-  filter(event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
-  select(c(site, DOC_max, DOC_min, DOC_change_mgL, DOC_percentDiff)) %>% 
-  group_by(site) %>% 
-  summarise_all(list(~max(.), ~min(.))) %>% 
-  select(c(site,   
-           DOC_min_min, DOC_max_max,  
-           DOC_change_mgL_min, DOC_change_mgL_max,  
-           DOC_percentDiff_min, DOC_percentDiff_max)) %>%
-  #mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
-  arrange(site) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary_subset.csv")
+ungroup() %>% 
+filter(event_ID == 9 | event_ID == 10 | event_ID == 11 | event_ID == 12) %>% 
+select(c(site, DOC_max, DOC_min, DOC_change_mgL, DOC_percentDiff)) %>% 
+group_by(site) %>% 
+summarise_all(list(~max(.), ~min(.))) %>% 
+select(c(site,   
+DOC_min_min, DOC_max_max,  
+DOC_change_mgL_min, DOC_change_mgL_max,  
+DOC_percentDiff_min, DOC_percentDiff_max)) %>%
+#mutate(event_ID = factor(event_ID, levels = c(1:18))) %>% 
+arrange(site) %>% 
+write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary_subset.csv")
 
 
 ```
@@ -6176,128 +6167,128 @@ narrow in on specific (well-sampled) events
 
 # Maxima
 peaksss1 <- stage_samples %>% 
-  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-         sample_type == "Grab" | sample_type == "Rack", 
-         sample != "Algae",      # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK",      # remove samples with extended hold-time  
-         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-  group_by(site, trip, event_ID) %>% 
-  # summarize maxima
-  summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
-            sample = sample[which.max(NPOC_ppm)],
-            sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
-  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample",  "event_ID")) %>% 
-  arrange(DateTime) %>% ungroup()
+filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+sample_type == "Grab" | sample_type == "Rack", 
+sample != "Algae",      # remove sample containing whole algae (high DOC)
+QAQC_flag == "OK",      # remove samples with extended hold-time  
+sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+!is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
+group_by(site, trip, event_ID) %>% 
+# summarize maxima
+summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
+sample = sample[which.max(NPOC_ppm)],
+sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
+full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample",  "event_ID")) %>% 
+arrange(DateTime) %>% ungroup()
 
 # Minima joined to Maxima for full extrema set
 # peaks in stage_sample = peaksSS
 peaksss <- stage_samples %>% 
-  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-         sample_type == "Grab" | sample_type == "Rack", 
-         sample != "Algae",      # remove sample containing whole algae (high DOC)
-         QAQC_flag == "OK",      # remove samples with extended hold-time  
-         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-  group_by(site, trip, event_ID) %>%
-  # summarize minima
-  summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
-            sample = sample[which.min(NPOC_ppm)],
-            sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
-  full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample", "event_ID")) %>% 
-  arrange(DateTime) %>% 
-  ungroup()
+filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+sample_type == "Grab" | sample_type == "Rack", 
+sample != "Algae",      # remove sample containing whole algae (high DOC)
+QAQC_flag == "OK",      # remove samples with extended hold-time  
+sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+!is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
+group_by(site, trip, event_ID) %>%
+# summarize minima
+summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
+sample = sample[which.min(NPOC_ppm)],
+sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
+full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample", "event_ID")) %>% 
+arrange(DateTime) %>% 
+ungroup()
 
 # -----
 # trip 17-21 -- stage and samples at each site by sampling event
 subset_event_starts <- (events %>% filter(ID == 9 | ID == 10 | ID == 11 | ID == 12))$StartDate
-  
+
 # plot
 peaksss %>% 
-  filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) %>%
-  ggplot(aes(x = DateTime))+
-  #geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+
-  #geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
-  geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
-             xintercept = c(subset_event_starts), size = 0.65, show.legend = TRUE)+ # events start
-  
-  #annotate("text", x = c(subset_event_starts), y = 60, label = c("9", "10", "11", "12")) +
-  
-  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), 
-             shape = 21, size = 2, na.rm = TRUE) +
-  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
-             shape = 24, size = 2, na.rm = TRUE) +
-  geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), 
-             shape = 22, size = 2, na.rm = TRUE) +
-  # geom_text(aes(x = DateTime, y = sampleStage_cm, label = round(NPOC_ppm, 2)), na.rm = TRUE) +
-  scale_fill_manual(values = c(forWater_colours2["MyOrange"], 
-                               forWater_colours2["Green"], 
-                               "grey")) + # manual matches alphabetically (max, min, sample)
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Events 9-12")+
-  scale_x_datetime(breaks = "3 day")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.position = "top") +
-  scale_color_manual(breaks = c("max DOC", "min DOC", "sample"),
-                     values = c("black", "black", "black"))+ # alphabetical matching
-  guides(colour = guide_legend("key:"),
-         fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
+filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) %>%
+ggplot(aes(x = DateTime))+
+#geom_vline(xintercept = c(trip_starts), size = 0.7, colour = forWater_colours2["Green"])+
+#geom_vline(colour = forWater_colours2["SkyBlue"], linetype = "dotted", xintercept = c(event_ends), size = 0.65, show.legend = TRUE)+ # events end
+geom_vline(colour = forWater_colours1["MainBlue"], linetype = "twodash", 
+xintercept = c(subset_event_starts), size = 0.65, show.legend = TRUE)+ # events start
+
+#annotate("text", x = c(subset_event_starts), y = 60, label = c("9", "10", "11", "12")) +
+
+geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+theme_bw()+
+geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), 
+shape = 21, size = 2, na.rm = TRUE) +
+geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), 
+shape = 24, size = 2, na.rm = TRUE) +
+geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), 
+shape = 22, size = 2, na.rm = TRUE) +
+# geom_text(aes(x = DateTime, y = sampleStage_cm, label = round(NPOC_ppm, 2)), na.rm = TRUE) +
+scale_fill_manual(values = c(forWater_colours2["MyOrange"], 
+forWater_colours2["Green"], 
+"grey")) + # manual matches alphabetically (max, min, sample)
+facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+labs(y = "River Stage (cm)", x = "", caption = "Events 9-12")+
+scale_x_datetime(breaks = "3 day")+
+theme(text = element_text(size = 12),
+axis.text.x = element_text(angle = 60, hjust = 1),
+legend.position = "top") +
+scale_color_manual(breaks = c("max DOC", "min DOC", "sample"),
+values = c("black", "black", "black"))+ # alphabetical matching
+guides(colour = guide_legend("key:"),
+fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-12_peakDOC-stage.png",
-       width = 6.5, height = 6.5, units = "in")
+width = 6.5, height = 6.5, units = "in")
 
 # --- 
 # big plot with lines showing subbset
 # assign lines
 narrow_trips_start <- peaksss %>% 
-  filter(interval == 17) %>%  
-  summarise(event = first(event_ID),
-            start = first(DateTime)) %>% pull()
+filter(interval == 17) %>%  
+summarise(event = first(event_ID),
+start = first(DateTime)) %>% pull()
 
 narrow_trips_end <- peaksss %>% 
-  filter(interval == 21) %>%  
-  summarise(event = last(event_ID),
-            end = last(DateTime)) %>% pull()
+filter(interval == 21) %>%  
+summarise(event = last(event_ID),
+end = last(DateTime)) %>% pull()
 
 # big plot with lines
 stage_sample_plot +
-  geom_vline(xintercept = narrow_trips_start, size = 0.7)+
-  geom_vline(xintercept = narrow_trips_end, size = 0.7)
+geom_vline(xintercept = narrow_trips_start, size = 0.7)+
+geom_vline(xintercept = narrow_trips_end, size = 0.7)
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-samples-with_narrow_events_9-12.png",
-       width = 6.5, height = 7, units = "in")
+width = 6.5, height = 7, units = "in")
 
 # OR --- big plto with all max and min and lines for subset
 # -----
 # stage and sample extrema at each site by sampling event
 peaksss %>% 
-  ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
-  theme_bw()+
-  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), shape = 21, size = 2.5, na.rm = TRUE) +
-  geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), shape = 22, size = 2.5, na.rm = TRUE) +
-  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), shape = 24, size = 2, na.rm = TRUE) +
-  geom_vline(xintercept = narrow_trips_start, size = 0.7)+
-  geom_vline(xintercept = narrow_trips_end, size = 0.7) +
-  # change colour of points -- matches alphabetically (max, min, sample)
-  scale_fill_manual(values = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey")) + 
-  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "")+
-  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") +
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 30, hjust = 1),
-        legend.position = "top") +
-  # colour for point outlines:
-  scale_color_manual(breaks = c("max DOC", "min DOC", "sample"), values = c("black", "black", "black"))+ 
-  # legend:
-  guides(colour = guide_legend("key:"),
-         fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
+ggplot(aes(x = DateTime))+
+geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+theme_bw()+
+geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), shape = 21, size = 2.5, na.rm = TRUE) +
+geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), shape = 22, size = 2.5, na.rm = TRUE) +
+geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), shape = 24, size = 2, na.rm = TRUE) +
+geom_vline(xintercept = narrow_trips_start, size = 0.7)+
+geom_vline(xintercept = narrow_trips_end, size = 0.7) +
+# change colour of points -- matches alphabetically (max, min, sample)
+scale_fill_manual(values = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey")) + 
+facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+labs(y = "River Stage (cm)", x = "")+
+scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") +
+theme(text = element_text(size = 12),
+axis.text.x = element_text(angle = 30, hjust = 1),
+legend.position = "top") +
+# colour for point outlines:
+scale_color_manual(breaks = c("max DOC", "min DOC", "sample"), values = c("black", "black", "black"))+ 
+# legend:
+guides(colour = guide_legend("key:"),
+fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png",
-       width = 7.5, height = 8, units = "in")
+width = 7.5, height = 8, units = "in")
 
 ```
 
@@ -6314,50 +6305,50 @@ how did events 17-21 compare to other sampled events, is this subset representat
 
 # stage
 narrow_stage <- stage_samples %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) 
+filter(QAQC_flag == "OK") %>% 
+filter(interval == 17 | interval == 18 | interval == 19 | interval == 20 | interval == 21) 
 
 rest_stage <- stage_samples %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(rain_season == "wet", # remove summer baseflow
-         interval != 17, interval != 18, interval != 19, interval != 20, interval != 21) 
+filter(QAQC_flag == "OK") %>% 
+filter(rain_season == "wet", # remove summer baseflow
+interval != 17, interval != 18, interval != 19, interval != 20, interval != 21) 
 
 # sample results
 narrow_results <- sixfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) 
+filter(QAQC_flag == "OK") %>% 
+filter(trip == 17 | trip == 18 | trip == 19 | trip == 20 | trip == 21) 
 
 rest_results <- sixfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(trip != 17, trip != 18, trip != 19, trip != 20, trip != 21) 
+filter(QAQC_flag == "OK") %>% 
+filter(trip != 17, trip != 18, trip != 19, trip != 20, trip != 21) 
 
 
 # density distribution normality 
 # stage of the isolated events
 narrow_stage %>% 
-  ggplot(aes(corr_stage_cm))+
-  geom_density(aes(colour = site))+
-  theme_bw()+
-  theme(legend.position = "top") 
+ggplot(aes(corr_stage_cm))+
+geom_density(aes(colour = site))+
+theme_bw()+
+theme(legend.position = "top") 
 # stage of the rest
 rest_stage %>% 
-  ggplot(aes(corr_stage_cm))+
-  geom_density(aes(colour = site))+
-  theme_bw()+
-  theme(legend.position = "top") 
+ggplot(aes(corr_stage_cm))+
+geom_density(aes(colour = site))+
+theme_bw()+
+theme(legend.position = "top") 
 
 # DOC of the isolated events
 narrow_results %>% 
-  ggplot(aes(NPOC_ppm))+
-  geom_density(aes(colour = site))+
-  theme_bw()+
-  theme(legend.position = "top") 
+ggplot(aes(NPOC_ppm))+
+geom_density(aes(colour = site))+
+theme_bw()+
+theme(legend.position = "top") 
 # stage of the rest
 rest_results %>% 
-  ggplot(aes(NPOC_ppm))+
-  geom_density(aes(colour = site))+
-  theme_bw()+
-  theme(legend.position = "top") 
+ggplot(aes(NPOC_ppm))+
+geom_density(aes(colour = site))+
+theme_bw()+
+theme(legend.position = "top") 
 
 
 # run tests and compile results
@@ -6368,134 +6359,134 @@ rest_results %>%
 # p-value > 0.05 --> cannot reject null hypothesis
 # p-value < 0.05 --> reject the null hypothesis 
 subbset_Wilcoxon_tests <- bind_rows(
-  ## stage ---
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Weeks"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "Weeks"])) %>% 
-    mutate(site = "Weeks", Analysis = "stage"),
-  
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "ChrisCrk"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "ChrisCrk"])) %>% 
-    mutate(site = "ChrisCrk", Analysis = "stage"),
-  
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "LeechHead"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "LeechHead"])) %>% 
-    mutate(site = "LeechHead", Analysis = "stage"),
-  
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "CraggCrk"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "CraggCrk"])) %>% 
-    mutate(site = "CraggCrk", Analysis = "stage"),
-  
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "WestLeech"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "WestLeech"])) %>% 
-    mutate(site = "WestLeech", Analysis = "stage"),
-  
-  tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Tunnel"],
-                   rest_stage$corr_stage_cm[rest_stage$site == "Tunnel"])) %>% 
-    mutate(site = "Tunnel", Analysis = "stage"),
-  
-  ## NPOC ---
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Weeks"],
-                   rest_results$NPOC_ppm[rest_results$site == "Weeks"])) %>% 
-    mutate(site = "Weeks", Analysis = "NPOC_ppm"),
-  
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "ChrisCrk"],
-                   rest_results$NPOC_ppm[rest_results$site == "ChrisCrk"])) %>% 
-    mutate(site = "ChrisCrk", Analysis = "NPOC_ppm"),
-  
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "LeechHead"],
-                   rest_results$NPOC_ppm[rest_results$site == "LeechHead"])) %>% 
-    mutate(site = "LeechHead", Analysis = "NPOC_ppm"),
-  
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "CraggCrk"],
-                   rest_results$NPOC_ppm[rest_results$site == "CraggCrk"])) %>% 
-    mutate(site = "CraggCrk", Analysis = "NPOC_ppm"),
-  
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "WestLeech"],
-                   rest_results$NPOC_ppm[rest_results$site == "WestLeech"])) %>% 
-    mutate(site = "WestLeech", Analysis = "NPOC_ppm"),
-  
-  tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Tunnel"],
-                   rest_results$NPOC_ppm[rest_results$site == "Tunnel"])) %>% 
-    mutate(site = "Tunnel", Analysis = "NPOC_ppm"),
-  
-  ## UV-254 ---
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Weeks"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "Weeks"])) %>% 
-    mutate(site = "Weeks", Analysis = "SAC254_Abs.m"),
-  
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "ChrisCrk"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "ChrisCrk"])) %>% 
-    mutate(site = "ChrisCrk", Analysis = "SAC254_Abs.m"),
-  
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "LeechHead"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "LeechHead"])) %>% 
-    mutate(site = "LeechHead", Analysis = "SAC254_Abs.m"),
-  
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "CraggCrk"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "CraggCrk"])) %>% 
-    mutate(site = "CraggCrk", Analysis = "SAC254_Abs.m"),
-  
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "WestLeech"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "WestLeech"])) %>% 
-    mutate(site = "WestLeech", Analysis = "SAC254_Abs.m"),
-  
-  tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Tunnel"],
-                   rest_results$SAC254_Abs.m[rest_results$site == "Tunnel"])) %>% 
-    mutate(site = "Tunnel", Analysis = "SAC254_Abs.m")) %>% 
-  
-  select(Parameter = "Analysis", site, p.value) %>% 
-  
-  # pull p-values to summarize
-  mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
-                              p.value < 0.05 ~ "**",# CL = 95%
-                              p.value > 0.05 ~ "NA")) # not significantly different (means are equal)
+## stage ---
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Weeks"],
+rest_stage$corr_stage_cm[rest_stage$site == "Weeks"])) %>% 
+mutate(site = "Weeks", Analysis = "stage"),
+
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "ChrisCrk"],
+rest_stage$corr_stage_cm[rest_stage$site == "ChrisCrk"])) %>% 
+mutate(site = "ChrisCrk", Analysis = "stage"),
+
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "LeechHead"],
+rest_stage$corr_stage_cm[rest_stage$site == "LeechHead"])) %>% 
+mutate(site = "LeechHead", Analysis = "stage"),
+
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "CraggCrk"],
+rest_stage$corr_stage_cm[rest_stage$site == "CraggCrk"])) %>% 
+mutate(site = "CraggCrk", Analysis = "stage"),
+
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "WestLeech"],
+rest_stage$corr_stage_cm[rest_stage$site == "WestLeech"])) %>% 
+mutate(site = "WestLeech", Analysis = "stage"),
+
+tidy(wilcox.test(narrow_stage$corr_stage_cm[narrow_stage$site == "Tunnel"],
+rest_stage$corr_stage_cm[rest_stage$site == "Tunnel"])) %>% 
+mutate(site = "Tunnel", Analysis = "stage"),
+
+## NPOC ---
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Weeks"],
+rest_results$NPOC_ppm[rest_results$site == "Weeks"])) %>% 
+mutate(site = "Weeks", Analysis = "NPOC_ppm"),
+
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "ChrisCrk"],
+rest_results$NPOC_ppm[rest_results$site == "ChrisCrk"])) %>% 
+mutate(site = "ChrisCrk", Analysis = "NPOC_ppm"),
+
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "LeechHead"],
+rest_results$NPOC_ppm[rest_results$site == "LeechHead"])) %>% 
+mutate(site = "LeechHead", Analysis = "NPOC_ppm"),
+
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "CraggCrk"],
+rest_results$NPOC_ppm[rest_results$site == "CraggCrk"])) %>% 
+mutate(site = "CraggCrk", Analysis = "NPOC_ppm"),
+
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "WestLeech"],
+rest_results$NPOC_ppm[rest_results$site == "WestLeech"])) %>% 
+mutate(site = "WestLeech", Analysis = "NPOC_ppm"),
+
+tidy(wilcox.test(narrow_results$NPOC_ppm[narrow_results$site == "Tunnel"],
+rest_results$NPOC_ppm[rest_results$site == "Tunnel"])) %>% 
+mutate(site = "Tunnel", Analysis = "NPOC_ppm"),
+
+## UV-254 ---
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Weeks"],
+rest_results$SAC254_Abs.m[rest_results$site == "Weeks"])) %>% 
+mutate(site = "Weeks", Analysis = "SAC254_Abs.m"),
+
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "ChrisCrk"],
+rest_results$SAC254_Abs.m[rest_results$site == "ChrisCrk"])) %>% 
+mutate(site = "ChrisCrk", Analysis = "SAC254_Abs.m"),
+
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "LeechHead"],
+rest_results$SAC254_Abs.m[rest_results$site == "LeechHead"])) %>% 
+mutate(site = "LeechHead", Analysis = "SAC254_Abs.m"),
+
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "CraggCrk"],
+rest_results$SAC254_Abs.m[rest_results$site == "CraggCrk"])) %>% 
+mutate(site = "CraggCrk", Analysis = "SAC254_Abs.m"),
+
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "WestLeech"],
+rest_results$SAC254_Abs.m[rest_results$site == "WestLeech"])) %>% 
+mutate(site = "WestLeech", Analysis = "SAC254_Abs.m"),
+
+tidy(wilcox.test(narrow_results$SAC254_Abs.m[narrow_results$site == "Tunnel"],
+rest_results$SAC254_Abs.m[rest_results$site == "Tunnel"])) %>% 
+mutate(site = "Tunnel", Analysis = "SAC254_Abs.m")) %>% 
+
+select(Parameter = "Analysis", site, p.value) %>% 
+
+# pull p-values to summarize
+mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
+p.value < 0.05 ~ "**",# CL = 95%
+p.value > 0.05 ~ "NA")) # not significantly different (means are equal)
 # check it out
 subbset_Wilcoxon_tests
 
 # also
 # compare storm intensity and duration
 narrow_events_summary <- majEvents_summary %>% 
-  filter(ID == 10 | ID == 11 | ID == 12) %>% 
-  select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
+filter(ID == 10 | ID == 11 | ID == 12) %>% 
+select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
 
 rest_events_summary <- majEvents_summary %>% 
-  filter(ID != 10, ID != 11, ID != 12) %>% 
-  select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
+filter(ID != 10, ID != 11, ID != 12) %>% 
+select(c(ID, startDate, endDate, rain, duration_days, intensity_mmhr))
 
 # compare with tests & summarize results
 subbset_Wilcoxon_tests_rain <- bind_rows(
-  tidy(wilcox.test(narrow_events_summary$rain, rest_events_summary$rain)) %>% 
-    mutate(Parameter = "Rain (mm)"),
-  tidy(wilcox.test(narrow_events_summary$duration_days, rest_events_summary$duration_days)) %>% 
-    mutate(Parameter = "Duration (days)"),
-  tidy(wilcox.test(narrow_events_summary$intensity_mmhr, rest_events_summary$intensity_mmhr)) %>%
-    mutate(Parameter = "Intensity (mm/hr)")) %>% 
-  select(Parameter, p.value) %>% 
-  mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
-                              p.value < 0.05 ~ "**",# CL = 95%
-                              p.value > 0.05 ~ "NA"))  # means are equal 
+tidy(wilcox.test(narrow_events_summary$rain, rest_events_summary$rain)) %>% 
+mutate(Parameter = "Rain (mm)"),
+tidy(wilcox.test(narrow_events_summary$duration_days, rest_events_summary$duration_days)) %>% 
+mutate(Parameter = "Duration (days)"),
+tidy(wilcox.test(narrow_events_summary$intensity_mmhr, rest_events_summary$intensity_mmhr)) %>%
+mutate(Parameter = "Intensity (mm/hr)")) %>% 
+select(Parameter, p.value) %>% 
+mutate(sig.diff = case_when(p.value < 0.01 ~ "***", # CL = 99%
+p.value < 0.05 ~ "**",# CL = 95%
+p.value > 0.05 ~ "NA"))  # means are equal 
 
 # make a summary table
 
 # stage and UV 254 are not comparable but DOC is
 narrow_wilcox_DOC <- subbset_Wilcoxon_tests %>% 
-  filter(Parameter == "NPOC_ppm") %>% 
-  mutate(Parameter = "DOC (mg/L)")
+filter(Parameter == "NPOC_ppm") %>% 
+mutate(Parameter = "DOC (mg/L)")
 # join with rain summary
 full_join(narrow_wilcox_DOC, (subbset_Wilcoxon_tests_rain %>%
-                                filter(Parameter != "Duration (days)") %>% 
-                                mutate(site = "LWSA"))) %>% 
-  select(c(site, Parameter, p.value)) %>%
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv")
+filter(Parameter != "Duration (days)") %>% 
+mutate(site = "LWSA"))) %>% 
+select(c(site, Parameter, p.value)) %>%
+write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/narrow-subbset_wilcoxon.csv")
 
 
 
 # compare hold-time days
 narrow_results %>% 
-  group_by(site, trip) %>% 
-  summarise(HT_mean = mean(HoldTime_days, na.rm = T),
-            HT_min = min(HoldTime_days, na.rm = T),
-            HT_max = max(HoldTime_days, na.rm = T))
+group_by(site, trip) %>% 
+summarise(HT_mean = mean(HoldTime_days, na.rm = T),
+HT_min = min(HoldTime_days, na.rm = T),
+HT_max = max(HoldTime_days, na.rm = T))
 
 ```
 
@@ -6512,63 +6503,63 @@ Longer data record from the Malahat weather station (for comparison).
 
 # malahat weather
 malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
-skip = 16,
-col_names = TRUE,
-col_types = list("f", "c", "d", "d")) %>% 
-mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
-Date = lubridate::as_date(Datetime),
-Year = lubridate::year(Datetime))
+                         skip = 16,
+                         col_names = TRUE,
+                         col_types = list("f", "c", "d", "d")) %>% 
+  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
+         Date = lubridate::as_date(Datetime),
+         Year = lubridate::year(Datetime))
 
 # summary: malahat_data precip + air temp 
 malahat_data %>% 
-filter(Analysis == "Precipitation Amount (mm)", 
-between(Year, 2014, 2019)) %>% 
-group_by(Year) %>%
-summarise(total_precip = sum(Value, na.rm = TRUE)) %>% 
-ungroup() %>% 
-right_join((
-malahat_data %>% 
-dplyr::filter(Analysis == "Temperature (Mean) (celsius)", 
-between(Year, 2014, 2019)) %>% 
-group_by(Year) %>%
-summarise(annual_mean_temp = mean(Value, na.rm = TRUE),
-temp_sd = sd(Value))) %>% 
-ungroup(), 
-by = "Year") %>%
-filter(Year != "2013", Year != "2020") %>% 
-dplyr::rename("year" = Year, 
-"annual precip. (mm)" = total_precip, 
-"mean air temp. (°C)" = annual_mean_temp, 
-"std.dev. (± °C)" = temp_sd) %>% 
-write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv")
+  filter(Analysis == "Precipitation Amount (mm)", 
+         between(Year, 2014, 2019)) %>% 
+  group_by(Year) %>%
+  summarise(total_precip = sum(Value, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  right_join((
+    malahat_data %>% 
+      dplyr::filter(Analysis == "Temperature (Mean) (celsius)", 
+                    between(Year, 2014, 2019)) %>% 
+      group_by(Year) %>%
+      summarise(annual_mean_temp = mean(Value, na.rm = TRUE),
+                temp_sd = sd(Value))) %>% 
+      ungroup(), 
+    by = "Year") %>%
+  filter(Year != "2013", Year != "2020") %>% 
+  dplyr::rename("year" = Year, 
+                "annual precip. (mm)" = total_precip, 
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "std.dev. (± °C)" = temp_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv")
 
 
 # plots
 # plot malahat rain and highlight my study period
 malahat_rn <- malahat_data %>% 
-filter(Analysis == "Precipitation Amount (mm)") %>% 
-ggplot(aes(x = Datetime, y = Value)) +
-geom_col(colour = "#09A4D2") +
-scale_y_reverse() +
-labs(x = "", y = "Rain (mm/day)") +
-theme_bw() +
-scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
-theme(legend.position = "none") +
-gghighlight::gghighlight(Datetime > "2018-10-23",
-unhighlighted_params = list(colour = "#3B3838"))
+  filter(Analysis == "Precipitation Amount (mm)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "Rain (mm/day)") +
+  theme_bw() +
+  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
+  theme(legend.position = "none") +
+  gghighlight::gghighlight(Datetime > "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838"))
 
 # plot malahat temperature and highlight my study period
 malahat_temp <- malahat_data %>% 
-filter(Analysis == "Temperature (Mean) (celsius)") %>% 
-ggplot(aes(x = Datetime, y = Value)) +
-geom_line(colour = "#f4AB0E") +
-geom_hline(yintercept = 0,
-linetype = "dotted") +
-labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
-theme_bw() +
-scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
-gghighlight::gghighlight(Datetime > "2018-10-23",
-unhighlighted_params = list(colour = "#3B3838"))
+  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
+  gghighlight::gghighlight(Datetime > "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838"))
 
 # stack with cowplot
 cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
@@ -6582,22 +6573,22 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
 # The central limit theorem:
 ## sampling distribution tends to be normal if the sample is large enough (n > 30)
 malahat_data %>% 
-filter(!is.na(Value),
-Analysis == "Precipitation Amount (mm)" | Analysis == "Temperature (Mean) (celsius)") %>% 
-group_by(Year, Analysis) %>% 
-summarise(count = n())
+  filter(!is.na(Value),
+         Analysis == "Precipitation Amount (mm)" | Analysis == "Temperature (Mean) (celsius)") %>% 
+  group_by(Year, Analysis) %>% 
+  summarise(count = n())
 # could assume normal distribution because each year has daily values (>>30)
 
 # visually check for normality 
 malahat_data %>% 
-filter(Year != 2013, Year != 2020,  # incomplete data sets
-!is.na(Value),
-Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data
-mutate(Year = as_factor(Year)) %>% 
-ggpubr::ggqqplot(data = ., x = "Value", 
-color = "Year", 
-palette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" ),
-facet.by = "Analysis")
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", 
+                   palette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" ),
+                   facet.by = "Analysis")
 ## Precipitation was not normally distributed (seasonality)
 
 # tidy wilcoxon tests: lag-year 
@@ -6606,21 +6597,21 @@ facet.by = "Analysis")
 
 # t-test comparing each year to the last year
 Malahat_test_lagyear <- malahat_data %>% 
-filter(Year != 2013, Year != 2020,  # incomplete data sets
-!is.na(Value)) %>%  # remove missing values 
-select(Analysis, Year) %>% 
-arrange(Analysis, Year) %>% 
-distinct() %>% 
-group_by(Analysis) %>% 
-mutate(lag_year = lag(Year)) %>% 
-filter(!is.na(lag_year)) %>% 
-group_by(Analysis, Year, lag_year) %>% 
-do(tidy(wilcox.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
-malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value)) %>%  # remove missing values 
+  select(Analysis, Year) %>% 
+  arrange(Analysis, Year) %>% 
+  distinct() %>% 
+  group_by(Analysis) %>% 
+  mutate(lag_year = lag(Year)) %>% 
+  filter(!is.na(lag_year)) %>% 
+  group_by(Analysis, Year, lag_year) %>% 
+  do(tidy(wilcox.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
+                      malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
 
 # identify signficantly different years
 Malahat_test_lagyear %>% 
-filter(p.value < 0.10)
+  filter(p.value < 0.10)
 
 # 2015 was an incredible drought year, so it makes sense that 2015-2016 would differ
 
@@ -6629,12 +6620,12 @@ filter(p.value < 0.10)
 
 # group
 malahat_test_data <- malahat_data %>% 
-filter(!is.na(Value),
-Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data 
-mutate(set = case_when(Year == 2016 | Year == 2017 ~ "pre",
-Year == 2018 | Year == 2019 ~ "MSc"),
-set = as_factor(set)) %>% 
-filter(!is.na(set)) 
+  filter(!is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data 
+  mutate(set = case_when(Year == 2016 | Year == 2017 ~ "pre",
+                         Year == 2018 | Year == 2019 ~ "MSc"),
+         set = as_factor(set)) %>% 
+  filter(!is.na(set)) 
 
 # subset for tests
 pre_MSc <- malahat_test_data %>% filter(set == "pre")
@@ -6645,15 +6636,15 @@ MSc <- malahat_test_data %>% filter(set == "MSc")
 ##### plots
 # plot sets
 malahat_test_data %>% 
-ggplot(aes(x = set, y = Value, fill = set))+
-geom_boxplot(alpha = 0.8)+
-scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
-labels = c(pre = "2016-2017", MSc = "2018-2019"),
-name = "Year span")+
-labs(y = "value", x = "")+
-theme_bw()+
-theme(legend.position = "top")+
-facet_wrap(~Analysis)
+  ggplot(aes(x = set, y = Value, fill = set))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    labels = c(pre = "2016-2017", MSc = "2018-2019"),
+                    name = "Year span")+
+  labs(y = "value", x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~Analysis)
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
 
@@ -6661,17 +6652,17 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.pn
 # Tests for normality 
 # Pre-MSc
 pre_MSc %>% 
-mutate(Year = as_factor(Year)) %>% 
-ggpubr::ggqqplot(data = ., x = "Value", 
-color = "Year", palette = c("#648326", "#f4AB0E", "#62ACC8", "#535353"),
-facet.by = "Analysis")
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", palette = c("#648326", "#f4AB0E", "#62ACC8", "#535353"),
+                   facet.by = "Analysis")
 
 # during
 MSc %>% 
-mutate(Year = as_factor(Year)) %>% 
-ggpubr::ggqqplot(data = ., x = "Value", 
-color = "Year", palette = c("#648326", "#f4AB0E"),
-facet.by = "Analysis")
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", palette = c("#648326", "#f4AB0E"),
+                   facet.by = "Analysis")
 
 
 
@@ -6685,30 +6676,30 @@ facet.by = "Analysis")
 # make a tibble for tidiness
 # note: snow data was only available 2017-2019 -- not included
 Malahat_testMSc_Wx <- bind_rows(
-# rain
-tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Precipitation Amount (mm)"], 
-MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"],
-)) %>% 
-mutate(Parameter = "rain"),
-# air temp
-tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Mean) (celsius)"], 
-MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
-mutate(Parameter = "temp_mean"),
-# Min air temp
-tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Min.) (celsius)"], 
-MSc$Value[MSc$Analysis == "Temperature (Min.) (celsius)"])) %>% 
-mutate(Parameter = "temp_min"),
-# Max air temp
-tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Max.) (celsius)"], 
-MSc$Value[MSc$Analysis == "Temperature (Max.) (celsius)"])) %>% 
-mutate(Parameter = "temp_max")) %>% 
-# pull values of interest to summarize
-select(Parameter, p.value) %>% 
-mutate(signifcance = case_when(p.value < 0.01 ~ "at 99%",
-p.value < 0.05 ~ "at 95%",
-p.value < 0.1 ~ "at 90%",
-p.value > 0.1 ~ "NA")) %>% 
-write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
+  # rain
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Precipitation Amount (mm)"], 
+                   MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"],
+  )) %>% 
+    mutate(Parameter = "rain"),
+  # air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Mean) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
+    mutate(Parameter = "temp_mean"),
+  # Min air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Min.) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Min.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_min"),
+  # Max air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Max.) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Max.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_max")) %>% 
+  # pull values of interest to summarize
+  select(Parameter, p.value) %>% 
+  mutate(signifcance = case_when(p.value < 0.01 ~ "at 99%",
+                                 p.value < 0.05 ~ "at 95%",
+                                 p.value < 0.1 ~ "at 90%",
+                                 p.value > 0.1 ~ "NA")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
 
 # interpretation
 # null hypothesis = both means are equal
@@ -6917,42 +6908,69 @@ a <- treatdat_long %>%
   ggplot(aes(x = DOC_ppm, y = DBPfp_ugL))+
   geom_point(aes(colour = site,
                  shape = Collection),
-             size = 3.5)+
+             size = 2.5)+
   scale_colour_brewer(palette="Set2") +
   theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+  facet_wrap(~DBP, ncol = 1, strip.position = "right", 
              scales = "free_y")+
   theme(text = element_text(size = 11),
-        legend.position = "top")+
-  labs(x = "DOC (ppm)", 
+        legend.position = "none",
+        strip.text.y = element_blank(),
+        strip.background = element_blank())+
+  labs(x = "DOC \n(ppm)", 
        y = "DBP-FPs (ppb)",
        colour = "Sampling site:")+
   guides(shape = FALSE,
-         colour = guide_legend(nrow = 2))
+         colour = FALSE)
 
 # plot UV-254
 b <- treatdat_long %>% 
   ggplot(aes(x = `UV254_cm-1`, y = DBPfp_ugL))+
   geom_point(aes(colour = site,
                  shape = Collection),
-             size = 3.5)+
+             size = 2.5)+
   scale_colour_brewer(palette="Set2") +
   theme_bw()+
   facet_wrap(~DBP, strip.position = "right", ncol = 1,
              scales = "free_y")+
   theme(text = element_text(size = 11),
-        legend.position = "top")+
-  labs(x = "UV254 (abs/cm)", 
+        legend.position = "none",
+        strip.text.y = element_blank(),
+        strip.background = element_blank(),
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(SAC[254], (m^-1)) ), 
        y = "",
        shape = "Collection:")+
   guides(colour = FALSE,
-         shape = guide_legend(nrow = 2))
+         shape = FALSE)
+
+# plot SUVA-254
+c <- treatdat_long %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(SUVA254_m = ( (UV254_cm*100) / DOC_ppm)) %>% 
+  ggplot(aes(x = SUVA254_m, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "right",
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(SUVA[254], (L~{mg^-1}~{m}^-1)) ), 
+       y = "",
+       shape = "Collection:")+
+  guides(#colour = ,
+    shape = guide_legend(nrow = 2))
 
 # join side by side
-cowplot::plot_grid(a, b, ncol = 2, align = "h") 
+cowplot::plot_grid(a, b, c, 
+                   ncol = 3, align = "h", rel_widths = c(1.25, 1, 2.15)) 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/treatability_DOC-UV254.png",
-       width = 6, height = 8, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
+       width = 6, height = 6.5, units = "in")
 ```
 
 # Garbage I think
@@ -6972,8 +6990,8 @@ conditions_NPOC <- sixfilter_physiographic %>%
            "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
            "antecedent_7day_temp",   # how warm
            "HoldTime_days")) #%>%     # held how long
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_conditions_NPOC))
@@ -6986,12 +7004,12 @@ conditions_NPOC <- sixfilter_physiographic %>%
 
 ## Run RF
 RF_DOC_cond <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC, 
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                          na.action = randomForest::na.roughfix,
+                                          mtry = ceiling(length(data)/2), # no. of features
+                                          ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                          importance = TRUE,
+                                          proximity = TRUE,
+                                          corr.bias = TRUE) # experimental 
 
 
 # Variable importance measure (VIM)
@@ -7012,7 +7030,7 @@ RF_DOC_cond_RelImp1_MSE <- randomForest::importance(RF_DOC_cond, type = 1) %>%
                                 "sampling stage" = "sampleStage_normalized"),  
          MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
-  
+
 # make a VIM plot ---
 RFplot_condit <- RF_DOC_cond_RelImp1_MSE %>% 
   ggplot(aes(predictor, MSE_percent)) +
@@ -7076,8 +7094,8 @@ conditions_E2E3 <- sixfilter_physiographic %>%
            "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
            "antecedent_7day_temp",   # how warm
            "HoldTime_days")) #%>%     # held how long
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_conditions_E2E3))
@@ -7090,12 +7108,12 @@ conditions_E2E3 <- sixfilter_physiographic %>%
 
 ## Run RF
 RF_E2E3_cond <- randomForest::randomForest(E2E3 ~ ., data = conditions_E2E3, 
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                           na.action = randomForest::na.roughfix,
+                                           mtry = ceiling(length(data)/2), # no. of features
+                                           ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                           importance = TRUE,
+                                           proximity = TRUE,
+                                           corr.bias = TRUE) # experimental 
 
 
 # Variable importance measure (VIM)
@@ -7116,7 +7134,7 @@ RF_E2E3_cond_RelImp1_MSE <- randomForest::importance(RF_E2E3_cond, type = 1) %>%
                                 "sampling stage" = "sampleStage_normalized"),  
          MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
-  
+
 # make a VIM plot ---
 RFplot_condit_E2E3 <- RF_E2E3_cond_RelImp1_MSE %>% 
   ggplot(aes(predictor, MSE_percent)) +
@@ -7148,8 +7166,8 @@ conditions_NPOC_wet <- sixfilter_physiographic %>%
            "antecedent_30day_rain",   
            "antecedent_7day_temp",   
            "HoldTime_days")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # --- RF
 # NPOC_ppm is dependent variable
@@ -7158,12 +7176,12 @@ conditions_NPOC_wet <- sixfilter_physiographic %>%
 
 ## Run RF
 RF_DOC_condWET <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_wet, 
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), # no. of features
+                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) # experimental 
 
 
 # Variable importance measure (VIM)
@@ -7210,8 +7228,8 @@ conditions_NPOC_dry <- sixfilter_physiographic %>%
            "antecedent_30day_rain",   
            "antecedent_7day_temp",   
            "HoldTime_days")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # --- RF
 # NPOC_ppm is dependent variable
@@ -7220,12 +7238,12 @@ conditions_NPOC_dry <- sixfilter_physiographic %>%
 
 ## Run RF
 RF_DOC_condDRY <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_dry, 
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), # no. of features
+                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) # experimental 
 
 
 # Variable importance measure (VIM)
@@ -7282,8 +7300,8 @@ surfaceCharacteristics_NPOC <- sixfilter_physiographic %>%
            #wetland_percent, 
            #openWater_percent,
            logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_surfaceCharacteristics_NPOC))
@@ -7293,14 +7311,14 @@ surfaceCharacteristics_NPOC <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_surf <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = surfaceCharacteristics_NPOC, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                               data = surfaceCharacteristics_NPOC, 
+                                               replace = FALSE, # improve VIM
+                                               na.action = randomForest::na.roughfix,
+                                               mtry = ceiling(length(data)/2), # no. of features
+                                               ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                               importance = TRUE,
+                                               proximity = TRUE,
+                                               corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7398,8 +7416,8 @@ surfaceCharacteristics_E2E3 <- sixfilter_physiographic %>%
            #wetland_percent, 
            #openWater_percent,
            logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_surfaceCharacteristics_E2E3))
@@ -7409,14 +7427,14 @@ surfaceCharacteristics_E2E3 <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_E2E3_chrc_surf <- randomForest::randomForest(E2E3 ~ ., 
-                                      data = surfaceCharacteristics_E2E3, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                data = surfaceCharacteristics_E2E3, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7470,8 +7488,8 @@ surfaceCharacteristics_NPOC_WET <- sixfilter_physiographic %>%
            #wetland_percent, 
            #openWater_percent,
            logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_surfaceCharacteristics_NPOC))
@@ -7481,14 +7499,14 @@ surfaceCharacteristics_NPOC_WET <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_surf_WET <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = surfaceCharacteristics_NPOC_WET, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                   data = surfaceCharacteristics_NPOC_WET, 
+                                                   replace = FALSE, # improve VIM
+                                                   na.action = randomForest::na.roughfix,
+                                                   mtry = ceiling(length(data)/2), # no. of features
+                                                   ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                   importance = TRUE,
+                                                   proximity = TRUE,
+                                                   corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7536,8 +7554,8 @@ surfaceCharacteristics_NPOC_DRY <- sixfilter_physiographic %>%
            #wetland_percent, 
            #openWater_percent,
            logging_percent_FROMnineteeneightyTOtwentyeleven = "logging_percent_nineteeneighty-twentyeleven")) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_surfaceCharacteristics_NPOC))
@@ -7547,14 +7565,14 @@ surfaceCharacteristics_NPOC_DRY <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_surf_DRY <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = surfaceCharacteristics_NPOC_DRY, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                   data = surfaceCharacteristics_NPOC_DRY, 
+                                                   replace = FALSE, # improve VIM
+                                                   na.action = randomForest::na.roughfix,
+                                                   mtry = ceiling(length(data)/2), # no. of features
+                                                   ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                   importance = TRUE,
+                                                   proximity = TRUE,
+                                                   corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7606,8 +7624,8 @@ RF_subSurfaceCharacteristics_NPOC <- sixfilter_physiographic %>%
            #geo_MetchosinVolcanics_percent,
            #geo_SookeGabbro_percent, 
            geo_igneous_percent )) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_subSurfaceCharacteristics_NPOC))
@@ -7617,14 +7635,14 @@ RF_subSurfaceCharacteristics_NPOC <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_SubSurf <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = RF_subSurfaceCharacteristics_NPOC, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                  data = RF_subSurfaceCharacteristics_NPOC, 
+                                                  replace = FALSE, # improve VIM
+                                                  na.action = randomForest::na.roughfix,
+                                                  mtry = ceiling(length(data)/2), # no. of features
+                                                  ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                  importance = TRUE,
+                                                  proximity = TRUE,
+                                                  corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7707,8 +7725,8 @@ RF_subSurfaceCharacteristics_E2E3 <- sixfilter_physiographic %>%
            geo_metasedimentary_percent, 
            geo_metaSedimentaryVolcanic_percent, 
            geo_igneous_percent )) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_subSurfaceCharacteristics_E2E3))
@@ -7718,14 +7736,14 @@ RF_subSurfaceCharacteristics_E2E3 <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_E2E3_chrc_SubSurf <- randomForest::randomForest(E2E3 ~ ., 
-                                      data = RF_subSurfaceCharacteristics_E2E3, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                   data = RF_subSurfaceCharacteristics_E2E3, 
+                                                   replace = FALSE, # improve VIM
+                                                   na.action = randomForest::na.roughfix,
+                                                   mtry = ceiling(length(data)/2), # no. of features
+                                                   ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                   importance = TRUE,
+                                                   proximity = TRUE,
+                                                   corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting E2E3
@@ -7774,8 +7792,8 @@ subSurfaceChrc_NPOC_Wet <- sixfilter_physiographic %>%
            geo_metasedimentary_percent, 
            geo_metaSedimentaryVolcanic_percent, 
            geo_igneous_percent )) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_subSurfaceCharacteristics_NPOC))
@@ -7785,14 +7803,14 @@ subSurfaceChrc_NPOC_Wet <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_SubSurf_WET <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = subSurfaceChrc_NPOC_Wet, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                      data = subSurfaceChrc_NPOC_Wet, 
+                                                      replace = FALSE, # improve VIM
+                                                      na.action = randomForest::na.roughfix,
+                                                      mtry = ceiling(length(data)/2), # no. of features
+                                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                      importance = TRUE,
+                                                      proximity = TRUE,
+                                                      corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7835,8 +7853,8 @@ subSurfaceChrc_NPOC_Dry <- sixfilter_physiographic %>%
            geo_metasedimentary_percent, 
            geo_metaSedimentaryVolcanic_percent, 
            geo_igneous_percent )) # %>%     
-  # add a column of random values as as QA -- this should not be found to be important
-  # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(RF_subSurfaceCharacteristics_NPOC))
@@ -7846,14 +7864,14 @@ subSurfaceChrc_NPOC_Dry <- sixfilter_physiographic %>%
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
 # mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 RF_DOC_chrc_SubSurf_DRY <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                      data = subSurfaceChrc_NPOC_Dry, 
-                                      replace = FALSE, # improve VIM
-                                      na.action = randomForest::na.roughfix,
-                                      mtry = ceiling(length(data)/2), # no. of features
-                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                      importance = TRUE,
-                                      proximity = TRUE,
-                                      corr.bias = TRUE) # experimental 
+                                                      data = subSurfaceChrc_NPOC_Dry, 
+                                                      replace = FALSE, # improve VIM
+                                                      na.action = randomForest::na.roughfix,
+                                                      mtry = ceiling(length(data)/2), # no. of features
+                                                      ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                      importance = TRUE,
+                                                      proximity = TRUE,
+                                                      corr.bias = TRUE) # experimental 
 
 
 ## relative importance of features in predicting DOC
@@ -7899,22 +7917,22 @@ RFplot_all_DOC
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions.png":
 a <- RFplot_condit +
-  labs(y = "")
+labs(y = "")
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_surface.png":
 b <- RFplot_surface +
-  labs(y = "")
+labs(y = "")
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_subsurface.png":
 c <- RFplot_subsurface
 
 # stack conditions, surface and subsurface plots
 RFplot_summary <- cowplot::plot_grid(a, b, c, 
-                   ncol = 1, align = "v",
-                   labels = c("A. Conditions", 
-                              "B. Surface Characteristics",
-                              "C. Subsurface Characteristics"), 
-                   label_size = 11, hjust = 0, label_fontface = "plain")
+ncol = 1, align = "v",
+labels = c("A. Conditions", 
+"B. Surface Characteristics",
+"C. Subsurface Characteristics"), 
+label_size = 11, hjust = 0, label_fontface = "plain")
 
 # save
 # ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_DOC.png", width = 6, height = 5, units = "in")
@@ -7931,22 +7949,22 @@ RFplot_all_E2E3
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions.png":
 a <- RFplot_condit_E2E3 +
-  labs(y = "")
+labs(y = "")
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_surface.png":
 b <- RFplot_surface_E2E3 +
-  labs(y = "")
+labs(y = "")
 
 # "R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_subsurface.png":
 c <- RFplot_subsurface_E2E3
 
 # stack conditions, surface and subsurface plots
 RFplot_summary_E2E3 <- cowplot::plot_grid(a, b, c, 
-                   ncol = 1, align = "v",
-                   labels = c("A. Conditions", 
-                              "B. Surface Characteristics",
-                              "C. Subsurface Characteristics"), 
-                   label_size = 11, hjust = 0, label_fontface = "plain")
+ncol = 1, align = "v",
+labels = c("A. Conditions", 
+"B. Surface Characteristics",
+"C. Subsurface Characteristics"), 
+label_size = 11, hjust = 0, label_fontface = "plain")
 
 # save
 #ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplots_variable-groups_E2E3.png", width = 6, height = 5, units = "in")

@@ -59,6 +59,10 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 
 \  
 
+The slope of absorbances over certain wavelength ranges (e.g. 275-295 nm (S275-295) or 350-400 nm (S350-400)) are inversely proportional to (chromophoric) NOM molecular weight [@Helms2008]. A spectral quotient called E~2~:E~3~ is a similar parameter which is more straight-forward to calculate. E~2~:E~3~ is the ratio of absorbance at 250 nm to 365 nm, and is inversely related to aromaticity and molecular size of aquatic humic solutes (Peuravuori and Pihlaja 1997; Helms et al. 2008). 
+
+\  
+
 ####   Watershed processes and water quality
 	
 Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals like natural organic matter represent an important link between ecosystem processes, land-use, hydrology, and water resources. These water-quality signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019].    

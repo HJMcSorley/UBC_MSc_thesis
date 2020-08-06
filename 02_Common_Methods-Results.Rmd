@@ -171,11 +171,11 @@ NOM molecular character was judged through a combination of specific UV-absorban
 
 ###### Spectral indices of NOM character
 
-More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Similarly, specific ultraviolet absorbance (SUVA~254~) is an indicator of NOM aromaticity relative to concentration. SUVA~254~ is calculated by dividing SAC~254~ by DOC concentration (mgL^-1^ as NPOC) and has units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m). The concentration of NOM in a sample is proportional to the intensity of absorbance (based on the Beer-Lambert law) which is why SUVA~254~ (specific UV absorbance at 254 nm) is widely used as indicator of sample aromaticity (concentration-relative character).
+More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Specific ultraviolet absorbance at 254 nm (SUVA~254~) is an indicator of NOM aromaticity relative to concentration, and is calculated by dividing SAC~254~ by DOC concentration (units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m)). Both SAC~254~ and SUVA~254~ are possible indicators of NOM reactivity and as such, each was calculated and evaluated with respect to disinfection by-product formation potential (DBP-FP, more details in _Appendix ####_) and the one most correlated to BDP-FP was selected for continued analysis.
 
 \  
 
-A spectral quotient called E~2~:E~3~ is the ratio of absorbance coefficients at wavelengths 250 nm and 365 nm. E~2~:E~3~ values were calculated (SAC~250~ / SAC~365~) to elucidate molecular character of NOM in samples; it is inversely related to the aromaticity and molecular weight of aquatic humic solutes. 
+The spectral quotient E~2~:E~3~, which is inversely related to aromaticity and molecular size of aquatic humic solutes (Peuravuori and Pihlaja 1997; Helms et al. 2008), was calculated as the ratio of absorbance coefficients at wavelengths 250 nm and 365 nm (i.e. SAC~250~ / SAC~365~). 
 
 \  
 
@@ -248,7 +248,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
 
 \  
 
-The sixteen-month study period was separated into "wet" and "dry" seasons based on detectable stream response at each monitoring site and across the GVWSA, stream response was primarily driven by the presence of major rain events. However, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included when delineating the 2018/2019 wet season, despite the lack of defined rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, and the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May had streamflow changes governed by snowmelt rather than rainfall. The 2019 dry sampling season spanned from mid-May to late-September, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable3)) and extended to the end of the field study period (Feb 20, 2020).
+The sixteen-month study period was separated into "wet" and "dry" seasons based on detectable stream response at each monitoring site and across the GVWSA, stream response was primarily driven by the presence of major rain events. However, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included when delineating the 2018/2019 wet season, despite the lack of defined rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, and the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May had streamflow changes governed by snowmelt rather than rainfall. The 2019 dry sampling season spanned from mid-May to late-September, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
 
 \  
 
@@ -257,6 +257,12 @@ fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area (LWSA) weather,
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
 ```
+
+\  
+
+#### NOM character: SAC~254~ rather than SUVA~254~
+
+Comparison between disinfection byproduct formation potential (BDP-FP) with DOC, SUVA~254~ and SAC~254~ (Appendix ####################) showed that SAC~254~ was a better predictor of DBP-FPs and therefor SAC~254~ was focused on as an indicator of NOM aromaticity and reactivity and SUVA~254~ was largely ommitted from resuls. 
 
 \  
 
@@ -292,7 +298,11 @@ All samples were analyzed to quantify DOC and characterized NOM properties and t
 
 ```{r HoldTimeTtests}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/HoldTime_results-summary.csv", col_names = TRUE) %>%
-  knitr::kable(caption = "Results comparing three Vertical Rack hold-time experiment sets for sample stability in the field") 
+  knitr::kable(caption = "Results comparing three Vertical Rack hold-time experiment sets for sample stability in the field",
+               col.names = c("Set", "Days held", "Air temp.", 
+                             "DOC change (%)", "p-value (DOC)", 
+                             "SAC~254~ change (%)", "p-value (SAC~254~)", 
+                             "E~2~:E~3~ change (%)", "p-value (E~2~:E~3~)")) 
 ```
 _Note:_ one star (*) indicates significant difference at 90% confidence (p < 0.1), 
 two stars (**) indicates significant difference at 95% confidence (p < 0.05)
@@ -300,11 +310,11 @@ two stars (**) indicates significant difference at 95% confidence (p < 0.05)
 
 \  
 
-There was a significant change in DOC concentration (at 90% confidence, p-value = 0.063) for hold-time set-A, where mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples. While there was no change in UV absorbance (i.e. SAC~254~ and E~2~:E~3~) for samples from hold-time set-A, the change in DOC generated a significant difference in SUVA~254~. Samples collected for hold-time set-A were DOC-rich "first flush" samples (i.e. the first sampling event of a wet season), and the Rack samples were held for 11 days at average temperature of 7° C (slightly above laboratory refrigerator temperatures). 
+There was a significant change in DOC concentration (at 90% confidence, p-value = 0.063) for hold-time set-A, where mean DOC concentration was 45% lower in the held samples compared to the fresh grab samples. Despite a change in concentrations, there was no change in NOM character as measured by SAC~254~ or E~2~:E~3~. Samples collected for hold-time set-A were DOC-rich "first flush" samples (i.e. the first sampling event of a wet season), and the Rack samples were held for 11 days at average temperature of 7° C (slightly above laboratory refrigerator temperatures). 
 
 \  
 
-Set-B had a hold-time of 20 days with average air temperature of 6° C. There were no significant changes to DOC concentrations or E~2~:E~3~ values between fresh and rack-held samples for this set. Wilcoxon tests for set-B showed that the 8% change in SAC~254~ was statistically significant (at 90% confidence). However, the SAC~254~ difference in set-B was determined to be caused by an outlier which could be rejected with 99% confidence by Dixon's Q-test (Q~exp~ = 0.941 > Q~crit~ = 0.821). Therefore, it was concluded that, despite the measured difference (Figure \@ref(fig:HoldTimeBoxPlot), Table \@ref(tab:HoldTimeTtests)) there was not truly a reliable change in SAC~254~ (or SUVA~254~, which relies on SAC~254~) for hold-time set-B. 
+Set-B had a hold-time of 20 days with average air temperature of 6° C. There were no significant changes to DOC concentrations or E~2~:E~3~ values between fresh and rack-held samples for this set. Wilcoxon tests for set-B showed that the 8% change in SAC~254~ was statistically significant (at 90% confidence). However, the SAC~254~ difference in set-B was determined to be caused by an outlier which could be rejected with 99% confidence by Dixon's Q-test (Q~exp~ = 0.941 > Q~crit~ = 0.821). Therefore, it was concluded that, despite the measured difference (Figure \@ref(fig:HoldTimeBoxPlot), Table \@ref(tab:HoldTimeTtests)) there was not truly a reliable change in SAC~254~ for hold-time set-B. 
 
 \  
 
@@ -313,7 +323,7 @@ Hold-time set-C included samples held for 34 days at an average of 4.4° C, incl
 \  
 
 ```{r HoldTimeBoxPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoldTimeBoxPlot} Comparison of three hold-time experiment sets, contrasting 'fresh' and 'held' sample results for DOC concentrations, spectral absorbance coefficient at 254 nm (SAC~254~), specific UV absorbance at 254 nm (SUVA~254~, units of Lmg^-1^m^-1^) and the quotient E~2~:E~3~."
+fig_cap = "\\label{fig:HoldTimeBoxPlot} Comparison of three hold-time experiment sets, contrasting 'fresh' and 'held' sample results for DOC concentrations, spectral absorbance coefficient at 254 nm (SAC~254~) and the spectral quotient E~2~:E~3~ (SAC~250~/SAC~365~)."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplots.png")
 ```

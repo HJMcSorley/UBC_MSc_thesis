@@ -94,7 +94,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_NOM-Synoptic-summary.csv", c
 
 fig_cap = "\\label{fig:synopticBox} Synoptic sampling results of dissolved organic carbon concentrations from 12 sites (arranged left to right from upstream to downstream). Samples were collected from Oct 2018 to Feb 2020. Symbol type indicates samples were collected by siphon samplers on Vertical Racks (triangle) or synoptic Grab sample (circle), outliers are indicated with an 'x'."
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_boxplot_allParams-allSites-allSamples.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_boxplot_allParams-allSites-allSamples.png")
 ```
 
 \ 

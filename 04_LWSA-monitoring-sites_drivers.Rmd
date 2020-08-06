@@ -19,17 +19,13 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Synopsis
 
-The previous chapter showed that across the Greater Victoria Water Supply Area (GVWSA), NOM shifted in character from aliphatic to aromatic from the dry to wet seasons and that event-based sampled had higher DOC concentrations than non-event Grab samples. A surprising range in NOM character was observed at the West Leech sub-basin (20.85 km^2^) monitoring site in the Leech WSA. While it wasn't clear why the ranges in NOM were greater at the West Leech Site compared to other streams of similar size (e.g. Leech-head, 20.59 km^2^ sub-basin, and Cragg creek 28.06 km^2^ sub-basin) one possibility was the difference in subsurface geology that set the West leech sub-basin apart from other synoptically sampled sites. 
-
-\  
-
-Watershed characteristics and conditions are  evaluated in this chapter to explore possible drivers for change in DOC and NOM across monitoring sites in the Leech WSA. Here, water sample results are interpreted to relate NOM concentration and character to conditions and watershed characteristic variables.
+The previous chapter showed that across the Greater Victoria Water Supply Area (GVWSA), NOM shifted in character from aliphatic to aromatic from the dry to wet seasons and that event-based sampled had higher DOC concentrations than non-event Grab samples. A surprising range in NOM character was observed at the West Leech sub-basin (20.85 km^2^) monitoring site in the Leech WSA. While it wasn't clear why the ranges in NOM were greater at the West Leech Site compared to other streams of similar size (e.g. Leech-head, 20.59 km^2^ sub-basin, and Cragg creek 28.06 km^2^ sub-basin) one possibility was the difference in subsurface geology that set the West leech sub-basin apart from other synoptically sampled sites. In this chapter, watershed characteristics and conditions are  evaluated  to explore possible drivers for change NOM concentration and character across six monitoring sites in the Leech WSA. 
 
 \  
 
 ### Methods 
 
-Sample collection and analysis follow the methods detailed in Chapter 2. The study sites of this chapter focus only on the six Leech WSA monitoring sites. Nested catchments of the Leech River system that were equipped with Vertical Rack samplers included two headwater streams (Weeks and Chris Creek, sites 1 & 2), the head of Leech River below the confluence of the two headwater streams (site 3), two major tributaries that feed the Leech (Cragg creek and West Leech, sites 4 & 5), and Leech Tunnel (site 6) encompassed the entire Leech WSA drainage area above the point of diversion (Figure \@ref(fig:subbasinMap)).
+Sample collection and analysis follow the methods detailed in Chapter 2. The study sites of this chapter focus only on the six Leech WSA monitoring sites (Figure \@ref(fig:subbasinMap)). Nested catchments of the Leech River system that were equipped with Vertical Rack samplers included two headwater streams, Weeks and Chris Creek sub-basins (site 1, 11.5 km^2^  & site 2 , 5.9 km^2^); the head of Leech River sub-basin, below the confluence of those two headwater streams (site 3, 20.6 km^2^); two major tributaries that feed the Leech, Cragg creek and West Leech sub-basins (site 4, 28.1 km^2^ & site 5, 20.9 km^2^), and Leech Tunnel (site 6) encompassed the entire Leech WSA drainage area above the point of diversion (95.3 km^2^). 
 
 \  
 
@@ -42,7 +38,11 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasi
 
 \ 
 
-Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg Creek (site 4) had no metasedimentary parent material (Argillite-Metagraywacke or Metagraywacke). Cragg Creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (Wark-Gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have Wark-Gneiss nor Chert-Argillite-Volcanic groups as parent materials and was the only sub-basin of the Metchosin igneous complex (16% Methchosin-volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by Argillite-Metagreywacke (metasedimentary parent material).       
+Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg creek (site 4) had no metasedimentary parent material (argillite-metagraywacke or metagraywacke). Cragg creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (wark-gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have wark-gneiss nor chert-argillite-volcanic groups as parent materials and was the only sub-basin of the Metchosin igneous complex (16% Methchosin volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by argillite-metagreywacke (metasedimentary parent material).       
+
+\  
+
+Most heavily harvested over the past 31 years was the Chris crk sub-basin (63% harvested), then Leech-head and Cragg crk sub-basins (43% and 41% harvested). West Leech was the least harvested between 1980 and 2011 (26%), followed by Weeks crk sub-basin (28%) and Leech Tunnel (34%).
 
 \  
 
@@ -86,10 +86,10 @@ Parameters were filtered to avoid spurious predictions, variables with correlati
 
 \  
 
-The nine selected predictor variables included:
+The ten selected predictor variables included:
 
 * metamorphic parent-material (wark gneiss)
-* igneous parent material (Metchosin volcanics)
+* igneous parent material (Metchosin volcanics & Gabbro stocks)
 * drainage area 
 * median basin slope
 * tree age (average, years)
@@ -97,6 +97,7 @@ The nine selected predictor variables included:
 * antecedent 7-day temperatures 
 * antecedent 30-day rain 
 * sampling stage (min-max-normalized to account for differences between site installations)
+
 
 \  
 
@@ -120,7 +121,13 @@ Results in the previous chapter showed elevated NOM in event-based samples, to e
 The RF variable importance measure showed that DOC and SAC~254~ were predicted by wet and warm conditions, while E~2~:E~3~ wasn't as impacted by 7-day antecedent temperature but was sensitive to rain and sampling stage. 
 
 
-For each of DOC, SAC~254~ and E~2~:E~3~ conditions ranked among the most important variable group, above most surface and subsurface watershed characteristics, and all three had antecedent 30-day rain as one of their top 3 predictor variables. Metamorphic parent material was ranked third importance for predicting DOC, fourth for SAC~254~ and ranked fifth for E~2~:E~3~. Igneous parent material was the least important for all three predictants. Slope was relatively more important for concentration than it was for character of NOM and sampling stage was more important to character than concentration. Tree age and logging history were quite poor for predicting both DOC concentration and SAC~254~, and more important for E~2~:E~3~. Drainage area was not found to be particularly important for any of the three predictants (Figure \@ref(fig:RFplot)). 
+For each of DOC, SAC~254~ and E~2~:E~3~ conditions ranked among the most important variable group, above most watershed characteristics, and all three had antecedent 30-day rain as one of their top 3 predictor variables. Metamorphic parent material was ranked fourth in importance for predicting each of DOC, SAC~254~ and E~2~:E~3~. Igneous parent material was the least important for all three predictants. 
+
+Slope was relatively more important for concentration than it was for character of NOM and sampling stage was more important to character than concentration. 
+
+Tree age and logging history were quite poor for predicting both DOC concentration and SAC~254~, and more important for E~2~:E~3~. 
+
+Drainage area was not found to be particularly important for any of the three predictants (Figure \@ref(fig:RFplot)). 
 
 \  
 
