@@ -406,7 +406,7 @@ mean_snowplot <- LWSA_meanWx %>%
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_SnowMax)) +
   geom_col(colour = "grey60") +
-  labs(x = "", y = 'Snow (m/day)') +
+  labs(x = "", y = 'Snow (m)') +
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
@@ -4613,7 +4613,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_NOM-DOC_boxplots-by-season.pn
 # plot grid
 cowplot::plot_grid(a, B, d, ncol = 1, axis = "tb", 
                    rel_widths = c(1,1,1),
-                   rel_heights = c(3,2,3))
+                   rel_heights = c(3,2,3),
+                   labels = "AUTO")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxplots-by-season.png",  
        width = 6, height = 6, unit = "in") 
@@ -4850,6 +4851,18 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
 
 ```
 
+### RF & plots
+```{r}
+
+# named colour vector
+fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
+           "Parent material" = forWater_colours2[["Gray"]], 
+           "Surface characteristics" = forWater_colours2[["Green"]])
+
+# all tests and plots by predictant follow:
+
+```
+
 #### RF : DOC All variables together
 
 ```{r}
@@ -4857,8 +4870,6 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
 # select surface & subsurface predictor variables -- some removed due to cross-correlation
 # values removed were cross-correlated at 0.65 or greater
 AllVariables_NPOC <- sixfilter_physiographic %>% 
-  # change rain season to numbers {1 = wet, 0 = dry}
-  mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(#event_ID, 
     #antecedent_7day_rain,
     # antecedent_30day_temp,
@@ -4915,12 +4926,8 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
                                 "QA-QC (random numbers)" = "QA_RandNum",
                                 "rain event number" = "event_ID",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day air temp" = "antecedent_30day_temp",
-                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Sample Hold-time" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
-                                "rain season" = "rain_season",
                                 "drainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "tree age (average, yrs)" = 'tree_age_average',
@@ -4938,19 +4945,12 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
     # conditions:
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day air temp" |
-      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "Sample Hold-time" | 
       predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-      predictor == "rain season" | 
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      #predictor == "wetland cover" | 
-      #predictor == "open water" | 
       predictor == "slope (median, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
@@ -4958,10 +4958,7 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
       predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group)) 
 
-# named colour vector
-fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
-           "Parent material" = forWater_colours2[["Gray"]], 
-           "Surface characteristics" = forWater_colours2[["Green"]])
+
 
 # VIM plot
 RFplot_all_DOC <- RF_DOC_allChrc_RelImp1_MSE %>% 
@@ -4992,8 +4989,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_DOC.png",
 # select surface & subsurface predictor variables
 AllVariables_E2E3 <- sixfilter_physiographic %>% 
   filter(!is.na(E2E3)) %>% 
-  # change rain season to numbers {1 = wet, 0 = dry}
-  mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(E2E3, # predict E2E3
            geo_metamorphic_percent,
     geo_igneous_percent,
@@ -5017,8 +5012,6 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
 
 
 ## Run RF
-# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 E2E3_allVars_RF <- randomForest::randomForest(E2E3 ~ ., 
                                               data = AllVariables_E2E3, 
                                               replace = FALSE, # improve VIM
@@ -5039,14 +5032,9 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
          MSE = "%IncMSE") %>% # percent increase in mean square error
   mutate(predictor = fct_recode(predictor,
                                 "QA-QC (random numbers)" = "QA_RandNum",
-                                "rain event number" = "event_ID",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day air temp" = "antecedent_30day_temp",
-                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Sample Hold-time" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
-                                "rain season" = "rain_season",
                                 "drainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "tree age (average, yrs)" = 'tree_age_average',
@@ -5064,19 +5052,12 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
     # conditions:
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day air temp" |
-      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "Sample Hold-time" | 
       predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-      predictor == "rain season" | 
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      #predictor == "wetland cover" | 
-      #predictor == "open water" | 
       predictor == "slope (median, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
@@ -5084,10 +5065,6 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
       predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
 
-# named colour vector
-fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
-           "Parent material" = forWater_colours2[["Gray"]], 
-           "Surface characteristics" = forWater_colours2[["Green"]])
 
 # VIM plot
 RFplot_all_E2E3 <- RF_E2E3_allChrc_RelImp1_MSE %>% 
@@ -5119,8 +5096,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_E2E3.png",
 # select surface & subsurface predictor variables
 AllVariables_SAC254 <- sixfilter_physiographic %>% 
   filter(!is.na(SAC254_Abs.m)) %>%
-  # change rain season to numbers {1 = wet, 0 = dry}
-  mutate(rain_season = case_when(rain_season == "wet" ~ 1, rain_season == "dry" ~ 0)) %>% 
   select(c(SAC254_Abs.m, # predict SAC254
            geo_metamorphic_percent,
     geo_igneous_percent,
@@ -5144,8 +5119,6 @@ AllVariables_SAC254 <- sixfilter_physiographic %>%
 
 
 ## Run RF
-# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
 SAC254_allVars_RF <- randomForest::randomForest(SAC254_Abs.m ~ ., 
                                                 data = AllVariables_SAC254, 
                                                 replace = FALSE, # improve VIM
@@ -5168,18 +5141,11 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
                                 "QA-QC (random numbers)" = "QA_RandNum",
                                 "rain event number" = "event_ID",
                                 "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day air temp" = "antecedent_30day_temp",
-                                "antecedent 7-day rain" = "antecedent_7day_rain",
                                 "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Sample Hold-time" = "HoldTime_days",
                                 "sampling stage" = "sampleStage_normalized",
-                                "rain season" = "rain_season",
                                 "drainage area" = "drainage_area_km2",
                                 "sample site elevation"= "elevation_masl",
                                 "tree age (average, yrs)" = 'tree_age_average',
-                                "forest cover" = "forest_percent",
-                                "wetland cover" = "wetland_percent",
-                                "open water" ="openWater_percent",
                                 "slope (median, degrees)" = "slope_median_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
@@ -5191,19 +5157,12 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
     # conditions:
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day air temp" |
-      predictor == "antecedent 7-day rain" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "Sample Hold-time" | 
       predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
-      predictor == "rain season" | 
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      #predictor == "wetland cover" | 
-      #predictor == "open water" | 
       predictor == "slope (median, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
@@ -5211,10 +5170,6 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
       predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
 
-# named colour vector
-fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
-           "Parent material" = forWater_colours2[["Gray"]], 
-           "Surface characteristics" = forWater_colours2[["Green"]])
 
 # VIM plot
 RFplot_all_SAC254 <- RF_SAC254_allChrc_RelImp1_MSE %>% 
@@ -5240,6 +5195,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_SAC254.png",
 
 
 ```
+
 ##### RF summary plot
 ```{r}
 # stack DOC, E2E3, SAC254 plots
@@ -5251,6 +5207,563 @@ cowplot::plot_grid(RFplot_all_DOC,
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC254.png", 
        width = 6, height = 7.5, units = "in")
+```
+
+###### appendix plots individual group predictors
+
+```{r}
+# --- DOC
+# SAC254
+# dynamic values: conditions only
+dynamicVariables_DOC <- sixfilter_physiographic %>% 
+  filter(!is.na(NPOC_ppm)) %>%
+  select(c(NPOC_ppm, # predict SAC254
+    sampleStage_normalized, 
+    antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
+    )) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+## Run RF
+# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
+DOC_dynamic_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                                data = dynamicVariables_DOC, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+
+## relative importance of features in predicting SAC254
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_DOC_dynamic_RelImp1_MSE <- randomForest::importance(DOC_dynamic_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "rain event number" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "sampling stage" = "sampleStage_normalized" ),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+# named colour vector
+fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
+           "Parent material" = forWater_colours2[["Gray"]], 
+           "Surface characteristics" = forWater_colours2[["Green"]])
+
+# VIM plot
+RFplot_dynamic_DOC <- RF_DOC_dynamic_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_dynamic_DOC.png", 
+       width = 6, height = 6, units = "in")
+
+# static values: watershed characteristics only
+staticVariables_DOC <- sixfilter_physiographic %>% 
+  filter(!is.na(NPOC_ppm)) %>%
+  select(c(NPOC_ppm, # predict DOC
+           geo_metamorphic_percent,
+    geo_igneous_percent,
+    drainage_area_km2,
+    slope_median_degrees,
+    tree_age_average,
+    logging_percent_1980to2011)) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(AllVariables_SAC254))
+
+
+## Run RF
+# mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (unpruned)
+DOC_static_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                                data = staticVariables_DOC, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+
+## relative importance of features in predicting SAC254
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "drainage area" = "drainage_area_km2",
+                                "tree age (average, yrs)" = 'tree_age_average',
+                                "forest cover" = "forest_percent",
+                                "wetland cover" = "wetland_percent",
+                                "open water" ="openWater_percent",
+                                "slope (median, degrees)" = "slope_median_degrees",
+                                "logging history (1980-2011)" = "logging_percent_1980to2011", 
+                                "metamorphic (%)" = "geo_metamorphic_percent",
+                                "igneous (%)" = "geo_igneous_percent"),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+# named colour vector
+fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
+           "Parent material" = forWater_colours2[["Gray"]], 
+           "Surface characteristics" = forWater_colours2[["Green"]])
+
+# VIM plot
+RFplot_static_DOC <- RF_DOC_static_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = 'Relative importance in predicting DOC (%)', 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_static_DOC.png", 
+       width = 6, height = 6, units = "in")
+
+# --- E2E3
+# SAC254
+# dynamic values: conditions only
+dynamicVariables_E2E3 <- sixfilter_physiographic %>% 
+  filter(!is.na(E2E3)) %>%
+  select(c(E2E3, # predict SAC254
+    sampleStage_normalized, 
+    antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
+    )) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(AllVariables_SAC254))
+
+
+## Run RF
+E2E3_dynamic_RF <- randomForest::randomForest(E2E3 ~ ., 
+                                                data = dynamicVariables_E2E3, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+
+## relative importance of features in predicting E2E3
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_E2E3_dynamic_RelImp1_MSE <- randomForest::importance(E2E3_dynamic_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "rain event number" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "sampling stage" = "sampleStage_normalized" ),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+# VIM plot
+RFplot_dynamic_E2E3 <- RF_E2E3_dynamic_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_dynamic_E2E3.png", 
+       width = 6, height = 6, units = "in")
+
+# static values: watershed characteristics only
+staticVariables_E2E3 <- sixfilter_physiographic %>% 
+  filter(!is.na(E2E3)) %>%
+  select(c(E2E3, # predict SAC254
+           geo_metamorphic_percent,
+    geo_igneous_percent,
+    drainage_area_km2,
+    slope_median_degrees,
+    tree_age_average,
+    logging_percent_1980to2011)) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(AllVariables_SAC254))
+
+
+## Run RF
+E2E3_static_RF <- randomForest::randomForest(E2E3 ~ ., 
+                                                data = staticVariables_E2E3, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+
+## relative importance of features in predicting E2E3
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_E2E3_static_RelImp1_MSE <- randomForest::importance(E2E3_static_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "drainage area" = "drainage_area_km2",
+                                "tree age (average, yrs)" = 'tree_age_average',
+                                "forest cover" = "forest_percent",
+                                "wetland cover" = "wetland_percent",
+                                "open water" ="openWater_percent",
+                                "slope (median, degrees)" = "slope_median_degrees",
+                                "logging history (1980-2011)" = "logging_percent_1980to2011", 
+                                "metamorphic (%)" = "geo_metamorphic_percent",
+                                "igneous (%)" = "geo_igneous_percent"),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+# VIM plot
+RFplot_static_E2E3 <- RF_E2E3_static_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_static_E2E3.png", 
+       width = 6, height = 6, units = "in")
+
+
+
+# --- SAC254
+# dynamic values: conditions only
+dynamicVariables_SAC254 <- sixfilter_physiographic %>% 
+  filter(!is.na(SAC254_Abs.m)) %>%
+  select(c(SAC254_Abs.m, # predict SAC254
+    sampleStage_normalized, 
+    antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
+    )) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(AllVariables_SAC254))
+
+
+## Run RF
+SAC254_dynamic_RF <- randomForest::randomForest(SAC254_Abs.m ~ ., 
+                                                data = dynamicVariables_SAC254, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+## relative importance of features in predicting SAC254
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_SAC254_dynamic_RelImp1_MSE <- randomForest::importance(SAC254_dynamic_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "rain event number" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "sampling stage" = "sampleStage_normalized" ),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "forest cover" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+
+# VIM plot
+RFplot_dynamic_SAC254 <- RF_SAC254_dynamic_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_dynamic_SAC254.png", 
+       width = 6, height = 6, units = "in")
+
+# static values: watershed characteristics only
+staticVariables_SAC254 <- sixfilter_physiographic %>% 
+  filter(!is.na(SAC254_Abs.m)) %>%
+  select(c(SAC254_Abs.m, # predict SAC254
+           geo_metamorphic_percent,
+    geo_igneous_percent,
+    drainage_area_km2,
+    slope_median_degrees,
+    tree_age_average,
+    logging_percent_1980to2011)) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(AllVariables_SAC254))
+
+
+## Run RF
+SAC254_static_RF <- randomForest::randomForest(SAC254_Abs.m ~ ., 
+                                                data = staticVariables_SAC254, 
+                                                replace = FALSE, # improve VIM
+                                                na.action = randomForest::na.roughfix,
+                                                mtry = ceiling(length(data)/2), # no. of features
+                                                ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                                importance = TRUE,
+                                                proximity = TRUE,
+                                                corr.bias = TRUE) # experimental 
+
+
+## relative importance of features in predicting SAC254
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_SAC254_static_RelImp1_MSE <- randomForest::importance(SAC254_static_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "drainage area" = "drainage_area_km2",
+                                "tree age (average, yrs)" = 'tree_age_average',
+                                "forest cover" = "forest_percent",
+                                "wetland cover" = "wetland_percent",
+                                "open water" ="openWater_percent",
+                                "slope (median, degrees)" = "slope_median_degrees",
+                                "logging history (1980-2011)" = "logging_percent_1980to2011", 
+                                "metamorphic (%)" = "geo_metamorphic_percent",
+                                "igneous (%)" = "geo_igneous_percent"),
+         MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
+  # add category for plot colouring:
+  mutate(variable_group = case_when(
+    # conditions:
+    predictor == "rain event number" | 
+      predictor == "antecedent 7-day air temp" |
+      predictor == "antecedent 30-day rain" | 
+      predictor == "sampling stage" ~ "Conditions",
+    # surface characteristics
+    predictor == "tree age (average, yrs)" |
+      predictor ==  "drainage area" | 
+      predictor == "sample site elevation" | 
+      predictor == "slope (median, degrees)" | 
+      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
+    # subsurface characteristics (parent material):
+    predictor == "metamorphic (%)" |
+      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+  mutate(variable_group = factor(variable_group))  
+
+
+# VIM plot
+RFplot_static_SAC254 <- RF_SAC254_static_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(aes(fill = variable_group), alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  scale_fill_manual(values = fills,
+                    breaks = c("Conditions", 
+                               "Surface characteristics", 
+                               "Parent material")) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+       x = "",
+       fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_static_SAC254.png", 
+       width = 6, height = 6, units = "in")
+
+
+
+
+
+# ----- all together
+## DOC
+cowplot::plot_grid(RFplot_dynamic_DOC + theme(legend.position = "none"), 
+                   RFplot_static_DOC + theme(legend.position = "none"), 
+                   ncol = 1)
+
+cowplot::plot_grid(RFplot_dynamic_E2E3 + theme(legend.position = "none"), 
+                   RFplot_static_E2E3 + theme(legend.position = "none"), 
+                   ncol = 1)
+
+cowplot::plot_grid(RFplot_dynamic_SAC254 + theme(legend.position = "none"), 
+                   RFplot_static_SAC254 + theme(legend.position = "none"), 
+                   ncol = 1)
+
 ```
 
 ## plots: predictors to predictants: one to one
@@ -5291,8 +5804,23 @@ b <- sixfilter_physiographic %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-2-rain.png",
        width = 4, height = 4, units = "in")
 
-# 3 DOC with metamorphic parent material
+# 3 DOC with slope
 c <- sixfilter_physiographic %>% 
+  ggplot(aes(x = slope_median_degrees, y = NPOC_ppm)) + 
+  theme_bw() +
+  geom_boxplot(aes(fill = site), alpha = 0.5,
+               varwidth = TRUE) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "Slope, median (degrees)", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-3-slope.png",
+       width = 4, height = 4, units = "in")
+
+# 4 DOC with metamorphic parent material
+d <- sixfilter_physiographic %>% 
   ggplot(aes(x = geo_metamorphic_percent, y = NPOC_ppm)) +
   theme_bw() +
   geom_boxplot(aes(fill = site), alpha = 0.5) +
@@ -5302,22 +5830,10 @@ c <- sixfilter_physiographic %>%
         text = element_text(size = 11)) +
   labs(x = "Metamorphic parent material (%)", y = "DOC (mg/L)")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-3-gneiss.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4-gneiss.png",
        width = 4, height = 4, units = "in")
 
-# 4 DOC with slope
-d <- sixfilter_physiographic %>% 
-  ggplot(aes(x = slope_median_degrees, y = NPOC_ppm)) + 
-  theme_bw() +
-  geom_boxplot(aes(fill = site), alpha = 0.5) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "top",
-        text = element_text(size = 11)) +
-  labs(x = "Slope, median (degrees)", y = "DOC (mg/L)")
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4-slope.png",
-       width = 4, height = 4, units = "in")
+
 
 ```
 
@@ -5655,9 +6171,9 @@ e <- stage_samples_norm %>%
   labs(y = "", x = expression(E[2]:E[3]))
 
 # group
-cowplot::plot_grid(d,u,s,e, nrow = 1, rel_widths = c(1,1,1,1.075))
+cowplot::plot_grid(d,u,e, nrow = 1, rel_widths = c(1,1,1.075))
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_StageNorm_DOC-NOM.png",
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DOC-NOM.png",
        width = 6, height = 7.5, units = "in")
 
 ```
@@ -6981,7 +7497,6 @@ Watershed characteristics data is mostly categorical (even though they're number
 
 RF : DOC conditions variables
 ```{r}
-
 # select only condition variables
 conditions_NPOC <- sixfilter_physiographic %>% 
   select(c("NPOC_ppm", # predict DOC

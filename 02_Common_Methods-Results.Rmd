@@ -223,7 +223,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 \  
 
 ```{r meanWxLWSA, fig.cap = fig_cap}
-fig_cap = "\\label{fig:meanWxLWSA} Average weather from Chris Creek and Martin's Gulch fire-weather stations in the Leech Water Supply Area, where the highlighted section indicates the study period."
+fig_cap = "\\label{fig:meanWxLWSA} Average weather from Chris Creek (560 m a.s.l) and Martin's Gulch (512 m a.s.l) fire-weather stations in the Leech Water Supply Area, where the highlighted section indicates the study period."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
 ```

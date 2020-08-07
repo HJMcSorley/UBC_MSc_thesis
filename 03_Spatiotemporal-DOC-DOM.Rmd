@@ -125,7 +125,7 @@ At the future point of diversion, Leech Tunnel (5th order stream), it was found 
 
 #### Temporal patterns in DOC & NOM
 
-From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across the synoptic sampling sites (Figure \@ref(fig:DOCloessAll)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations at the end of the wet season (in the spring), and progressively increasing over the dry season (summer). These patterns appear as a sinusoidal trend in DOC over the sampling seasons (Figure \@ref(fig:DOCloessAll))
+From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across the synoptic sampling sites (Figure \@ref(fig:DOCloessAll)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations at the end of the wet season (in the spring), and progressively increasing over the dry season (summer). These patterns appear as a sinusoidal trend in DOC over the sampling seasons (Figure \@ref(fig:DOCloessAll)).
 
 \  
 
@@ -134,6 +134,10 @@ fig_cap = "\\label{fig:DOCloessAll} Dissolved organic carbon concentrations over
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-loess-trend.png")
 ```
+
+\  
+
+There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparce period, appears to fit the overall pattern of available data.
 
 \  
 
@@ -226,7 +230,7 @@ Rack sampling also more than doubled the number of samples that would have been 
 
 \  
 
-Spatially, DOC concentrations and NOM aromaticity decreased from upstream to downstream sampling sites. And there was greater variation in NOM character (i.e. aromaticity) at the headwater sites than the higher-order streams. This spatial reduction in NOM molecular diversity from lower-order to higher-order streams agrees with predictions of the river continuum concept [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. Weeks crk, which drains from Weeks Lake and surrounding wetlands, had the greatest average aromaticity and highest DOC concentrations of all GVWSA synoptic sampling sites. This was to be expected as wetlands have been linked to high concentrations of aromatic-rich NOM [e.g. @Helms2008; @Agren2008; @Aiken1995]. 
+Weeks creek had higher aromaticity than all of the other sites, which was likely due to inputs from Weeks Lake and its surrounding wetlands. Spatially, DOC concentrations and NOM aromaticity decreased from upstream to downstream sampling sites. And there was greater variation in NOM character (i.e. aromaticity) at the headwater sites than the higher-order streams. This spatial reduction in NOM molecular diversity from lower-order to higher-order streams agrees with predictions of the river continuum concept [@Vannote1980; @Mosher2015; @Abbott2018; @Creed2015]. Weeks crk, which drains from Weeks Lake and surrounding wetlands, had the greatest average aromaticity and highest DOC concentrations of all GVWSA synoptic sampling sites. This was to be expected as wetlands have been linked to high concentrations of aromatic-rich NOM [e.g. @Helms2008; @Agren2008; @Aiken1995]. 
 
 \  
 
