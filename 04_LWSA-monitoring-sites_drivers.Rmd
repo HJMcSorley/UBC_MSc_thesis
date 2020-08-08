@@ -452,7 +452,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DO
 
 #### Hysteresis of NOM with predictor variables
 
-
+Events 10 and 11 were relatively well represented by sampling and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain amounts (p = 0.732), durations (p = 0.837), and intensity (p = 0.549).
 
 \  
 
