@@ -32,3 +32,10 @@ antecedent 7-day air temp MSE = 8.486056 %
 antecedent 7-day rain MSE = 12.786768 % 
 antecedent 7-day air temp MSE = 9.834241 %
  
+ 
+ ?? Does wark gneiss have relatively great  or weak hydraulic conductivity??
+ 
+ 
+ 
+ 
+ 

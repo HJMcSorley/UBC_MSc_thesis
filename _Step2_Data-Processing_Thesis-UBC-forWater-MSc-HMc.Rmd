@@ -6027,7 +6027,7 @@ stage_samples %>%
   geom_vline(xintercept = event_starts[10], linetype = 1, colour = forWater_colours2["MyOrange"] ) + 
   geom_vline(xintercept = event_starts[11], linetype = 1, colour = forWater_colours2["MyOrange"] ) + 
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-  labs(y = "River Stage (cm)", x = "", caption = "Events 10 & 11")+
+  labs(y = "River Stage (cm)", x = "", caption = "Events 10 & 11", shape = "Sampling method:")+
   scale_x_datetime(breaks = "4 day")+
   theme(text = element_text(size = 12),
         axis.text.x = element_text(angle = 60, hjust = 1),
@@ -6040,7 +6040,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png",
 
 ##### DOC 
 
-###### 7-day temp 
+7-day temp 
 
 ```{r}
 
@@ -6079,39 +6079,64 @@ hystPlot_DOC_7temp <- cowplot::plot_grid(e10temp_DOC, e11temp_DOC, ncol = 2)
 
 ```
 
-###### 30-day rain
+30-day rain
+
 ```{r}
+
+# add the lowflow points to both events... ??
+#hyst_1011df_shared <- 
+e_ten <- hyst_df %>%
+  select(c(site, Date, event_ID, DateTime_sampled, antecedent_30day_rain, NPOC_ppm, SAC254_Abs.m, E2E3)) %>% 
+  filter(event_ID == "10") %>% 
+  mutate(shared_lowflow_eventID = event_ID )
+
+e_eleven <- hyst_df %>%
+  select(c(site, Date, event_ID, DateTime_sampled, antecedent_30day_rain, NPOC_ppm, SAC254_Abs.m, E2E3)) %>% 
+  filter(event_ID == "10" | event_ID == "11",
+         Date > lubridate::as_date("2019-11-10")) %>% 
+  mutate(shared_lowflow_eventID = case_when(Date > lubridate::as_date("2019-11-10") ~ "11") )
+         
+# join both so they share the low-flow date points
+hyst_1011df_shared <- full_join(e_ten, e_eleven,
+                                by = c("site", "Date", "event_ID", "DateTime_sampled", 
+                                       "antecedent_30day_rain", 
+                                       "NPOC_ppm", "SAC254_Abs.m", "E2E3",  
+                                       "shared_lowflow_eventID")) %>% 
+  mutate(shared_lowflow_eventID = factor(shared_lowflow_eventID, levels = c("10", "11")) )
+
+# tried it with shared low-flow and it was whacky -- better to use the actual events
 
 # 10 == clockwise hysteresis
 # 11 == counter clockwise
 
 ## --- 30 day antecedent rain
 # event 10
-e10rain_DOC <- hyst_df %>%
+e10rain_DOC <- hyst_1011df_shared %>%
   filter(event_ID == "10") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
-  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm, colour = site)) + 
-  geom_point(na.rm = TRUE)+
-  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + #, colour = site
+  geom_point(na.rm = TRUE, colour = forWater_colours2["DeepBlue"], size = 2)+
+  geom_path(arrow = arrow(angle = 20, type = "closed", length = unit(0.2, "inches") ),
             na.rm = TRUE, linetype = 1) +
-  scale_colour_brewer(palette = "Dark2") +
+  #scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
   theme_bw()+
   theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
-        text = element_text(size = 11))+
+        text = element_text(size = 11)) +
   labs(x = "antecedent 30-day rain (mm)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
 
 # event 11
-e11rain_DOC <- hyst_df %>%
+e11rain_DOC <- hyst_1011df_shared %>%
   filter(event_ID == "11") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
-  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm, colour = site)) + 
-  geom_point(na.rm = TRUE)+
-  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) +  # , colour = site
+  geom_point(na.rm = TRUE, colour = forWater_colours2["DeepBlue"], size = 2)+
+  geom_path(arrow = arrow(angle = 20, type = "closed", length = unit(0.2, "inches") ),
             na.rm = TRUE, linetype = 1) +
-  scale_colour_brewer(palette = "Dark2") +
+  #scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
-  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  theme_bw() +  
+  theme(legend.position = "none", text = element_text(size = 11)) +
   labs(x = "antecedent 30-day rain (mm)", y = "") + ggtitle("B) Event 11")
 
 # side by side
@@ -6120,7 +6145,8 @@ hystPlot_DOC_30rain <-cowplot::plot_grid(e10rain_DOC, e11rain_DOC, ncol = 2)
 
 ```
 
-###### stage
+stage
+
 ```{r}
 
 ## --- stage
@@ -6155,12 +6181,11 @@ e11stg_DOC <- hyst_df %>%
 # side by side
 hystPlot_DOC_stg <- cowplot::plot_grid(e10stg_DOC, e11stg_DOC, ncol = 2)
 
-
 ```
 
 ##### SAC254
 
-###### stage
+stage
 
 ```{r}
 # event 10
@@ -6196,7 +6221,7 @@ hystPlot_SAC254_stg <-cowplot::plot_grid(e10SAC254_stg, e11SAC254_stg, ncol = 2)
 
 ```
 
-###### 30-day rain
+30-day rain
 ```{r}
 
 # event 10
@@ -6232,7 +6257,7 @@ hystPlot_1011_SAC_rain <- cowplot::plot_grid(e10SAC254_rain, e11SAC254_rain, nco
 
 ```
 
-###### 7-day temp 
+7-day temp 
 
 ```{r}
 
@@ -6273,7 +6298,7 @@ hystPlot_1011_SAC_temp <- cowplot::plot_grid(e10temp_SAC254, e11temp_SAC254, nco
 
 ##### E2E3
 
-###### 30-day rain
+30-day rain
 
 ```{r}
 
@@ -6311,7 +6336,7 @@ hystPlot_E2E3_rain <-cowplot::plot_grid(e10E2E3_rain, e11E2E3_rain, ncol = 2)
 
 ```
 
-###### stage
+stage
 
 ```{r}
 # event 10
@@ -6347,7 +6372,7 @@ hystPlot_E2E3_stg <-cowplot::plot_grid(e10E2E3_stg, e11E2E3_stg, ncol = 2)
 
 ```
 
-###### 7-day temp 
+7-day temp 
 
 ```{r}
 
@@ -6386,38 +6411,43 @@ hystPlot_E2E3_temp <- cowplot::plot_grid(e10temp_E2E3, e11temp_E2E3, ncol = 2)
 
 ```
 
-##### hysteresis plots summary
+#### hysteresis plots summary
+```
+# compare DOC to spectral ps
+
+# wetness -- 30 day rain was a predictor variable that all 3 were sensitive to
+# DOC has a better plot -- 10 was clockwise, 11 was counter clockwise
+hystPlot_1011_SAC_rain # similar pattern
+hystPlot_E2E3_rain  # similar pattern but missing values make it whacky
+
+```
+
 ```{r}
-# DOC VIM: 1, 2, 3
-#hystPlot_DOC_7temp
-#hystPlot_DOC_30rain
-#hystPlot_DOC_stg 
+# Save the DOC hysteresis plot as representative 
+hystPlot_DOC_30rain
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_DOC-wetness.png",
+       width = 6, height = 6, units = "in" )
+```
 
-# SAC VIM: 1, 2, 3
-#hystPlot_SAC254_stg
-#hystPlot_1011_SAC_rain
-#hystPlot_1011_SAC_temp 
 
-# E2E3 VIM: 1, 2, 3
-#hystPlot_E2E3_rain 
-#hystPlot_E2E3_stg
-#hystPlot_E2E3_temp 
-
-# compare
+```
+# --- other variables? Plots are not as clear
+# temp 
 hystPlot_DOC_7temp # ugly
 hystPlot_1011_SAC_temp # ugly
 
 hystPlot_DOC_7temp # ugly
 hystPlot_E2E3_temp # ugly
 
-hystPlot_DOC_30rain  # better plot 
-hystPlot_1011_SAC_rain # similar pattern
+# stage
+hystPlot_DOC_stg     # messy but more clear
+hystPlot_SAC254_stg  # messy
 
-hystPlot_DOC_30rain
-hystPlot_E2E3_rain
+hystPlot_DOC_stg
+hystPlot_E2E3_stg
 
 ```
-
 
 
 # River Stage & NOM dynamics

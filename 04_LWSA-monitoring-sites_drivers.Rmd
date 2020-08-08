@@ -454,6 +454,26 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DO
 
 
 
+\  
+
+```{r events1011, fig.cap = fig_cap}
+fig_cap = "\\label{fig:events1011} Stage and sample collection points six Leech watershed monitoring sites during rain events 10 and 11 (fall 2019). Vertical yellow lines indicate the start of each rain event. Results of samples in each event were compared to antecedent 30-day rain to assess hysteretic behaviour."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png")
+```
+
+\  
+
+```{r hysteresisplots, fig.cap = fig_cap}
+fig_cap = "\\label{fig:hysteresisplots} Dissolved organic carbon (DOC) concentrations plotted with antecedent 30-day rain during events 10 and 11 at six monitoring sites in the Leech watershed."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_DOC-wetness.png")
+```
+
+\  
+
+
+
 
 
 ### Discussion

@@ -80,7 +80,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/index-acronyms.csv", col_names = 
 
 # Acknowledgments
 
-This research work would not have been possible without the support and accommodation of the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (IWS) (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations and worker checks. 
+This research work would not have been possible without the support of, and physical accommodations provided by, the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations and worker checks. 
 
 \  
 
