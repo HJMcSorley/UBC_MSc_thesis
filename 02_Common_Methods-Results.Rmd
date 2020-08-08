@@ -50,8 +50,8 @@ Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl
 
 ```{r siteCharacteristics}
 
-read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics.csv", col_names = TRUE) %>%
-  knitr::kable(digits = 1,
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics_wide.csv", col_names = TRUE) %>%
+  knitr::kable(#digits = 1,
                caption = "Watershed Characteristics of Twelve Synoptic Sampling Sites Across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC")
 ```  
 
@@ -143,7 +143,7 @@ The first five vials of each analytic run contained only lab grade water; these 
 
 \  
 
-Calibration was completed each time the zero-air gas cylinder was replaced, and in one instance when the gas flow rate was adjusted. A five- or six-point calibration curve (0-30 mg/L organic carbon) was created with series made from stock solution of anhydrous primary-standard grade potassium hydrogen phthalate. Calibration was verified regularly by including a 'cal-ver' in most sample trays (standard organic carbon solution diluted to approximately 5 mg/L, catalog No.LC129107, labchem.com).
+Calibration was completed each time the zero-air gas cylinder was replaced, and in one instance when the gas flow rate was adjusted. A five- or six-point calibration curve (0-30 mg/L organic carbon) was created with series made from stock solution of anhydrous primary-standard grade potassium hydrogen phthalate. Calibration was verified regularly by including a 'cal-ver' in most sample trays (standard organic carbon solution diluted to approximately 3-8 mg/L, catalog No.LC129107, labchem.com).
 
 \  
 
@@ -185,7 +185,7 @@ Coastal BC climate is characterized by a predominantly wet season and dry season
 
 \ 
 
-Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) were used to define events that corresponded to Rack sample collection. Rain events were defined using the 'RMevents' function in the R package _Rainmaker_ (github.com/USGS-R/Rainmaker), and were used to help distinguish between wet and dry seasons. Snow was qualitatively considered when defining seasons, as it did not contribute to event definitions but did contribute to stream levels at the monitoring sites. 
+Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) were used to define events that corresponded to Rack sample collection. Rain events were defined using the 'RMevents' function in the R package _Rainmaker_ (github.com/USGS-R/Rainmaker), in which threshold rain and inter-event period parameters were tuned to find conditions that defined events which aligned with stream response across the Leech WSA. Refined events were used to help distinguish the start and end of wet and dry seasons, where wet season began when Vertical Rack sampling was initiated by stream stage changes, and ended when streamflow dropped off and Vertical Rack samples were no longer collected. Snow was qualitatively considered when defining seasons, as it did not contribute to event definitions but did contribute to stream levels at the monitoring sites. 
 
 \  
 
@@ -232,7 +232,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 
 #### Seasonal delineation  
 
-
 Wet seasons were defined by conditions that generated stream responses significant enough to collect Vertical Rack samples, and the dry season was defined by baseflow conditions where stream response was not detected at the Vertical Racks. There were 18 rain events of sufficient magnitude for Vertical Rack sample collection; the conditions that corresponded to these major rain events were precipitation accumulating to 50 mm or more with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)). 
 
 \  
@@ -242,7 +241,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
          col_names = TRUE) %>% 
   select(-c("Storm number")) %>% 
   knitr::kable(digits = c(0, 0, 1, 1, 0), 
-               caption = "Rain Events Defined by Vertical Rack Sample Collection (threshold of 50 mm accumulation with 14-hour inter-event period)" )
+               caption = "Rain Events Defined by Vertical Rack Sample Collection (corresponding to a threshold of 50 mm accumulation with 14-hour inter-event period)" )
 
 ```
 
@@ -253,7 +252,7 @@ The sixteen-month study period was separated into "wet" and "dry" seasons based 
 \  
 
 ```{r seasonalMegaPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area (LWSA) weather, stream response and sample collection at the six monitoring sites across the LWSA. Seasons were separated by stream responses and conditions that corresponded to Verical Rack Sample collection." 
+fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area (LWSA) air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites across the LWSA. Vertical yellow lines indicate seasons, which were defined by the start of Vertical Rack sampling (wet season) and baseflow Grab sampling during the dry season. The dashed yellow line separates the 2018/2019 wet season into rain-dominated and snow-melt dominated streamflow. The 'first flush' period indicates the first event and beginning of the 2019/2020 wet season. " 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
 ```

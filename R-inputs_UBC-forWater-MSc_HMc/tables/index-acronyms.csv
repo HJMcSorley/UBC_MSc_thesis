@@ -11,3 +11,7 @@ GVWSA ,Greater Victoria Water Supply Area
 QA/QC,Quality Assurance & Quality Control
 HDPE,High density polyethylene (sample bottles)
 RSD,Relative standard deviation (a.k.a coefficient of variance)
+SAC254,Spectral absorbance coefficient at 254 nm (absorbance at 254 nm divided by pathlength)
+E2:E3,Quotient of SAC250 divided by SAC365 
+RF,Random Forest
+VIM,"Variable Importance Measure (in randomForest, R)"

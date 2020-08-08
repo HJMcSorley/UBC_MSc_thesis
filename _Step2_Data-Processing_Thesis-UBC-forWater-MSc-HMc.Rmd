@@ -373,7 +373,6 @@ a <- LWSA_meanWx %>%
 
 ```
 
-
 plot mean FWx 
 ```{r}
 # mean precip plot
@@ -520,61 +519,7 @@ b <- precip_data %>%
 c <- bind_rows(a, b) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
 ```
 
-##### questionable objects
-```{r, Wx-Stn_summaries}
-# I want to know precip totals over the study period
-# by month and by season
-# use rain to define storm events
 
-# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
-rn_MScTotal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         year = lubridate::year(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx",
-         date >= "2018-10-23") %>% 
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup() 
-
-# rain seasons rainfalls
-rn_seasonal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
-  mutate(month = lubridate::month(DateTime),
-         year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year, rain_season) %>% 
-  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# annual rainfalls
-rn_annual <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
-  mutate(year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# water-year rainfalls (Oct 1 - Sept 30)
-rn_wateryr <- LWSA_meanWx %>%
-  mutate(Year = lubridate::year(DateTime),
-         month = lubridate::month(DateTime),
-         water_year = case_when(
-           between(month, 1, 9) & Year == "2018" ~ "2018",
-           between(month, 10, 12) & Year == "2018" ~ "2019",
-           between(month, 1, 9) & Year == "2019" ~ "2019",
-           between(month, 10, 12) & Year == "2019" ~ "2020",
-           between(month, 1, 9) & Year == "2020" ~ "2020")) %>%
-  #filter(water_year != "2018") %>% 
-  group_by(water_year) %>% 
-  dplyr::summarise(annual_precip_mm = sum(Rn_1_mean, na.rm = TRUE),
-                   max_snow_m = max(SnowDep_mean, na.rm = TRUE),
-                   annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
-                   temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
-  ungroup() #%>% 
-#write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
-
-```
 
 ## RAIN EVENTS
 ```{r}
@@ -2091,7 +2036,7 @@ subasin_snow_plot <- LWSA_meanWx %>%
   filter(date >= "2018-10-24", date <= "2020-02-19") %>% 
   ggplot(aes(x = date, y = daily_maxsnow)) +
   geom_col(aes(colour = Snow), colour = "grey40") +
-  labs(x = "", y = "m /day") +
+  labs(x = "", y = "m") +
   theme_bw() +
   scale_x_date(date_breaks = "2 months",
                date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
@@ -4232,7 +4177,7 @@ eventsample_table <- right_join(events_table,
                                 by = c("Major event no." = "event_ID" )) %>% 
   # rename things
   select(-c("Storm number", mean_pseudo254)) %>%
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH3_events-n-samples.csv")
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv")
 
 
 ```
@@ -5988,6 +5933,475 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-5-metamorph
        width = 4, height = 4, units = "in")
 
 ```
+### Hysteresis
+
+```{r}
+
+# antecedent weather (like RF but a bit different)
+antecedent_Wx <- LWSA_meanWx %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  group_by(Date) %>% 
+  summarise(daily_rain = sum(Rn15_mean, na.rm = TRUE),
+            daily_mean_T = mean(Temp_mean, na.rm = TRUE)) %>%  # temp too, why not
+  ungroup() %>% 
+  arrange(Date) %>% 
+  # add a 7 day antecedent rain for each day
+  mutate(antecedent_30day_rain = as.double(zoo::rollsum(daily_rain, k = 30, align = "right", fill = NA)),
+         antecedent_15day_rain = as.double(zoo::rollsum(daily_rain, k = 15, align = "right", fill = NA)),
+         antecedent_7day_rain = as.double(zoo::rollsum(daily_rain, k = 7, align = "right", fill = NA)),
+         antecedent_30day_temp = as.double(zoo::rollmean(daily_mean_T, k = 30, align = "right", fill = NA)),
+         antecedent_22day_temp = as.double(zoo::rollmean(daily_mean_T, k = 22, align = "right", fill = NA)),
+         antecedent_14day_temp = as.double(zoo::rollmean(daily_mean_T, k = 14, align = "right", fill = NA)),
+         antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA)),
+         antecedent_5day_temp = as.double(zoo::rollmean(daily_mean_T, k = 5, align = "right", fill = NA)),
+         antecedent_3day_temp = as.double(zoo::rollmean(daily_mean_T, k = 3, align = "right", fill = NA))  )
+# note: align right sets the date to the right side of box (k values wide) & sums all values in the box 
+
+# make a big ol nugget of a dataframe
+hyst_df <- sixfilter %>%
+  group_by(site) %>% 
+  # add normalized stage
+  left_join(., ( odyssey_norm %>% group_by(source) %>% select(-c(stage_cm, Date)) ), 
+            by = c("DateTime_sampled" = "DateTime", "site" = "source", "trip" = "interval", 
+                   "corr_stage_cm", "rain_season", "event_ID")) %>% 
+  filter(!is.na(analysis),  # drop empty TOC samples (unfiltered on shimadzu)
+         QAQC_flag == "OK") %>%
+  ungroup() %>% 
+  # drop un-needed items 
+  select(-c(analysis, collection, Date_collected, two_seasons, corr_stage_cm, rain_seasons, E4E6, SlopeRatio)) %>% 
+  group_by(site, trip, sample) %>% 
+  left_join(., antecedent_Wx, by = c("Date_sampled" = "Date")) %>% ungroup() %>%  
+  select(-c("Date_sampled")) %>% 
+  # rename norm_stg & trip
+  rename(sampling_trip = "trip",
+         sampleStage_normalized = "norm_stg") %>% 
+  # add a month-year grouping variable
+  mutate(mo = lubridate::month(DateTime_sampled),
+         yr = lubridate::year(DateTime_sampled),
+         moyr = paste(mo, yr, sep = "-") ) %>% 
+  mutate(moyr = factor(moyr, 
+                       levels = c("10-2018", "10-2019", 
+                                  "11-2018", "11-2019", 
+                                  "12-2018", "12-2019", 
+                                  "1-2019", "1-2020",
+                                  "2-2019", "2-2020", 
+                                  "3-2019", "4-2019", "5-2019", "6-2019", "7-2019", "8-2019", "9-2019"))) %>% 
+  mutate(hyst_season = case_when(moyr == "10-2018" |
+                                   moyr == "11-2018" |
+                                   moyr == "12-2018" ~ "2018 fall (early wet season)",
+                                   moyr == "1-2019" |
+                                   moyr == "2-2019" |
+                                   moyr == "3-2019" |
+                                   moyr == "4-2019" |
+                                   moyr == "5-2019" ~ "2018/2019 winter (late wet season)",
+                                   moyr == "6-2019" |
+                                   moyr == "7-2019" |
+                                   moyr == "8-2019" ~ "2019 dry season",
+                                   moyr == "9-2019" |
+                                 moyr == "10-2019" |
+                                   moyr == "11-2019" |
+                                   moyr == "12-2019" ~ "2019 fall (early wet season)",
+                                   moyr == "1-2020" |
+                                   moyr == "2-2020" ~ "2019/2020 winter (late wet season)"))
+
+```
+
+#### stage sample plot events 10 & 11
+
+```{r}
+# insufficient data in events 4, 5, 6, 8, 13, 14, 15, 17
+#### --- events 10 & 11 were interesting for DOC with rain 
+# also the most sampled events --> eventsample_table
+
+
+# plot events 10 & 11
+stage_samples %>% 
+  filter(event_ID == 10 | event_ID == 11) %>%
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, shape = sample_type), 
+             size = 2, na.rm = TRUE, fill = forWater_colours2[["Gray"]]) +
+  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24),  #circle, triangle
+                     breaks = c("Grab", "Rack"))+ 
+  geom_vline(xintercept = event_starts[10], linetype = 1, colour = forWater_colours2["MyOrange"] ) + 
+  geom_vline(xintercept = event_starts[11], linetype = 1, colour = forWater_colours2["MyOrange"] ) + 
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+  labs(y = "River Stage (cm)", x = "", caption = "Events 10 & 11")+
+  scale_x_datetime(breaks = "4 day")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        legend.position = "top") 
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png",
+       width = 6, height = 6.5, units = "in")
+
+```
+
+##### DOC 
+
+###### 7-day temp 
+
+```{r}
+
+## --- 7 day antecedent temp
+# event 10
+e10temp_DOC <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_14day_temp, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11)) # +
+ # labs(x = "antecedent 3-day temp (°C)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
+
+# event 11
+e11temp_DOC <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_14day_temp, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) # +
+  #labs(x = "antecedent 3-day temp (°C)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+#hystPlot_DOC_3temp <-
+hystPlot_DOC_7temp <- cowplot::plot_grid(e10temp_DOC, e11temp_DOC, ncol = 2)
+
+```
+
+###### 30-day rain
+```{r}
+
+# 10 == clockwise hysteresis
+# 11 == counter clockwise
+
+## --- 30 day antecedent rain
+# event 10
+e10rain_DOC <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11))+
+  labs(x = "antecedent 30-day rain (mm)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
+
+# event 11
+e11rain_DOC <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 30-day rain (mm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_DOC_30rain <-cowplot::plot_grid(e10rain_DOC, e11rain_DOC, ncol = 2)
+
+
+```
+
+###### stage
+```{r}
+
+## --- stage
+# event 10
+e10stg_DOC <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x =  sampleStage_cm, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11)) +
+  labs(x = "sampling stage (cm)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
+
+# event 11
+e11stg_DOC <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = sampleStage_cm, y = NPOC_ppm, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "sampling stage (cm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_DOC_stg <- cowplot::plot_grid(e10stg_DOC, e11stg_DOC, ncol = 2)
+
+
+```
+
+##### SAC254
+
+###### stage
+
+```{r}
+# event 10
+e10SAC254_stg <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = sampleStage_cm, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11))+
+  labs(x = "Sample Stage (cm)", y = expression(SAC[254]~(m^-1)) ) + ggtitle("A) Event 10")
+
+# event 11
+e11SAC254_stg <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = sampleStage_cm, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "Sample Stage (cm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_SAC254_stg <-cowplot::plot_grid(e10SAC254_stg, e11SAC254_stg, ncol = 2)
+
+```
+
+###### 30-day rain
+```{r}
+
+# event 10
+e10SAC254_rain <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11))+
+  labs(x = "antecedent 30-day rain (mm)", y = expression(SAC[254]~(m^-1)) ) + ggtitle("A) Event 10")
+
+# event 11
+e11SAC254_rain <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 30-day rain (mm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_1011_SAC_rain <- cowplot::plot_grid(e10SAC254_rain, e11SAC254_rain, ncol = 2)
+
+```
+
+###### 7-day temp 
+
+```{r}
+
+## --- 7 day antecedent temp
+# event 10
+e10temp_SAC254 <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11)) +
+ labs(x = "antecedent 7-day temp (°C)", y = expression(SAC[254]~ (m^1)) ) + ggtitle("A) Event 10")
+
+# event 11
+e11temp_SAC254 <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = SAC254_Abs.m, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 7-day temp (°C)", y = expression(SAC[254]~ (m^1))) + ggtitle("B) Event 11")
+
+# side by side
+#hystPlot_DOC_3temp <-
+hystPlot_1011_SAC <- cowplot::plot_grid(e10temp_SAC254, e11temp_SAC254, ncol = 2)
+
+```
+
+##### E2E3
+
+###### 30-day rain
+
+```{r}
+# ---
+## E2E3
+
+# event 10
+e10E2E3 <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11))+
+  labs(x = "antecedent 30-day rain (mm)", y = expression(E[2]:E[3]) ) + ggtitle("A) Event 10")
+
+# event 11
+e11E2E3 <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 30-day rain (mm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_1011_E2E3 <-cowplot::plot_grid(e10E2E3, e11E2E3, ncol = 2)
+
+
+```
+
+###### stage
+
+```{r}
+# event 10
+e10E2E3_stg <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = sampleStage_cm, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11))+
+  labs(x = "Sample Stage (cm)", y = expression(E[2]:E[3]) ) + ggtitle("A) Event 10")
+
+# event 11
+e11E2E3_stg <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = sampleStage_cm, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "Sample Stage (cm)", y = "") + ggtitle("B) Event 11")
+
+# side by side
+hystPlot_E2E3_stg <-cowplot::plot_grid(e10E2E3_stg, e11E2E3_stg, ncol = 2)
+
+```
+
+###### 7-day temp 
+
+```{r}
+
+## --- 7 day antecedent temp
+# event 10
+e10temp_E2E3 <- hyst_df %>%
+  filter(event_ID == "10") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+
+  theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
+        text = element_text(size = 11)) +
+ labs(x = "antecedent 7-day temp (°C)", y = expression(E[2]:E[3]) ) + ggtitle("A) Event 10")
+
+# event 11
+e11temp_E2E3 <- hyst_df %>%
+  filter(event_ID == "11") %>% 
+  filter(!is.na(DateTime_sampled)) %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = E2E3, colour = site)) + 
+  geom_point(na.rm = TRUE)+
+  geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
+            na.rm = TRUE, linetype = 1) +
+  scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 7-day temp (°C)", y = expression(E[2]:E[3]) ) + ggtitle("B) Event 11")
+
+# side by side
+#hystPlot_DOC_3temp <-
+hystPlot_1011_E2E3 <- cowplot::plot_grid(e10temp_E2E3, e11temp_E2E3, ncol = 2)
+
+```
+
+##### hysteresis plots summary
+```{r}
+hystPlot_DOC_7temp
+hystPlot_DOC_30rain
+hystPlot_DOC_stg 
+
+hystPlot_SAC254_stg
+hystPlot_1011_SAC_rain
+hystPlot_1011_SAC
+
+hystPlot_1011_E2E3
+hystPlot_E2E3_stg
+hystPlot_1011_E2E3
+```
 
 
 # River Stage & NOM dynamics
@@ -6214,6 +6628,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 # Rack samples: n_installRackSamples
 
 ```
+
+
+
+
 
 # half-attempted -- maybe come back to this
 ```
@@ -7490,6 +7908,63 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-S
 ```
 
 # Garbage I think
+
+##### Wx questionable objects
+```{r, Wx-Stn_summaries}
+# I want to know precip totals over the study period
+# by month and by season
+# use rain to define storm events
+
+# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
+rn_MScTotal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx",
+         date >= "2018-10-23") %>% 
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup() 
+
+# rain seasons rainfalls
+rn_seasonal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(month = lubridate::month(DateTime),
+         year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year, rain_season) %>% 
+  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# annual rainfalls
+rn_annual <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# water-year rainfalls (Oct 1 - Sept 30)
+rn_wateryr <- LWSA_meanWx %>%
+  mutate(Year = lubridate::year(DateTime),
+         month = lubridate::month(DateTime),
+         water_year = case_when(
+           between(month, 1, 9) & Year == "2018" ~ "2018",
+           between(month, 10, 12) & Year == "2018" ~ "2019",
+           between(month, 1, 9) & Year == "2019" ~ "2019",
+           between(month, 10, 12) & Year == "2019" ~ "2020",
+           between(month, 1, 9) & Year == "2020" ~ "2020")) %>%
+  #filter(water_year != "2018") %>% 
+  group_by(water_year) %>% 
+  dplyr::summarise(annual_precip_mm = sum(Rn_1_mean, na.rm = TRUE),
+                   max_snow_m = max(SnowDep_mean, na.rm = TRUE),
+                   annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
+                   temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup() #%>% 
+#write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
+
+```
+
 
 RF can generate biased VIM (variable importance measure) when different types of predictant data are used (e.g. numeric and categorical). 
 

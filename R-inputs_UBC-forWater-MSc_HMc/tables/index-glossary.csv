@@ -8,7 +8,7 @@ Discharge / Streamflow,"the volume of water moving through a river channel over 
 Stream stage,"water level above an arbitrary point (e.g. bottom of a stilling well, streambed, step)"
 Chromophore,"part of a molecule (structure) that absorbs visible light and is responsible for molecular colour (function). Chromophores are generally conjugated pi-bond systems in the molecule, commonly aromatic structures. UV-Vis abosrbance measurements can be a proxy for molecular aromaticity because of the relationship between aromaticity and chromophoric absorbance."
 Autochthonous,natural organic matter (NOM) that is formed in place (in stream) generally by micro-organisms
-Alochthonous,natural organic matter (NOM) that is formed formed outside of a water body and then transported into the water body; composition depends on the plant-derived precursor compounds and natural diagenetic processes that alter its composition
+Allochthonous,natural organic matter (NOM) that is formed formed outside of a water body and then transported into the water body; composition depends on the plant-derived precursor compounds and natural diagenetic processes that alter its composition
 Pi Bond,"a covalent bond formed by the side-to-side overlap of two atomic orbitals (versus a sigma bond is a covalent bond formed by head-on overlap of two atomic orbitals; note that every single bond (e.g. C-C) consists of one sigma bond, a double bond (e.g C=C) is made of one sigma bond and one pi bond, and a triple bond consists of one sigma bond and two pi bonds). Adjacent pi bionds can lead to increased molecular stability (through resonance structures), aromaticity, and chromophores."
 Natural Organic Matter,"diverse carbon-based compounds found in natural, engineered, terrestrial and aquatic environments "
 Dissolved Organic Matter ,organic compounds operationally defined as finer than 0.45 um in diameter
@@ -21,3 +21,6 @@ Greater Victoria Water Supply Area ,"20,549 hectares of protected drinking water
 Quality Assurance & Quality Control,"methods of providing confidence in the quality of results, both are part of quality management (QA is more process oriented, QC is more product oriented) "
 High density polyethylene (sample bottles),plastic material that is impact resistant with good chemical compatibility. Suitable bottle material for water sample collection. 
 Relative standard deviation (a.k.a coefficient of variance),"An expression of standard deviation relative to the mean, expressed as a percentage (RSD = (sd/mean)*100)"
+Aromatic,class of hydrocarbons characterized by presence of conjugated pi-bonds with a ring structure (e.g. benzene C6H6)
+Aliphatic,"class of hydrocarbons characterized by lack of conjugated pi-bonds, which could be straight-chain, branched chain or saturated ring structures (e.g. squalene C30H50)"
+Random Forest,Statistical machine learning algorithm (collection of classification and regression trees)
