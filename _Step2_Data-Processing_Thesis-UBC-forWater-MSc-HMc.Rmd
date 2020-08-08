@@ -6049,7 +6049,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png",
 e10temp_DOC <- hyst_df %>%
   filter(event_ID == "10") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
-  ggplot(aes(x = antecedent_14day_temp, y = NPOC_ppm, colour = site)) + 
+  ggplot(aes(x = antecedent_7day_temp, y = NPOC_ppm, colour = site)) + 
   geom_point(na.rm = TRUE)+
   geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
             na.rm = TRUE, linetype = 1) +
@@ -6057,21 +6057,21 @@ e10temp_DOC <- hyst_df %>%
   facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
   theme_bw()+
   theme(legend.position = "none", strip.background.x = element_blank(), strip.text = element_blank(), 
-        text = element_text(size = 11)) # +
- # labs(x = "antecedent 3-day temp (°C)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
+        text = element_text(size = 11)) +
+  labs(x = "antecedent 7-day temp (°C)", y = "DOC (mg/L)") + ggtitle("A) Event 10")
 
 # event 11
 e11temp_DOC <- hyst_df %>%
   filter(event_ID == "11") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
-  ggplot(aes(x = antecedent_14day_temp, y = NPOC_ppm, colour = site)) + 
+  ggplot(aes(x = antecedent_7day_temp, y = NPOC_ppm, colour = site)) + 
   geom_point(na.rm = TRUE)+
   geom_path(arrow = arrow(angle = 15, type = "closed", length = unit(0.2, "inches") ),
             na.rm = TRUE, linetype = 1) +
   scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~site, scales = "free", ncol = 1, strip.position = "right")+
-  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) # +
-  #labs(x = "antecedent 3-day temp (°C)", y = "") + ggtitle("B) Event 11")
+  theme_bw()+  theme(legend.position = "none", text = element_text(size = 11)) +
+  labs(x = "antecedent 7-day temp (°C)", y = "") + ggtitle("B) Event 11")
 
 # side by side
 #hystPlot_DOC_3temp <-
@@ -6267,7 +6267,7 @@ e11temp_SAC254 <- hyst_df %>%
 
 # side by side
 #hystPlot_DOC_3temp <-
-hystPlot_1011_SAC <- cowplot::plot_grid(e10temp_SAC254, e11temp_SAC254, ncol = 2)
+hystPlot_1011_SAC_temp <- cowplot::plot_grid(e10temp_SAC254, e11temp_SAC254, ncol = 2)
 
 ```
 
@@ -6276,11 +6276,9 @@ hystPlot_1011_SAC <- cowplot::plot_grid(e10temp_SAC254, e11temp_SAC254, ncol = 2
 ###### 30-day rain
 
 ```{r}
-# ---
-## E2E3
 
 # event 10
-e10E2E3 <- hyst_df %>%
+e10E2E3_rain <- hyst_df %>%
   filter(event_ID == "10") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
   ggplot(aes(x = antecedent_30day_rain, y = E2E3, colour = site)) + 
@@ -6295,7 +6293,7 @@ e10E2E3 <- hyst_df %>%
   labs(x = "antecedent 30-day rain (mm)", y = expression(E[2]:E[3]) ) + ggtitle("A) Event 10")
 
 # event 11
-e11E2E3 <- hyst_df %>%
+e11E2E3_rain <- hyst_df %>%
   filter(event_ID == "11") %>% 
   filter(!is.na(DateTime_sampled)) %>% 
   ggplot(aes(x = antecedent_30day_rain, y = E2E3, colour = site)) + 
@@ -6308,7 +6306,7 @@ e11E2E3 <- hyst_df %>%
   labs(x = "antecedent 30-day rain (mm)", y = "") + ggtitle("B) Event 11")
 
 # side by side
-hystPlot_1011_E2E3 <-cowplot::plot_grid(e10E2E3, e11E2E3, ncol = 2)
+hystPlot_E2E3_rain <-cowplot::plot_grid(e10E2E3_rain, e11E2E3_rain, ncol = 2)
 
 
 ```
@@ -6384,24 +6382,42 @@ e11temp_E2E3 <- hyst_df %>%
 
 # side by side
 #hystPlot_DOC_3temp <-
-hystPlot_1011_E2E3 <- cowplot::plot_grid(e10temp_E2E3, e11temp_E2E3, ncol = 2)
+hystPlot_E2E3_temp <- cowplot::plot_grid(e10temp_E2E3, e11temp_E2E3, ncol = 2)
 
 ```
 
 ##### hysteresis plots summary
 ```{r}
-hystPlot_DOC_7temp
+# DOC VIM: 1, 2, 3
+#hystPlot_DOC_7temp
+#hystPlot_DOC_30rain
+#hystPlot_DOC_stg 
+
+# SAC VIM: 1, 2, 3
+#hystPlot_SAC254_stg
+#hystPlot_1011_SAC_rain
+#hystPlot_1011_SAC_temp 
+
+# E2E3 VIM: 1, 2, 3
+#hystPlot_E2E3_rain 
+#hystPlot_E2E3_stg
+#hystPlot_E2E3_temp 
+
+# compare
+hystPlot_DOC_7temp # ugly
+hystPlot_1011_SAC_temp # ugly
+
+hystPlot_DOC_7temp # ugly
+hystPlot_E2E3_temp # ugly
+
+hystPlot_DOC_30rain  # better plot 
+hystPlot_1011_SAC_rain # similar pattern
+
 hystPlot_DOC_30rain
-hystPlot_DOC_stg 
+hystPlot_E2E3_rain
 
-hystPlot_SAC254_stg
-hystPlot_1011_SAC_rain
-hystPlot_1011_SAC
-
-hystPlot_1011_E2E3
-hystPlot_E2E3_stg
-hystPlot_1011_E2E3
 ```
+
 
 
 # River Stage & NOM dynamics

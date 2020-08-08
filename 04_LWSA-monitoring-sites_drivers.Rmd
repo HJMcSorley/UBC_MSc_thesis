@@ -121,6 +121,11 @@ information about this...
 
 Conditions that were calculated to be most important for predicting NOM concentration and character were plotted with their predictant to assess possible hysteresis. This was only possible for dynamic conditions with variable measurements (i.e. not static watershed characteristics predictors).
 
+\ 
+
+clock-wise hysteresis shows
+counterclock-wise hysteresis shows....
+
 
 \  
 
