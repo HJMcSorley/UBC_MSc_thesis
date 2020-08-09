@@ -6693,6 +6693,27 @@ write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch4_events10-11_rep-by-site_wil
 
 ```
 
+## events 10 & 11 conc changes
+
+```{r}
+percent_diff <- hyst_df %>% 
+  filter(event_ID == 10 | event_ID == 11) %>% 
+  group_by(site, event_ID) %>% 
+  summarise(DOC_max = max(NPOC_ppm, na.rm = TRUE),
+            DOC_min = min(NPOC_ppm, na.rm = TRUE),
+            DOC_diff = ((DOC_max - DOC_min)/((DOC_max + DOC_min)/2))*100,
+            SAC_max = max(SAC254_Abs.m, na.rm = TRUE),
+            SAC_min = min(SAC254_Abs.m, na.rm = TRUE),
+            SAC_diff = ((SAC_max - SAC_min)/((SAC_max + SAC_min)/2))*100,
+            E2E3_max = max(E2E3, na.rm = TRUE),
+            E2E3_min = min(E2E3, na.rm = TRUE),
+            E2E3_diff = ((E2E3_max - E2E3_min)/((E2E3_max + E2E3_min)/2))*100 ) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch4_events10-11_values-difference.csv")
+
+
+
+```
+
 
 
 

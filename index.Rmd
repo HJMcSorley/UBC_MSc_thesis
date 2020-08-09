@@ -80,15 +80,19 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/index-acronyms.csv", col_names = 
 
 # Acknowledgments
 
-This research work would not have been possible without the support of, and physical accommodations provided by, the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (Victoria, BC). I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Annette Constabel, Kathy Haesevoats, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations and worker checks. 
+This research work would not have been possible without the support and physical accommodations provided by the Capital Regional District (CRD) Watershed Protection and Management Division, Integrated Water Services (Victoria, BC). Thank you so much. I would like to acknowledge the help, support and assistance provided by the following CRD folks: Tobi Gardner, Kathy Haesevoats, Annette Constabel, Joel Ussery, Patrick McCoubrey, Ryan Biggs, Burn Hemus, Christoph Moch, Jessica Dupuis, Devon Barnes, and Athina Connor. I'm grateful to have been supported by the entire CRD Field Operations Staff; thank you all for making me feel welcome on site and including me in daily field operations and worker checks.
 
 \  
 
-This research also would not have been possible without the support and encouragement from my academic supervisors -- Bill Floyd and Mark Johnson -- and from partners in the NSERC forWater Network: Suzanne Tank, Mike Stone, Dana Harriman, Monica Emelko, Uldis Silins, Axel Anderson. I would like to acknowledge the financial and tangible support from Vancouver Island University, the University of British Columbia, the NSERC Canadian Graduate Scholarship Masters Award, and the NSERC forWater Network for Source Water Protection Strategies -- thank you for supporting me as a master's student.   
+This research also would not have been possible without support and encouragement from my academic supervisors. Bill Floyd and Mark Johnson -- thank you both for your patience, for supporting me, and for helping me grow as a researcher and writer; it's been challenging and truly wonderful. Thank you also to academic partners in the NSERC forWater Network: Suzanne Tank, Mike Stone, Dana Harriman, Monica Emelko, Uldis Silins, and Axel Anderson. Thank you all for interesting discussions, and to the entire forWater Network for providing transdisciplinary training and workshops. Thank you to Emily Mistick for being my forWater travel buddy, for bouncing ideas and concepts around with me, and for checking my writing, it was that much better with you there.
 
 \  
 
-For help with field installations and streamflow gauging, a big thanks to my friend and former field partner, Stewart Butler (VIU Coastal Hydrology Research Lab); thanks Stew. Thanks also to Alison Bishop for assistance on a field trip during the winter of 2019/2020 and for help with GIS.
+I would like to acknowledge Vancouver Island University, University of British Columbia, the NSERC Canadian Graduate Scholarship Masters Award, and the NSERC forWater Network for Source Water Protection Strategies -- thank you for supporting me financial (and tangibly) as a master's student.   
+
+\  
+
+For help with field installations, streamflow gauging and sampling a big thanks to my friend and former field partner, Stewart Butler (VIU Coastal Hydrology Research Lab); thanks Stew for being the best field partner on the coldest, wettest, darkest field days. Thanks also to Alison Bishop for assistance on a field trip during the winter of 2019/2020 and for so much help with GIS. I owe you both some beers.
 
 \  
 
@@ -96,7 +100,7 @@ Big thanks to my incredibly wonderful friends and family for supporting me in my
 
 \  
 
-__Land Acknowledgement__
+__Land Acknowledgment__
 
 The author, Hannah J. McSorley, acknowledges and thanks the First Nations on whose traditional lands she traveled, learned, researched, lived and played on during this master's thesis project, and on whose land she continues to live.
 
