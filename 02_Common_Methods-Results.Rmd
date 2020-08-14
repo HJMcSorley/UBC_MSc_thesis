@@ -50,7 +50,7 @@ Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl
 
 ```{r siteCharacteristics}
 
-read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics_wide.csv", col_names = TRUE) %>%
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics_wide-simple.csv", col_names = TRUE) %>%
   knitr::kable(#digits = 1,
                caption = "Watershed Characteristics of Twelve Synoptic Sampling Sites Across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC")
 ```  
@@ -81,11 +81,15 @@ Siphon sampling bottles were used on vertical sampling racks as a cost-effective
 
 Each Vertical Rack included a central stilling well (3.81 cm (1.5") PCV pipe with 1.27 cm (1/2") holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). 
 
+\  
+
 ```{r verticalRack, fig.cap = fig_cap}
 fig_cap = "\\label{fig:verticalRack} Vertical sampling rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2)."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
 ```  
+
+\  
 
 Siphon sample bottle design was based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). The siphon system was created by modifying lids of 250 mL amber HDPE wide-mouth bottles to include an inlet and exhaust tube. Two 1/4" (O.D.) stainless steel tubes (14 cm and 22 cm length), each with a 180$^\circ$ bend at the top end, were inserted into a pre-drilled cap. The taller tube formed the air vent, the shorter acted as the water inlet (Figure \@ref(fig:verticalRack)). The sample bottle filled when water reached the top of the inlet tube bend, and when a siphon bottle was submerged below this filling height a sample was collected in less than 60 seconds. To ensure a water-tight seal around the inlet and exhaust tubes, marine epoxy was applied to the outside of siphon caps and inert silicone sealant was added to the inside of lids. The siphon samplers collected river water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice). Sampled water filled each siphon bottle with approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
 

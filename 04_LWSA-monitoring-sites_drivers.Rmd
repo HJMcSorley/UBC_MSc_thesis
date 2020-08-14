@@ -40,11 +40,18 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasi
 
 \ 
 
-Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg creek (site 4) had no metasedimentary parent material (argillite-metagraywacke or metagraywacke). Cragg creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (wark-gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have wark-gneiss nor chert-argillite-volcanic groups as parent materials and was the only sub-basin of the Metchosin igneous complex (16% Methchosin volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by argillite-metagreywacke (metasedimentary parent material).       
+Weeks Creek (site 1), had the greatest proportion of wetland and open water compared to the other sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). Chris Creek (site 2) and Cragg creek (site 4) had no metasedimentary parent material (argillite-metagraywacke or metagraywacke). Cragg creek, draining from the east, was the only sub-basin with predominantly metamorphic parent material (wark-gneiss, 78%). West Leech (site 5) was the only sub-basin that did not have wark-gneiss nor chert-argillite-volcanic groups as parent materials and was the only sub-basin of the Metchosin igneous complex (16% Methchosin volcanics). Like Weeks basin (site 1), which also drains from the West, WestLeech is predominantly underlain by argillite-metagreywacke (metasedimentary parent material).   
+
+\  
+
+While there was a small amount of poorly-draining terric mesisol (undifferentiated organic soil) in the Weeks Creek sub-basin, soils were predominantly well-draining podzolic in the Leech (Table \@ref(tab:WTScharacterSubbasinTable)). Primarily, soils were either more acidic orthic humo-ferric podzol (O-HFP, pH < 5.6) or more neutral duric humo-ferric podzol (DU-HFP, pH 5.6 - 7.4). The major materials were colluvial deposits (O-HFP) and till (morainal, either DU-HFP or O-HFP).
 
 \  
 
 Most heavily harvested over the past 31 years was the Chris crk sub-basin (63% harvested), then Leech-head and Cragg crk sub-basins (43% and 41% harvested). West Leech was the least harvested between 1980 and 2011 (26%), followed by Weeks crk sub-basin (28%) and Leech Tunnel (34%).
+
+
+
 
 \  
 

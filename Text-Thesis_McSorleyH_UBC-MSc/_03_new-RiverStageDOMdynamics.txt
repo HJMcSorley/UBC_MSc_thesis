@@ -1,11 +1,110 @@
-New chapter - Chapter 3: River stage dynamics with DOC & DOM
+New chapter - Chapter 4: River stage dynamics with DOC & DOM
+
+* compositional extreme of geological parent material -- absence of wark gneiss was not correlated to highest DOC despite DOC decreasing with increasing metamorphic representation. Becasue the subsurface material is all realted, there may be more nuanced relationsups between DOC and other parent materials that couldn't be teased out in thi RF analysis because of cross-correlations with other predictor variables. But the increasing amount of Wark gneiss incidates a decreasing amount of some other parent materils (... based on the table of values, that appears to be MMMMM....) so it could be that what is observed as a negative relationship with wark gneiss is actually a positive relationship between DOC and another parent material. 
+
+--- 
+"DOC is strongly adsorbed (Hemond, 1990)
+---
+Hemond, H. F. 1990. `Wetlands as the source of dissolved organic carbon to surface waters', in Perdue, E. M. and Gjessing, E. T. (eds), Organic Acids in Aquatic Ecosystems. John Wiley, New York. pp. 301±313.
 
 
-Additionally, time-stamps of event-based samples were used to inform stage-concentration relationships (Chapter 3). 
+hysteresis:
 
-***discussion point***
-...
-The rising limb has been shown to have higher DOC concentration than low flows between storm pulses [@Yang2015; @Raymond2016; @Raymond2010; @Zarnetske2018]. Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive DOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rack samples clarifies the magnitude and direction of water quality changes in response to precipitation relative, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
-...
+- plot antecedent rain with date-time sampled to see what the relationship is. Then you can relate the direction of the hysteresis loop to the conditions (and thus to the hydrograph)
 
-Additionally, event-based river samples collected near-simultaneously at sites across a watershed can provide insights about relative hydrologic pulse responses across nested catchments [@Abbott2018]....
+- the hysterestic pattern (temporal) was consistent among the six subbasins (spatial) * bigger loop/same??
+
+---
+[@Evans1999]
+
+concentration-discharge relationships can inform flow-paths and streamflow contributions (i.e. subsurface vs overland, near-stream vs. upland
+
+For C-Q analysis, a minimum of five samples are required to determine the rotational direction of hysteresis (pre and post episode low flow, rising and falling limbs and close to peak Q). 
+
+
+----
+hysteresis may also result from simple component mixing, where contributions from di?erent ¯ow sources peak at di?erent times (Walling and Webb, 1986; Swistock et al., 1989; Hooper et al., 1990). Evans and Davies (1998) have identi®ed the forms of hysteresis that can be produced within the constraints of various types oftwo-component (2CM) and three-component model (3CM)
+
+Evans, C. D. and Davies, T. D. 1998. `Causes of concentration/discharge hysteresis, and its potential as a tool for analysis of episode hydrochemistry', Wat. Resour. Res., 34, 129-137.
+
+Walling, D. E. and Webb, B. W. 1986. `Solutes in river systems', in Trudgill, S. T. (ed.), Solute Processes. John Wiley, Chichester. pp. 251-327.
+
+Swistock, B. R., DeWalle, D. R., and Sharpe, W. E. 1989. `Sources of acidic storm ¯ow in an Appalachian headwater stream', Wat. Resour. Res., 25, 2139±2147
+
+Hooper, R. P., Christophersen, N., and Peters, N. E. 1990. `Modelling streamwater chemistry as a mixture of soilwater end- members Ð an application to the Panola Mountain catchment, Georgia, U.S.A.', J. Hydrol., 116, 321±343
+
+---
+[@Lambert2014]
+
+intra-storm DOC (^13^C~DOC~) closely resemble riparian soil quality during that event. 
+
+  
+>80% of stream DOC originated in superficial soil horizones of the riparian domain, and the riparian soil DOC included material from upland and riparian sources.
+ Upland DOC contributions decreased from the beginning of the high-flow period to the end of high-flows.
+ 
+ 
+** stream DOC has major contributions from upland domains, but that upland source pool is a size-limited reservoir. In contrast, riparian and wetland dominated areas act as a near-infinite NOM reservoir. 
+
+Allochthonous inputs are dominant in headwater catchments [Aitkenhead et al., 1999; Billett et al., 2006)]and most of the export occurs during rain or melt events [Raymond and Saiers, 2010]
+
+
+I have no data from which to infer hydrologic connectivity between upland portions of the Leech catchments with the streams... just specualtion. 
+
+* autochthonous NOM could also originate near-stream in riparian areas
+
+
+upland portions of the catchment contribute to stream DOC, but the dominant sources are the riparian zones 
+
+observed in France (Lambert) and coastal California -- (Sanderman et al. 2008, 2009)  --  seasonal depletion of upland DOC pool, graual depletion in stream though hydrologic connectivity remained high during that period. 
+
+Hood et al., 2006; Inamdar and Mitchell, 2006; Inamdar et al., 2006
+
+For example, the release of microbial DOC may explain the DOC peaks observed in wet- land soils after dry summers (Kalbitz et al., 2000). As
+
+--- meeee:
+Results of this research show that Vertical Rack sampling stations coupled with synoptic grab sampling campaigns provide a reliable method for measuring water quality changes over time and across events. A key limitation of Vertical Rack sampling is isolation of siphon sample collection to only the rising hydrograph limb, additionally, high water can prohibit safe retrieval of colelcted samples from the Racks. Coupling mulitple monitoring sites provided good spatial resolution to accompany the event- and synoptic-based temporal resolution of sampling....
+
+I wonder if the higher molecular weight at the end of the wet season is indicative of potential intra-event shift from lower molecular weight NOM on the rising limb to higher MW, more aromatic NOM on the falling limb (possible shift between new/old water?)
+
+
+
+[@Vaughan2019]
+
+Langergraber et al. 2003; Avagyan et al. 2014 for spectrolyser SAC and DOC turbidity compensation
+
+
+
+threshold could also be related to hydrograph components (i.e. old/new water)
+
+
+
+# --- me --- need some references in here...
+
+solute concentrations often show hysteresis with streamflow
+this is sometimes refered to as concentration-discharge, or 'C-Q', relationships .
+
+antecedent wetness conditions are linked to streamflow and hydrologic connectivity to upland source pools of solutes, particularaly terrigeneous NOM.
+
+thus, in the absense of streaflow-solute data, perhaps antecedent condion data could reveal similar patterns of hysteresis. 
+
+higher antecedent wettness corresponds to greater hydrologic connectivity to streamflow  
+
+so and so said that 5 points were the minimum required to evaluate C-Q hysterestic behaviour, so long as the five points represented the event well (i.e. low-flow pre-event, rising limb, near-peakflow, falling limb,  
+
+# ----
+
+[@Kiewiet2020]
+
+Oswald et al. (2011), showed for a 0.8 km2 catchment in north- western Ontario, Canada, that a large part of the catchment area was hydrologically disconnected from the stream during most events, and that there was a threshold catchment stor- age at which a larger area contributed to streamflow
+
+
+Interpretations of hydrologic connectivity are often based on such changes in stream water chemistry (Uhlenbrook et al., 2004; Soulsby et al., 2007; Pacific et al., 2010).
+
+For in- stance, McGlynn and McDonnell (2003) used silica concentrations and isotope data for a 2.6 ha sub-catchment of the Maimai catchment in New Zealand to show that the contributions from the hillslopes were larger for an event with higher wetness conditions than for an event with drier initial conditions and were also larger on the falling limb of the hydrograph
+
+Zuecco et al. (2019) showed that the increase in subsurface connectivity was delayed compared to stream- flow (anticlockwise hysteresis) for two sub-catchments of the Studibach catchment in Switzerland, suggesting that hills- lope runoff may not be the dominant runoff source at the be- ginning of rainfall events for these small catchments.
+
+
+However, the events were smaller than the 50mm threshold for large contributions of event water to streamflow (Fischer et al., 2017).
+
+
