@@ -3,11 +3,23 @@ Surface water samples were collected between October 2018 and February 2020 to m
 Aqueous forms of NOM in freshwater play important ecological roles but can be problematic for drinking water treatment because they increase oxidant demand (e.g. chlorination), contribute to the formation of disinfection by-products, and cause other disruptions (e.g. short filter run times, microbial bio-fouling, coagulant demand). Because the backbone of NOM is carbon, DOC is a measure of the dissolved forms of NOM in a sample. While quantifying a sample's DOC is important in describing the amount of NOM, it tells us nothing about the structure (and therefore the function) of that material. Characterizing molecular attributes in addition to quantifying NOM provides greater insight than quantification alone; therefore, both quantification of DOC and characterization of NOM were tackled for this project. 
 
 
-Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
+Natural organic matter (NOM) is a complex assembly of carbon-based molecules that exhibit dynamic variability across watersheds due to interconnected biotic and abiotic processes. NOM is a complicated medley of molecules so it can be challenging to quantify, but measuring organic carbon (the backbone of NOM) is standard and thus organic carbon is quantified as a surrogate for NOM. The molecular character of NOM can vary from large, highly aromatic compounds to smaller more aliphatic molecules and the differences in molecular makeup can be attributed to the source of NOM (e.g. terrestrial humic substances or in-stream algae, i.e. allochthonous or autochthonous NOM). Concentrations and character of NOM vary over space and time. 
+
+The river continuum concept predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Spatial-scaling of NOM diversity is attributed to hydrological processes and most watershed characteristics, including: geomorphic variables; physical impoundments; organic matter inputs and sources; sediment transport; solar inputs; and processing by aquatic invertebrates and microbes [@Vannote1980; @Stanley2012; @Aiken2011; @Zarnetske2018]. 
 
 \  
 
 An intense atmospheric river event hit the LWSA January 29-31 (event 17, Table \@ref(tab:EventsTable3)) and generated incredible flows across the Leech watershed (and across southern Vancouver Island). Streamflow at CraggCrk (site 4) and the Tunnel (site 6) over-topped the 2 m vertical racks and ripped the level-loggers out of their stilling wells. Luckily, the level-loggers were found downstream in February and (after drying the circuit boards) the data were successfully retrieved from both Odyssey loggers. Following event 17, changes to the stream-bed morphology were evident at LeechHead (site 3) in the form of gravel and cobble deposition, there was evidence of substantial coarse woody debris transport at ChrisCrk (site 2), and destruction to hydrologic monitoring equipment at the Leech Tunnel.
+
+\  
+
+
+* variability among sub-basins versus variability within each sub-basin over time
+* timing of peaks and valleys of stage -- at 10 min resolution was there a lag from upstream to downstream?
+* source versus transport limitations -- DOC in rising limb
+* any hysteretic behaviour? (DOC over time by event)
+* was there a relationship between rain event intensity/duration and DOC?
+* use RF to in-fill missing NOM absorbance data based on relationship with DOC??? Like Yeonuk did for CH4 flux
 
 \  
 
@@ -174,3 +186,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/narrow_events_9-
 ___end whacky section___
 
 \
+
+
+Spatially, DOC and SAC~254~ decreased from low- to high-order streams during both wet and dry seasons; in contrast, E~2~:E~3~ had opposite patterns in the wet and dry seasons. From upstream to downstream, E~2~:E~3~ showed aromaticity increased in the dry-season and decreased in the wet-season. As indicators of aromaticity, the key difference between SAC~254~ and E~2~:E~3~ is that E~2~:E~3~ accounts for absorbance at 365 nm wavelength which corresponds to larger and more aromatic molecules. So, the different patterns observed for E~2~:E~3~ and SAC~254~ in the wet season suggests that relatively smaller aromatic NOM (measured by SAC~254~) was depleted along the reach  

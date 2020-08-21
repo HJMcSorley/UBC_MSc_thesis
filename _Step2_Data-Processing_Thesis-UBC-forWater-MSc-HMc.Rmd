@@ -600,7 +600,7 @@ Hobo <- Hobo %>%
 
 ```
 
-##plot: Hobo air/water temps time & space
+## plot: Hobo air/water temps time & space
 ```{r}
 # ---- over time
 Hobo %>% 
@@ -4773,7 +4773,7 @@ synch_PeaksSumm_stage <- tibble(
 # first, calculate antecedent rain conditions at the cumulative rain for 7 days up to and including date sampled
 # NOTE this is not antecedent 'wetness' because it doesn't account for snow or snowmelt
 
-# get daily mean rain
+# get antecedent mean air temp (average) and cumulative rain (daily totals)
 antecedent_Wx <- LWSA_meanWx %>% 
   mutate(Date = as_date(DateTime)) %>% 
   group_by(Date) %>% 
@@ -4784,6 +4784,7 @@ antecedent_Wx <- LWSA_meanWx %>%
   # add a 7 day antecedent rain for each day
   mutate(antecedent_30day_rain = as.double(zoo::rollsum(daily_rain, k = 30, align = "right", fill = NA)),
          antecedent_7day_rain = as.double(zoo::rollsum(daily_rain, k = 7, align = "right", fill = NA)),
+         antecedent_3day_rain = as.double(zoo::rollsum(daily_rain, k = 3, align = "right", fill = NA)),
          antecedent_30day_temp = as.double(zoo::rollmean(daily_mean_T, k = 30, align = "right", fill = NA)),
          antecedent_7day_temp = as.double(zoo::rollmean(daily_mean_T, k = 7, align = "right", fill = NA))
   )
@@ -4818,7 +4819,9 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
          !is.na(sampleStage_normalized)) %>% 
   # drop unneccessary variables
   select(-c("QAQC_flag", "Hobo_Tmean_airDaily", "sampling_trip", "subbasin_type", "daily_rain", "daily_mean_T")) %>% 
-  mutate(event_ID = as.numeric(event_ID)) # RF don't want factors
+  mutate(event_ID = as.numeric(event_ID)) %>%  # RF don't want no factors
+  # create a Leech River formation variable 
+  mutate(geo_LeechRiverFormation_percent = geo_Metagreywacke_percent + geo_ArgilliteMetagreywacke_percent)
 
 ```
 
@@ -4847,30 +4850,51 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
     #geo_metasedimentary_percent,  # correlated to meta and logging!? 
     #geo_metaSedimentaryVolcanic_percent, # correlated to meta etc 
     #rain_season, 
-    # wetland_percent, # correlated to slope + forest
+    #wetland_percent, # correlated to slope + forest
     #forest_percent, # correlated with wetland and open water (all land-cover) + slope
     #HoldTime_days,
     geo_metamorphic_percent,
-    geo_igneous_percent,
+    geo_igneous_percent, # ------
     #"geo_ArgilliteMetagreywacke_percent", 
     # geo_ChertArgilliteVolcanic_percent",
     #"geo_MetchosinVolcanics_percent",
+    #geo_LeechRiverFormation_percent, # cross correlation
     NPOC_ppm, # predict DOC
     sampleStage_normalized, 
     antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
+    #antecedent_3day_rain,
     antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
     drainage_area_km2,
-    slope_median_degrees,
+    # slope_median_degrees, # only 3 unique values
+    slope_mean_degrees, # 6 unique values
     tree_age_average,
     #geo_WarkGneiss_percent,
     #geo_Metagreywacke_percent,
+    #COLL_O.HFP_percent, 
+    #TILL_DU.HFP_percent, 
+    #TILL_O.HFP_percent,
+    #FLUV_DU.HFP_percent,
+    #GLFL_DU.HFP_percent,
+    #UNDO_T.M_percent,
     logging_percent_1980to2011)) # %>%     
 # add a column of random values as as QA -- this should not be found to be important
 #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
+# view(cor(AllVariables_NPOC, method = "spearman")) # ? should I Spear, man?
 # view(cor(AllVariables_NPOC))
 
+# ---
+
+# subsurface only 
+SSVariables_NPOC <- AllVariables_NPOC %>% 
+  select(NPOC_ppm, geo_metamorphic_percent, geo_igneous_percent)
+
+# surface only 
+SVariables_NPOC <- AllVariables_NPOC %>% 
+  select(-c(geo_metamorphic_percent, geo_igneous_percent) )
+
+# ---
 
 ## Run RF
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
@@ -4885,6 +4909,28 @@ DOC_allVars_RF <- randomForest::randomForest(NPOC_ppm ~ .,
                                              proximity = TRUE,
                                              corr.bias = TRUE) # experimental 
 
+# subsurface only
+DOC_SSVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                             data = SSVariables_NPOC, 
+                                             replace = FALSE, 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), 
+                                             ntree = 5000,  
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) 
+
+# surface only
+DOC_SVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                             data = SVariables_NPOC, 
+                                             replace = FALSE, 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), 
+                                             ntree = 5000,  
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE)
+# ---
 
 ## relative importance of features in predicting DOC
 ## type 1 = mean square error (MSE) as decrease in accuracy
@@ -4906,9 +4952,12 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
                                 "wetland cover" = "wetland_percent",
                                 "open water" ="openWater_percent",
                                 "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
-                                "igneous (%)" = "geo_igneous_percent"),
+                                "igneous (%)" = "geo_igneous_percent",
+                                "colluvial (O-HFP, %)" = "COLL_O.HFP_percent",
+                                "till (DU-HFP, %)" = "TILL_DU.HFP_percent"),
          MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
   # add category for plot colouring:
@@ -4922,11 +4971,13 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)"  | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
-      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+      predictor == "igneous (%)" |
+      predictor == "colluvial (O-HFP, %)" |
+      predictor == "till (DU-HFP, %)" ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group)) 
 
 
@@ -4948,8 +4999,58 @@ RFplot_all_DOC <- RF_DOC_allChrc_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_DOC.png", 
-       width = 6, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_all_DOC.png", width = 6, height = 6, units = "in")
+
+
+# ---
+# --- segregated dynamic from static values
+
+# subsurface RF
+RF_DOC_SSChrc_RelImp1_MSE <- randomForest::importance(DOC_SSVars_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE))
+
+# surface RF
+RF_DOC_SChrc_RelImp1_MSE <- randomForest::importance(DOC_SVars_RF, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(MSE_percent = MSE/sum(MSE)*100,  # add a percent MSE variable
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE))
+
+#--- segregated plots
+# subsurface VIM  plots
+RFplot_SS_DOC <- RF_DOC_SSChrc_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = "Relative importance in predicting DOC (%)", x = "", fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# surface VIM plots
+RFplot_S_DOC <- RF_DOC_SChrc_RelImp1_MSE %>% 
+  ggplot(aes(x = predictor, y = MSE_percent)) +
+  coord_flip()+
+  geom_bar(alpha = 0.8,
+           stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1) +
+  theme_bw() +
+  theme(legend.position = "top", text = element_text(size = 12))+
+  labs(y = "Relative importance in predicting DOC (%)", x = "", fill = "Predictor variable group") +
+  guides(fill = guide_legend(nrow = 3, byrow=TRUE))
+
+# ---
+
+
 
 ```
 
@@ -4970,7 +5071,8 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
            antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
            antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
            drainage_area_km2,
-           slope_median_degrees,
+           # slope_median_degrees, # only 3 unique values
+           slope_mean_degrees,
            tree_age_average,
            #geo_WarkGneiss_percent,
            #geo_Metagreywacke_percent,
@@ -5013,6 +5115,7 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
                                 "wetland cover" = "wetland_percent",
                                 "open water" ="openWater_percent",
                                 "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
                                 "igneous (%)" = "geo_igneous_percent"),
@@ -5029,7 +5132,7 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
@@ -5077,7 +5180,8 @@ AllVariables_SAC254 <- sixfilter_physiographic %>%
            antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
            antecedent_7day_temp, # no real diff in VIM for 7 vs 30 day
            drainage_area_km2,
-           slope_median_degrees,
+           # slope_median_degrees, # only 3 unique values
+           slope_mean_degrees,
            tree_age_average,
            #geo_WarkGneiss_percent,
            #geo_Metagreywacke_percent,
@@ -5118,6 +5222,7 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
                                 "sample site elevation"= "elevation_masl",
                                 "tree age (average, yrs)" = 'tree_age_average',
                                 "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
                                 "igneous (%)" = "geo_igneous_percent"),
@@ -5134,7 +5239,7 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
@@ -5775,9 +5880,9 @@ b <- sixfilter_physiographic %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-2-rain.png",
        width = 4, height = 4, units = "in")
 
-# 3 DOC with slope
+# 3 DOC with slope -- box
 c <- sixfilter_physiographic %>% 
-  ggplot(aes(x = slope_median_degrees, y = NPOC_ppm)) + 
+  ggplot(aes(x = slope_mean_degrees, y = NPOC_ppm)) + 
   theme_bw() +
   geom_boxplot(aes(fill = site), alpha = 0.5,
                varwidth = TRUE) +
@@ -5785,10 +5890,25 @@ c <- sixfilter_physiographic %>%
   theme_bw() +
   theme(legend.position = "top",
         text = element_text(size = 11)) +
-  labs(x = "Slope, median (degrees)", y = "DOC (mg/L)")
+  labs(x = "Slope, mean (degrees)", y = "DOC (mg/L)")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-3-slope.png",
        width = 4, height = 4, units = "in")
+
+# 3 again DOC & slope -- ridge plot
+c <- sixfilter_physiographic %>% 
+  ggplot(aes(y = slope_mean_degrees, x = NPOC_ppm)) + 
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(y = "Slope, mean (degrees)", x = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-3-slope_ridge.png",
+       width = 4, height = 4, units = "in")
+
 
 # 4 DOC with metamorphic parent material
 d <- sixfilter_physiographic %>% 
@@ -5802,6 +5922,20 @@ d <- sixfilter_physiographic %>%
   labs(x = "Metamorphic parent material (%)", y = "DOC (mg/L)")
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4-gneiss.png",
+       width = 4, height = 4, units = "in")
+
+# ?4? DOC with Leech River formation parent material
+d <- sixfilter_physiographic %>% 
+  ggplot(aes(x = geo_LeechRiverFormation_percent, y = NPOC_ppm)) +
+  theme_bw() +
+  geom_boxplot(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "Leech River Formation parent material (%)", y = "DOC (mg/L)")
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_DOC-predictor-4.1-LeechRvForm.png",
        width = 4, height = 4, units = "in")
 
 
@@ -5902,8 +6036,7 @@ bbb <- sixfilter_physiographic %>%
         text = element_text(size = 11)) +
   labs(x = "Sampling stage (normalized)", y = expression(E[2]:E[3]) )
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-2-stage.png",
-       width = 4, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-2-stage.png", width = 4, height = 4, units = "in")
 
 
 # 3 E2E3 with Tree age
@@ -6063,6 +6196,26 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png",
        width = 6, height = 6.5, units = "in")
 
 ```
+
+```{r}
+# trying things...
+# plot antecedent rain with datetime_sampled to relate the direction of the hysteresis loop to the conditions and thus the hydrograph
+
+sixfilter_physiographic %>% 
+  ggplot(aes(x = antecedent_7day_rain, y = sampleStage_normalized)) +
+  theme_bw() +
+  geom_jitter(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "antecedent 7-day rain (mm)", y = "Sampling stage (normalized)" )
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_rain-stage.png", width = 4, height = 4, units = "in")
+
+```
+
+
 
 ### DOC 
 

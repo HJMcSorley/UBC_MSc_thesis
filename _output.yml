@@ -9,4 +9,5 @@ bookdown::word_document2:
   toc_unnumbered: no
   toc_appendix: yes
   keep_tex: true
+  csl: http://csl.mendeley.com/styles/485108831/hydrological-processes-HMc-2
 bookdown::epub_book: default
