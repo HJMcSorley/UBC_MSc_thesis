@@ -11,7 +11,7 @@ Drinking water in Canada is primarily sourced from surface water supplies. Over 
 
 \  
 
-In Canada, all drinking water must meet Health Canada drinking water quality guidelines, which specify allowable levels of biological, physical and chemical parameters that are safe for human use and consumption [@BC2019; @HealthLinkBC2018; @HealthCanada2019a]. To meet guidelines, source water is most commonly treated to remove substances which may pose a health risk. Drinking water treatment processes vary from simple chlorination to combinations of physical filtration, chemically assisted filtration, reverse osmosis, and or advanced oxidative processes [@MWH2014; @Emelko2011]. Drinking water treatment technologies differ between communities by infrastructure design and operation, which may be guided by source water quality, infrastructure capabilities, budget, regional size and  water quality regulations [@Emelko2011]. All drinking water treatment processes share the same goal: ensure public health by providing a continuous supply of safe water. There are guidelines for radiological, chemical and physical parameters (e.g. removal of metals), but the drinking water guidelines with highest priority are those that focus on inactivation of potentially harmful microorganisms; therefore, disinfection is the most important step in the treatment process [@MWH2014; @HealthCanada2019a]. In British Columbia, chlorination remains the most widely used method of disinfection, whether it is used alone or in combination with other treatment processes, such as those mentioned above [@HealthCanada2006; @HealthLinkBC2018]. 
+In Canada, all drinking water must meet Health Canada drinking water quality guidelines, which specify allowable levels of biological, physical and chemical parameters that are safe for human use and consumption [@BC2019; @HealthLinkBC2018; @HealthCanada2019a]. To meet guidelines, source water is commonly treated to remove substances which may pose a health risk. Drinking water treatment processes vary from simple chlorination to combinations of physical filtration, chemically assisted filtration, reverse osmosis, and or advanced oxidative processes [@MWH2014; @Emelko2011]. Drinking water treatment technologies differ between communities by infrastructure design and operation, which may be guided by source water quality, infrastructure capabilities, budget, regional size and  water quality regulations [@Emelko2011]. All drinking water treatment processes share the same goal: ensure public health by providing a continuous supply of safe water. There are guidelines for radiological, chemical and physical parameters (e.g. removal of metals), but the drinking water guidelines with highest priority are those that focus on inactivation of potentially harmful microorganisms; therefore, disinfection is the most important step in the treatment process [@MWH2014; @HealthCanada2019a]. In British Columbia, chlorination remains the most widely used method of disinfection, whether it is used alone or in combination with other treatment processes, such as those mentioned above [@HealthCanada2006; @HealthLinkBC2018]. 
 
 \  
 
@@ -21,7 +21,7 @@ Drinking water treatment requirements vary with source water quality, thus guide
 
 ####   Aqueous natural organic matter in drinking source water supply
 
-Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997 ;@Aiken2011; @Matilainen2011; @Ruhala2017]. NOM can be introduced to a water body from terrestrial sources (i.e. allochthonous NOM) or generated through in-stream processes (i.e. autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
+Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997; @Aiken2011; @Matilainen2011; @Ruhala2017]. NOM can be introduced to a water body from terrestrial sources (i.e. allochthonous NOM) or generated through in-stream processes (i.e. autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
 
 \  
 
@@ -47,7 +47,7 @@ NOM concentration and character vary widely in source water depending on source 
  
 ##### Spectroscopic assessment of NOM   
 
-The molecular structure of NOM can be assessed through spectrophotometry. For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the molecules electronic structure. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e. a chromophore), which is common in aromatic molecules. The wavelength of light absorption is proportional to the length of the molecule's conjugated system -- that is, a larger and/or more aromatic molecule will absorb UV-Vis light at longer wavelengths than a smaller, less aromatic molecule. So, higher molecular weight (chromophoric) NOM molecules will have stronger light absorption at longer wavelenghts [@Helms2008]. A more concentrated sample will also lead to greater absorption intensity. Therefore, the UV-Vis spectrum of a water sample can provide valuable information about relative weights, aromaticity and relative concentrations of aqueous NOM [@Helms2008; @Cory2011; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration can be estimated from UV-Vis absorbance; a proxy that represents the chromophoric component of NOM which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
+The molecular structure of NOM can be assessed through spectrophotometry. For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the molecules electronic structure. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e. a chromophore), which is common in aromatic molecules. The wavelength of light absorption is proportional to the length of the molecule's conjugated system -- that is, a larger and/or more aromatic molecule will absorb UV-Vis light at longer wavelengths than a smaller, less aromatic molecule. So, higher molecular weight (chromophoric) NOM molecules will have stronger light absorption at longer wavelengths [@Helms2008]. A more concentrated sample will also lead to greater absorption intensity. Therefore, the UV-Vis spectrum of a water sample can provide valuable information about relative weights, aromaticity and relative concentrations of aqueous NOM [@Helms2008; @Cory2011; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration can be estimated from UV-Vis absorbance; a proxy that represents the chromophoric component of NOM which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
 
 \  
 
@@ -59,7 +59,7 @@ With respect to SUVA~254~ and drinking water treatability, it's important to con
 
 \  
 
-The slope of absorbances over certain wavelength ranges (e.g. 275-295 nm (S275-295) or 350-400 nm (S350-400)) are inversely proportional to (chromophoric) NOM molecular weight [@Helms2008]. A spectral quotient called E~2~:E~3~ is a similar parameter which is more straight-forward to calculate. E~2~:E~3~ is the ratio of absorbance at 250 nm to 365 nm, and is inversely related to aromaticity and molecular size of aquatic humic solutes (Peuravuori and Pihlaja 1997; Helms et al. 2008). 
+The slope of absorbances over certain wavelength ranges (e.g. 275-295 nm (S~275-295~) or 350-400 nm (S~350-400~)) are inversely proportional to (chromophoric) NOM molecular weight [@Helms2008]. A spectral quotient called E~2~:E~3~ is a similar parameter which is more straight-forward to calculate. E~2~:E~3~ is the ratio of absorbance at 250 nm to 365 nm and is inversely related to aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008]. 
 
 \  
 
@@ -77,11 +77,11 @@ On a finer temporal scale, hydrologic pulses can cause temporal variability in N
 
 \  
 
-Through a large and geographically diverse data study in the United States, Zarnetske _et al_ [-@Zarnetske2018] found that increasing flows systematically increased DOC fluxes in 80% of watersheds (n=1006) across ecoregions. Proportional increases in DOC flux and discharge indicates that the flux is not limited by organic matter supply, but rather by hydrologic connectivity and mobilization [@Creed2015; @Zarnetske2018]. Watershed size and stream order were determined to be weak indicators of DOC flux-discharge relationship while watershed slope and mean precipitation were strong predictors of DOC flux [e.g. @Zarnetske2018]. Zarnetske _et al_ [-@Zarnetske2018] also found that wetland area exerted non-linear control over whether DOC flux was limited by supply or hydrologic transport. 
+Through a large and geographically diverse data study in the United States, Zarnetske et al. [-@Zarnetske2018] found that increasing flows systematically increased DOC fluxes in 80% of watersheds (_n_=1006) across ecoregions. Proportional increases in DOC flux and discharge indicates that the flux is not limited by organic matter supply, but rather by hydrologic connectivity and mobilization [@Creed2015; @Zarnetske2018]. Watershed size and stream order were determined to be weak indicators of DOC flux-discharge relationship while watershed slope and mean precipitation were strong predictors of DOC flux [e.g. @Zarnetske2018]. Zarnetske et al. [-@Zarnetske2018] also found that wetland area exerted non-linear control over whether DOC flux was limited by supply or hydrologic transport. 
 
 \  
 
-Aspects of both the RCC and PSC were illustrated in a recent nested catchment study by Abbott _et al_ [-@Abbott2018] which found greater NOM chemical diversity in headwaters relative to downstream, but not greater temporal variance in headwaters biogeochemistry. Despite longitudinal differences in molecular character, solute concentrations varied synchronously among upstream and downstream sites, leading to stability in relative biogeochemical signatures over time [@Abbott2018]. The temporal extent to which water quality changes echo across nested sub-catchments depends on the synchrony (i.e. mean covariance) of the hydrologic pulse generation among sub-catchments [@Abbott2018]. 
+Aspects of both the RCC and PSC were illustrated in a recent nested catchment study by Abbott et al. [-@Abbott2018] which found greater NOM chemical diversity in headwaters relative to downstream, but not greater temporal variance in headwaters biogeochemistry. Despite longitudinal differences in molecular character, solute concentrations varied synchronously among upstream and downstream sites, leading to stability in relative biogeochemical signatures over time [@Abbott2018]. The temporal extent to which water quality changes echo across nested sub-catchments depends on the synchrony (i.e. mean covariance) of the hydrologic pulse generation among sub-catchments [@Abbott2018]. 
 
 \  
 
@@ -126,14 +126,14 @@ In anticipation of future water demands and uncertainty related to rainfall and 
 \  
 
 ```{r GVWSAoverview, out.width = "50%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "Overview of the Leech and Sooke Water Supply Areas (Capital Regional District, Greater Victoria), located on southeastern Vancouver Island, British Columbia, Canada. The overview (bottom) shows precipitation across Canada including an atmospheric river event which is common to the west coast and recharges drinking source water supplies (image and inset of Vancouver Island are screenshots from the Windy app, Windy.com, captured 2020-02-04)."
+fig_cap = "Overview of the Leech and Sooke Water Supply Areas (Capital Regional District, Greater Victoria), located on southeastern Vancouver Island, British Columbia, Canada. Map at the bottom shows Vancouver Island's position in Canada with precipitation including a common west coast atmospheric river event which recharges drinking source water supplies (image and inset of Vancouver Island are screenshots from the Windy app, Windy.com, captured 2020-02-04)."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis-map_inset-overview_colour.png")
 ```
 
 \  
 
-Prior to purchase by the CRD, the Leech WSA was privately managed forest land (___commercial sustained harvest___) which was extensively harvested (nearly 96% clearcut over the past 70 years); as a result, a large portion of the Leech WSA is densely forested with softwood stands around 50 years of age (as of 2020). The second growth forests of the Leech WSA are no longer managed for timber supply, but rather to improve and maintain drinking source water quality and to reduce the risk of landscape level wildfire. Due to prior harvest, reforestation and active fire suppression, forest fire fuels have accumulated in the Leech and pose a threat if a fire occurs. In the Sooke WSA, the CRD implements forest treatments designed to foster healthy forest stands capable of reducing fire intensity, such as reducing fuel hazards and creating conditions that are safe for crews to action a fire (e.g. closed-canopy fuel breaks). Similar preventative fire treatments may be applied in the LWSA prior to inter-basin transfers. 
+Prior to purchase by the CRD, the Leech WSA was privately managed forest land (commercial sustained harvest) which was extensively harvested (nearly 96% clearcut over the past 70 years); as a result, a large portion of the Leech WSA is densely forested with softwood stands around 50 years of age (as of 2020). The second growth forests of the Leech WSA are no longer managed for timber supply, but rather to improve and maintain drinking source water quality and to reduce the risk of landscape level wildfire. Due to prior harvest, reforestation and active fire suppression, forest fire fuels have accumulated in the Leech and pose a threat if a fire occurs. In the Sooke WSA, the CRD implements forest treatments designed to foster healthy forest stands capable of reducing fire intensity, such as reducing fuel hazards and creating conditions that are safe for crews to action a fire (e.g. closed-canopy fuel breaks). Similar preventative fire treatments may be applied in the LWSA prior to inter-basin transfers. 
 
 \  
 
@@ -147,15 +147,15 @@ This research was conducted in partnership with the CRD and forWater Network to 
 
 \  
 
-*__Research Question 1.__   How do DOC concentrations and NOM character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have on concentration of DOC and character of NOM?
+__Research Question 1.__   How does NOM concentration and character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have?
 
-*__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of DOC concentrations and NOM character.
+__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of NOM concentrations and character.
 
 \  
 
-*__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in DOC and NOM in the Leech watershed?
+__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in NOM concentrations and character in the Leech watershed?
 
-*__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between DOC, NOM and key variables.
+__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between NOM and possible explanatory variables.
 
 \  
 
@@ -171,7 +171,7 @@ Results of this research will contribute to baseline understanding and could be 
 
 #### Thesis structure outline
 
-Chapter 2 outlines common methods that were used to generate results discussed in later chapters; it introduces details of the study site, and explains methods used for surface water sampling, laboratory analyses and data handling. Chapter 2 also includes foundational results upon which all subsequent data analysis relied. Chapters 3 and 4 present research findings from two different perspectives. Chapter 3 interprets synoptic sampling results to elucidate broad spatial and temporal patterns in NOM and DOC across twelve sites in the GVWSA, and assesses the sampling program design. Chapter 4 focuses on six monitoring sites in the Leech WSA to evaluate research findings in context of watershed drivers for DOC and NOM dynamics. A comprehensive summary and discussion follows.
+Chapter 2 outlines common methods that were used to generate results discussed in later chapters; it introduces details of the study site, and explains methods used for surface water sampling, laboratory analyses and data handling. Chapter 2 also includes foundational results upon which all subsequent data analysis relied. Chapters 3 and 4 present research findings from two different perspectives. Chapter 3 interprets synoptic sampling results to elucidate broad spatial and temporal patterns in NOM concentrations and character across twelve sites in the GVWSA, and assesses the sampling program design. Chapter 4 focuses on six monitoring sites in the Leech WSA to evaluate research findings in context of watershed drivers for DOC and NOM dynamics. A comprehensive summary and discussion follows.
 
 \  
 

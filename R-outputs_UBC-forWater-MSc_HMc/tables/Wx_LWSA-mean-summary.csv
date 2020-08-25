@@ -1,4 +1,4 @@
-year,mean annual rain (mm),stdev rain. (±mm),"max. snow depth, mean (m)",mean air temp. (°C),stdev air temp. (±°C),"min. temp., mean (°C)","max. temp., mean (°C)"
+Year,Rain (mm),st.dev. (± mm),"Snow depth, max. (m)","Air temp., mean (°C)",st.dev. air temp. (± °C),Min. air temp. (°C),Max. air temp. (°C)
 2018,2005.09,52.69359733402151,0.531,8.495620230668706,0.5955188667801564,-10.7,33.849999999999994
 2019,1457.515,41.21725427536383,0.476,7.93009218299609,0.6299766656668417,-13.2,31.2
 Jan-Feb 2018,573.59,4.4547727214752175,0.2355,1.919053505209253,0.5474802035653427,-10.7,12.3

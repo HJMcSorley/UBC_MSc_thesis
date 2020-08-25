@@ -470,15 +470,14 @@ a <- precip_data %>%
             annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
             annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
   ungroup() %>% 
-  dplyr::rename("year" = Year,
-                "mean annual rain (mm)" = mean_rain_mm,
-                "stdev rain. (±mm)" = sd_rain_mm,
-                "max. snow depth, mean (m)" = max_snow_m,
-                "mean air temp. (°C)" = annual_mean_temp, 
-                "stdev air temp. (±°C)" = temp_sd,
-                "min. temp., mean (°C)" = annual_min_temp2,
-                "max. temp., mean (°C)" = annual_max_temp2) %>% 
-  mutate(year = as.character(year)) # to bind to Jan-Feb table below
+  dplyr::rename("Rain (mm)" = mean_rain_mm,
+                "st.dev. (± mm)" = sd_rain_mm,
+                "Snow depth, max. (m)" = max_snow_m,
+                "Air temp., mean (°C)" = annual_mean_temp, 
+                "st.dev. air temp. (± °C)" = temp_sd,
+                "Min. air temp. (°C)" = annual_min_temp2,
+                "Max. air temp. (°C)" = annual_max_temp2) %>% 
+  mutate(Year = as.character(Year)) # to bind to Jan-Feb table below
 
 b <- precip_data %>%
   mutate(Year = lubridate::year(DateTime),
@@ -506,14 +505,14 @@ b <- precip_data %>%
             annual_min_temp2 = mean(annual_min_temp, na.rm = TRUE),
             annual_max_temp2 = mean(annual_max_temp, na.rm = TRUE)) %>%
   ungroup() %>% 
-  dplyr::rename("year" = JanFebYr,
-                "mean annual rain (mm)" = mean_rain_mm,
-                "stdev rain. (±mm)" = sd_rain_mm,
-                "max. snow depth, mean (m)" = mean_max_snow_m,
-                "mean air temp. (°C)" = annual_mean_temp, 
-                "stdev air temp. (±°C)" = temp_sd,
-                "min. temp., mean (°C)" = annual_min_temp2,
-                "max. temp., mean (°C)" = annual_max_temp2) 
+  dplyr::rename("Year" = JanFebYr,
+                "Rain (mm)" = mean_rain_mm,
+                "st.dev. (± mm)" = sd_rain_mm,
+                "Snow depth, max. (m)" = mean_max_snow_m,
+                "Air temp., mean (°C)" = annual_mean_temp, 
+                "st.dev. air temp. (± °C)" = temp_sd,
+                "Min. air temp. (°C)" = annual_min_temp2,
+                "Max. air temp. (°C)" = annual_max_temp2) 
 
 # combine as full summary table
 c <- bind_rows(a, b) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv")
@@ -3771,7 +3770,7 @@ DOCNPOC <- synopticfilter %>%
   dplyr::filter(sample_type == "Rack" | 
                   sample_type == "Grab" & sample == "Grab") %>%
   ggplot(aes(x = NPOC_ppm, y = DOCeq_ppm)) +
-  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 2, alpha = 0.8)+
+  geom_point(aes(fill = rain_seasons, shape = rain_seasons), size = 1.5, alpha = 0.8)+
   scale_fill_manual(values = c("wet" = forWater_colours2[["SkyBlue"]], 
                                "dry" = forWater_colours2[["MyOrange"]], 
                                "first flush" = cbPalette[["grey"]]))+
@@ -3806,7 +3805,6 @@ SAC <- synopticfilter %>%
   #ggpmisc::stat_poly_eq(formula = y ~ x, 
   #            aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
   #            parse = TRUE, rr.digits = 4) +
-  
   labs(y = expression(SAC[254]~(m^-1)),
        x = "DOC (mg/L)")+
   theme_bw() +
@@ -3814,6 +3812,18 @@ SAC <- synopticfilter %>%
          shape = guide_legend("Sample season:"))+
   theme(text = element_text(size = 11),
         legend.position = "top")
+
+# correlation coefficients
+synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  dplyr::filter(analysis == "DOC", rain_seasons == "first flush", # "wet" / "dry"
+                sample_type == "Grab" | sample_type == "Rack") %>%
+  select(NPOC_ppm, SAC254_Abs.m) %>% 
+  filter(!is.na(NPOC_ppm), !is.na(SAC254_Abs.m)) %>% 
+  cor()
+# ---
+
+
 
 # inset the SAC254 plot into the NPOC DOCest plot
 cowplot::ggdraw() +
@@ -3838,8 +3848,8 @@ cowplot::ggdraw() +
             height = .3, # Inset height
             scale = 1) # Inset scale (1 = none)
 #save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-SAC254_seasonal_with-Inset.png",
-       height = 5, width = 5, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-SAC254_seasonal_with-Inset.png",
+       height = 4.5, width = 4.5, units = "in")
 
 
 ```
