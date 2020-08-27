@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Spatial and Temporal Patterns in DOC & NOM across Greater Victoria Water Supply Areas
+##	Spatial and Temporal Patterns in NOM Concentration and Character Across the Greater Victoria Water Supply Areas
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -17,17 +17,22 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \  
 
-### Synopsis
+### Synopsis 
+
+
+
+### Methods
 
 The methods defined in Chapter 2 were used to collect and analyze surface water samples with the objective of describing spatial and temporal patterns and variation of dissolved organic carbon (DOC) concentrations and natural organic matter (NOM) character across the Greater Victoria water supply area (GVWSA, refer to Figure \@ref(fig:sampleSitesMap) for map). Additionally, sampling results were interpreted with the goal of clarifying the influence of seasonality on concentration of DOC and character of NOM. 
 
 \  
 
-DOC and NOM results were evaluated by comparing results from low- to high-order streams; between the Leech and Sooke portions of the water supply area (WSA); by sample method (standard Grab versus Vertical Rack); and across seasons.   
+DOC and NOM results were evaluated by comparing results from low- to high-order streams; between the Leech and Sooke portions of the water supply area (WSA); by sample method (standard Grab versus Vertical Rack); and across seasons.
+.....
 
 \  
 
-### Sampling Results
+### Results
 
 From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed for NOM by UV-Vis (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and instrument-sharing limitations. Of the samples collected and analyzed, DOC data were reduced by 9.2% (to 387 samples) during Hold-time quality control checks (described in Chapter 2) and UV-Vis data were reduced by 19.5% (to 256 samples). Quality control resulted in a 9% reduction in UV-Vis data and an additional 10.5% data loss was unfortunately caused during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10% (_n_ = 20).  
 
@@ -38,16 +43,13 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_
   knitr::kable(caption = "Summary of Samples Collected and Number Included in Data Analysis") 
 ```
 
-
-\  
-
 \  
 
 Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
 
 \  
 
-#### Spatial patterns in DOC & NOM 
+#### Spatial patterns  
 
 From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. 
 
@@ -62,7 +64,7 @@ Mean DOC concentrations were similar between the Sooke WSA main tributaries of J
 \  
 
 ```{r synopticDOCdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 1, 1),
                caption = "Dissolved Organic Carbon Concentrations (DOC) Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "Count", 
@@ -78,7 +80,7 @@ Like DOC, there was an overall reduction in NOM character (i.e. aromaticity, rea
 \  
 
 ```{r synopticNOMdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_NOM-Synoptic-summary.csv", col_names = TRUE) %>% 
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_NOM-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2, 2, 0, 2, 2), 
                caption = "Spectral Properties of Natural Organic Matter (NOM) Character Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "Count", 
@@ -118,12 +120,12 @@ At the future point of diversion, Leech Tunnel (5th order stream), it was found 
 ```{r abcDOCbox, fig.cap = fig_cap}
 fig_cap = "\\label{fig:abcDOCbox}  Comparison of dissolved organic carbon concentrations collected by Grab sampling at upstream sites compared to results obtained from both Vertical Rack and Grab sampling below their confluence(s). Plots A and B show Grab samples from headwater (HW) sites compared to Rack & Grab at downstream (DS) monitoring sites. Plot C shows DOC from Grab samples collected at upstream sites (US) compared to Rack & Grab at the mainstem monitoring site."
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-boxplot_up-down_metcompar.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-boxplot_up-down_metcompar.png")
 ```
 
 \  
 
-#### Temporal patterns in DOC & NOM
+#### Temporal patterns
 
 From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across the synoptic sampling sites (Figure \@ref(fig:DOCloessAll)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations at the end of the wet season (in the spring), and progressively increasing over the dry season (summer). These patterns appear as a sinusoidal trend in DOC over the sampling seasons (Figure \@ref(fig:DOCloessAll)).
 
@@ -132,7 +134,7 @@ From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across t
 ```{r DOCloessAll, fig.cap = fig_cap}
 fig_cap = "\\label{fig:DOCloessAll} Dissolved organic carbon concentrations over sixteen months (Oct 2018 - Feb 2020) at twelve sites across the Greater Victoria Water Supply Area. Trend line shows locally weighted smoothing (loess method, local polynomial regression)."
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-loess-trend.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-loess-trend.png")
 ```
 
 \  
@@ -141,18 +143,30 @@ There were few data points from mid-February through March 2019 (when snow limit
 
 \  
 
-Despite DOC changes over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L, Table \@ref(tab:seasonDOCcount)). However, there were far fewer samples collected in the dry season (55) than during the wet season (311). 
+Despite DOC changes over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L, Table \@ref(tab:seasonDOCcount)). However, there were far fewer DOC samples collected in the dry season (55) than during the wet season (311).  
 
 \  
 
 ```{r seasonDOCcount}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>%
-  knitr::kable(digits = c(0,0,2,2,0,1,1,1),
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-samples-DOC-summary.csv", col_names = TRUE) %>%
+  knitr::kable(digits = c(0,0,0,2,2,2,2),
                caption = "Seasonal Sample Collection and Dissolved Organic Carbon (DOC) Summary from Twelve Synoptic Sampling Sites Across the Greater Victoria Water Supply Area",
-               col.names = c("Season", "Sample count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
+               col.names = c("Season", "Sample count", "Mean DOC (mg/L) ± RSD (%)", "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)"))
 ```
 
 \  
+
+Similarly, there were more spectral NOM characteristic samples colelcted in the wet season than the dry (Table \@ref(tab:seasonNOMcount)). 
+
+```{r seasonNOMcount}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-samples-NOM-summary.csv", col_names = TRUE) %>%
+  knitr::kable(digits = c(0,0,0, 2,2,2, 0,2,2,2),
+               caption = "Seasonal Sample Collection and Summary of NOM Character Indices from Twelve Synoptic Sampling Sites Across the Greater Victoria Water Supply Area",
+               col.names = c("Season", "Sample count", 
+                             "Mean SAC~254~ (m^-1^) ± RSD (%)", "Min. SAC~254~ (m^-1^)", "Median SAC~254~ (m^-1^)", "Max. SAC~254~ (m^-1^)", 
+                             "Mean E~2~:E~3~ ± RSD (%)", "Min. E~2~:E~3~", "Median E~2~:E~3~", "Max. E~2~:E~3~"))
+```
+
 
 The wet season was most heavily sampled at the six monitoring sites in the Leech WSA, where Rack samplers more doubled the number of samples that would have been collected through Grab sampling alone. 
 
@@ -167,7 +181,7 @@ To evaluate if (and when) molecular character of synoptic stream samples shifted
 ```{r seasonalDOCest, fig.cap = fig_cap}
 fig_cap = "\\label{fig:seasonalDOCest} Dissolved organic carbon concentration (DOC) plotted against spectral absorbance coefficient at 254 nm (SAC~254~, m^-1^) with results grouped by sampling season. The inset shows DOC (as NPOC) plotted against DOC estimated by the spectro::lyser with an internal calibration file referenced to SAC~254~, where the dashed lined indicates best fit (1:1)."
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_DOC-SAC254_seasonal_with-Inset.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-SAC254_seasonal_with-Inset.png")
 ```
 
 \  
@@ -176,14 +190,14 @@ These results suggests that spectral estimates of DOC should be evaluated carefu
 
 \  
 
-##### Spatiotemporal NOM patterns and event-based sampling
+#### Spatiotemporal patterns & event-based sampling at the six Leech monitoring sites
 
 Isolating DOC results to the six monitoring sites during only the wet season allowed for further comparison of event-based Vertical Rack to standard synoptic Grab samples (Table \@ref(tab:wetDOCcountInstallsites)). Across the six sites, event-based Rack samples contained higher DOC concentrations on average than Grab samples (6.8 mg/L compared to 5.2 mg/L). Surprisingly, a slightly greater variance was captured through Grab sampling (53% RSD) compared to Rack sampling (41% RSD). This indicates that stormflow sustained greater concentrations of NOM compared to lower concentrations with greater relative variance in inter-event flows.   
 
 \  
 
 ```{r wetDOCcountInstallsites}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(0,0,2,2,0,1,1,1),
                caption = "Wet Season Dissolved Organic Carbon (DOC) by Sample Collection Method at Six Monitoring Sites in the Leech Watershed",
                col.names = c("Sample type", "Count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
@@ -196,7 +210,7 @@ Leech-head was the only site where the maximum DOC concentration was obtained by
 \  
 
 ```{r wetDOCinstallSites}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-site-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-site-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(0, 0,0,2,2,0,1,1,1),
                caption = "Wet Season Dissolved Organic Carbon (DOC) by Sample Collection Method at Each of the Six Monitoring Sites in the Leech Watershed",
                col.names = c("Site", "Sample type", "Count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
@@ -207,7 +221,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch2_wet-site-InstallSamples-DOC-
 ```{r wetSeasonDOC, fig.cap = fig_cap}
 fig_cap = "\\label{fig:wetSeasonDOC} DOC from each monitoring site grouped by collection method (synoptic Grab vs. Vertical Rack samples) in the wet season only."
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_subbasin_GvsR_WETseason-ridgeplot.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
 
 \  

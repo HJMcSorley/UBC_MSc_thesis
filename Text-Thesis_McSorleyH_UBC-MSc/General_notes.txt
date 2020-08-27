@@ -23,4 +23,13 @@ Hydrologic and forest management controls on dissolved organic matter characteri
 	
 REPLACE
 Matilainen, Vepsäläinen, and Sillanpää  --> Matilainen et al.
+Cory, Boyer, and McKnight  --> Cory et al.
+Baird, Eaton, and Rice  --> Baird et al.
+Aiken, Hsu-Kim, and Ryan  --> Aiken et al.
+Karanfil, Schlautman, and Erdogan  --> Karanfil et al.
+Karanfil, Erdogan, and Schlautman  --> Karanfil et al.
+Vidon, Wagner, and Soyeux  --> Vidon et al.
+Avagyan, Runkle, and Kutzbach  -- Avagyan et al. 
+
+The site with the second highest DOC range was the West Leech sub-basin (20.85 km2) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD).
 	
