@@ -1,4 +1,4 @@
-rain_season,count,mean_RSD,DOCmin,DOCmedian,DOCmax
+rain_season,conc_count,mean_RSD,DOCmin,DOCmedian,DOCmax
 dry,55,6.13 ± 49%,1.637,6.066,12.81
 wet,311,6.14 ± 47%,1.845,5.596,19.07
 overall,366,6.14 ± 48%,1.637,5.7010000000000005,19.07

@@ -3912,7 +3912,7 @@ conc_seas <- synopticfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   group_by(rain_season) %>% 
-  summarize(count = n(), 
+  summarize(conc_count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             #DOCsd = sd(NPOC_ppm, na.rm = T), 
             RSD = (sd(NPOC_ppm, na.rm = T)/DOCmean)*100,
@@ -3924,7 +3924,7 @@ conc_seas <- synopticfilter %>%
       filter(QAQC_flag == "OK") %>%
       filter(sample_type == "Grab" | sample_type == "Rack") %>% 
       summarize(rain_season = "overall",
-                count = n(), 
+                conc_count = n(), 
                 DOCmean = mean(NPOC_ppm, na.rm = T), 
                 #DOCsd = sd(NPOC_ppm, na.rm = T), 
                 RSD = (sd(NPOC_ppm, na.rm = T)/DOCmean)*100,
@@ -3933,7 +3933,7 @@ conc_seas <- synopticfilter %>%
                 DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
       ungroup()) %>%
   mutate(mean_RSD = paste0(round(DOCmean, 2), " ± ", round(RSD, 0), "%")) %>% 
-  select(rain_season, count, mean_RSD, DOCmin, DOCmedian, DOCmax) %>% 
+  select(rain_season, conc_count, mean_RSD, DOCmin, DOCmedian, DOCmax) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-samples-DOC-summary.csv")
 
 
@@ -3944,43 +3944,53 @@ char_seas <- synopticfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack",
          !is.na(SAC254_Abs.m)) %>% 
   group_by(rain_season) %>% 
-  summarize(count = n(),
+  summarize(char_count = n(),
     SACmean = mean(SAC254_Abs.m, na.rm = T), 
     SACRSD = (sd(SAC254_Abs.m, na.rm = T)/SACmean)*100,
     SACmin = min(SAC254_Abs.m, na.rm = T), 
     SACmedian = median(SAC254_Abs.m, na.rm = T), 
-    SACmax = max(SAC254_Abs.m, na.rm = T),
+    SACmax = max(SAC254_Abs.m, na.rm = T) #,
     # E2E3count = length(!is.na(E2E3)), # same as SAC254
-    E2E3mean = mean(E2E3, na.rm = T), 
-    E2E3RSD = (sd(E2E3, na.rm = T) /E2E3mean)*100,
-    E2E3min = min(E2E3, na.rm = T), 
-    E2E3median = median(E2E3, na.rm = T), 
-    E2E3max = max(E2E3, na.rm = T)) %>%
+    #E2E3mean = mean(E2E3, na.rm = T), 
+    #E2E3RSD = (sd(E2E3, na.rm = T) /E2E3mean)*100,
+    #E2E3min = min(E2E3, na.rm = T), 
+    #E2E3median = median(E2E3, na.rm = T), 
+    #E2E3max = max(E2E3, na.rm = T)
+    ) %>%
   ungroup() %>% 
   bind_rows(synopticfilter %>%
       filter(QAQC_flag == "OK") %>%
       filter(sample_type == "Grab" | sample_type == "Rack",
              !is.na(SAC254_Abs.m)) %>% 
       summarize(rain_season = "overall",
-                count = n(), 
+                char_count = n(), 
                 SACmean = mean(SAC254_Abs.m, na.rm = T), 
                 SACRSD = (sd(SAC254_Abs.m, na.rm = T) /SACmean)*100,
                 SACmin = min(SAC254_Abs.m, na.rm = T), 
                 SACmedian = median(SAC254_Abs.m, na.rm = T), 
-                SACmax = max(SAC254_Abs.m, na.rm = T),
-                E2E3mean = mean(E2E3, na.rm = T), 
-                E2E3RSD = (sd(E2E3, na.rm = T) /SACmean)*100, 
-                E2E3min = min(E2E3, na.rm = T), 
-                E2E3median = median(E2E3, na.rm = T), 
-                E2E3max = max(E2E3, na.rm = T)) %>% 
+                SACmax = max(SAC254_Abs.m, na.rm = T) #,
+                #E2E3mean = mean(E2E3, na.rm = T), 
+                #E2E3RSD = (sd(E2E3, na.rm = T) /SACmean)*100, 
+                #E2E3min = min(E2E3, na.rm = T), 
+                #E2E3median = median(E2E3, na.rm = T), 
+                #E2E3max = max(E2E3, na.rm = T)
+                ) %>% 
       ungroup()) %>%
-  mutate(mean_RSD_SAC = paste0(round(SACmean, 2), " ± ", round(SACRSD, 0), "%"),
-         mean_RSD_E2E3 = paste0(round(E2E3mean, 2), " ± ", round(E2E3RSD, 0), "%")) %>% 
-  select( rain_season, count, 
-          mean_RSD_SAC, SACmin, SACmedian, SACmax, 
-           mean_RSD_E2E3, E2E3min, E2E3median, E2E3max) %>% 
+  mutate(mean_RSD_SAC = paste0(round(SACmean, 2), " ± ", round(SACRSD, 0), "%") #,
+         #mean_RSD_E2E3 = paste0(round(E2E3mean, 2), " ± ", round(E2E3RSD, 0), "%")
+         ) %>% 
+  select( rain_season, char_count, 
+          mean_RSD_SAC, SACmin, SACmedian, SACmax #, 
+          # mean_RSD_E2E3, E2E3min, E2E3median, E2E3max
+          ) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-samples-NOM-summary.csv")
 
+
+# --- THIS IS THE ONE
+
+# Join conc & character
+full_join(conc_seas, char_seas, by = "rain_season") %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-summary_conc-char.csv")
 
 
 ```
@@ -3992,12 +4002,12 @@ char_seas <- synopticfilter %>%
 
 # Concentration
 # in only the wet season & LWSA monitoring sites...
-sixfilter %>%
+a <- sixfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   filter(rain_season == "wet") %>% 
   group_by(sample_type) %>% 
-  summarize(count = n(), 
+  summarize(conc_count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
             RSD = round((DOCsd/DOCmean)*100, 0),
@@ -4010,7 +4020,7 @@ sixfilter %>%
       filter(QAQC_flag == "OK") %>%
       filter(sample_type == "Grab" | sample_type == "Rack") %>% 
       summarize(sample_type = "all",
-                count = n(), 
+                conc_count = n(), 
                 DOCmean = mean(NPOC_ppm, na.rm = T), 
                 DOCsd = sd(NPOC_ppm, na.rm = T), 
                 RSD = round((DOCsd/DOCmean)*100, 0),
@@ -4027,7 +4037,7 @@ sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   filter(rain_season == "wet") %>%
   group_by(site, sample_type) %>% 
-  summarize(count = n(), 
+  summarize(conc_count = n(), 
             DOCmean = mean(NPOC_ppm, na.rm = T), 
             DOCsd = sd(NPOC_ppm, na.rm = T), 
             RSD = round((DOCsd/DOCmean)*100, 0),
@@ -4039,13 +4049,13 @@ sixfilter %>%
 
 # Character
 # in only the wet season in LWSA monitoring sites...
-sixfilter %>%
+b <- sixfilter %>%
   filter(QAQC_flag == "OK") %>% 
   filter(sample_type == "Grab" | sample_type == "Rack") %>% 
   filter(rain_season == "wet", 
          !is.na(SAC254_Abs.m)) %>% 
   group_by(sample_type) %>% 
-  summarize(count = n(), 
+  summarize(char_count = n(), 
             SACmean = mean(SAC254_Abs.m, na.rm = T), 
             SACsd = sd(SAC254_Abs.m, na.rm = T), 
             RSD = round((SACsd/SACmean)*100, 0),
@@ -4064,7 +4074,7 @@ sixfilter %>%
       filter(QAQC_flag == "OK") %>%
       filter(sample_type == "Grab" | sample_type == "Rack") %>% 
       summarize(sample_type = "all",
-                count = count(!is.na(SAC254_Abs.m)), 
+                char_count = count(!is.na(SAC254_Abs.m)), 
                 SACmean = mean(SAC254_Abs.m, na.rm = T), 
                 SACsd = sd(SAC254_Abs.m, na.rm = T), 
                 RSD = round((SACsd/SACmean)*100, 0),
@@ -4088,7 +4098,7 @@ sixfilter %>%
   filter(rain_season == "wet",
          !is.na(SAC254_Abs.m)) %>%
   group_by(site, sample_type) %>% 
-  summarize(count = n(), 
+  summarize(char_count = n(), 
                 SACmean = mean(SAC254_Abs.m, na.rm = T), 
                 SACsd = sd(SAC254_Abs.m, na.rm = T), 
                 RSD = round((SACsd/SACmean)*100, 0),
