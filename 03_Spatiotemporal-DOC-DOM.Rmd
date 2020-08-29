@@ -127,7 +127,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-boxplot_
 
 #### Temporal patterns & seasonal changes
 
-From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across the synoptic sampling sites (Figure \@ref(fig:DOCloessAll)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations at the end of the wet season (in the spring), and progressively increasing over the dry season (summer). These patterns appear as a sinusoidal trend in DOC over the sampling seasons (Figure \@ref(fig:DOCloessAll)).
+From Oct 2018 to Feb 2020, DOC concentrations followed similar patterns across the synoptic sampling sites (Figure \@ref(fig:DOCloessAll)). DOC was highest early in the wet season and progressively decreased through the fall and winter, reaching minimum concentrations at the end of the wet season (in the spring), and progressively increasing over the dry season (summer). These patterns appear as a nearly sinusoidal trend in DOC over the sampling seasons (Figure \@ref(fig:DOCloessAll)).
 
 \  
 
@@ -139,76 +139,84 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-loess-tr
 
 \  
 
-There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparce period, appears to fit the overall pattern of available data.
+There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparse period, appears to match with the overall pattern observed in available data.
 
 \  
 
-Despite DOC changes over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L). However, there were far fewer DOC samples collected in the dry season (55) than during the wet season (311).  Similarly, there were more spectral NOM characteristic samples collected in the wet season than the dry (Table \@ref(tab:seasonalSummary)). Higher SAC~254~ values in the wet season indicated greater aromaticity and NOM reactivity than was observed in the dry season.
+Despite DOC changes over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L, Table \@ref(tab:seasonalSummary)). However, there were far fewer DOC samples collected in the dry season (55) than during the wet season (311). In a similar ratio, there were fewer spectral NOM characteristic samples collected in the dry season (25) than wet (139). While NOM concentration remained the same on average between seasons, higher SAC~254~ values in wet season samples indicated greater NOM aromaticity and reactivity compared to dry season stream samples (Table \@ref(tab:seasonalSummary)). DOC concentration (as NPOC) was well correlated with SAC~254~ during the wet season (R^2^ = 0.896) and during the transition from dry to wet seasons (first-flush event, R^2^ = 0.916), but the relationship between DOC concentration and SAC~254~ was weak during the dry season (R^2^ = 0.396). The seasonal discrepancy between NOM concentration and spectral character is indicative of a shift in NOM source pools between seasons, with allochthonous (humic-like, aromatic) sources contributing in the wet season and autochthonous (biolabile algal-derived, aliphatic) sources dominating in the dry season (Figure \@ref(fig:seasonalDOCest)). 
 
 \  
 
 ```{r seasonalSummary}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-summary_conc-char.csv", col_names = TRUE) %>%
-  knitr::kable(#digits = c(0,0,0, 2,2,2, 0,0, 2,2,2),
+  knitr::kable(digits = c(0,0,0, 2,2,2, 0,0, 2,2,2),
                    caption = "Sample Summary by Season for NOM Concentration (DOC) and Character (SAC~254~) from Twelve Synoptic Sampling Sites Across the Greater Victoria Water Supply Area",
                col.names = c("Season", 
-                             "Concentration sample count", 
+                             "DOC sample count", 
                              "Mean DOC (mg/L) ± RSD (%)", "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)",
-                             "Character sample count", 
+                             "SAC~254~ sample count", 
                              "Mean SAC~254~ (m^-1^) ± RSD (%)", "Min. SAC~254~ (m^-1^)", "Median SAC~254~ (m^-1^)", "Max. SAC~254~ (m^-1^)" ))
 ```
 
 \  
 
-To evaluate if (and when) molecular character of synoptic stream samples shifted, DOC concentrations (as NPOC) were compared to specific absorbance coefficients at 254 nm (SAC~254~, used by the spectro::lyser to estimate DOC). DOC concentration was well correlated with SAC~254~ during the wet season (R^2^ = 0.896) and is the transition from dry to wet seasons (first-flush event, R^2^ = 0.916), but the relationship between DOC concentration and SAC~254~ was weak during the dry season (R^2^ = 0.396). The separation of wet and dry season samples suggests that aqueous NOM in the GVSWA had more aromatic character (more humic-like, allochthonous NOM) during the wet-season than during the dry-season. NOM in  the dry season had comparable concentrations to the wet season but the absorbance at 254 nm was not as strongly related, leading to weaker NOM spectral absorbance relationships (Figure \@ref(fig:seasonalDOCest)).
-
-\  
-
 ```{r seasonalDOCest, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalDOCest} Dissolved organic carbon concentration (DOC) plotted against spectral absorbance coefficient at 254 nm (SAC~254~, m^-1^) with results grouped by sampling season. The inset shows DOC (as NPOC) plotted against DOC estimated by the spectro::lyser with an internal calibration file referenced to SAC~254~, where the dashed lined indicates best fit (1:1)."
+fig_cap = "\\label{fig:seasonalDOCest} Stream samples collected Oct. 2018 to Feb. 2020 from twelve sites in the Greater Victoria Water Supply Area (B.C) showing seasonal relationships between dissolved organic carbon concentration (DOC) plotted against spectral absorbance coefficient at 254 nm (SAC~254~, m^-1^). The inset plot shows DOC (as NPOC) plotted against DOC estimated by the spectro::lyser spectrophotometer through an internal calibration file referenced to SAC~254~, where the dashed lined indicates best fit (1:1)."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-SAC254_seasonal_with-Inset.png")
 ```
 
 \  
 
-These results suggests that spectral estimates of DOC should be evaluated carefully and that a season-specific site-based calibration should be conducted if DOC is to be estimated by UV-Vis absorbance. Wet-season NOM character caused positive bias in absorbance-based DOC estimates and dry-season sample characteristics lead to negative bias in UV-based DOC estimates. These results indicate a seasonal shift in NOM character from more aliphatic NOM in the dry season to more aromatic NOM in the wet season (autochthonous to allochthonous). 
+In addition to clarifying a seasonal shift in NOM source pools, these results implore careful consideration of DOC estimates based on UV-Vis absorbance. If spectral estimates of concentration are to be conducted, season-specific and site-based calibrations should be conducted, as wet-season NOM character causes positive bias in absorbance-based DOC estimates and dry-season sample characteristics lead to negative bias in UV-based DOC estimates (inset, Figure \@ref(fig:seasonalDOCest)).  
 
 \  
 
 ##### Spatiotemporal patterns & event-based sampling at the six Leech monitoring sites
 
-Isolating DOC results to the six monitoring sites during only the wet season allowed for further comparison of event-based Vertical Rack to standard synoptic Grab samples (Table \@ref(tab:wetDOCcountInstallsites)). Across the six sites, event-based Rack samples contained higher DOC concentrations on average than Grab samples (6.8 mg/L compared to 5.2 mg/L). Surprisingly, a slightly greater variance was captured through Grab sampling (53% RSD) compared to Rack sampling (41% RSD). This indicates that stormflow sustained greater concentrations of NOM compared to lower concentrations with greater relative variance in inter-event flows.   
+Isolating DOC results to the six monitoring sites during only the wet season allowed for comparison of results from event-based Vertical Rack samples to standard synoptic Grab samples (Table \@ref(tab:wetDOCcountInstallsites)). Across the six sites, event-based Rack samples contained higher DOC concentrations on average than Grab samples (6.8 mg/L compared to 5.2 mg/L). Surprisingly, a slightly greater variance was captured through Grab sampling (53% RSD) compared to Rack sampling (41% RSD). This suggests that stormflow sustained greater concentrations of NOM compared to lower concentrations with greater relative variance in inter-event flows. Between Grab and Rack samples, wet season DOC concentration averaged out to 6.14 mg/L.    
 
 \  
 
 ```{r wetDOCcountInstallsites}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
-  knitr::kable(digits = c(0,0,2,2,0,1,1,1),
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char_overall.csv", col_names = TRUE) %>%
+  knitr::kable(digits = c(0,0,0,2,2,2,0,0,2,2,2),
                caption = "Wet Season Dissolved Organic Carbon (DOC) by Sample Collection Method at Six Monitoring Sites in the Leech Watershed",
-               col.names = c("Sample type", "Count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
+               col.names = c("Sample type", "DOC sample count", 
+                             "Mean DOC (mg/L) ± RSD (%)", 
+                             "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)",
+                             "SAC~254~ sample count", 
+                             "Mean SAC~254~ (m^-1^) ± RSD (%)", 
+                             "Min. SAC~254~ (m^-1^)", "Median SAC~254~ (m^-1^)", "Max. SAC~254~ (m^-1^)"))
 ```
 
 \  
 
-Leech-head was the only site where the maximum DOC concentration was obtained by Grab sampling (11.6 mg/L), rather than Rack (max 10.6 mg/L). At all other monitoring sites, event-based samples collected by Vertical Racks had higher mean DOC compared to Grab samples (Table \@ref(tab:wetDOCcountInstallsites)). Weeks crk had the highest DOC overall, with slightly higher concentrations occurring during stream rise (10.3 mg/L mean) compared to between events (9.3 mg/L mean) and Rack sampling collected a greater representation of all concentrations (Figure \@ref(fig:wetSeasonDOC)). Interestingly, Rack sampling at Weeks crk captured both the highest and lowest DOC concentrations (minimum of 3.8 mg/L, maximum of 19.1 mg/L).  West Leech showed the greatest difference between DOC collected as Grab samples (4.2	± 1.9) and event-based Rack samples (6.7 ± 2.2 mg/L). This suggests that hydrologic pulses in the West Leech sub-basin create considerably different DOC transport than non-stormflow in that sub-basin (Table \@ref(tab:wetDOCcountInstallsites), Figure \@ref(fig:wetSeasonDOC)). 
+Leech-head was the only site where the maximum DOC concentration was obtained by Grab sampling (11.6 mg/L), rather than Rack (max 10.6 mg/L). At all other monitoring sites, event-based samples collected by Vertical Racks had higher mean DOC compared to Grab samples (Table \@ref(tab:wetDOCinstallSites)). Weeks crk had the highest DOC overall, with slightly higher concentrations occurring during stream rise (10.3 mg/L mean) compared to between events (9.3 mg/L mean) and Rack sampling collected a greater representation of all concentrations (Figure \@ref(fig:wetSeasonDOC)). Interestingly, Rack sampling at Weeks crk captured that site's highest and lowest DOC concentrations (minimum of 3.8 mg/L, maximum of 19.1 mg/L).  West Leech showed the greatest difference in DOC collected as Grab samples (4.2	± 1.9) versus event-based Rack samples (6.7 ± 2.2 mg/L). This suggests that hydrologic pulses in the West Leech sub-basin created considerably different DOC transport than non-stormflow in that sub-basin (Table \@ref(tab:wetDOCinstallSites), Figure \@ref(fig:wetSeasonDOC)). 
 
 \  
 
 ```{r wetDOCinstallSites}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-site-InstallSamples-DOC-summary.csv", col_names = TRUE) %>%
-  knitr::kable(digits = c(0, 0,0,2,2,0,1,1,1),
-               caption = "Wet Season Dissolved Organic Carbon (DOC) by Sample Collection Method at Each of the Six Monitoring Sites in the Leech Watershed",
-               col.names = c("Site", "Sample type", "Count", "Mean DOC (mg/L)", "sd (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"))
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char_by-site.csv", col_names = TRUE) %>%
+  knitr::kable(digits = c(0,0,0,2,2,2,0,0,2,2,2),
+               caption = "Wet Season Stream NOM Concentration and Character (as DOC & SAC~254~, respectively) by Sample Collection Method at Each of the Six Monitoring Sites in the Leech Watershed",
+               col.names = c("Site", "Sample type", "DOC sample count", 
+                             "Mean DOC (mg/L) ± RSD (%)", 
+                             "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)",
+                             "SAC~254~ sample count", 
+                             "Mean SAC~254~ (m^-1^) ± RSD (%)", 
+                             "Min. SAC~254~ (m^-1^)", "Median SAC~254~ (m^-1^)", "Max. SAC~254~ (m^-1^)"))
 ```
 
 \  
 
-```{r wetSeasonDOC, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetSeasonDOC} DOC from each monitoring site grouped by collection method (synoptic Grab vs. Vertical Rack samples) in the wet season only."
+```{r wetSeasonPlot, fig.cap = fig_cap}
+fig_cap = "\\label{fig:wetSeasonDOC} Wet season NOM concentration and character from six monitoring sites, comparing samples collected by Vertical Racks (event-based) and standard synoptic Grab sampling. Plot A shows concentration (as dissolved organic carbon (DOC) and plot B shows spectral absorbance coeffisient values at 254 nm (SAC~254~) which indicates aromaticity and reactivity."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
+
+\  
 
 \  
 
