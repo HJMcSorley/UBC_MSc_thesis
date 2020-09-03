@@ -3679,8 +3679,8 @@ cowplot::plot_grid(a, d, nrow = 2, align = "v")
 
 ### Seasonal dynamics 
 
-seasonal counts
-```{r}
+throw this away, I think:
+```
 # count dry season samples
 n_dry_samples <- sixfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack", rain_season == "dry") %>% 
@@ -3758,11 +3758,18 @@ n_ff_DOCCDOM <- synopticfilter %>%
 tibble("category" = c("total", "wet season", "dry season", "first-flush"),
        "sample count" = c(n_DOCCDOM, n_wet_DOCCDOM, n_dry_DOCCDOM, n_ff_DOCCDOM))
 
-
 ```
 
 #### [1:1] scatter 
 ```{r}
+# how many samples were colelcted by season for which both NPOC and SAC254 data were avaialble and OK?
+synopticfilter %>%
+  filter(sample_type == "Grab" | sample_type == "Rack",
+         !is.na(NPOC_ppm) & !is.na(SAC254_Abs.m)) %>% 
+  group_by(rain_seasons) %>% 
+  summarise(samples = n()) 
+
+
 # CDOM vs NPOC by season
 DOCNPOC <- synopticfilter %>% 
   filter(!is.na(rain_seasons)) %>% 
