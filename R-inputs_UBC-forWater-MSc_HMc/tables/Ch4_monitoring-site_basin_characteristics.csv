@@ -9,7 +9,7 @@ Elevation (m a.s.l),521,522,476,509,248,207
 Percent Forest,94.5,99,96.6,97.8,98.5,97.6
 Percent Wetland,4.2,0.8,2.6,1.6,0.4,1.1
 Percent open water,2.9,0.6,1.8,0.9,0.3,0.7
-"slope, median (degrees)",8,10,9,9,9,10
+"slope, mean (degrees)",9.1,10.5,10.2,9.5,11.3,11.8
 "slope, max (degrees)",44,38,50,40,56,61
 "Logging history, 1980-2011 (% area)",28.1,62.6,42.7,41.3,25.8,33.9
 Tree age (average),52,40,48,59,49,53

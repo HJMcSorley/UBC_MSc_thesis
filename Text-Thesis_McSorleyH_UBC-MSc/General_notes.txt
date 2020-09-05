@@ -29,7 +29,8 @@ Aiken, Hsu-Kim, and Ryan  --> Aiken et al.
 Karanfil, Schlautman, and Erdogan  --> Karanfil et al.
 Karanfil, Erdogan, and Schlautman  --> Karanfil et al.
 Vidon, Wagner, and Soyeux  --> Vidon et al.
-Avagyan, Runkle, and Kutzbach  -- Avagyan et al. 
+Avagyan, Runkle, and Kutzbach  --> Avagyan et al. 
+Tyralis, Papacharalampous, and Langousis --> Tyralis et al.
 
 The site with the second highest DOC range was the West Leech sub-basin (20.85 km2) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD).
 	
