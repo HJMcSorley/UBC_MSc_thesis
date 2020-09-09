@@ -19,19 +19,13 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Synopsis / Introduction
 
-The previous chapter showed that across the Greater Victoria Water Supply Area (GVWSA), the character of natural organic matter (NOM) shifted from aliphatic to aromatic in dry to wet seasons. Additionally, Chapter 3 results confirmed that event-based Rack samples had higher DOC concentrations than standard Grab samples. The seasonal character shift agreed with predictions of the river continuum concept (RCC), as did an observed spatial reduction in NOM molecular diversity from lower-order to higher-order streams [@Vannote1980; @Abbott2018; @Mosher2015; @Creed2015]. Elevated NOM in stormflow was expected (e.g. @Vidon2008; @Raymond2010) and is a key aspect of the pulse-shunt concept [@Raymond2016]. 
+The previous chapter showed that across the Greater Victoria Water Supply Area (GVWSA), the character of natural organic matter (NOM) shifted from aliphatic in the dry season to aromatic during the wet seasons. Additionally, Chapter 3 results confirmed that event-based Rack samples had higher DOC concentrations than standard Grab samples. The seasonal character shift agreed with predictions of the river continuum concept (RCC), as did an observed spatial reduction in NOM molecular diversity from lower-order to higher-order streams [@Vannote1980; @Abbott2018; @Mosher2015; @Creed2015]. Elevated NOM in stormflow was expected (e.g. @Vidon2008; @Raymond2010) and is a key aspect of the pulse-shunt concept [@Raymond2016]. 
 
 \  
 
-Of the main tributaries to the Leech River mainstem, Cragg crk had the lowest average concentration and least aromatic NOM character, while West Leech NOM was higher in concentration and more aromatic. At the monitoring site for West Leech sub-basin (20.85 km^2^), there was considerable event-based changes in NOM concentration which indicates that hydrologic pulses were more important for NOM transport than non-stormflow, particualrly in the West Leech sub-basin. It was expected that hydrology would play an important roll in aqueous NOM transport (e.g. XXXXX). Aside from hysrologic pulses, it wasn't immediately obvious why event-based ranges in NOM were greater, or why samples contained relatively more aromatic NOM, at the West Leech site compared to other streams of similar size (e.g. Leech-head, 20.59 km^2^ sub-basin; and Cragg crk 28.06 km^2^ sub-basin). There were some watershed characteristics that set the West Leech sub-basin apart from other sampling sites. Similarly, Cragg crk sub-basin had a few characteristics that differentiated it from the other sites. As water quality is intrinsically linked to watershed features, there may be key characteristics that operate (in tandem with weather conditions) as drivers for NOM concentrations and character.  
+Of the main tributaries to the Leech River mainstem, Cragg crk had the lowest average concentration and least aromatic NOM character, while West Leech NOM was higher in concentration and more aromatic. It was expected that hydrology would play an important roll in aqueous NOM transport (e.g. _XXXXX_), but aside from hydrologic pulses, it wasn't immediately obvious why event-based ranges in NOM were greater, or why samples contained relatively more aromatic NOM, at the West Leech site (20.85 km^2^ sub-basin) compared to other streams draining catchments of similar size (i.e. Leech-head, 20.59 km^2^ sub-basin; and Cragg crk 28.06 km^2^ sub-basin). There were some watershed characteristics that distinguished the West Leech and Cragg crk sub-basins from other sampling sites. As water quality is intrinsically linked to watershed features, there may be key characteristics that operate (in tandem with weather conditions) as drivers for NOM concentration and character dynamics.  
 
-\  
 
-Surficial materials and soils in the Leech WSA were predominantly podzolic with approximately 50% of the parent material in each sub-basin composed of colluvial deposits with O-HFP development (orthic humo-ferric podzol). The second most dominant soil group for all sub-basins, except for West Leech, was duric humo-ferric podzol (DU-HFP) from till (morainal) parent material [@SoilsCanada2018]. For West Leech, the second most dominant soil group was till-based O-HFP (Table \@ref(tab:WTScharacterSubbasinTable)). DU-HFP differs from O-HFP by the presence of a strongly cemented layer (duric horizon) that is unlike the B horizon in O-HFP [@SoilScience2020]. Both DU-HFP and O-HFP are well drained, or moderately so, and O-HFP tends to be acidic (pH < 5.6) while DU-HFP is generally moderately acidic to neutral (pH 5.6 - 7.4) [@SoilsCanada2018].
-
-\ 
-
-There were a few notable differences in subsurface geology between sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). West Leech was characterized by the absence of wark gneiss and chert-argillite-volcanic parent materials (0%), which were present in all other sub-basins. Both Weeks crk and West Leech sub-basins were dominated by argillite-metagreywacke (64% and 77%, respectively) parent material. West Leech was underlain by metagreywacke (7%) and Metchosin volcanics (16%), which were absent in each of the other monitoring sub-basins. Less of the West Leech sub-basin was logged since 1980 (26% by area) compared to most other sites (generally > 40%, except Weeks which was 28% harvested but is also 7% open water and wetland). Cragg crk sub-basin had the oldest average tree age (59 years), and was underlain predominantly by wark gneiss (78%) with no argillite-metagreywacke parent material (0%). Metagreywacke parent materials are part of the metasedimentary Leech River Formation, where metagreywacke is meta-sandstone and argillite-metagreywacke is more of a meta-mudstone, they tend to be more erodible than metamorphic wark gneiss [@Ussery2015]. 
 
 \  
 
@@ -47,27 +41,39 @@ A Random Forest is a collection of decision trees, which composes a statistical 
 
 \  
 
-The RF algorithm learns from many independent Classification And Regression Trees (CARTs) which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision trees are created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the final forest prediction is equal to the average of individual tree predictions [@Tyralis2019; @Biau2016]. 
+The RF algorithm learns from many independent Classification And Regression Trees which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision trees are created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the final forest prediction is equal to the average of individual tree predictions [@Tyralis2019; @Biau2016]. 
 
 \  
 
-The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. Relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, VIM is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE) or the increase in sum of square errors (SSE). The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate. Despite the ability of RF to handle non-independent real world data, mixing categorical and quantitative data has shown bias towards variables with many categories, many missing values, and strong cross-correlations among predictor variables [@Strobl2008]. Therefore, some predictor refinement is important. 
+The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. The relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, VIM is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE) or the increase in sum of square errors (SSE). The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate. Despite the ability of RF to handle non-independent real world data, mixing categorical and quantitative data has shown bias towards variables with many categories, many missing values, and strong cross-correlations among predictor variables [@Strobl2008]. Therefore, some predictor refinement is important. 
 
 \  
-
-
 
 #### Hysteresis
 
-put words here
+Storm events are understood to be a key driver for solute and particle mobilization in streams (e.g. @Aguilera2018; ...). Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop, the magnitude, and the direction of slope [@Aguilera2018].    
 
 \  
 
-words go here also
+Concentration-discharge relationships  (C-Q) can elucidate flow-paths and aid in estimating proportional streamflow contributions (i.e. subsurface vs overland, or near-stream vs. upland) [@Evans1999]. C-Q can be used to determine whether a catchment's solute export regime is chemostatic or chemodynamic [@Musolff2015]. In an assessment of ~400 stream events in coastal California, Aguilera and Melack [-@Aguilera2018] found that sediment-associated concentrations peaked during high flows but dissolved nitrogen species concentrations had hysteretic behaviour with flow, the direction of which differed depending on land-use. 
+
+\  
+
+Dominant sources and flow paths during events can be inferred from the slope (positive or negative) and the direction of the hysteresis loop rotation [@Evans1998; @Aguilera2018]. A clockwise C-Q hysteresis loop indicates rapid flushing and dilution (higher concentration on the rising limb than falling limb) while a counter-clockwise loop indicates enrichment via delayed meterial delivery from distant (upstream) or deeper subsurface source pools [@Aguilera2018]. Evans et al. [-@Evans1999] determined that C-Q analysis requires a minimum of five samples to determine the rotational direction of hysteresis: pre and post episode low-flow, rising and falling limbs and near to peak Q. 
+
+\  
+
+Using end-member mixing, with hydrometric monitoring and carbon isotope (δ^13^C~DOC~) data, Lambert et al. [-@Lambert2014] determined that approximately 80% of stream DOC flowed through the riparian domain's most superficial soil horizons, and that riparian soil DOC was sourced from both riparian and upland areas. Upland NOM source pools were determined to contribute significant amounts of carbon to streams, but were supply-limited; whereas riparian NOM was found to be a near-finite carbon source. Lambert et al. [-@Lambert2014] also found that upland sources contributed most early in the wet season (~30% of stream DOC) and less as high-flows continued (decreased to ~10% of stream DOC later in the wet period). In that vein, antecedent weather conditions are important for nutrient and sediment export and C-Q relationships, as the first precipitation events after a prolonged dry period can result in rapid flushing of accumulated material [@Aguilera2018].  
+
+\  
+
+ANTECEDENT CONDITIONS....
 
 \  
 
 ### Methods 
+
+\  
 
 #### Site details
 
@@ -89,6 +95,14 @@ Weeks crk (site 1), had the greatest proportion of wetland and open water compar
 \  
 
 While there was a small amount of poorly-draining terric mesisol (T.M., undifferentiated organic soil) in the Weeks crk sub-basin, soils were predominantly well-draining podzolic across the Leech WSA (Table \@ref(tab:WTScharacterSubbasinTable)). Primarily, soils were either more acidic orthic humo-ferric podzol (O-HFP, pH < 5.6) or more neutral duric humo-ferric podzol (DU-HFP, pH 5.6 - 7.4). The major materials were colluvial deposits (O-HFP) and till (morainal, either DU-HFP or O-HFP soils).
+
+\  
+
+Surficial materials and soils in the Leech WSA were predominantly podzolic with approximately 50% of the parent material in each sub-basin composed of colluvial deposits with O-HFP development (orthic humo-ferric podzol). The second most dominant soil group for all sub-basins, except for West Leech, was duric humo-ferric podzol (DU-HFP) from till (morainal) parent material [@SoilsCanada2018]. For West Leech, the second most dominant soil group was till-based O-HFP (Table \@ref(tab:WTScharacterSubbasinTable)). DU-HFP differs from O-HFP by the presence of a strongly cemented layer (duric horizon) that is unlike the B horizon in O-HFP [@SoilScience2020]. Both DU-HFP and O-HFP are well drained, or moderately so, and O-HFP tends to be acidic (pH < 5.6) while DU-HFP is generally moderately acidic to neutral (pH 5.6 - 7.4) [@SoilsCanada2018].
+
+\ 
+
+There were a few notable differences in subsurface geology between sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). West Leech was characterized by the absence of wark gneiss and chert-argillite-volcanic parent materials (0%), which were present in all other sub-basins. Both Weeks crk and West Leech sub-basins were dominated by argillite-metagreywacke (64% and 77%, respectively) parent material. West Leech was underlain by metagreywacke (7%) and Metchosin volcanics (16%), which were absent in each of the other monitoring sub-basins. Less of the West Leech sub-basin was logged since 1980 (26% by area) compared to most other sites (generally > 40%, except Weeks which was 28% harvested but is also 7% open water and wetland). Cragg crk sub-basin had the oldest average tree age (59 years), and was underlain predominantly by wark gneiss (78%) with no argillite-metagreywacke parent material (0%). Metagreywacke parent materials are part of the metasedimentary Leech River Formation, where metagreywacke is meta-sandstone and argillite-metagreywacke is more of a meta-mudstone. The Leech River Formation tends to be more erodible than metamorphic wark gneiss [@Ussery2015]. 
 
 \  
 
