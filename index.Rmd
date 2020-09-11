@@ -1,5 +1,5 @@
 --- 
-title: "Spatial and temporal variation in natural organic matter concentration (carbon) and character (spectral properties) across a second growth forested drinking water supply area on Vancouver Island, BC"
+title: "Spatial and temporal variation in natural organic matter concentration and character across a second growth forested drinking water supply area on Vancouver Island, BC: an assessment of dissolved organic carbon and spectral properties"
 author: "Hannah J. McSorley"
 date: "2020"
 site: bookdown::bookdown_site

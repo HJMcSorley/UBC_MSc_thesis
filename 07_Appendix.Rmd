@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 ```
 
+##Technology summary
 ####### Technology summary
 
 Digital equipment used in this thesis are summarized here.  
@@ -29,12 +30,20 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/MSc_technology-summary.csv", skip
 
 \  
 
+####### Example calculations
+
+Some data were normalized to allow for relative comparison between sites where absolute values were not appropriate. For example, stage at each site was relative to the Vertical Rack stilling well and direct comparison between stage at each site would not be useful, but comparing min-max normalized stage allowed for relative comparison regardless of each "staff gauge" (measuring tape on the stilling well) datum.
+
+Equation 1: $$normalized ~ X_{i} = \frac { (X_{i} - X_{min}) }{ (X_{max} - X_{min}) }$$
+
+
+## forWater CRD
 ####### NSERC forWater Network & the Capital Regional District 
 
 The forWater NSERC Network for source water protection strategies is a transdisciplinary, cross-Canada, applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, so forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatment demands as they relate to forested source water. 
 
 \  
-
+## GVWSA
 ######## Greater Victoria Regional Water Supply System, CRD
 
 The Capital Regional District (CRD) owns and operates the water supply system for the Greater Victoria region. As a water purveyor, CRD supplies an average of 130 million liters of treated water to customers each day (130,000 m^3^day^-1^) [@CapitalRegionDistrict2017]. The provision of safe and sustainable drinking water has three tiers of regulation above the CRD: federal, provincial, and regional. Federally, Health Canada publishes Canadian Drinking Water Quality Guidelines which outline quantitative bounds for microbial, chemical, radiological parameters and physical aesthetic characteristics for safe drinking water. The province of British Columbia sets requirements for planning, reporting and regualting of drinking water providers through the Drinking Water Protection Act and the Water Sustainability Act, and the Public Health Act and Regulations. Regionally, the CRD reports to the Vancouver Island Health Authority (Island Health) regarding water quality information and provincial legislation.    
@@ -46,7 +55,7 @@ The Leech River watershed is a sub-catchment of the Sooke River watershed (~25% 
 In 1977, the CRD obtained a provincial water licence authorizing the diversion of up to 30.6 million cubic meters per year from the Leech River to the Sooke Reservoir [@Ussery2015]. Based on the 2017 strategic plan statement of a daily average water supply of 130,000 m^3^ [-@CapitalRegionDistrict2017], the Leech water license could contribute about 65% of 2017 average water supply. The license allows diversion only as long as minimum flows (>5.7 m^3^s^-1^) are maintained to protect fish and downstream ecology [@Ussery2015]. Based on current hydroclimatic dynamics, the water license flow requirements will exclude the summer months from inter-basin transfer and limit streamflow diversion to the winter (November to approximately April). The Leech Tunnel was constructed in the 1980's to transfer Leech River water into the Sooke Reservoir. The Tunnel is not currently operational, and it's anticipated that inter-basin transfer won't be required until 2050 or later. 
 
 \  
-
+## LeechWSA details
 ######## Leech water supply area monitoring sites: details and observations 
 
 The Leech River watershed ("the Leech") is located on south-east Vancouver Island, British Columbia, Canada. Like most of coastal BC, it is in the Coastal Western Hemlock Biogeoclimatic Zone. The hydroclimatic regime of the Leech is pluvial (i.e. rain-dominated). Annual rainfall is typically between xxxx - yyyy mm (~2500 mm/yr). This areas has a strong seasonal distribution of rainfall: approximately 90% of rain falls from September to April, with only about 10% of annual rainfall occurring from May to August [*REFS*]. Across the Leech, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. While the majority of precipitaiton falls as rain, snow does accumulate for short periods at higher elevations. 
@@ -118,7 +127,7 @@ Originating in the west of the Leech River watershed, West Leech River is a 4th 
 This research site was at the point of future diversion, the Leech River Tunnel. The Leech is a 5th order river, and this research site had a drainage area of approximately 96 km^2^ (the entire watershed above the point of diversion). The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised, but overall the river is wider than is is deep. The Tunnel site was approximately 1 km downstream of the West Leech confluence. 
 
 \  
-
+## Treatability
 ########   Treatability: forWater coordinated treatability analyses for disinfection by-product formation potentials (DBP-FP)
 
 Four of the synoptic sampling sites were selected as treatability sampling sites, where source water was collected and shipped to collaborative researchers in the forWater Network for analyses of drinking water treatability metrics. The four treatability sites were: 
@@ -143,7 +152,7 @@ Sets of samples were collected during winter of the 2020 water year (November 12
 At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM.
 
 \  
-
+### results
 ######### Results: Treatability & DOC
 
 Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). 
@@ -166,13 +175,13 @@ While UV-254 is a good indicator of NOM aromaticity and also appears to be corre
 
 \  
 
-
+## Metals
 ######## Metals & DOC: collaborative sampling for Metals on behalf of the CRD
 
 Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). Reports from BL Labs were provided by the CRD (for the samples collected in association with this research) and data were used to evaluate relationships between DOC and metals in solution. 
 
 \  
-
+### and DOC
 ######### Metals & DOC 
 
 Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, seven sets of samples were collected from six sites in the LWSA for metals analysis. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was collected and analyzed for DOC at UBC. A suite of total metals were included in the analyses, many of which were below detection limits. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations (Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L). 
@@ -208,7 +217,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv",
 ```
 
 \  
-
+## FWx
 ######## FWx stations in the LWSA: ancilary data
 
 There were two weather stations that operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
@@ -234,7 +243,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 ``` 
 
 \  
-
+## Linear Wx regress
 ####### Linear regression for air temperatures at vertical racks
 
 TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30 minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
@@ -259,7 +268,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-l
 ```
 
 \  
-
+## linear regress
 ######## Linear regression: air temperature estimation 
 
 Air temperatures recorded at each of the six sites were compared to LWSA FWx for the overlapping period (August 24, 2019 to February 20, 2020). Overall, FWx temperatures were slightly higher than those recorded at each site installation. Figure \@ref(fig:TidbiTFWxridges) shows the density distribution of air temperature measured at each site compared to the LWSA FWx mean. 
@@ -316,6 +325,21 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx
 
 \  
 
+####### Antecedent 30-day rain and stream stage
+
+In Chapter 4, I used antecedent rain like a surrogate for stream discharge in a proxy Q-C hysteresis evaluation. This seemed reasonable because in the Leech WSA rain is a main contributor to streamflow. For each sample collected at each of the six monitoring sites, the relationship between antecedent rain (from LWSA Fwx mean of Chris Creek and Martin's Gulch rain data) and measured stage loosely resembles the shape of an expected rating curve (Figure \@ref(fig:Ant30RainStage)).
+
+\  
+
+```{r Ant30RainStage}
+fig_cap = "\\label{fig:Ant30RainStage} Relationship between sample stage and antecedent 30-day rain at the six Leech WSA monitoring sites."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png")
+```
+
+\  
+
+## extended ch2 results
 ####### Results extended
 
 ######## NOM sampling in nested catchments (from Ch.2)
@@ -343,22 +367,22 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot
 ```
 
 \  
-
+## possible trash
 ####### possible trash
 
-
+### sampling methods
 #######   Sampling methods extended
 
 In river systems, peak flows are critical times for mass transport of dissolved and suspended materials. Therefore water quality sampling should include proportional representation of stormflow pulses relative to between-storm flows and baseflow. Sampling programs can range from low-cost synoptic grab sampling campaigns to high-cost programmable pump samplers (e.g. ISCO). Synoptic grab sampling was completed across the six primary Leech research sites, as well as four supplemental sites. In addition to synoptic sampling, passive sampling techniques were employed to collect stormflow samples.  
 
 \  
-
+### vertical racks
 ######## Vertical racks
 
 The benefits of using these vertical racks as a method of sampling include: low cost (about $500 CND per installation), low power (two 1/2-AA batteries in each logger), self-contained (no external power source or data logger required), customizable design, passive sampling (no pumps). The downsides of using this technique are similar to any autosampler, in that someone must visit the field sites regularly for set-up and collection of samples, but because there are minimal powered components, mis-firing is not an issue. The only reason a sample wouldn't be collected was if the stream stage did not reach a bottles intake. The primary drawback of this technique is that sampling is limitied to the rising limb of the hydrograph, which limits the elucidation of stormflow water quality dynamics. There is some uncertainty about timing between sample collection and sample retrieval, every effort was made to return to each research site following precipitation events to retrieve collected samples, and it was assummed that any sample held on the rack was stable due to low air and river temperatures during the wet season. The assumption of river-as-a-refrigerator was addressed by deploying temperature sensors on each vertical rack (August 2019), and also with hold-time experiments.  
 
 \  
-
+## prototype
 ######## Prototype for falling limb passive sampling
 
 _Development of a modified siphon sampler designed for passive water collection on the falling limb of hydrograph_
@@ -366,13 +390,13 @@ _Development of a modified siphon sampler designed for passive water collection 
 In keeping with goals of low-cost, low-powered passive sampling, a falling-limb sampler was designed based on principles of the rising limb siphon sampler. The rising limb sampler collects a discrete water sample when river stage exceeds the crown of the inlet tube, so long as the vent is unobstructed; obstruction of the siphon sampler vent was the key component of the falling limb sampler prototype design. There were a half-dozen iterations in design prior to the model which was field-deployed in the Leech WSA (winter 2019). Each design iteration included a valve on the siphon vent which remained closed as the river rose, and opened when stream stage dropped below a certain point (allowing air to exit the sample bottle and a water sample to be collected). A number of valve options were explored, including: an external tube plug, in internal tube plug, and a self-sealing silicone bite-valve (i.e. Camelback Big Bite^TM^ for hydration packs). The final design iteration used a tube pinch valve (SP Science) to close and open the air vent. The mechanism that triggers the vent valve to open is a simple fixed pulley, where the valve is connected to a weighted-cup by a wire that passes through two loops which alter the direction of force.  The river rises and fills the cup with stream water, the cup remains full when the river recedes, and when the stream drops low enough that the full cup is no longer buoyant, the weight of water in the cup exerts a force on the lever of the pinch-valve, causing it to release the vent tube and triggering sample collection. The vent valve and trigger mechanism are contained in a 4" sewer pipe (a "filling well"), which was attached to supplemental support bars on the vertical rack. One prototype was field deployed at Cragg Creek (subbasin site 4) as a proof of concept and work will continue to improve the design and operation.
 
 \  
-
+### field protocol
 ######## Field protocol
 
 Following the installation of a vertical sampling rack, the field protocol was to visit the site approximately biweekly (or more frequently, based on storms) to check, collect and set the rack. Every time a site was visited, a grab sample was also collected. When a bottle was placed on its rack (attached by 3" hose clamp), the filling stage (height of intake tube crown) was recorded relative to the central still well tape. Bottles were staggered, generally from water level to approximately 120 cm above water level (as experience showed that a bottle should always be placed above the stage of anticipated peak streamflow). Following a rain event, each site was revisited to collect rack samples; for full bottles, the siphon lid was replaced with a labelled HDPE lid and samples were transported in a cooler with ice packs back to the lab and refrigerated until analysis.     
 
 \ 
-
+### Malahat Wx
 ######## Malahat 5 year weather
 
 * NOTE: replace this seciton with data from the PCIC on climate normals and departure from norms during my study period.
@@ -413,7 +437,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2y
 ```
 
 \  
-
+## spatial variance
 ######## Spatial variance in DOC concentrations
 
 As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site 6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks and ChrisCrk (sites 1 & 2) are integrated at LeechHead (site 3), which is just below the headwaters' confluence. Sites were categorized based on their relative position in the Leech river system and evaluated for DOC range and variability (Table \@ref(tab:subbasinDOCtunnelint)). 
@@ -444,7 +468,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.c
   knitr::kable(digits = c(5),
                caption = "*Results of Levene's test comparing DOC variance between pairs of sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
 ```
-
+## E2E3 over time (loess)
 ######### E2E3 over time
 
 ```{r E2E3loessAll, fig.cap = fig_cap}

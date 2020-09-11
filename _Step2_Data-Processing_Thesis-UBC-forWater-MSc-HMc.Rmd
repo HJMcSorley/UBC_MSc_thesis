@@ -4445,7 +4445,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 
 # CH4 RESULTS
 
-## normailize
+## normalize
 
 ```{r}
 
@@ -5587,11 +5587,10 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC25
 
 ```{r}
 # --- DOC
-# SAC254
 # dynamic values: conditions only
 dynamicVariables_DOC <- sixfilter_physiographic %>% 
   filter(!is.na(NPOC_ppm)) %>%
-  select(c(NPOC_ppm, # predict SAC254
+  select(c(NPOC_ppm, # predict DOC
            sampleStage_normalized, 
            antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
            antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
@@ -5613,7 +5612,7 @@ DOC_dynamic_RF <- randomForest::randomForest(NPOC_ppm ~ .,
                                              corr.bias = TRUE) # experimental 
 
 
-## relative importance of features in predicting SAC254
+## relative importance of features in predicting DOC
 ## type 1 = mean square error (MSE) as decrease in accuracy
 RF_DOC_dynamic_RelImp1_MSE <- randomForest::importance(DOC_dynamic_RF, type = 1) %>% 
   as.data.frame() %>%  # rather than matrix
@@ -5665,7 +5664,7 @@ RFplot_dynamic_DOC <- RF_DOC_dynamic_RelImp1_MSE %>%
                                "Parent material")) +
   theme_bw() +
   theme(legend.position = "top", text = element_text(size = 12))+
-  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+  labs(y = expression('Relative importance in predicting DOC (%)'), 
        x = "",
        fill = "Predictor variable group") +
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
@@ -5688,7 +5687,7 @@ staticVariables_DOC <- sixfilter_physiographic %>%
 #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(AllVariables_SAC254))
+# view(cor(staticVariables_DOC))
 
 
 ## Run RF
@@ -5705,7 +5704,7 @@ DOC_static_RF <- randomForest::randomForest(NPOC_ppm ~ .,
                                             corr.bias = TRUE) # experimental 
 
 
-## relative importance of features in predicting SAC254
+## relative importance of features in predicting DOC
 ## type 1 = mean square error (MSE) as decrease in accuracy
 RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %>% 
   as.data.frame() %>%  # rather than matrix
@@ -5771,7 +5770,6 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_static_DOC.png",
        width = 6, height = 6, units = "in")
 
 # --- E2E3
-# SAC254
 # dynamic values: conditions only
 dynamicVariables_E2E3 <- sixfilter_physiographic %>% 
   filter(!is.na(E2E3)) %>%
@@ -5784,7 +5782,7 @@ dynamicVariables_E2E3 <- sixfilter_physiographic %>%
 #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(AllVariables_SAC254))
+# view(cor(dynamicVariables_E2E3))
 
 
 ## Run RF
@@ -5846,7 +5844,7 @@ RFplot_dynamic_E2E3 <- RF_E2E3_dynamic_RelImp1_MSE %>%
                                "Parent material")) +
   theme_bw() +
   theme(legend.position = "top", text = element_text(size = 12))+
-  labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
+  labs(y = expression('Relative importance in predicting'~E[2]:E[3]~'(%)'), 
        x = "",
        fill = "Predictor variable group") +
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
@@ -6141,6 +6139,29 @@ cowplot::plot_grid(RFplot_dynamic_SAC254 + theme(legend.position = "none"),
 ```
 
 ## plots: predictors to predictants: one to one
+
+```{r}
+# plot antecedent rain with stage
+# is this a surrogate?
+
+sixfilter_physiographic %>% 
+  mutate(rain_season = factor(rain_season, levels = c("wet", "dry"))) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = sampleStage_normalized)) +
+  ylim(min = 0, max = 1) +
+  theme_bw() +
+  geom_point(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  facet_wrap(~site)+
+  labs(x = "Antecedent 30-day rain (mm)", y = "Normalized stage (a.u.)" ) 
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png", width = 4, height = 4, units = "in")
+
+
+```
 
 ### DOC
 ```{r}
@@ -9019,7 +9040,7 @@ RF_DOC_cond_RelImp1_MSE__DRYseason <- randomForest::importance(RF_DOC_condDRY, t
 
 ```
 
-RF : characteristics variables
+RF : characteristics variables --- failures
 Surface DOC
 ```{r}
 
