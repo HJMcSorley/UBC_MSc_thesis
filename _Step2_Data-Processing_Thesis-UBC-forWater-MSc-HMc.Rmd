@@ -5156,7 +5156,7 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
     #"geo_ArgilliteMetagreywacke_percent", 
     # geo_ChertArgilliteVolcanic_percent",
     #"geo_MetchosinVolcanics_percent",
-    #geo_LeechRiverFormation_percent, # cross correlation
+    # geo_LeechRiverFormation_percent, # cross correlation
     NPOC_ppm, # predict DOC
     sampleStage_normalized, 
     antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
@@ -5174,9 +5174,9 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
     #FLUV_DU.HFP_percent,
     #GLFL_DU.HFP_percent,
     #UNDO_T.M_percent,
-    logging_percent_1980to2011)) # %>%     
+    logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_NPOC, method = "spearman")) # ? should I Spear, man?
@@ -5187,6 +5187,7 @@ AllVariables_NPOC <- sixfilter_physiographic %>%
 # subsurface only 
 SSVariables_NPOC <- AllVariables_NPOC %>% 
   select(NPOC_ppm, geo_metamorphic_percent, geo_igneous_percent)
+# view(cor(SSVariables_NPOC))
 
 # surface only 
 SVariables_NPOC <- AllVariables_NPOC %>% 
@@ -5207,27 +5208,6 @@ DOC_allVars_RF <- randomForest::randomForest(NPOC_ppm ~ .,
                                              proximity = TRUE,
                                              corr.bias = TRUE) # experimental 
 
-# subsurface only
-DOC_SSVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                            data = SSVariables_NPOC, 
-                                            replace = FALSE, 
-                                            na.action = randomForest::na.roughfix,
-                                            mtry = ceiling(length(data)/2), 
-                                            ntree = 5000,  
-                                            importance = TRUE,
-                                            proximity = TRUE,
-                                            corr.bias = TRUE) 
-
-# surface only
-DOC_SVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
-                                           data = SVariables_NPOC, 
-                                           replace = FALSE, 
-                                           na.action = randomForest::na.roughfix,
-                                           mtry = ceiling(length(data)/2), 
-                                           ntree = 5000,  
-                                           importance = TRUE,
-                                           proximity = TRUE,
-                                           corr.bias = TRUE)
 # ---
 
 ## relative importance of features in predicting DOC
@@ -5299,8 +5279,33 @@ RFplot_all_DOC <- RF_DOC_allChrc_RelImp1_MSE %>%
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_all_DOC.png", width = 6, height = 6, units = "in")
 
+```
 
+##### surface sep. subsurface
+```{r}
 # ---
+
+# subsurface only
+DOC_SSVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                            data = SSVariables_NPOC, 
+                                            replace = FALSE, 
+                                            na.action = randomForest::na.roughfix,
+                                            mtry = ceiling(length(data)/2), 
+                                            ntree = 5000,  
+                                            importance = TRUE,
+                                            proximity = TRUE,
+                                            corr.bias = TRUE) 
+
+# surface only
+DOC_SVars_RF <- randomForest::randomForest(NPOC_ppm ~ ., 
+                                           data = SVariables_NPOC, 
+                                           replace = FALSE, 
+                                           na.action = randomForest::na.roughfix,
+                                           mtry = ceiling(length(data)/2), 
+                                           ntree = 5000,  
+                                           importance = TRUE,
+                                           proximity = TRUE,
+                                           corr.bias = TRUE)
 # --- segregated dynamic from static values
 
 # subsurface RF
@@ -5349,7 +5354,6 @@ RFplot_S_DOC <- RF_DOC_SChrc_RelImp1_MSE %>%
 # ---
 
 
-
 ```
 
 
@@ -5374,9 +5378,9 @@ AllVariables_E2E3 <- sixfilter_physiographic %>%
            tree_age_average,
            #geo_WarkGneiss_percent,
            #geo_Metagreywacke_percent,
-           logging_percent_1980to2011)) # %>%     
+           logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_E2E3))
@@ -5457,7 +5461,7 @@ RFplot_all_E2E3 <- RF_E2E3_allChrc_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_E2E3.png", 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_all_E2E3.png", 
        width = 6, height = 6, units = "in")
 
 ```
@@ -5483,9 +5487,9 @@ AllVariables_SAC254 <- sixfilter_physiographic %>%
            tree_age_average,
            #geo_WarkGneiss_percent,
            #geo_Metagreywacke_percent,
-           logging_percent_1980to2011)) # %>%     
+           logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_SAC254))
@@ -5564,13 +5568,13 @@ RFplot_all_SAC254 <- RF_SAC254_allChrc_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_all_SAC254.png", 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_all_SAC254.png", 
        width = 6, height = 6, units = "in")
 
 
 ```
 
-##### RF summary plot
+##### RF summary plot (all variables together)
 ```{r}
 # stack DOC, E2E3, SAC254 plots
 cowplot::plot_grid(RFplot_all_DOC, 
@@ -5583,7 +5587,9 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC25
        width = 6, height = 7.5, units = "in")
 ```
 
-###### appendix plots individual group predictors
+### Individually grouped predictors
+
+separated conditions from characteristics
 
 ```{r}
 # --- DOC
@@ -5592,11 +5598,11 @@ dynamicVariables_DOC <- sixfilter_physiographic %>%
   filter(!is.na(NPOC_ppm)) %>%
   select(c(NPOC_ppm, # predict DOC
            sampleStage_normalized, 
-           antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
-           antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
-  )) # %>%     
-# add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+           antecedent_30day_rain,  
+           antecedent_7day_temp 
+  ))  %>%     
+ #add a column of random values as as QA -- this should not be found to be important
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 ## Run RF
 # mtry = (length(sixfilter_physiographic)-1)/3 = number of features/3 ~= 10 (or = num.features)
@@ -5614,11 +5620,11 @@ DOC_dynamic_RF <- randomForest::randomForest(NPOC_ppm ~ .,
 
 ## relative importance of features in predicting DOC
 ## type 1 = mean square error (MSE) as decrease in accuracy
-RF_DOC_dynamic_RelImp1_MSE <- randomForest::importance(DOC_dynamic_RF, type = 1) %>% 
+RF_DOC_dynamic_RelImp1_MSE <- randomForest::importance(DOC_dynamic_RF, type = 1  ) %>% 
   as.data.frame() %>%  # rather than matrix
   rownames_to_column() %>% 
   select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
+         MSE = "%IncMSE") %>% # "IncNodePurity") %>%  # percent increase in mean square error
   mutate(predictor = fct_recode(predictor,
                                 "QA-QC (random numbers)" = "QA_RandNum",
                                 "rain event number" = "event_ID",
@@ -5663,7 +5669,7 @@ RFplot_dynamic_DOC <- RF_DOC_dynamic_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "top", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 12))+
   labs(y = expression('Relative importance in predicting DOC (%)'), 
        x = "",
        fill = "Predictor variable group") +
@@ -5682,9 +5688,9 @@ staticVariables_DOC <- sixfilter_physiographic %>%
            drainage_area_km2,
            slope_median_degrees,
            tree_age_average,
-           logging_percent_1980to2011)) # %>%     
+           logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(staticVariables_DOC))
@@ -5710,7 +5716,7 @@ RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %
   as.data.frame() %>%  # rather than matrix
   rownames_to_column() %>% 
   select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
+         MSE = "%IncMSE") %>%  #"IncNodePurity") %>% # percent increase in mean square error
   mutate(predictor = fct_recode(predictor,
                                 "QA-QC (random numbers)" = "QA_RandNum",
                                 "drainage area" = "drainage_area_km2",
@@ -5742,10 +5748,6 @@ RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %
       predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
 
-# named colour vector
-fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
-           "Parent material" = forWater_colours2[["Gray"]], 
-           "Surface characteristics" = forWater_colours2[["Green"]])
 
 # VIM plot
 RFplot_static_DOC <- RF_DOC_static_RelImp1_MSE %>% 
@@ -5769,6 +5771,12 @@ RFplot_static_DOC <- RF_DOC_static_RelImp1_MSE %>%
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_RFplot_static_DOC.png", 
        width = 6, height = 6, units = "in")
 
+
+# DOC dynamic and static adjacent to eachother
+RFplot_dynamic_DOC
+
+
+
 # --- E2E3
 # dynamic values: conditions only
 dynamicVariables_E2E3 <- sixfilter_physiographic %>% 
@@ -5777,9 +5785,9 @@ dynamicVariables_E2E3 <- sixfilter_physiographic %>%
            sampleStage_normalized, 
            antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
            antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
-  )) # %>%     
+  ))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(dynamicVariables_E2E3))
@@ -5862,9 +5870,9 @@ staticVariables_E2E3 <- sixfilter_physiographic %>%
            drainage_area_km2,
            slope_median_degrees,
            tree_age_average,
-           logging_percent_1980to2011)) # %>%     
+           logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_SAC254))
@@ -5952,9 +5960,9 @@ dynamicVariables_SAC254 <- sixfilter_physiographic %>%
            sampleStage_normalized, 
            antecedent_30day_rain, # relatively more important than 7-day -- correlated with stage tho 
            antecedent_7day_temp # no real diff in VIM for 7 vs 30 day
-  )) # %>%     
+  ))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_SAC254))
@@ -6037,9 +6045,9 @@ staticVariables_SAC254 <- sixfilter_physiographic %>%
            drainage_area_km2,
            slope_median_degrees,
            tree_age_average,
-           logging_percent_1980to2011)) # %>%     
+           logging_percent_1980to2011))  %>%     
 # add a column of random values as as QA -- this should not be found to be important
-#mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
 # view(cor(AllVariables_SAC254))

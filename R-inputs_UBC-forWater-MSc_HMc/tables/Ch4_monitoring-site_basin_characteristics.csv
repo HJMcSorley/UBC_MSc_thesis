@@ -1,8 +1,7 @@
-,Weeks crk (1),Chris crk (2),Leech-head (3),Cragg crk (4),West Leech (5),Leech Tunnel (6)
-Variable by site,,,,,,
+Variable by site,Weeks crk (1),Chris crk (2),Leech-head (3),Cragg crk (4),West Leech (5),Leech Tunnel (6)
 Latitude,48.57592,48.57691,48.5666,48.54856,48.50635,48.5069
 Longitude,-123.84397,-123.83995,-123.82569,-123.77141,-123.78618,-123.768
-Interest / characteristic,Headwater,Headwater,Leech Rv. ,Major trib.,Major trib.,"Mainstem, future diversion pt."
+Interest / characteristic,Headwater,Headwater,Leech Rv. (head),Major trib.,Major trib.,"Mainstem, future diversion "
 Strahler Order,3,3,4,4,4,5
 Drainage Area (km2),11.5,5.9,20.6,28.1,20.9,95.3
 Elevation (m a.s.l),521,522,476,509,248,207
