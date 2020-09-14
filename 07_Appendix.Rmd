@@ -339,7 +339,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rai
 
 \  
 
-## extended ch2 results
+## extended ch3 results
 ####### Results extended
 
 ######## NOM sampling in nested catchments (from Ch.2)
@@ -366,7 +366,22 @@ fig_cap = "\\label{fig:aroma}*Grab sample E~2~:E~3~ at upstream locations compar
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot_up-down_metcompar.png")
 ```
 
+\
+
+## extended chapter 4 results
+
+Random Forest variable importance measure (VIM) treated static watershed characteristics categorically and treated dynamic sampling conditions as numeric variables to be used in regression. When conditions and characteristics were combined for RF VIM, the relative ranking of each predictant was changed compared to when conditions and characteristics were analyzed separately. While it was expected that the relative importance (as a percent) would shift when all predictants were combined, it was not expected that the relative ranking would change, and that suggests that these two groups (static and dynamic) of predictants should be separated for RF VIM. Compare plots for the two groups (Ch 4) to Figure \@ref(fig:RFallvars) and see how the relative rankings changed.
+
+
+```{r RFallvars}
+fig_cap = "\\label{fig:RFallvars} Random Forest variable importance measure for NOM concentration and character using combined predictant types (dynamic conditions and static watershed chaaracteristics), which altered the relative importance ranking compared to when the groups were assessed separately"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RFplot-summary_DOC-E2E3-SAC254.png")
+```
+
+
 \  
+
 ## possible trash
 ####### possible trash
 

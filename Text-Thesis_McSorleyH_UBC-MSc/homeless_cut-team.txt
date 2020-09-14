@@ -1,3 +1,22 @@
+
+antecedent 30-day rain MSE % = 12.87  // without stage: 13.5234 % MSE 
+antecedent 7-day rain MSE % = 11.66  // without stage: 12.0837 % MSE
+*these differences aren't huge but the change switched relative importance between rain and hold-time. 
+
+Relatively long term rain was most important for predicitng E~2~:E~3~, and sample hold-time was also an important predictor in NOM character. Logging history (percent of basin harvested from 1980-2011) and basin parent material was more important in predicting NOM character than concentration. 
+
+E2E3
+
+antecedent 30-day rain MSE = 16.440 %
+antecedent 30-day air temp MSE = 6.525875 % 
+
+antecedent 30-day rain MSE = 15.330895 %
+antecedent 7-day air temp MSE = 8.486056 % 
+
+antecedent 7-day rain MSE = 12.786768 % 
+antecedent 7-day air temp MSE = 9.834241 %
+
+
 Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA).Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively. The sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech WSA. Results of synoptic sampling analyses were used to elucidate spatial and temporal patterns in NOM and DOC.
 
 Aqueous forms of NOM in freshwater play important ecological roles but can be problematic for drinking water treatment because they increase oxidant demand (e.g. chlorination), contribute to the formation of disinfection by-products, and cause other disruptions (e.g. short filter run times, microbial bio-fouling, coagulant demand). Because the backbone of NOM is carbon, DOC is a measure of the dissolved forms of NOM in a sample. While quantifying a sample's DOC is important in describing the amount of NOM, it tells us nothing about the structure (and therefore the function) of that material. Characterizing molecular attributes in addition to quantifying NOM provides greater insight than quantification alone; therefore, both quantification of DOC and characterization of NOM were tackled for this project. 

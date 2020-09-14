@@ -178,6 +178,10 @@ Results in the previous chapter showed elevated NOM in event-based samples, to e
 A variable of random numbers were included with watershed characteristic and sampling condition predictors to verify that the VIM assessment method ranked random numbers as the least important predictor of NOM concentration and character (i.e. random numbers should be assigned no predicting power).
 
 
+separated conditions from characteristics - show combo plot in appendix
+dynamic and static conditions appear to be treated for regression & categorically (respectively). Numeric isn't the defining factor, it's whether the predictant is changing (or not) with the predictor, that seems to be what may create bias in combined RF VIM. 
+
+
 for DOC: 
 -conditions VIM using SSE (method 2) assigned QA last but gave it substantial weight (not negligible), whereas method 1 (MSE) assigned no weight.
 - characteristics VIM with SSE method 2 assigned greater variable importance to QA than to igneous percent and method 1 (MSE) assigned negative importance
@@ -186,10 +190,42 @@ for DOC:
 
 Watershed characteristics were less important than conditions for predicting NOM concentration and character. Each of DOC, SAC~254~ and E~2~:E~3~ had antecedent 30-day rain as one of their top 3 predictor variables. The RF variable importance measure (VIM) showed that DOC and SAC~254~ were best predicted by wet and warm conditions, while E~2~:E~3~ was sensitive to rain and sampling stage but wasn't strongly influenced by 7-day antecedent temperature.  Metamorphic parent material was ranked fourth in importance for predicting concentration and character of NOM and igneous parent material was ranked least important. 
 
+##### Drivers for NOM Concentration
 
+```{r RFplotDOC, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:RFplotDOC} Variable importance for predicting NOM concentration (DOC) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-DOC.png")
+```
  
+##### Drivers for NOM Character
 
+###### SAC~254~: reactivity & aromaticity
 
+\  
+
+```{r RFplotSAC254, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:RFplotSAC254} Variable importance for predicting NOM molecular aromaticity (SAC~254~) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png")
+```
+
+\  
+
+###### E~2~:E~3~: molecular size & aromaticity
+
+\  
+
+```{r RFplotE2E3, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:RFplotE2E3} Variable importance for predicting NOM aromaticity & size (E~2~:E~3~) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png")
+```
+
+\  
 
 Slope was relatively more important for concentration than it was for character of NOM and sampling stage was more important to character than concentration. 
 
@@ -199,12 +235,6 @@ Drainage area was not found to be particularly important for any of the three pr
 
 \  
 
-```{r RFplot, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:RFplot} Variable importance for predicting NOM concentration (DOC), molecular aromaticity (SAC~254~), and aromaticity & size (E~2~:E~3~) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot-summary_DOC-E2E3-SAC254.png")
-```
 
 \  
 
@@ -214,6 +244,18 @@ RF can sometimes find biased VIM if predictor variables are cross-correlated, an
 
 
 #### Predicting DOC
+
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorphic.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_tree-age.png"
+"R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png"
+
+\  
+
+_old:_
 
 Antecedent 7-day air temperature was calculated to have the greatest relative importance in predicting DOC concentrations. Upon closer inspection, DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Figure \@ref(fig:DOC1)). 
 
