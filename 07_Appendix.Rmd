@@ -379,8 +379,17 @@ fig_cap = "\\label{fig:RFallvars} Random Forest variable importance measure for 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RFplot-summary_DOC-E2E3-SAC254.png")
 ```
 
-
 \  
+
+Enough samples were collected in both the dry and wet seasons for DOC assessment to tease apart a wet season increase in DOC with increasing antecedent air temperatures, while there was no apaprent trend in the dry season (Figure \@ref(fig:RFtempDOC)). 
+
+```{r RFtempDOC}
+fig_cap = "\\label{fig:RFtempDOC} Antecedent 7-day air temperature as a predictor variable for concentrations of dissolved organic carbon in the wet and dry seasons of the Leech Water Supply Area (including loess trend lines)"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_DOCtemp.png")
+```
+
+
 
 ## possible trash
 ####### possible trash

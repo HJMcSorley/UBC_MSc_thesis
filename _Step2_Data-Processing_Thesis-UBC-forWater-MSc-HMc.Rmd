@@ -5124,18 +5124,6 @@ sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")
 ```
 
 ### RF & plots
-```{r}
-
-# named colour vector
-fills <- c("Conditions" = forWater_colours2[["SkyBlue"]], 
-           "Parent material" = forWater_colours2[["Gray"]], 
-           "Surface characteristics" = forWater_colours2[["Green"]])
-
-# all tests and plots by predictant follow:
-
-```
-
-### Individually grouped predictors
 
 ```{r}
 # named colour vector for different groups
@@ -5143,6 +5131,8 @@ fills <- c("Conditions" = forWater_colours2[["SkyBlue"]],
            "Parent material" = forWater_colours2[["Gray"]], 
            "Surface characteristics" = forWater_colours2[["Green"]])
 ```
+
+### Individually grouped predictors
 
 separated conditions from characteristics - show combo plot in appendix
 dynamic and static conditions appear to be treated for regression & categorically (respectively). Numeric isn't the defining factor, it's whether the predictant is changing (or not) with the predictor, that seems to be what may create bias in combined RF VIM. 
@@ -5196,17 +5186,7 @@ RF_DOC_dynamic_RelImp1_MSE <- randomForest::importance(DOC_dynamic_RF, type = 1 
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
-    # surface characteristics
-    predictor == "tree age (average, yrs)" |
-      predictor ==  "drainage area" | 
-      predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      predictor == "slope (median, degrees)" | 
-      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
-    # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" |
-      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+      predictor == "sampling stage" ~ "Conditions")) %>%
   mutate(variable_group = factor(variable_group))  
 
 
@@ -5223,7 +5203,7 @@ RFplot_dynamic_DOC <- RF_DOC_dynamic_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = "", # expression('Relative importance in predicting DOC (%)'), 
        x = "",
        fill = "Predictor variable group", 
@@ -5284,11 +5264,6 @@ RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
   # add category for plot colouring:
   mutate(variable_group = case_when(
-    # conditions:
-    predictor == "rain event number" | 
-      predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
@@ -5313,7 +5288,7 @@ RFplot_static_DOC <- RF_DOC_static_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = 'Relative importance in predicting DOC (%)', 
        x = "",
        fill = "Predictor variable group",
@@ -5321,11 +5296,13 @@ RFplot_static_DOC <- RF_DOC_static_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 2, byrow=TRUE))
 
 # DOC dynamic and static adjacent to eachother
-RFsep_DOC <- cowplot::plot_grid(RFplot_dynamic_DOC, RFplot_static_DOC, ncol= 1, align = "v")
+RFsep_DOC <- cowplot::plot_grid(RFplot_dynamic_DOC, RFplot_static_DOC, 
+                                ncol= 1, align = "v",
+                                rel_heights = c(1, 1.6))
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-DOC.png", 
-       width = 6, height = 6, units = "in")
+       width = 5, height = 5, units = "in")
 
 ```
 
@@ -5381,17 +5358,7 @@ RF_E2E3_dynamic_RelImp1_MSE <- randomForest::importance(E2E3_dynamic_RF, type = 
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
-    # surface characteristics
-    predictor == "tree age (average, yrs)" |
-      predictor ==  "drainage area" | 
-      predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      predictor == "slope (median, degrees)" | 
-      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
-    # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" |
-      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+      predictor == "sampling stage" ~ "Conditions") ) %>%
   mutate(variable_group = factor(variable_group))  
 
 # VIM plot - dynamic
@@ -5406,7 +5373,7 @@ RFplot_dynamic_E2E3 <- RF_E2E3_dynamic_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = "", #expression('Relative importance in predicting'~E[2]:E[3]~'(%)'), 
        x = "",
        fill = "Predictor variable group",
@@ -5414,7 +5381,7 @@ RFplot_dynamic_E2E3 <- RF_E2E3_dynamic_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 
-# --- dynamic
+# --- static
 # static values: watershed characteristics only
 staticVariables_E2E3 <- sixfilter_physiographic %>% 
   filter(!is.na(E2E3)) %>%
@@ -5466,11 +5433,6 @@ RF_E2E3_static_RelImp1_MSE <- randomForest::importance(E2E3_static_RF, type = 1)
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
   # add category for plot colouring:
   mutate(variable_group = case_when(
-    # conditions:
-    predictor == "rain event number" | 
-      predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
@@ -5495,7 +5457,7 @@ RFplot_static_E2E3 <- RF_E2E3_static_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = expression('Relative importance in predicting'~E[2]:E[3]~'(%)'), 
        x = "",
        fill = "Predictor variable group",
@@ -5503,11 +5465,13 @@ RFplot_static_E2E3 <- RF_E2E3_static_RelImp1_MSE %>%
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
 # DOC dynamic and static adjacent to eachother
-RFsep_E2E3 <- cowplot::plot_grid(RFplot_dynamic_E2E3, RFplot_static_E2E3, ncol= 1, align = "v")
+RFsep_E2E3 <- cowplot::plot_grid(RFplot_dynamic_E2E3, RFplot_static_E2E3, 
+                                 ncol= 1, align = "v",
+                                 rel_heights = c(1, 1.6))
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", 
-       width = 6, height = 6, units = "in")
+       width = 5, height = 5, units = "in")
 
 ```
 
@@ -5562,17 +5526,7 @@ RF_SAC254_dynamic_RelImp1_MSE <- randomForest::importance(SAC254_dynamic_RF, typ
     predictor == "rain event number" | 
       predictor == "antecedent 7-day air temp" |
       predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
-    # surface characteristics
-    predictor == "tree age (average, yrs)" |
-      predictor ==  "drainage area" | 
-      predictor == "sample site elevation" | 
-      predictor == "forest cover" | 
-      predictor == "slope (median, degrees)" | 
-      predictor == "logging history (1980-2011)" ~ "Surface characteristics",
-    # subsurface characteristics (parent material):
-    predictor == "metamorphic (%)" |
-      predictor == "igneous (%)"  ~ "Parent material") ) %>%
+      predictor == "sampling stage" ~ "Conditions") ) %>%
   mutate(variable_group = factor(variable_group))  
 
 
@@ -5588,7 +5542,7 @@ RFplot_dynamic_SAC254 <- RF_SAC254_dynamic_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = "", #expression('Relative importance in predicting'~SAC[254]~'(%)'), 
        x = "",
        fill = "Predictor variable group",
@@ -5648,11 +5602,6 @@ RF_SAC254_static_RelImp1_MSE <- randomForest::importance(SAC254_static_RF, type 
          predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% 
   # add category for plot colouring:
   mutate(variable_group = case_when(
-    # conditions:
-    predictor == "rain event number" | 
-      predictor == "antecedent 7-day air temp" |
-      predictor == "antecedent 30-day rain" | 
-      predictor == "sampling stage" ~ "Conditions",
     # surface characteristics
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
@@ -5677,7 +5626,7 @@ RFplot_static_SAC254 <- RF_SAC254_static_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "none", text = element_text(size = 12))+
+  theme(legend.position = "none", text = element_text(size = 11))+
   labs(y = expression('Relative importance in predicting'~SAC[254]~'(%)'), 
        x = "",
        fill = "Predictor variable group",
@@ -5686,11 +5635,13 @@ RFplot_static_SAC254 <- RF_SAC254_static_RelImp1_MSE %>%
 
 
 # DOC dynamic and static adjacent to eachother
-RFsep_SAC254 <- cowplot::plot_grid(RFplot_dynamic_SAC254, RFplot_static_SAC254, ncol= 1, align = "v")
+RFsep_SAC254 <- cowplot::plot_grid(RFplot_dynamic_SAC254, RFplot_static_SAC254, 
+                                   ncol= 1, align = "v",
+                                   rel_heights = c(1, 1.6))
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", 
-       width = 6, height = 6, units = "in")
+       width = 5, height = 5, units = "in")
 
 
 ```
@@ -6196,7 +6147,7 @@ stage_DOC <- sixfilter_physiographic %>%
   geom_jitter(aes(fill = site), shape = 21, size = 2) +
   geom_smooth(colour = "black", size = 0.7) +
   scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "none",
+  theme(legend.position = "top",
         text = element_text(size = 11)) +
   #facet_wrap(~site, scales = "free_y")+
   labs(x = "", y = "DOC (mg/L)" )
@@ -6210,7 +6161,7 @@ stage_SAC254 <- sixfilter_physiographic %>%
   scale_fill_brewer(palette="Set2") +
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(x = "", y = expression(SAC[254]~(mg/L)) )
+  labs(x = "", y = expression(SAC[254]~(m^-1)) )
 
 
 stage_E2E3 <- sixfilter_physiographic %>% 
@@ -6230,7 +6181,7 @@ cowplot::plot_grid(stage_DOC, stage_SAC254, stage_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 
 ```
 
@@ -6238,6 +6189,17 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png",
 ### temp (7 day ant)
 ```{r}
 temp_DOC <- sixfilter_physiographic %>% 
+  ggplot(aes(x = antecedent_7day_temp, y = NPOC_ppm)) + 
+  theme_bw() +
+  geom_jitter(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "", y = "DOC (mg/L)" ) 
+
+# DOC-temp seasonal for appendix
+temp_DOC_A <- sixfilter_physiographic %>% 
   mutate(rain_season = factor(rain_season, levels = c("wet", "dry"))) %>% 
   ggplot(aes(x = antecedent_7day_temp, y = NPOC_ppm)) + 
   theme_bw() +
@@ -6247,7 +6209,10 @@ temp_DOC <- sixfilter_physiographic %>%
   theme(legend.position = "top",
         text = element_text(size = 11)) +
   facet_wrap(~rain_season, scales = "free_x") +
-  labs(x = "", y = "DOC (mg/L)" ) 
+  labs(x = "Antecedent 7-day air temp. (°C)", y = "DOC (mg/L)" ) 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_DOCtemp.png",
+       width = 4, height = 4, units = "in")
 
 
 temp_SAC254 <- sixfilter_physiographic %>% 
@@ -6277,7 +6242,7 @@ cowplot::plot_grid(temp_DOC, temp_SAC254, temp_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 
 ```
 
@@ -6285,15 +6250,15 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png",
 ### rain (30 day ant)
 ```{r}
 rain_DOC <- sixfilter_physiographic %>% 
-  #filter(rain_season == "wet") %>% 
   ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + 
   theme_bw() +
   geom_point(aes(fill = site), shape = 21, size = 2) +
   geom_smooth(colour = "black", size = 0.7) +
   scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "none",
+  xlim(0, 740)+
+  theme(legend.position = "top",
         text = element_text(size = 11)) +
-  facet_wrap(~site, scales = "free_x") +
+  facet_wrap(~site, scales = "free_y", strip.position = "right") +
   labs(x = "", y = "DOC (mg/L)" )
 
 rain_SAC254 <- sixfilter_physiographic %>% 
@@ -6302,10 +6267,11 @@ rain_SAC254 <- sixfilter_physiographic %>%
   geom_jitter(aes(fill = site), shape = 21, size = 2) +
   geom_smooth(colour = "black", size = 0.7) +
   scale_fill_brewer(palette="Set2") +
+  xlim(0, 740)+
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  #facet_wrap(~site, scales = "free_x") +
-  labs(x = "", y = expression(SAC[254]~(mg/L)) ) 
+  facet_wrap(~site, scales = "free_y", strip.position = "right") +
+  labs(x = "", y = expression(SAC[254]~(m^-1)) ) 
 
 rain_E2E3 <- sixfilter_physiographic %>% 
   filter(E2E3 > 2.5) %>% 
@@ -6314,17 +6280,20 @@ rain_E2E3 <- sixfilter_physiographic %>%
   geom_jitter(aes(fill = site), shape = 21, size = 2) +
   geom_smooth(colour = "black", size = 0.7) +
   scale_fill_brewer(palette="Set2") +
+  xlim(0, 740)+
   theme(legend.position = "none",
         text = element_text(size = 11)) +
+  facet_wrap(~site, scales = "free_y", strip.position = "right") +
   labs(x = "Antecedent 30-day rain (mm)", y = expression(E[2]:E[3]) ) 
 
 # together
 cowplot::plot_grid(rain_DOC, rain_SAC254, rain_E2E3,
-                   ncol = 1, align = "v", rel_heights = c(2, 1.3, 1.3))
+                   ncol = 1, align = "v", 
+                   rel_heights = c(2, 1.3, 1.3))
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 
 ```
 
@@ -6366,7 +6335,7 @@ cowplot::plot_grid(metamorphic_DOC, metamorphic_SAC254, metamorphic_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorphic.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 
 ```
 
@@ -6386,7 +6355,7 @@ slope_DOC <- sixfilter_physiographic %>%
 
 
 slope_SAC254 <- sixfilter_physiographic %>% 
-  ggplot(aes(x = slope_mean_degrees, y = NPOC_ppm)) + 
+  ggplot(aes(x = slope_mean_degrees, y = SAC254_Abs.m)) + 
   theme_bw() +
   geom_boxplot(aes(fill = site), alpha = 0.5,
                varwidth = TRUE) +
@@ -6398,7 +6367,7 @@ slope_SAC254 <- sixfilter_physiographic %>%
 
 
 slope_E2E3 <- sixfilter_physiographic %>% 
-  ggplot(aes(x = slope_mean_degrees, y = NPOC_ppm)) + 
+  ggplot(aes(x = slope_mean_degrees, y = E2E3)) + 
   theme_bw() +
   geom_boxplot(aes(fill = site), alpha = 0.5,
                varwidth = TRUE) +
@@ -6414,7 +6383,7 @@ cowplot::plot_grid(slope_DOC, slope_SAC254, slope_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 
 ```
 
@@ -6463,7 +6432,7 @@ cowplot::plot_grid(logging_DOC, logging_SAC254, logging_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6.5, units = "in")
 ```
 
 
