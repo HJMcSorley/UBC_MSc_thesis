@@ -317,11 +317,7 @@ Of watershed characteristics, the top predictors for NOM concentration and chara
 
 ###### Sub-basin slope
 
-Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. The relationship between slope and DOC across the six monitoring sites was not linear, but in general lower slope was related to higher DOC (Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
-
-\ 
-
-An interesting pattern appeared with slope where the six monitoring basins were grouped in pairs, with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. 
+Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. Across the six monitoring sites, the relationship between slope and these two variables  was not linear and an interesting pattern appeared, where the six monitoring basins were grouped in pairs with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. In general, lower sub-basin slope was related to higher DOC (Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
 
 \  
 
@@ -336,11 +332,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png
 
 ###### Parent material (metamorphic wark gneiss)
 
-Metamorphic parent material, which was inversely correlated (-0.92) to the metasedimentary Leech River Formation, was a common watershed characteristic predictant for each of DOC, SAC~254~, and E~2~:E~3~. The percent of wark gneiss in each sub-basin ranked second most important for predicting each of DOC, E~2~:E~3~, and SAC~254~. 
-
+Metamorphic parent material (wark gneiss) was inversely correlated (-0.92) to the metasedimentary Leech River Formation. The percent of wark gneiss in each sub-basin was ranked as the second most important watershed characteristic for predicting each of DOC, SAC~254~ and E~2~:E~3~.
+ 
 \  
 
-For the five sites that were underlain by some proportion of wark gneiss, DOC decreased with increasing percentage of this metamorphic surficial deposit. While greater percent metamorphic material corresponded to lower DOC, the absence of wark gneiss in West Leech sub-basin did not correspond to the highest DOC concentration (Figure \@ref(fig:VIMwark)). NOM character had a similar pattern to concentration, where greater metamorphic parent material corresponded with lower NOM aromaticity and reactivity (SAC~254~), but the absence of wark gneiss did not correspond to the sub-basin with the lowest SAC~254~ (Figure \@ref(fig:VIMwark)). E~2~:E~3~ showed a similar pattern in that greater metamorphic parent material corresponded to lower aromaticity and molecular weight (higher E~2~:E~3~ values); but in contrast to DOC and SAC~254~, the absence of wark gneiss did correspond to the lowest mean E~2~:E~3~, the sub-basin with the greatest molecular weight NOM (Figure \@ref(fig:VIMwark)).
+For the five sites that were underlain by some proportion of wark gneiss, stream DOC concentrations decreased with increasing percentage of this metamorphic surficial deposit. While more metamorphic material corresponded to lower DOC, the absence of wark gneiss in West Leech sub-basin did not correspond to the highest DOC concentration (Figure \@ref(fig:VIMwark)). NOM character had a similar pattern to concentration, where greater metamorphic parent material corresponded to lower NOM aromaticity and reactivity (SAC~254~), but its absence did not correspond to the sub-basin with the lowest SAC~254~ (Figure \@ref(fig:VIMwark)). E~2~:E~3~ showed that greater metamorphic parent material corresponded to lower NOM aromaticity and molecular weight (higher E~2~:E~3~ values) and, in contrast to DOC and SAC~254~, the sub-basin with the greatest molecular weight NOM (lowest mean E~2~:E~3~) did correspond with the absence of wark gneiss (Figure \@ref(fig:VIMwark)).
 
 \  
 
@@ -353,42 +349,39 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 \  
 
- 
-
 ###### Mean tree age & logging history...
 
-Ranking third for variable importance in predicting DOC and E~2~:E~3~ was average tree age in each monitoring basin. Logging history was ranked fourth in VIM for SAC~254~ 
-
-
-Average tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E~2~:E~3~ with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure 27). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins
-
-
-(Figure \@ref(fig:VIMtree))
+Ranking third for variable importance in predicting DOC and E~2~:E~3~ was average tree age in each monitoring basin and logging history (percent of basin harvested from 1980-2011) was ranked fourth in VIM for SAC~254~. Average tree age was partially due to the history of forest harvest, so these predictor variables were examined together.
 
 \  
 
-```{r VIMtree, fig.cap = fig_cap}
+Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites. West Leech, Weeks, Tunnel, Cragg crk sub-basins showed decreasing NOM molecular weight and aromaticity (increasing E~2~:E~3~) with increasing area harvested. However, the sub-basins of Chris crk and Leech-head (just downstream) had higher harvested area (ergo younger trees) did not match this pattern (Figure \@ref(fig:VIMloggingtree)). 
 
-fig_cap = "\\label{fig:VIMtree} Sub-basin mean tree age as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+These results suggests that NOM character was less aromatic in more heavily harvest sub-basins.
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_tree-age.png")
+
+(Figure \@ref(fig:VIMloggingtree))
+
+
+Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively, yet these two sites had very similar averages for NOM concentration and character, with slightly higher molecular weight NOM in Chris crk.
+
+While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge)*fire 2020* it was West Leech that was the least-harvested sub-basin. These two sites had similar mean DOC, SAC~254~. Mean E~2~:E~3~ was different (___statistically??___)  between the West Leech and Cragg crk where Cragg had greater molecular weight NOM than West Leech (but there error bars overlapped entirely)
+
+* it's also possible that the GIS layers for forest harvest and tree age were missing some details 
+
+
+\  
+
+```{r VIMloggingtree, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:VIMloggingtree} Sub-basin mean tree age as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-tree-age.png")
 ```
 
 \  
 
-Tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E2:E3 at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E2:E3 with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure 27). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins
 
-
-(Figure \@ref(fig:VIMlogging))
-
-\  
-
-```{r VIMlogging, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:VIMlogging} The percent of each sub-basin logged from 1980-2011 as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging.png")
-```
 
 
 \  
@@ -414,39 +407,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-
 
 
 _old:_
-
-
-
-#### Predicting E~2~:E~3~
-
-\  
- 
-
-Ranking third for variable importance in predicting E~2~:E~3~ was average tree age in each monitoring basin. Tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E~2~:E~3~ with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure \@ref(fig:E3n4)). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins.  ...{?}
-
-\  
-
-```{r E3n4, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:E3n4} Average tree age and percent basin area harvested as predictors for E~2~:E~3~ in the Leech Water Supply Area "
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-3n4-Trees-Logging.png")
-```
-
-\  
-
-Metamorphic parent material ranked fourth in importance for predicting E~2~:E~3~, which showed agreement with DOC and SAC~254~. Greater metamorphic parent material corresponded to lower aromaticity and molecular weight (higher E~2~:E~3~ values). In contrast to DOC and SAC~254~ the absence of wark-gneiss did correspond to the lowest mean E~2~:E~3~, the sub-basin with the greatest aromaticity and molecular weight (Figure \@ref(fig:E5)). 
-
-\  
-
-```{r E5, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:E5} Metamorphic parent material (Wark-Gneiss) as a predictor variable of E~2~:E~3~ in the Leech Water Supply Area"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-5-metamorphic.png")
-```
-
-\  
 
 Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. NOM concentration and aromaticity in sub-basins with wark-gneiss parent material showed a negative relationship to this metamorphic parent material. 
 

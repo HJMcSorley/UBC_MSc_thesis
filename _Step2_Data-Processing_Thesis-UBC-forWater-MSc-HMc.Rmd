@@ -5216,7 +5216,7 @@ staticVariables_DOC <- sixfilter_physiographic %>%
   filter(!is.na(NPOC_ppm)) %>%
   select(c(NPOC_ppm, # predict DOC
            #geo_LeechRiverFormation_percent,
-           wetland_percent,
+           #wetland_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
@@ -6476,21 +6476,29 @@ logging_E2E3 <- sixfilter_physiographic %>%
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(x = "Area harvested between 1980 and 2011 (%)", y = expression(E[2]:E[3]) )
+  labs(x = "Area harvested 1980 to 2011 (%)", y = expression(E[2]:E[3]) )
 
 
 # together
-cowplot::plot_grid(logging_DOC, logging_SAC254, logging_E2E3,
-                   ncol = 1, align = "v", rel_heights = c(2, 1.3, 1.3))
+a <- cowplot::plot_grid(logging_DOC + theme(legend.position = "none"), 
+                        logging_SAC254, logging_E2E3,
+                   ncol = 1, align = "v", 
+                   rel_heights = c(1,1,1)) #2, 1.3, 1.3
 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging.png",
-       width = 4, height = 6, units = "in")
-```
+# extract legend to add to top of combined variable plot
+legend <- cowplot::get_legend(
+  logging_DOC#
+    #theme(legend.box.margin = margin(0, 0, 8, 0)) # t, r, b, l
+    # create some space to the bottom of the legend
+    )
 
+
+# .
+# ... join plots of logging history and tree age
+# .
 
 ### tree age
-```{r}
+
 tree_DOC <- sixfilter_physiographic %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = tree_age_average, y = NPOC_ppm)) +
@@ -6498,9 +6506,9 @@ tree_DOC <- sixfilter_physiographic %>%
   geom_boxplot(aes(fill = site), alpha = 0.5) +
   scale_fill_brewer(palette="Set2") +
   theme_bw() +
-  theme(legend.position = "top",
+  theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(x = "", y = "DOC(mg/L)" )
+  labs(x = "", y = "" )
 
 
 tree_SAC254 <- sixfilter_physiographic %>% 
@@ -6512,7 +6520,7 @@ tree_SAC254 <- sixfilter_physiographic %>%
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(x = "", y = expression(SAC[254]~(m^-1)) )
+  labs(x = "", y = "")
 
 
 tree_E2E3 <- sixfilter_physiographic %>% 
@@ -6524,15 +6532,25 @@ tree_E2E3 <- sixfilter_physiographic %>%
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(x = "Tree age, average (years)", y = expression(E[2]:E[3]) )
+  labs(x = "Tree age, average (years)", y = "" )
 
 # together
-cowplot::plot_grid(tree_DOC, tree_SAC254, tree_E2E3,
-                   ncol = 1, align = "v", rel_heights = c(2, 1.3, 1.3))
+b <- cowplot::plot_grid(tree_DOC, tree_SAC254, tree_E2E3,
+                   ncol = 1, align = "v", rel_heights = c(1,1,1))
+
+# join variable plots
+c <- cowplot::plot_grid(a, b, 
+                   ncol = 2, align = "h",
+                   rel_widths = c(1.025, 1))
+
+# add legend 
+cowplot::plot_grid(legend, c, 
+                   ncol = 1, 
+                   rel_widths = c(1,1),
+                   rel_heights = c(1,8))
 
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_tree-age.png",
-       width = 4, height = 6, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-tree-age.png", width = 6.5, height = 6, units = "in")
 
 ```
 
