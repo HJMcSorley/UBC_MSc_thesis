@@ -389,7 +389,20 @@ fig_cap = "\\label{fig:RFtempDOC} Antecedent 7-day air temperature as a predicto
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_DOCtemp.png")
 ```
 
+\  
 
+30-day antecedent rain by site...(Figure \@ref(fig:VIMrainSites))
+
+\  
+
+```{r VIMrainSites, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:VIMrainSites} Antecedent 30-day rain as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed. Each plot includes a loess trend line."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain-bysite.png")
+```
+
+\  
 
 ## possible trash
 ####### possible trash

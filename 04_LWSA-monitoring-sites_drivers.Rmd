@@ -193,7 +193,7 @@ RF can sometimes find biased VIM if predictor variables are cross-correlated, an
 
 ##### DOC: concentration
 
-Across the Leech WSA monitoring sites, NOM concentration (DOC) was found to be most influenced by sampling stage, then antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, average tree age, and percent of the basin underlain by metamorphic parent material (Figure \@ref(fig:RFplotDOC)). 
+Across the Leech WSA monitoring sites, the condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and average tree age (Figure \@ref(fig:RFplotDOC)). 
 
 \  
 
@@ -208,7 +208,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-D
 
 ##### SAC~254~: reactivity & aromaticity
 
-Like concentration, SAC~254~ was best predicted by sampling stage; unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin underlain by metamorphic parent material (wark gneiss), slope, and basin area was nearly tied with area logged from 1980-2011 (Figure \@ref(fig:RFplotSAC254)).
+Like concentration, SAC~254~ was best predicted by sampling stage. Unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin underlain by metamorphic parent material (wark gneiss), slope, and the importance of drainage area was nearly tied with that of 30-year logging history (Figure \@ref(fig:RFplotSAC254)).
 
 
 \  
@@ -224,9 +224,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-S
 
 ##### E~2~:E~3~: molecular size & aromaticity
 
-Sampling conditions' variable importance were ranked in reverse order for E~2~:E~3~ compared to DOC. NOM molecular size and aromaticity (E~2~:E~3~) was best predicted by antecedent 30-day rain, followed by 7-day air temperatures and then sampling stage. 
+The VIM ranking for sampling conditions for E~2~:E~3~ were the reverse of those for DOC. NOM molecular size and aromaticity (E~2~:E~3~) was best predicted by antecedent 30-day rain, followed by 7-day air temperatures and then sampling stage. 
 
-The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin underlain by metamorphic parent material (wark gneiss), slope, and area logged from 1980-2011 (Figure \@ref(fig:RFplotSAC254)).
+The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin logged from 1980-2011, followed by percent underlain by metamorphic parent material (wark gneiss) which was nearly tied with average tree age (Figure \@ref(fig:RFplotSAC254)).
 
 \  
 
@@ -241,17 +241,25 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E
 
 #### Predictors in relation to NOM concentration and character 
 
-When all variables were assessed together, sampling conditions were more important than Watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix, Figure \@ref(fig:RFallvars)). The order of relative importance for sampling conditions was reversed for DOC (stage, temp, rain) and E~2~:E~3~ (rain, temp, stage).
-
-##### Sampling conditions
-
-###### Sampling stage
-
-Stream stage at the time of sample collection was the most important predictor variable for DOC and SAC~254~. For DOC, there was a gentle increase in concentration with increasing stage up to approximately 60% of maximum sampling stage at each site. The same relationship was seen (albeit more dramatically) for SAC~254~ (Figure \@ref(fig:VIMstage)). This indicates that as stream levels increased, so too did NOM aromaticity, which was to be expected based on results in Chapter 3 that showed higher concentrations of more aromatic NOM in Vertical Rack samples compared to (inter-event) Grab samples. The threshold level (~0.6 of peak stage) points to a change where increasing stage led to dilution rather than mobilization. Stream stage was the least important sampling condition for predicting E~2~:E~3~ (below antecedent rain and air temperature), and the two variables were inversely related. This agrees with results of stage with SAC~254~ and shows that as stream stage increased across the Leech WSA, so too did NOM molecular size & aromaticity. 
+When all variables were assessed together, sampling conditions were more important than Watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix, Figure \@ref(fig:RFallvars)). 
 
 \  
 
-As stream stage increased across the Leech WSA, so too did NOM molecular size and aromaticity. Similar to SAC~254~, E~2~:E~3~ and stage had a weaker relationship around 60-75% of maximum stage (indicated by the greater uncertainty in the loess trend line, Figure \@ref(fig:VIMstage)) which indicates a point at which aromaticity no longer increased with stage. While there were fewer high-flow samples collected compared to mid-range and low-flow samples, this apparent sampling stage threshold may indicate depletion of a terrestrial NOM aromatic pool, or could suggest that the most aromatic sources had reached peak connectivity to the streams and NOM could get no more humic in nature.
+##### Sampling conditions
+
+The ranking of relative importance for sampling conditions were in reverse order for DOC (stage, temp, rain) and E~2~:E~3~ (rain, temp, stage). Like DOC, SAC~254~ was similarly influence most by sampling stage; and like E~2~:E~3~, SAC~254~ was more sensitive to antecedent wetness than antecedent air temperatures. The relative sensitivity of NOM concentration to stream stage points to hydrologic mass transport, whereas the sensitivity to antecedent wetness points to the importance of hydrologic connectivity between the terrestrial landscape and stream system for NOM molecular character. 
+
+\  
+
+###### Sampling stage
+
+Stream stage at the time of sample collection was the most important condition predictor variable for DOC and SAC~254~. Concentration of DOC increased with increasing stage up to approximately 60% of maximum sampling stage at each site. The same relationship was seen (albeit more dramatically) for SAC~254~ (Figure \@ref(fig:VIMstage)). This indicates that as stream levels increased, so too did NOM concentration and aromaticity. This was expected based on results in Chapter 3 that showed higher concentrations of more aromatic NOM in Vertical Rack samples compared to (inter-event) Grab samples. The threshold level (~0.6 of peak stage) points to a change where increasing stage led to dilution rather than mobilization.
+
+\  
+
+Stream stage was the least important sampling condition for predicting E~2~:E~3~ (below antecedent rain and air temperature), and the two variables were inversely related. This pattern supports results of stage in relation to SAC~254~ and shows that as stream stage increased across the Leech WSA, so too did NOM molecular size & aromaticity. Like SAC~254~, E~2~:E~3~ and stage had a weaker relationship around 60-75% of maximum stage (indicated by the greater uncertainty in the loess trend line, Figure \@ref(fig:VIMstage)) which indicates a point at which aromaticity no longer increased with stage. While there were fewer high-flow samples collected compared to mid-range and low-flow samples, this apparent sampling stage threshold may indicate depletion of a terrestrial NOM aromatic pool, or could suggest that the most aromatic sources had reached peak connectivity to the streams and NOM could get no more humic in nature. 
+
+\  
 
 ```{r VIMstage, fig.cap = fig_cap}
 
@@ -264,7 +272,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png
 
 ###### Antecedent 7-day air temperature
 
-Antecedent 7-day mean air temperature ranked second most important for predicting DOC and E~2~:E~3~, and was the least (third) important sampling condition for predicting SAC~254~. NOM concentration, reactivity, aromaticity and molecular weight increased from approximately zero to 10°C of mean antecedent air temperature for the 7 days priod to sample collection (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix _XXX_, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
+Antecedent 7-day mean air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10°C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix _XXX_, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
+
+\  
 
 ```{r VIMtemp, fig.cap = fig_cap}
 
@@ -278,11 +288,15 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png"
 
 ###### Antecedent 30-day rain
 
-Antecedent 30-day cumulative rain (i.e. antecedent wetness) was calculated to have the greatest relative importance in predicting E~2~:E~3~, second-most importance for SAC~254~ and was the least important sampling condition for predicting DOC concentration. As antecedent 30-day rain increased from near zero to approximately 150 mm, there was an apparent decrease in NOM aromaticity and molecular size (E~2~:E~3~ increased) and above ~150 mm, these NOM characteristics increased. At approximately 300 mm of 30-day antecedent rain, NOM aromaticity and molecular size appeared to become less variable (Figure \@ref(fig:VIMrain)). Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore the pattern of SAC~254~ and antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. 
+Antecedent 30-day cumulative rain (i.e. antecedent wetness) was the sampling condition calculated to have the greatest relative importance in predicting E~2~:E~3~, second-most importance for SAC~254~ and was the least important sampling condition for predicting DOC concentration. As antecedent 30-day rain increased to approximately 150 mm, there was an apparent decrease in NOM aromaticity and molecular size (E~2~:E~3~ increased); above ~150 mm, NOM aromaticity and molecular size increased. At approximately 300 mm of 30-day antecedent rain, NOM aromaticity and molecular size appeared to become less variable (Figure \@ref(fig:VIMrain)). 
 
 \  
 
-For DOC, there was a non-linear relationship between the two variables which showed an initial increase in DOC with increasing antecedent wetness, and then a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specifics not shown -- __*could add plot to appendix*__). Together, these patterns of antecedent wetness with DOC and E~2~:E~3~ suggest that smaller, more aliphatic NOM was flushed through the Leech system when antecedent wetness was low (i.e. near the onset of the wet season). As rains continued, streams had greater connection to more aromatic NOM source pools (humic material, possibly from upland sources). The slight decline in aromatic DOC with antecedent wetness (above approximately 350 mm in 30 days) suggests exhaustion of humic NOM source pools and a shift to dilution. These results largely support seasonal characteristic shifts described in Chapter 3, which follow prediction of the River Continuum Concept.   
+Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ and antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
+
+\  
+
+Together, these patterns of antecedent wetness with DOC and E~2~:E~3~ suggest that smaller, more aliphatic NOM was flushed through the Leech system when antecedent wetness was low (i.e. near the onset of the wet season). As rains continued, streams had greater connection to more aromatic NOM source pools (humic material, possibly from upland sources). The slight decline in aromatic DOC with antecedent wetness (above approximately 350 mm in 30 days) suggests exhaustion of humic NOM source pools and a shift to dilution. These results largely support seasonal characteristic shifts described in Chapter 3, which follow prediction of the River Continuum Concept.   
 
 \  
 
@@ -293,22 +307,40 @@ fig_cap = "\\label{fig:VIMrain} Antecedent 30-day rain as a predictor for NOM co
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png")
 ```
 
-
 \  
 
 ##### Watershed characteristics
 
-Of watershed characteristics, the top predictors for NOM concentration and character were a combination of metamorphic parent material (percent of basin), sub-basin slope, tree age (average), and logging history (percent of basin harvested 1980-2011) or drainage area. 
+Of watershed characteristics, the top predictors for NOM concentration and character were a combination of mean sub-basin slope, metamorphic parent material (percent of basin), tree age (average), logging history (percent of basin harvested 1980-2011) and/or drainage area. 
 
 \  
+
+###### Sub-basin slope
+
+Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. The relationship between slope and DOC across the six monitoring sites was not linear, but in general lower slope was related to higher DOC (Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
+
+\ 
+
+An interesting pattern appeared with slope where the six monitoring basins were grouped in pairs, with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. 
+
+\  
+
+```{r VIMslope, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:VIMslope} Sub-basin mean slope as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png")
+```
+
+\ 
 
 ###### Parent material (metamorphic wark gneiss)
 
-Metamorphic parent material, which was inversely correlated to the metasedimentary Leech River Formation, was a common watershed characteristic predictant for each of DOC, SAC~254~, and E~2~:E~3~. Wark gneiss ranked third most important for predicting DOC and E~2~:E~3~ and was most important for predicting SAC~254~. 
+Metamorphic parent material, which was inversely correlated (-0.92) to the metasedimentary Leech River Formation, was a common watershed characteristic predictant for each of DOC, SAC~254~, and E~2~:E~3~. The percent of wark gneiss in each sub-basin ranked second most important for predicting each of DOC, E~2~:E~3~, and SAC~254~. 
 
 \  
 
-For the five sites that were underlain by some proportion of wark gneiss, DOC decreased with increasing percentage of this metamorphic surficial deposit. While greater percent metamorphic material corresponded to lower DOC, the absence of wark gneiss in West Leech sub-basin did not correspond to the highest DOC (Figure \@ref(fig:VIMwark)). Similar to NOM concentration, greater metamorphic parent material corresponded with lower NOM aromaticity and reactivity (SAC~254~), but the absence of wark gneiss did not correspond to the sub-basin with the lowest SAC~254~ (Figure \@ref(fig:VIMwark)). E~2~:E~3~ showed a similar pattern in that greater metamorphic parent material corresponded to lower aromaticity and molecular weight (higher E~2~:E~3~ values). In contrast to DOC and SAC~254~ the absence of wark gneiss did correspond to the lowest mean E2:E3, the sub-basin with the greatest molecular weight NOM (Figure \@ref(fig:VIMwark)).
+For the five sites that were underlain by some proportion of wark gneiss, DOC decreased with increasing percentage of this metamorphic surficial deposit. While greater percent metamorphic material corresponded to lower DOC, the absence of wark gneiss in West Leech sub-basin did not correspond to the highest DOC concentration (Figure \@ref(fig:VIMwark)). NOM character had a similar pattern to concentration, where greater metamorphic parent material corresponded with lower NOM aromaticity and reactivity (SAC~254~), but the absence of wark gneiss did not correspond to the sub-basin with the lowest SAC~254~ (Figure \@ref(fig:VIMwark)). E~2~:E~3~ showed a similar pattern in that greater metamorphic parent material corresponded to lower aromaticity and molecular weight (higher E~2~:E~3~ values); but in contrast to DOC and SAC~254~, the absence of wark gneiss did correspond to the lowest mean E~2~:E~3~, the sub-basin with the greatest molecular weight NOM (Figure \@ref(fig:VIMwark)).
 
 \  
 
@@ -321,27 +353,19 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 \  
 
-###### Sub-basin slope
-
-Sub-basin slope ranked third in importance as a predictor for DOC. The relationship between slope and DOC across the six monitoring sites was not linear, but in general lower slope was related to higher DOC (Figure \@ref(fig:VIMslope)). Slope was also negatively correlated to percent wetland, which is known to be linked with high DOC concentrations and greater aromaticity. Indeed, SAC~254~ (which had slope as the second most important predictor variable) indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two was inagreement with results for SAC~254~. 
-
-```{r VIMslope, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:VIMslope} Sub-basin mean slope as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png")
-```
-
-\  
+ 
 
 ###### Mean tree age & logging history...
 
-Ranking third for variable importance in predicting E~2~:E~3~ was average tree age in each monitoring basin. 
+Ranking third for variable importance in predicting DOC and E~2~:E~3~ was average tree age in each monitoring basin. Logging history was ranked fourth in VIM for SAC~254~ 
+
 
 Average tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E~2~:E~3~ with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure 27). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins
 
 
 (Figure \@ref(fig:VIMtree))
+
+\  
 
 ```{r VIMtree, fig.cap = fig_cap}
 
@@ -350,10 +374,14 @@ fig_cap = "\\label{fig:VIMtree} Sub-basin mean tree age as a predictor for NOM c
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_tree-age.png")
 ```
 
-Ranking third for variable importance in predicting E~2~:E~3~ was average tree age in each monitoring basin. Tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E2:E3 at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E2:E3 with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure 27). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins
+\  
+
+Tree age was partially due to forest harvest, which was the fifth ranked VIM predictor, so these two variables were plotted together for interpretation. Sub-basin area harvested between 1980 and 2011 was positively related to E2:E3 at four of the six sub-basin sites (West Leech, Weeks, Tunnel, Cragg crk), which showed increasing E2:E3 with percent area harvested over the past 31 years. However, Leech-head and Chris creek sub-basins, which had higher percent harvest over the past 31 years (thus youngest trees) did not continue this pattern (Figure 27). These results suggests that NOM character was less aromatic in more heavily harvest sub-basins
 
 
 (Figure \@ref(fig:VIMlogging))
+
+\  
 
 ```{r VIMlogging, fig.cap = fig_cap}
 
@@ -368,6 +396,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging.p
 ###### Drainage area 
 
 (Figure \@ref(fig:VIMarea))
+
+third for SAC~254~
+fourth for E~2~:E~3~ & DOC
 
 ```{r VIMarea, fig.cap = fig_cap}
 

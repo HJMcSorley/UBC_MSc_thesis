@@ -5215,10 +5215,12 @@ RFplot_dynamic_DOC <- RF_DOC_dynamic_RelImp1_MSE %>%
 staticVariables_DOC <- sixfilter_physiographic %>% 
   filter(!is.na(NPOC_ppm)) %>%
   select(c(NPOC_ppm, # predict DOC
+           #geo_LeechRiverFormation_percent,
+           wetland_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
-           slope_median_degrees,
+           slope_mean_degrees,
            tree_age_average,
            logging_percent_1980to2011)) # %>%     
 # add a column of random values as as QA -- this should not be found to be important
@@ -5256,7 +5258,7 @@ RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %
                                 "forest cover" = "forest_percent",
                                 "wetland cover" = "wetland_percent",
                                 "open water" ="openWater_percent",
-                                "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
                                 "igneous (%)" = "geo_igneous_percent"),
@@ -5268,7 +5270,7 @@ RF_DOC_static_RelImp1_MSE <- randomForest::importance(DOC_static_RF, type = 1) %
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
@@ -5386,17 +5388,18 @@ RFplot_dynamic_E2E3 <- RF_E2E3_dynamic_RelImp1_MSE %>%
 staticVariables_E2E3 <- sixfilter_physiographic %>% 
   filter(!is.na(E2E3)) %>%
   select(c(E2E3, # predict SAC254
+           #geo_LeechRiverFormation_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
-           slope_median_degrees,
+           slope_mean_degrees,
            tree_age_average,
            logging_percent_1980to2011))  # %>%     
 # add a column of random values as as QA -- this should not be found to be important
 #mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(AllVariables_SAC254))
+# view(cor(staticVariables_E2E3))
 
 
 ## Run RF
@@ -5425,7 +5428,7 @@ RF_E2E3_static_RelImp1_MSE <- randomForest::importance(E2E3_static_RF, type = 1)
                                 "forest cover" = "forest_percent",
                                 "wetland cover" = "wetland_percent",
                                 "open water" ="openWater_percent",
-                                "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
                                 "igneous (%)" = "geo_igneous_percent"),
@@ -5437,7 +5440,7 @@ RF_E2E3_static_RelImp1_MSE <- randomForest::importance(E2E3_static_RF, type = 1)
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
@@ -5555,17 +5558,18 @@ RFplot_dynamic_SAC254 <- RF_SAC254_dynamic_RelImp1_MSE %>%
 staticVariables_SAC254 <- sixfilter_physiographic %>% 
   filter(!is.na(SAC254_Abs.m)) %>%
   select(c(SAC254_Abs.m, # predict SAC254
+           #geo_LeechRiverFormation_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
-           slope_median_degrees,
+           slope_mean_degrees,
            tree_age_average,
            logging_percent_1980to2011)) # %>%     
 # add a column of random values as as QA -- this should not be found to be important
 # mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
 
 # check for correlations
-# view(cor(AllVariables_SAC254))
+# view(cor(staticVariables_SAC254))
 
 
 ## Run RF
@@ -5594,7 +5598,7 @@ RF_SAC254_static_RelImp1_MSE <- randomForest::importance(SAC254_static_RF, type 
                                 "forest cover" = "forest_percent",
                                 "wetland cover" = "wetland_percent",
                                 "open water" ="openWater_percent",
-                                "slope (median, degrees)" = "slope_median_degrees",
+                                "slope (mean, degrees)" = "slope_mean_degrees",
                                 "logging history (1980-2011)" = "logging_percent_1980to2011", 
                                 "metamorphic (%)" = "geo_metamorphic_percent",
                                 "igneous (%)" = "geo_igneous_percent"),
@@ -5606,7 +5610,7 @@ RF_SAC254_static_RelImp1_MSE <- randomForest::importance(SAC254_static_RF, type 
     predictor == "tree age (average, yrs)" |
       predictor ==  "drainage area" | 
       predictor == "sample site elevation" | 
-      predictor == "slope (median, degrees)" | 
+      predictor == "slope (mean, degrees)" | 
       predictor == "logging history (1980-2011)" ~ "Surface characteristics",
     # subsurface characteristics (parent material):
     predictor == "metamorphic (%)" |
@@ -6248,6 +6252,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png",
 
 
 ### rain (30 day ant)
+
+by site
 ```{r}
 rain_DOC <- sixfilter_physiographic %>% 
   ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + 
@@ -6292,8 +6298,55 @@ cowplot::plot_grid(rain_DOC, rain_SAC254, rain_E2E3,
                    rel_heights = c(2, 1.3, 1.3))
 
 # save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain-bysite.png",
+       width = 6, height = 7, units = "in")
+
+```
+
+all sites together
+```{r}
+train_DOC <- sixfilter_physiographic %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = NPOC_ppm)) + 
+  theme_bw() +
+  geom_point(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  xlim(0, 740)+
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "", y = "DOC (mg/L)" )
+
+train_SAC254 <- sixfilter_physiographic %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = SAC254_Abs.m)) + 
+  theme_bw() +
+  geom_jitter(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  xlim(0, 740)+
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(x = "", y = expression(SAC[254]~(m^-1)) ) 
+
+train_E2E3 <- sixfilter_physiographic %>% 
+  filter(E2E3 > 2.5) %>% 
+  ggplot(aes(x = antecedent_30day_rain, y = E2E3)) + 
+  theme_bw() +
+  geom_jitter(aes(fill = site), shape = 21, size = 2) +
+  geom_smooth(colour = "black", size = 0.7) +
+  scale_fill_brewer(palette="Set2") +
+  xlim(0, 740)+
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(x = "Antecedent 30-day rain (mm)", y = expression(E[2]:E[3]) ) 
+
+# together
+cowplot::plot_grid(train_DOC, train_SAC254, train_E2E3,
+                   ncol = 1, align = "v", 
+                   rel_heights = c(2, 1.3, 1.3))
+
+# save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png",
-       width = 4, height = 6.5, units = "in")
+       width = 5, height = 6.5, units = "in")
 
 ```
 
@@ -6335,7 +6388,7 @@ cowplot::plot_grid(metamorphic_DOC, metamorphic_SAC254, metamorphic_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorphic.png",
-       width = 4, height = 6.5, units = "in")
+       width = 4, height = 6, units = "in")
 
 ```
 
@@ -6383,7 +6436,7 @@ cowplot::plot_grid(slope_DOC, slope_SAC254, slope_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png",
-       width = 4, height = 6.5, units = "in")
+       width = 4, height = 6, units = "in")
 
 ```
 
@@ -6432,7 +6485,7 @@ cowplot::plot_grid(logging_DOC, logging_SAC254, logging_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging.png",
-       width = 4, height = 6.5, units = "in")
+       width = 4, height = 6, units = "in")
 ```
 
 
@@ -6479,7 +6532,7 @@ cowplot::plot_grid(tree_DOC, tree_SAC254, tree_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_tree-age.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6, units = "in")
 
 ```
 
