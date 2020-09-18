@@ -29,10 +29,12 @@ library(gghighlight)# plot highlighting
 library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
+library(plotrix)    # for splitting a ggplot axis - to be used carefully
 library(car)        # stats: Companion to Applied Regression
 library(synchrony)  # stats for autocorrelated & non-independent data :)
 library(randomForest)
 library(randomForestExplainer)
+
 
 ```
 
@@ -5304,7 +5306,7 @@ RFsep_DOC <- cowplot::plot_grid(RFplot_dynamic_DOC, RFplot_static_DOC,
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-DOC.png", 
-       width = 5, height = 5, units = "in")
+       width = 6, height = 4, units = "in")
 
 ```
 
@@ -5474,7 +5476,7 @@ RFsep_E2E3 <- cowplot::plot_grid(RFplot_dynamic_E2E3, RFplot_static_E2E3,
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", 
-       width = 5, height = 5, units = "in")
+       width = 6, height = 4, units = "in")
 
 ```
 
@@ -5645,7 +5647,7 @@ RFsep_SAC254 <- cowplot::plot_grid(RFplot_dynamic_SAC254, RFplot_static_SAC254,
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", 
-       width = 5, height = 5, units = "in")
+       width = 6, height = 4, units = "in")
 
 
 ```
@@ -6486,11 +6488,7 @@ a <- cowplot::plot_grid(logging_DOC + theme(legend.position = "none"),
                    rel_heights = c(1,1,1)) #2, 1.3, 1.3
 
 # extract legend to add to top of combined variable plot
-legend <- cowplot::get_legend(
-  logging_DOC#
-    #theme(legend.box.margin = margin(0, 0, 8, 0)) # t, r, b, l
-    # create some space to the bottom of the legend
-    )
+legend <- cowplot::get_legend(logging_DOC)
 
 
 # .
@@ -6555,21 +6553,156 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-tree-age.png", wid
 ```
 
 
-### drainage area -- not very interesting...
+### drainage area 
+
+#### ridge plots
+
+*not enough data for Weeks?!
+
 ```{r}
-area_DOC <- sixfilter_physiographic %>% 
+
+# pull the tunnel out
+a <- sixfilter_physiographic %>%
   filter(E2E3 > 3.5) %>% 
-  ggplot(aes(x = drainage_area_km2, y = SAC254_Abs.m)) +
+  ggplot(aes(y = drainage_area_km2, x = NPOC_ppm)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(y = expression(Monitoring~site~drainage~area~(km^2)), x = "DOC (mg/L)" )
+
+# pull legend 
+a_legend <- cowplot::get_legend(a)
+
+# all together
+b <- sixfilter_physiographic %>%
+  filter(site != "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = NPOC_ppm)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = expression(Sub-basin~drainage~area~(km^2)), x = "DOC (mg/L)" )
+
+# put the sub-basin plot adjacent to all sites
+cowplot::plot_grid(a + theme(legend.position = "none"), 
+                   b, 
+                   nrow= 1)
+
+```
+
+
+```
+# tunnel only 
+aa <- sixfilter_physiographic %>%
+  filter(site == "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = NPOC_ppm)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_manual(values = brewer.pal(6, "Set2")[[6]]) + # yellow, 6th shade
+  theme_bw() +
+  lims(x = c(0,20),
+       y = c(95.25, 95.75)) +
+  theme(legend.position = "none",
+        text = element_text(size = 11), 
+        axis.text.x = element_blank()) +
+  labs(x = "", y = expression( (km^2) ) ) # no labels, stack on top
+
+# pull legend 
+a_legend <- cowplot::get_legend(
+  sixfilter_physiographic %>%
+    ggplot(aes(y = drainage_area_km2, x = NPOC_ppm)) +
+    theme(legend.position = "top") +
+    labs(fill = "Site:") +
+    guides(fill = guide_legend(nrow = 1, ncol = 6)) +
+    ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+    scale_fill_brewer(palette="Set2") 
+  )
+
+# join
+area_DOC1 <- cowplot::plot_grid(aa, a, ncol = 1, rel_heights = c(2,7), align = "v")
+# add legend
+area_DOC <- cowplot::plot_grid(a_legend, area_DOC1, ncol = 1, rel_heights = c(1,12))
+
+# --- SAC254
+
+# pull the tunnel out
+b <- sixfilter_physiographic %>%
+  filter(site != "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = SAC254_Abs.m)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  xlim(0,20) +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = expression(Drainage~area~(km^2)), x = expression(SAC[254]~(m^-1)) )
+
+# tunnel only 
+bb <- sixfilter_physiographic %>%
+  filter(site == "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = SAC254_Abs.m)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_manual(values = brewer.pal(6, "Set2")[[6]]) + # yellow, 6th shade
+  theme_bw() +
+  lims(x = c(0,20),
+       y = c(95.25, 95.75)) +
+  theme(legend.position = "none",
+        text = element_text(size = 11), 
+        axis.text.x = element_blank() ) +
+  labs(x = "", y = expression( (km^2) ) ) # no labels, stack on top
+
+# join
+area_SAC254 <- cowplot::plot_grid(bb, b, ncol = 1, rel_heights = c(2,7), align = "v")
+
+
+```
+
+#### boxplots
+
+```{r}
+
+area_DOC1 <- sixfilter_physiographic %>% 
+  filter(site != "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(x = drainage_area_km2, y = NPOC_ppm)) +
   theme_bw() +
   geom_boxplot(aes(fill = site), alpha = 0.5) +
   scale_fill_brewer(palette="Set2") +
   theme_bw() +
+  ylim(0, 15) +
   theme(legend.position = "top",
         text = element_text(size = 11)) +
-  labs(x = "", y = "DOC(mg/L)" )
+  labs(x = "", y = "DOC (mg/L)" )
 
+area_DOC2 <- sixfilter_physiographic %>% 
+  filter(site == "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(x = drainage_area_km2, y = NPOC_ppm)) +
+  theme_bw() +
+  ylim(0, 15) +
+  geom_boxplot(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 11), axis.text.y = element_blank()) +
+  labs(x = "", y = "", fill = "" )
+
+cowplot::plot_grid(area_DOC1, area_DOC2, nrow = 1, rel_widths = c(10,1))
 
 area_SAC254 <- sixfilter_physiographic %>% 
+  filter(site != "Tunnel") %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = drainage_area_km2, y = SAC254_Abs.m)) +
   theme_bw() +
@@ -6582,6 +6715,7 @@ area_SAC254 <- sixfilter_physiographic %>%
 
 
 area_E2E3 <- sixfilter_physiographic %>% 
+  filter(site != "Tunnel") %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = drainage_area_km2, y = E2E3)) +
   theme_bw() +
@@ -6598,7 +6732,7 @@ cowplot::plot_grid(area_DOC, area_SAC254, area_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png",
-       width = 6, height = 6, units = "in")
+       width = 4, height = 6, units = "in")
 ```
 
 

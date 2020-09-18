@@ -151,7 +151,7 @@ Surface and subsurface watershed characteristics were static values (e.g. basin 
 
 \  
 
-RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a mode of quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results (below). Following RF VIM analysis, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Where possible, important predictor variables were assessed for hysteretic behaviour. 
+RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a mode of quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results (below). Following RF VIM analysis, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Results of RF VIM assessment were also used to retrospectively infer importance of variables that were excluded from VIM due to their cross correlation(s). Where possible, important predictor variables were assessed for hysteretic behaviour. 
 
 \  
 
@@ -161,8 +161,7 @@ Hydrochemical hysteresis is most often evaluated through C-Q relationships, but 
 
 \  
 
-For a C-Q hysteresis loop, clockwise rotation indicates rapid flushing and dilution, while counter-clockwise rotation indicates enrichment via delayed material delivery from distant (upstream) or deeper subsurface source pools [@Aguilera2018]. Because of the assumed relationship between antecedent rain and streamflow, a similar interpretation was used here despite the absence of discharge data.   
-
+For a C-Q hysteresis loop, clockwise rotation indicates rapid flushing and dilution, while counter-clockwise rotation indicates enrichment via delayed material delivery from distant (upstream) or deeper subsurface source pools [@Aguilera2018]. Because of the assumed relationship between antecedent rain and streamflow, a similar interpretation was used here despite the absence of discharge data.  
 
 \  
 
@@ -349,26 +348,22 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 \  
 
-###### Mean tree age & logging history...
+###### Logging history and mean tree age 
 
-Ranking third for variable importance in predicting DOC and E~2~:E~3~ was average tree age in each monitoring basin and logging history (percent of basin harvested from 1980-2011) was ranked fourth in VIM for SAC~254~. Average tree age was partially due to the history of forest harvest, so these predictor variables were examined together.
+Of watershed characteristic variables, logging history (percent of basin harvested from 1980-2011) was ranked second for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~ and fourth for DOC. These two predictor variables were examined together because average tree age was partially due to the history of forest harvest.
 
 \  
 
-Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites. West Leech, Weeks, Tunnel, Cragg crk sub-basins showed decreasing NOM molecular weight and aromaticity (increasing E~2~:E~3~) with increasing area harvested. However, the sub-basins of Chris crk and Leech-head (just downstream) had higher harvested area (ergo younger trees) did not match this pattern (Figure \@ref(fig:VIMloggingtree)). 
+Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~3~ at four of the six sub-basin sites. West Leech, Weeks, Leech Tunnel, and Cragg crk sub-basins showed decreasing NOM molecular weight and aromaticity (increasing E~2~:E~3~) with increasing area harvested. However, the sub-basins of Chris crk and Leech-head (just downstream) had higher harvested area (ergo younger trees) and did not match this pattern of less aromatic, lower molecular weight NOM with greater harvest history (Figure \@ref(fig:VIMloggingtree)). The sites with more aromatic and higher molecular weight NOM were not clearly linked to average tree age (Figure \@ref(fig:VIMloggingtree)).
 
-These results suggests that NOM character was less aromatic in more heavily harvest sub-basins.
+\  
 
-
-(Figure \@ref(fig:VIMloggingtree))
-
-
-Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively, yet these two sites had very similar averages for NOM concentration and character, with slightly higher molecular weight NOM in Chris crk.
-
-While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge)*fire 2020* it was West Leech that was the least-harvested sub-basin. These two sites had similar mean DOC, SAC~254~. Mean E~2~:E~3~ was different (___statistically??___)  between the West Leech and Cragg crk where Cragg had greater molecular weight NOM than West Leech (but there error bars overlapped entirely)
+Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge) it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but there error bars overlapped entirely).
 
 * it's also possible that the GIS layers for forest harvest and tree age were missing some details 
 
+
+what was the correlation when all variables combined??
 
 \  
 
@@ -381,17 +376,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-t
 
 \  
 
+###### Drainage area
 
-
+Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentartion and character were examined and no patterns were evident (Figure \@ref(fig:VIMarea)).
 
 \  
-
-###### Drainage area 
-
-(Figure \@ref(fig:VIMarea))
-
-third for SAC~254~
-fourth for E~2~:E~3~ & DOC
 
 ```{r VIMarea, fig.cap = fig_cap}
 
@@ -400,28 +389,45 @@ fig_cap = "\\label{fig:VIMarea} Sub-basin drainage area as a predictor for NOM c
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png")
 ```
 
-
 \  
 
   
+##### Variable importance Summary
 
+Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface material was largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships. NOM concentration and character could be influenced by other parent materials, or combinations of parent materials, that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is actually a positive relationship between DOC and another parent material, likely the schist-like Leech River Formation. 
 
-_old:_
+\ 
 
-Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. NOM concentration and aromaticity in sub-basins with wark-gneiss parent material showed a negative relationship to this metamorphic parent material. 
-
-\  
-
-Like concentration, NOM character was driven by antecedent wetness but only up to a threshold of approximately 150 mm of 30-day antecedent rain. After this threshold, the relationship was no longer positive. In a similar way, NOM aromaticity increased with increasing sample collection stage up to approximately 75% of maximum stage at each site.
+Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. Like concentration, NOM character was driven by antecedent wetness but only up to a threshold of approximately 150 mm of 30-day antecedent rain. After this threshold, the relationship was no longer positive. In a similar way, NOM aromaticity increased with increasing sample collection stage up to approximately 60-75% of maximum stage at each site.
 
 \  
 
+#### Warm and wet: seasonal patterns and rain event
 
-#### Evaluating rain events with NOM concentration and character
+Moisture and temperature, important to each of the three predictant variables, corresponded to different seasons. Given the evidence of strong seasonality for NOM character (Chapter 3), a comparison between the wet and dry season sample results was used to assess spatial difference between seasons for DOC, SAC~254~ and E~2~:E~3~. 
 
 \  
 
-Antecedent moisture was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked later than DOC during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). While E~2~:E~3~ indicated maximum aromaticity and molecular size occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
+During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks crk had greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris crk and Leech-head in SAC~254~ than in E~2~:E~3~. 
+
+\  
+
+As we know from Chapter 3, DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest dry-season variance at the head (Weeks) and mouth (Tunnel). The dry season patterns of decreasing DOC and SAC~254~ from low- to high-order streams were apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downstream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differences suggest a possible shift in NOM source material, and/or a possible dilution effect.      
+
+\    
+
+```{r seasonalNOM, fig.cap = fig_cap}
+fig_cap = "\\label{fig:seasonalNOM} Sample results over the dry and wet seasons for [A] dissolved organic carbon concentrations (DOC), [B] specific absorbance coefficient at 254 nm (SAC~254~, m^-1^), and [C] the quotient of SAC~250~/SAC~365~ (E~2~:E~3~). Note that each season has a differnt y-scale to clarify patterns. The inset in panel B is an elargement of SAC~254~ for all sites except Weeks."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxplots-by-season.png")
+```
+
+\  
+
+
+##### Rising stage and NOM dynamics 
+
+Antecedent moisture and/or sampling stage was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked later than DOC during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). While E~2~:E~3~ indicated maximum aromaticity and molecular size occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
 
 \  
 
@@ -436,29 +442,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>%
 
 \  
 
-Moisture was important to each of the three predictant variables, so a comparison between the wet and dry season sample results was done to assess difference in spatial patterns for DOC, SAC~254~ and E~2~:E~3~. During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks creek had much greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris crk and Leech-Head in SAC~254~ than in E~2~:E~3~. As we know from Chapter 3, DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest dry-season variance at the head (Weeks) and mouth (Tunnel). 
-
-\  
-
-The dry season patterns of decreasing DOC and SAC~254~ from low- to high-order streams were apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downtream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differenced suggest a possible shift in NOM source material, and also a possible dilution effect.      
-
-\    
-
-```{r seasonalNOM, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalNOM} Sample results over the dry and wet seasons for [A] dissolved organic carbon concentrations (DOC), [B] specific absorbance coefficient at 254 nm (SAC~254~, m^-1^), and [C] the quotient of SAC~250~/SAC~365~ (E~2~:E~3~). Note that each season has a differnt y-scale to clarify patterns. The inset in panel B is an elargement of SAC~254~ for all sites except Weeks."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxplots-by-season.png")
-```
-
-\  
-
-##### Rising stage and NOM dynamics across the LWSA
-
-Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six sites were temporally synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666).
-
-\  
-
-Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks creek.
+Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six sites were temporally synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks crk.
 
 \  
 
@@ -477,7 +461,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
 
 \  
 
-To determine is a similar harmony was present for fluctuations in DOC or spectral properties, the proportion of common DOC and stage extrema samples were calculated (Table \@ref(tab:synchDOCstage). A proportion of 1 indicates perfect agreement between samples of extreme DOC and sample stage, and zero indicates complete asynchrony between DOC and stage highs and lows. Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. 
+To determine is a similar harmony was present for fluctuations in DOC or spectral properties, the proportion of common DOC and stage extrema samples were calculated (Table \@ref(tab:synchDOCstage)). A proportion of 1 indicates perfect agreement between samples of extreme DOC and sample stage, and zero indicates complete asynchrony between DOC and stage highs and lows. Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. 
 
 \  
 
@@ -500,12 +484,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-
 ```
 
 \  
-
-Changes in DOC during events varied from a little more than 1% DOC change to nearly 100% change during event response (Table \@ref(tab:DOCResponse)).
-
 \  
 
 * Still to do:___look at individual events and pull out interesting facts (during this event, DOC concentration tripled or doubled, etc)... + differences among events___
+
+
+Changes in DOC during events varied from a little more than 1% DOC change to nearly 100% change during event response (Table \@ref(tab:DOCResponse)). In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not linear and not consistent. The relationships between spectral indicators of NOM character and stage showed less variation than DOC with stage at all sites; again, the relationships were not linear (Figure \@ref(fig:stageRelations)). Weeks crk maintained the most consistent NOM aromaticity and molecular weight (E~2~:E~3~) with changing stage
 
 \  
 
@@ -516,14 +500,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
                caption = "Summary of DOC Changes Within Stormflow Response to Precipitation Events Across the Leech WSA (Samples from Wet Season Only). ")
 ```
 
-\
-
-In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear (Figure \@ref(fig:stageRelations)). 
-
 \  
 
 ```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} Relationships between river stage and sample NOM concentrations and character. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship. None of the relationships were were linear, some had larger variance and some variables remained consistent with changing stage."
+fig_cap = "\\label{fig:stageRelations} Relationships between river stage and sample NOM concentrations and character, where connected lines show data density. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship. None of the relationships were linear, some had larger variance and some variables remained consistent with changing stage."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DOC-NOM.png")
 ```
@@ -531,9 +511,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DO
 
 \
 
-#### Hysteresis of NOM with predictor variables
+#### Hysteresis of NOM with antecedent wetness 
 
-Events 10 and 11 were relatively well represented by sampling and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain amounts (p = 0.732), durations (p = 0.837), and intensity (p = 0.549).
+Events 10 and 11 were relatively well represented by sampling and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain amounts (p = 0.732), durations (p = 0.837), and intensity (p = 0.549). 
+
+(Figure \@ref(fig:events1011))
 
 \  
 
@@ -545,6 +527,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-eve
 
 \  
 
+Sample DOC concentrations from rain events 10 and 11 were plotted with their corresponding antecedent wetness (30-day rain) to explore possible hysteresis. The relationship of DOC concentration to antecedent wetness within a hydrologic event was interpreted in the same manner as a concentration-discharge (C-Q) relationship. Rapid flushing and dilution is indicated by a hysteresis loop with Clockwise rotation, and counter-clockwise rotation points to delayed material delivery and enrichment. Event 10 was the second measured rain event in the 2019/2020 wet season and had twice as much rain fall than event 11 (136 mm in event 10 compared to 68 mm in event 11, Table \@ref(tab:EventsTab)). Event 10 was longer in duration (6.4 days) compared to event 11 (2.3 days) with slightly lower intensity (21 vs 29 mm/24-hr). DOC concentrations were comparable between these two events (6.7 mg/L and 6.4 mg/L). 
+
+\  
+
+There was a clockwise rotation pattern for DOC with antecedent wetness in event 10 and a counter clockwise rotation in event 11 (Figure \@ref(fig:hysteresisplots)). 
+
 ```{r hysteresisplots, fig.cap = fig_cap}
 fig_cap = "\\label{fig:hysteresisplots} Dissolved organic carbon (DOC) concentrations plotted with antecedent 30-day rain during events 10 and 11 at six monitoring sites in the Leech watershed."
 
@@ -552,10 +540,6 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_D
 ```
 
 \  
-
-
-
-
 
 ### Discussion
 
@@ -591,7 +575,7 @@ A pattern in DOC concentration during rising stage can provide information about
 \  
 
 ``` gooder here:```
-Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. This suggests that there is a more nuanced relationships between NOM concentrations and parent materials that couldn't be teased out in this RF analysis because of cross correlations between subsurface and other predictor variables. As the percent of wark gneiss was correlated to other parent materials, what is observed as an inverse relationship between DOC and amount of wark gneiss could indicate another relationship, potentailly of increasing DOC with the decrease of some other parent materials. Based on values presented in Table \@ref(tab:WTScharacterSubbasinTable) it could be a relationship with the Leech River formation (argillite metagreywacke and metagreywacke) which was inversely correlated (-0.92) to   
+Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. This suggests that there is a more nuanced relationships between NOM concentrations and parent materials that couldn't be teased out in this RF analysis because of cross correlations between subsurface and other predictor variables. As the percent of wark gneiss was correlated to other parent materials, what is observed as an inverse relationship between DOC and amount of wark gneiss could indicate another relationship, potentially of increasing DOC with the decrease of some other parent materials. Based on values presented in Table \@ref(tab:WTScharacterSubbasinTable) it could be a relationship with the Leech River formation (argillite metagreywacke and metagreywacke) which was inversely correlated (-0.92) to   
  wark gneiss coverage. 
  
  \  
