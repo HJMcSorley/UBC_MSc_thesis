@@ -1607,14 +1607,14 @@ HT_air_plot <- HT_Hobo_L %>%
                  HT_dates$date_held[3]-HT_dates$half_lapse[3]), 
            y = 25)+
   theme_bw()+
-  labs(y = "Air Temperature (°C)",
-       #caption = glue::glue("Mean temperatures during vertical rack hold-time experiments: {A_temp} (set A), {B_temp} (set B), {C_temp} (set C)."),
-       x = "") +
-  theme(legend.position = "bottom", 
-        text = element_text(size = 12)) +
+  labs(y = "Air Temperature (°C)", x = "") +
+  theme(legend.position = "top", 
+        text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1)) +
   scale_x_date(date_breaks = "1 months")
 # save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png", width = 6, height = 5.5, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_airTemp_megaplot.png", 
+       width = 6, height = 4.5, units = "in")
 
 ```
 
@@ -2047,7 +2047,7 @@ subasin_snow_plot <- LWSA_meanWx %>%
         legend.position = "none",
         strip.background = element_blank(),
         axis.text.x = element_text(angle = 90),
-        plot.margin = unit(c(0.5,0,0,0), "cm")) # top, right, bottom, left
+        plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left
 
 # 2 - plot LWSA temp for the same time span
 subasin_meantemp_plot <- LWSA_meanWx %>% 
@@ -2085,7 +2085,7 @@ subbasin_meanrain_plot <- LWSA_meanWx %>%
   geom_col(aes(colour = Rain), colour = "#0072B2") +
   scale_y_reverse() +
   labs(x = "", y = "mm /day") +
-  theme_bw() +
+  theme_bw() + 
   scale_x_date(date_breaks = "2 months",
                date_minor_breaks = "1 months", labels = NULL)+  # remove axis labels when you're confident
   facet_wrap(~Rain, ncol = 1, 
@@ -2093,7 +2093,7 @@ subbasin_meanrain_plot <- LWSA_meanWx %>%
   theme(text = element_text(size = 12),
         legend.position = "none",
         strip.background = element_blank(),
-        axis.text.x = element_text(angle = 90),
+        #axis.text.x = element_text(angle = 90),
         plot.margin = unit(c(0,0,0,0), "cm")) # top, right, bottom, left)
 
 # 4 - plot stage at each of the subbasins
@@ -2191,6 +2191,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage-subbasins_megaplot-noTem
 
 ## Ch3 Seasonal megaplot
 ```{r}
+# this is the one I chose to use
+
 # --- junior megaplot: megaplot 2 with lines indicating seasons
 
 # pull last rain event date from 2018/2019 wet season
@@ -2236,21 +2238,22 @@ season_meanrain_plot <- subbasin_meanrain_plot +
              xintercept = as.Date(start_wet2019), size = 0.65)+
   # labels
   annotate("text", label = "rain / snow-melt", x = as.Date(last_2018_rainevent)+15, 
-           y = 75, colour = "grey45")+
+           y = 75, colour = "grey45", size = 3)+
   annotate("text", label = "2018/2019 wet season", x = as.Date(last_2018_rainevent), 
-           y = 125)+
+           y = 125, size = 3)+
   annotate("text", label = "2019 dry season", x = as.Date(start_dry2019)+65, 
-           y = 125)+
+           y = 125, size = 3)+
   annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
-           y = 80, angle = 90)+
+           y = 80, angle = 90, size = 3)+
   annotate("text", label = "2019/2020 wet season", x = as.Date(start_wet2019)+75, 
-           y = 125)
+           y = 125, size = 3) +
+  theme(text = element_text(size = 11))
 
 # update stage plot  
 season_stage_sample_plot <- stage_samples %>% 
   filter(Date >= "2018-10-24", Date <= "2020-02-19") %>%  
   ggplot(aes(x = DateTime))+
-  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+
   theme_bw()+
   geom_point(aes(y = sampleStage_cm, shape = sample_type), fill = "white", na.rm = TRUE, size = 1.5)+
   scale_shape_manual(breaks = c("Grab", "Rack"), 
@@ -2270,8 +2273,9 @@ season_stage_sample_plot <- stage_samples %>%
   scale_x_datetime(date_labels = "%Y %b %d",
                    date_breaks = "2 months",
                    date_minor_breaks = "1 months")+
-  theme(text = element_text(size = 12),
-        axis.text.x = element_text(angle = 20, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+  theme(text = element_text(size = 10.5),
+        axis.text.x = element_text(angle = 20, hjust = 1), 
+        plot.margin = unit(c(0,0,0,0), "cm"), 
         legend.position = "bottom")
 
 # update snow and temp to include season lines
@@ -2298,10 +2302,10 @@ season_meantemp_plot <- subasin_meantemp_plot +
 
 # create a second megaplot with sample points included
 # stack snow, temp, precip and stage with cowplot::plot_grid
-cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,6)) 
+cowplot::plot_grid(season_meantemp_plot, season_meanrain_plot, season_snow_plot, season_stage_sample_plot, ncol = 1, axis = "l", align = "v", rel_heights = c(1,1,1,7.2)) 
 
 # save megaplot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", width = 7, height = 9, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png", width = 6.5, height = 7.25, units = "in")
 ```
 
 ## Ch4 sample stage, rain events, seasons
@@ -4253,10 +4257,10 @@ sixfilter %>%
 ridge plots of G/R wet season only  
 ```{r}
 # wrap by sample_type -- wet season only
-label1 <- c(Grab = "Grab sample concentration, wet season", 
-            Rack = "Rack samples concentration, wet season")
-label2 <- c(Grab = "Grab sample character, wet season", 
-            Rack = "Rack sample character, wet season")
+label1 <- c(Grab = "Wet season Grab samples", 
+            Rack = "Wet season Rack samples")
+label2 <- c(Grab = "Wet season Grab samples", 
+            Rack = "Wet season Rack samples")
 
 # --- Concentration
 # density ridge plot
@@ -4273,7 +4277,7 @@ a <- sixfilter %>%
         text = element_text(size = 12)) +
   facet_wrap(~sample_type, ncol = 1,
              labeller = labeller(sample_type = label1)) +  
-  labs(y = "", x = "DOC (mg/L)")
+  labs(y = "", x = "DOC (mg/L)", subtitle = "A) NOM Concentration")
 
 
 # --- character
@@ -4292,7 +4296,7 @@ b <- sixfilter %>%
         text = element_text(size = 12)) +
   facet_wrap(~sample_type, ncol = 1,
              labeller = labeller(sample_type = label2)) +  
-  labs(y = "", x = expression(SAC[254]~(m^-1)) )
+  labs(y = "", x = expression(SAC[254]~(m^-1)), subtitle = "B) NOM Character" )
 
 
 # --- both side by each
@@ -5109,7 +5113,8 @@ sixfilter_RF <- sixfilter %>%
 
 # load watershed characteristics for each site
 physiographic <- read_csv("R-inputs_UBC-forWater-MSc_HMc/subbasin_characteristics_RandomForests.csv", col_names = TRUE) %>% 
-  mutate(site = factor(site, levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
+  mutate(site = factor(site, 
+                       levels = c("Weeks", "ChrisCrk", "LeechHead", "CraggCrk", "WestLeech", "Tunnel")))
 
 # combine 
 sixfilter_physiographic <- left_join(sixfilter_RF, physiographic, by = c("site")) %>%

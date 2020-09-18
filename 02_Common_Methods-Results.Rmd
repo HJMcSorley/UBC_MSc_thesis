@@ -32,7 +32,7 @@ Twelve sites were selected across the GVWSA, most of which were in the Leech WSA
 
 \  
 
-Rithet Creek is the largest tributary (11.12 km^2^ basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2^ basin). The Leech River Tunnel (currently deactivated) terminates at Deception Gulch ('Deception'), a small tributary (4.02 km^2^ basin) to Deception Reservoir; as such, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. The Leech WSA includes two major tributary sub-basins: West Leech River (20.85 km^2^) and Cragg Creek (28.06 km^2^). The Cragg crk sub-basin included two headwater sub-basins: Lazar (4.74 km^2^) and Jarvis (1.51 km^2^). The Leech-Beach site was located just downstream from the confluence of West Leech River with the Leech River mainstem (94.09 km^2^ sub-basin). And near the effective mouth of the Leech WSA, the Leech Tunnel basin included the entire Leech WSA (95.3 km^2^). Headwaters of the Leech River included Weeks and Chris Creek sub-basins; Weeks sub-basin (11.52 km^2) encompassed Weeks Lake and surrounding wetlands (Jordan Meadows fen), and Chris crk sub-basin (5.8 km^2) included smaller Worley Lake. Below the confluence of Weeks and Chris crk is the Leech-head site (20.59 km^2^ sub-basin), the head of Leech River.  
+Rithet Creek is the largest tributary (11.12 km^2^ basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2^ basin). The Leech River Tunnel (currently deactivated) terminates at Deception Gulch ('Deception'), a small tributary (4.02 km^2^ basin) to Deception Reservoir; as such, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. The Leech WSA includes two major tributary sub-basins: West Leech River (20.85 km^2^) and Cragg Creek (28.06 km^2^). The Cragg crk sub-basin included two headwater sub-basins: Lazar (4.74 km^2^) and Jarvis (1.51 km^2^). The Leech-Beach site was located just downstream from the confluence of West Leech River with the Leech River mainstem (94.09 km^2^ sub-basin). And near the effective mouth of the Leech WSA, the Leech Tunnel basin included the entire Leech WSA (95.3 km^2^). Headwaters of the Leech River included Weeks and Chris Creek sub-basins; Weeks sub-basin (11.52 km^2^) encompassed Weeks Lake and surrounding wetlands (Jordan Meadows fen), and Chris crk sub-basin (5.8 km^2^) included smaller Worley Lake. Below the confluence of Weeks and Chris crk is the Leech-head site (20.59 km^2^ sub-basin), the head of Leech River.  
 
 \  
 
@@ -197,7 +197,7 @@ Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) wer
 
 This section presents results used to informed all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and it's application in seasonal delineation and quality control for Vertical Rack sampling method development. 
 
-\
+\  
 
 #### CRD weather data
 
@@ -256,7 +256,7 @@ The sixteen-month study period was separated into "wet" and "dry" seasons based 
 \  
 
 ```{r seasonalMegaPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area (LWSA) air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites across the LWSA. Vertical yellow lines indicate seasons, which were defined by the start of Vertical Rack sampling (wet season) and baseflow Grab sampling during the dry season. The dashed yellow line separates the 2018/2019 wet season into rain-dominated and snow-melt dominated streamflow. The 'first flush' period indicates the first event and beginning of the 2019/2020 wet season. " 
+fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites. Vertical yellow lines indicate seasons, distinguished by stormflow Vertical Rack sampling (wet season). The dashed yellow line shows the 2018/2019 wet season separation of rain and snowmelt dominated streamflow. The 'first flush' period indicates the first event and beginning of the 2019/2020 wet season. " 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
 ```

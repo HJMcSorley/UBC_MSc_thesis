@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Watershed Characteristics and Sampling Conditions as Driving Forces for Aqueous Natural Organic Matter Dynamics Across the Leech River Watershed 
+##	Watershed Characteristics and Sampling Conditions as Driving Forces for Dynamics of Aqueous Natural Organic Matter Across the Leech River Watershed 
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -23,8 +23,7 @@ The previous chapter showed that across the Greater Victoria Water Supply Area (
 
 \  
 
-Of the main tributaries to the Leech River mainstem, Cragg crk had the lowest average concentration and least aromatic NOM character, while West Leech NOM was higher in concentration and more aromatic. It was expected that that there would be differences in NOM concentration and character among monitoring sites, but it wasn’t immediately obvious why event-based NOM variances were greater at the West Leech site (20.85 km2 sub-basin) compared to other streams draining catchments of similar size (i.e. Leech-head, 20.59 km2 sub-basin; and Cragg crk 28.06 km2 sub-basin). As water quality is intrinsically linked to watershed characteristics, there may be a key feature (or combination of features) that operate in tandem with weather conditions to drive NOM concentration and character dynamics. This chapter evaluates watershed characteristics (e.g. land cover, parent material, slope) with conditions (e.g. antecedent rain, sampling stage) to identify possible explanatory variables for differences and drivers of change in NOM concentration and character across the six sub-basins
-monitoring sites in the Leech WSA.
+Of the main tributaries to the Leech River mainstem, Cragg crk (draining from the east) had the lowest average concentration and least aromatic NOM character, while West Leech NOM was higher in concentration and more aromatic. It was expected that that there would be differences in NOM concentration and character among monitoring sites, but it wasn’t immediately obvious why event-based NOM variances were greater at the West Leech site (20.85 km^2^ sub-basin) compared to other streams draining catchments of similar size (i.e. Leech-head, 20.59 km^2^ sub-basin; and Cragg crk 28.06 km^2^ sub-basin). As water quality is intrinsically linked to watershed characteristics, there may be a key feature (or combination of features) that operate in tandem with weather conditions to drive NOM concentration and character dynamics. This chapter evaluates watershed characteristics (e.g. land cover, parent material, slope) with conditions (e.g. antecedent rain, sampling stage) to identify possible explanatory variables for differences and drivers of change in NOM concentration and character across the six monitoring sites in the Leech WSA.
 
 \  
 
@@ -40,11 +39,7 @@ The RF algorithm learns from many independent Classification And Regression Tree
 
 \  
 
-The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. The relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, VIM is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE) or the increase in sum of square errors (SSE). The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate. 
-...
-Type 1 of the variable importance measure (VIM) is calculated by permutation, where "the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences" [@Liaw2018]. VIM type 2 "is the total decrease in node impurities from splitting on the variable, averaged over all trees. For classification, the node impurity is measured by the Gini index. For regression, it is measured by residual sum of squares" [@Liaw2018].
-...
-Despite the ability of RF to handle non-independent real world data, mixing categorical and quantitative data has shown bias towards variables with many categories, many missing values, and strong cross-correlations among predictor variables [@Strobl2008]. Therefore, some predictor refinement is important. 
+The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. The relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, VIM is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE, type 1) or the increase in sum of square errors (SSE, type 2). Type 1 of the variable importance measure (VIM) is calculated by permutation, where "the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences" [@Liaw2018]. VIM type 2 "is the total decrease in node impurities from splitting on the variable, averaged over all trees. For classification, the node impurity is measured by the Gini index. For regression, it is measured by residual sum of squares" [@Liaw2018]. The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate. Despite the ability of RF to handle non-independent real world data, bias can result from cross-correlations among predictor variables, and mixing categorical and quantitative data may result in bias towards variables with many categories or many missing values [@Strobl2008]. Therefore, some predictor refinement is important. 
 
 \  
 
@@ -52,11 +47,11 @@ Despite the ability of RF to handle non-independent real world data, mixing cate
 
 _update this because it's alluding to C-Q and you don't have Q_
 
-Storm events are understood to be a key driver for solute and particle mobilization in streams (e.g. @Aguilera2018; ...). Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop, the magnitude, and the direction of slope [@Aguilera2018].    
+Storm events are understood to be a key driver for solute and particle mobilization in streams (e.g. @Aguilera2018; ...*__add more refs__). Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop, the magnitude, and the direction of slope [@Aguilera2018].    
 
 \  
 
-Concentration-discharge relationships  (C-Q) can elucidate flow-paths and aid in estimating proportional streamflow contributions (i.e. subsurface vs overland, or near-stream vs. upland) [@Evans1999]. C-Q can be used to determine whether a catchment's solute export regime is chemostatic or chemodynamic [@Musolff2015]. In an assessment of ~400 stream events in coastal California, Aguilera and Melack [-@Aguilera2018] found that sediment-associated concentrations peaked during high flows but dissolved nitrogen species concentrations had hysteretic behaviour with flow, the direction of which differed depending on land-use. 
+Concentration-discharge relationships (C-Q) can elucidate flow-paths and aid in estimating proportional streamflow contributions (i.e. subsurface vs. overland, or near-stream vs. upland) [@Evans1999]. C-Q can be used to determine whether a catchment's solute export regime is chemostatic or chemodynamic [@Musolff2015]. In an assessment of ~400 stream events in coastal California, Aguilera and Melack [-@Aguilera2018] found that sediment-associated concentrations peaked during high flows but dissolved nitrogen species had hysteretic behaviour with flow, the direction of which differed depending on land-use. 
 
 \  
 
@@ -64,11 +59,11 @@ Dominant sources and flow paths during events can be inferred from the slope (po
 
 \  
 
-Using end-member mixing, with hydrometric monitoring and carbon isotope (δ^13^C~DOC~) data, Lambert et al. [-@Lambert2014] determined that approximately 80% of stream DOC flowed through the riparian domain's most superficial soil horizons, and that riparian soil DOC was sourced from both riparian and upland areas. Upland NOM source pools were determined to contribute significant amounts of carbon to streams, but were supply-limited; whereas riparian NOM was found to be a near-finite carbon source. Lambert et al. [-@Lambert2014] also found that upland sources contributed most early in the wet season (~30% of stream DOC) and less as high-flows continued (decreased to ~10% of stream DOC later in the wet period). In that vein, antecedent weather conditions are important for nutrient and sediment export and C-Q relationships, as the first precipitation events after a prolonged dry period can result in rapid flushing of accumulated material [@Aguilera2018].  
+Using end-member mixing, with hydrometric monitoring and carbon isotope (δ^13^C~DOC~) data, Lambert et al. [-@Lambert2014] determined that approximately 80% of stream DOC flowed through the riparian domain's most superficial soil horizons, and that riparian soil DOC was sourced from both riparian and upland areas. Upland NOM source pools were determined to contribute significant amounts of carbon to streams but were supply-limited; whereas riparian NOM was found to be a near-finite carbon source. Lambert et al. [-@Lambert2014] also found that upland sources contributed relatively more early in the wet season (~30% of stream DOC) and less as high-flows continued (decreased to ~10% of stream DOC later in the wet period). In that vein, antecedent weather conditions are important for nutrient and sediment export and C-Q relationships, as the first precipitation events after a prolonged dry period can result in rapid flushing of accumulated material [@Aguilera2018].  
 
 \  
 
-ANTECEDENT CONDITIONS....
+add info about ANTECEDENT CONDITIONS?
 
 \  
 
@@ -78,13 +73,13 @@ ANTECEDENT CONDITIONS....
 
 #### Site details
 
-This chapter focuses on the six Leech WSA monitoring sites (Figure \@ref(fig:subbasinMap)), which were equipped with Vertical Rack samplers. Nested catchments of the Leech WSA included two headwater streams, Weeks and Chris crk sub-basins (site 1, 11.5 km^2^  & site 2 , 5.9 km^2^); the head of Leech River ('Leech-head'), below the confluence of those two headwater streams (site 3, 20.6 km^2^ sub-basin); two major tributaries that feed the Leech, Cragg crk and West Leech sub-basins (site 4, 28.1 km^2^ & site 5, 20.9 km^2^), and Leech Tunnel (site 6) which encompassed drainage of the entire Leech WSA above the point of diversion (95.3 km^2^). Sample collection and analysis follow the methods detailed in Chapter 2. Of the main tributaries to the Leech River mainstem, Cragg crk had the lowest average concentration and least aromatic NOM character, while West Leech NOM was higher in concentration and more aromatic (Chapter 3). 
+This chapter focuses on the six Leech WSA monitoring sites (Figure \@ref(fig:subbasinMap)), which were equipped with Vertical Rack samplers. Nested catchments of the Leech WSA included two headwater streams, Weeks and Chris crk sub-basins (site 1, 11.5 km^2^  & site 2 , 5.9 km^2^); the head of Leech River ('Leech-head'), below the confluence of those two headwater streams (site 3, 20.6 km^2^ sub-basin); two major tributaries that feed the Leech, Cragg crk and West Leech sub-basins (site 4, 28.1 km^2^ & site 5, 20.9 km^2^), and Leech Tunnel (site 6) which encompassed drainage of the entire Leech WSA above the point of diversion (95.3 km^2^). Sample collection and analysis follow the methods detailed in Chapter 2. 
 
 \  
 
 ```{r subbasinMap, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:subbasinMap} Monitoring sites in the Leech Water Supply Area (WSA). Sites are named and numbered, where the number indicates both the sequence of vertical rack installations as well as the relative progression from headwaters to mouth. Each research basin boundary (defined using each sampling site as the drainage outlet) is outlined in black, and the Leech WSA boundary is delineated in red."
+fig_cap = "\\label{fig:subbasinMap} Monitoring sites in the Leech Water Supply Area (WSA). Sites are named and numbered, where the number indicates both the sequence of vertical rack installations as well as the relative progression from headwaters to mouth. Each sub-basin boundary (defined using each sampling site as the drainage outlet) is outlined in black, and the Leech WSA boundary is delineated in red."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_subbasin-sampling_with-numbers.png")
 ```
@@ -95,7 +90,7 @@ Surficial materials and soils in the Leech WSA were predominantly podzolic with 
 
 \ 
 
-There were a few notable differences in subsurface geology between sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). West Leech was characterized by the absence of wark-gneiss and chert-argillite-volcanic parent materials (0%), which were present in all other sub-basins. Both Weeks crk and West Leech sub-basins were dominated by argillite-metagreywacke parent material (64% and 77%, respectively). West Leech was also underlain by metagreywacke (7%) and Metchosin volcanics (16%), which were absent in each of the other monitoring sub-basins. Cragg crk sub-basin (site 4) was underlain predominantly by metamorphic wark gneiss (78%) with no argillite-metagreywacke parent material (0%). Metagreywacke parent materials are part of the metasedimentary Leech River Formation, where metagreywacke is meta-sandstone and argillite-metagreywacke is more of a meta-mudstone. The Leech River Formation tends to be more erodible than wark-gneiss [@Ussery2015]. Chris crk and Cragg crk sub-basins had no metasedimentary parent material of the Leech River Formation.
+There were a few notable differences in subsurface geology between sub-basins (Table \@ref(tab:WTScharacterSubbasinTable)). West Leech was characterized by the absence of wark gneiss and chert argillite volcanic parent materials (0%), which were present in all other sub-basins. Both Weeks crk and West Leech sub-basins were dominated by argillite metagreywacke parent material (64% and 77%, respectively). West Leech was also underlain by metagreywacke (7%) and Metchosin volcanics (16%), which were absent in each of the other monitoring sub-basins. Cragg crk sub-basin (site 4) was underlain predominantly by metamorphic wark gneiss (78%) with no argillite metagreywacke parent material (0%). Metagreywacke parent materials are part of the metasedimentary Leech River Formation, where metagreywacke is meta-sandstone and argillite metagreywacke is more of a meta-mudstone [@Groome2003]. The Leech River Formation tends to be more erodible than wark-gneiss [@Ussery2015]. Chris crk and Cragg crk sub-basins had no metasedimentary parent material of the Leech River Formation.
 
 \  
 
@@ -117,11 +112,11 @@ The watershed characteristics included in Table \@ref(tab:WTScharacterSubbasinTa
 
 #### Random Forests predictor variable refinement & quality control
 
-RF variable importance measures (VIMs) were used to assess the relative importance of sub-basin characteristics and conditions as predictors of NOM concentration and character. VIM was assessed via the MSE method. Possible predictor variables for NOM concentration (i.e. DOC) and character (i.e. SAC~254~ and E~2~:E~3~) included sub-basin characteristics of each of the six monitoring sites (Table \@ref(tab:WTScharacterSubbasinTable)) as well as sampling stage and antecedent weather conditions. To avoid undue bias [@Strobl2008] all predictor variables were numeric values (quantitative) and missing values were removed. As cross-correlated predictors can cause biased VIM in RF, variables with correlation coefficients greater than 0.65 were omitted (though there is no standard definition for levels of correlation coefficient strengths, 0.65 seemed a reasonable threshold to separate moderate and more strongly correlated variables). 
+RF variable importance measures (VIMs) were used to assess the relative importance of sub-basin characteristics and conditions as predictors of NOM concentration and character using the MSE method (type 1). Possible predictor variables for NOM concentration (i.e. DOC) and character (i.e. SAC~254~ and E~2~:E~3~) included sub-basin characteristics of each of the six monitoring sites (Table \@ref(tab:WTScharacterSubbasinTable)) as well as sampling stage and antecedent weather conditions. To avoid undue bias [@Strobl2008] all predictor variables were numeric values (quantitative) and missing values were removed. As cross-correlated predictors can cause biased VIM in RF, variables with correlation coefficients greater than 0.65 were omitted (though there is no standard definition for levels of correlation coefficient strengths, 0.65 seemed a reasonable threshold to separate moderate and more strongly correlated variables). 
 
 \  
 
-Values for median basin slopes were the same across three sites, so mean slopes were selected instead, as means were unique to each sampling basin. Sub-basin percent wetland cover was correlated with slope (-0.73), as well as forest cover (-0.97). Thus, wetland and forest percent cover were not included in VIM assessments, and slope was. Interestingly, the percent of sub-basins underlain by the meta-sedimentary Leech River formation (including argillite-metagreywacke (mudstone) and metagreywacke (meta-sandstone)) was correlated (-0.83) with 30-year logging history (percent of basin harvested 1980-2011). The Leech River geologic formation underlies the Weeks crk and West Leech sub-basins, which were also the two sub-basins least harvested since 1980 (Table \@ref(tab:WTScharacterSubbasinTable)). These are the types of correlations that could cause spurious VIM bias in RF, because it's unlikely that the presence of meta-sedimentary parent material was the cause for these basins to be less harvested. Parent-material variables were refined to metamorphic (wark-gneiss) and igneous (Metchosin volcanics & gabbro stocks), which did not show cross-correlation to other predictor variables. As one might expect, soil materials were correlated with geologic parent materials (as well as with each other and logging history), thus soils were not included with RF VIM predictor variables.  
+Values for median basin slopes were the same across three sites, so mean slopes were selected instead, as means were unique to each sampling basin. Sub-basin percent wetland cover was correlated with slope (-0.73), as well as forest cover (-0.97). Thus, wetland and forest percent cover were not included in VIM assessments, and slope was. Interestingly, the percent of sub-basins underlain by the meta-sedimentary Leech River formation (including argillite-metagreywacke (mudstone) and metagreywacke (meta-sandstone)) was correlated (-0.83) with 30-year logging history (percent of basin harvested 1980-2011). The Leech River geologic formation underlies the Weeks crk and West Leech sub-basins, which were also the two sub-basins least harvested since 1980 (Table \@ref(tab:WTScharacterSubbasinTable)). These are the types of correlations that could cause spurious VIM bias in RF, because it's unlikely that the presence of meta-sedimentary parent material was the cause for these basins to be less harvested. Parent material variables were refined to metamorphic (wark gneiss) and igneous (Metchosin volcanics & gabbro stocks), which did not show cross-correlation to other predictor variables. As one might expect, soil materials were correlated with geologic parent materials (as well as with each other and logging history), thus soils were not included with RF VIM predictor variables.  
 
 \  
 
@@ -143,21 +138,25 @@ Sampling stages for each site were scaled (min-max-normalized) to account for di
 
 \  
 
-Furthermore, 30 days of rain could be considered as an indicator of overall antecedent landscape wetness, whereas shorter periods of rain may not have been adequate indicators of wetness due to interception, evaporation, or evapotranspiration losses. A longer period of antecedent rain may be indicative of greater connectivity of streams to distant/deeper terrestrial environments. Using the same VIM parameters tuned for DOC prediction, 30-day antecedent rain was relatively more important than 7-day rain (15.3% vs. 12.8%) for predicting E~2~:E~3~, and 7-day antecedent air temperatures were more important than 30-day air temperatures (8.5% vs. 6.5%). This confirmed that relatively short-term temperatures (rolling 7-day mean)and relatively long-term rain (rolling 30-day sum) were appropriate selections for RF VIM assessments.
+Furthermore, 30 days of rain could be considered as an indicator of overall antecedent landscape wetness, whereas shorter periods of rain may not have been adequate indicators of wetness due to interception, evaporation, or evapotranspiration losses. A longer period of antecedent rain may be indicative of greater connectivity of streams to distant/deeper terrestrial environments. Using the same VIM parameters tuned for DOC prediction, 30-day antecedent rain was relatively more important than 7-day rain (15.3% vs. 12.8%) for predicting E~2~:E~3~, and 7-day antecedent air temperatures were more important than 30-day air temperatures (8.5% vs. 6.5%). This confirmed that relatively short-term temperatures (rolling 7-day mean) and relatively long-term rain (rolling 30-day sum) were appropriate selections for the RF VIM assessments.
 
 \  
 
-Surface and subsurface watershed characteristics were static values (e.g. basin slope, parent material), whereas sampling stage and antecedent weather were dynamic values (different for each sample). It was possible that RF might treat static values categorically, and RF bias can result from VIM assessment of combined categorical and numeric predictor variables. So, sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in overall relative VIM ranking results.  
+Surface and subsurface watershed characteristics were static values (e.g. basin slope, parent material), whereas sampling stage and antecedent weather were dynamic values (different for each sample). Although all variables were numeric, it was possible that RF might treat static values categorically, and RF bias can result from VIM assessment of combined categorical and quantitative predictor variables. So, sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in overall relative VIM ranking results.  
 
 \  
 
-RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a mode of quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results (below). Following RF VIM analysis, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Results of RF VIM assessment were also used to retrospectively infer importance of variables that were excluded from VIM due to their cross correlation(s). Where possible, important predictor variables were assessed for hysteretic behaviour. 
+RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a mode of quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results (below). 
+
+\  
+
+Following RF VIM analyses, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Results of RF VIM assessment were also used to retrospectively infer importance of variables that were excluded from VIM due to their cross correlation(s). Where possible, important predictor variables were assessed for hysteretic behaviour. 
 
 \  
 
 #### Hysteresis
 
-Hydrochemical hysteresis is most often evaluated through C-Q relationships, but the concept of hysteresis applies to any time-based predictor and effected values. The principle of hysteresis is based on a lag between a driving force (e.g. discharge, Q) and the analyte that is driven to change (e.g. solute concentration, C). Ideally, streamflow data would accompany all sample data collected for this research, however that was not the case. Stage data was collected, and given the strong relationship between stage and discharge, stage can be evaluated as an indicator for Q. Similarly, because streamflow in the Leech WSA is governed by precipitation, rain and antecedent wetness could be proxy data in a hysteresis analysis. Conditions that were calculated to be most important for predicting NOM concentration and character were plotted with their predictant to assess possible hysteresis. This was only possible for dynamic conditions with variable measurements (i.e. not static watershed characteristics predictors).
+Hydrochemical hysteresis is most often evaluated through C-Q relationships, but the concept of hysteresis applies to any time-based predictor and effected values. The principle of hysteresis is based on a lag between a driving force (e.g. discharge, Q) and the analyte that is driven to change (e.g. solute concentration, C). Ideally, streamflow data would accompany all sample data collected for this research, however that was not the case. Stage data was collected, and given the strong relationship between stage and discharge, stage can be evaluated as an indicator for Q. Similarly, because streamflow in the Leech WSA is governed by precipitation, antecedent wetness (rain) could be proxy data in a hysteresis analysis. Conditions that were calculated to be most important for predicting NOM concentration and character were plotted with their predictant to assess possible hysteresis; this was only possible for dynamic conditions with variable measurements (i.e. not static watershed characteristics predictors).
 
 \  
 
@@ -178,21 +177,17 @@ Results in the previous chapter showed elevated NOM in event-based samples, to e
 
 #### Random Forest variable importance
 
-A variable of random numbers was included with watershed characteristic and sampling condition predictors as a method of quality assurance (QA) in using the variable importance measure (VIM). Random numbers are not a real predictor of NOM concentration or character, so the VIM assessment should rank that QA variable as the least important predictor and assign it negligible importance. There are two methods for evaluating variable importance in randomForest (RF): type 1 measures the mean decrease in accuracy and type 2 measures the decrease in node impurity [@Liaw2018]. For the Leech WSA data, both VIM methods were checked and type 2 (total decrease in node impurities from splitting on the variable) assigned the random number variable relatively high importance (ranked more important than a real variable) while type 1 (permutation on out-of-bag data) ranked the random number variable as least important with insignificant weight [@Liaw2018]. These results clarified that type 1 VIM was the best choice and suggests that numeric data is best assessed for VIM by mean decrease in accuracy rather than mean decrease in node impurity.
+A variable of random numbers was included with watershed characteristic and sampling conditions as a method of quality assurance (QA) in using the RF variable importance measure (VIM). Because random numbers are not a real predictor of NOM concentration or character, the VIM assessment should rank the QA variable as the least important predictor and assign it negligible importance. Recall that there are two methods for evaluating variable importance in randomForest (RF): type 1 measures the mean decrease in accuracy and type 2 measures the decrease in node impurity [@Liaw2018]. For the Leech WSA data, both VIM methods were checked and type 2 (total decrease in node impurities from splitting on the variable) assigned the random number variable relatively high importance (ranked more important than a real variable) while type 1 (permutation on out-of-bag data) ranked the random number variable as least important with insignificant weight [@Liaw2018]. These results clarified that type 1 VIM was the best choice and suggests that quantitative data is best assessed for VIM by mean decrease in accuracy (MSE, type 1) rather than mean decrease in node impurity (SSE, type 2).
 
 \  
 
-In VIM assessment of predictors, bias can result from combining categorical and numeric predictor variables. Although all RF data was numeric (e.g. percent of drainage basin by area, normalized stage, etc.) it was possible that RF could treat dynamic condition variables differently than static watershed characteristic variables, so sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in overall relative VIM ranking results. While it was expected that the relative importance (as a percent) would shift when all predictants were combined, it was not expected that the relative ranking would change -- but it did. When conditions and characteristics were combined for RF VIM, the relative ranking of each predictant was changed compared to when conditions and characteristics were analyzed separately (see Appendix _XXXX_, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM, as was done here. Perhaps dynamic variables (that changed with the predictant) were treated for regression while static variables were treated categorically. Here, VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
-
-\  
-
-RF can sometimes find biased VIM if predictor variables are cross-correlated, and rain and stage were correlated (0.61 Pearson correlation coefficient), so RF VIM was run with only sampling stage, and with only antecedent 30-day rain and in both scenarios, each variable ranked at the same relative importance for predicting DOC.
+Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. While it was expected that the relative importance (as a percent) would shift when all predictant variables were combined, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix _XXXX_, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM, as was done here. Here, VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
 
 \  
 
 ##### DOC: concentration
 
-Across the Leech WSA monitoring sites, the condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and average tree age (Figure \@ref(fig:RFplotDOC)). 
+Across the Leech WSA monitoring sites, the condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and drainage area (Figure \@ref(fig:RFplotDOC)). 
 
 \  
 
@@ -207,7 +202,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-D
 
 ##### SAC~254~: reactivity & aromaticity
 
-Like concentration, SAC~254~ was best predicted by sampling stage. Unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin underlain by metamorphic parent material (wark gneiss), slope, and the importance of drainage area was nearly tied with that of 30-year logging history (Figure \@ref(fig:RFplotSAC254)).
+Like concentration, SAC~254~ was best predicted by sampling stage. Unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were slope, percent of the basin underlain by metamorphic parent material (wark gneiss), and drainage area (Figure \@ref(fig:RFplotSAC254)).
 
 
 \  
@@ -223,15 +218,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-S
 
 ##### E~2~:E~3~: molecular size & aromaticity
 
-The VIM ranking for sampling conditions for E~2~:E~3~ were the reverse of those for DOC. NOM molecular size and aromaticity (E~2~:E~3~) was best predicted by antecedent 30-day rain, followed by 7-day air temperatures and then sampling stage. 
-
-The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were percent of the basin logged from 1980-2011, followed by percent underlain by metamorphic parent material (wark gneiss) which was nearly tied with average tree age (Figure \@ref(fig:RFplotSAC254)).
+Sampling conditions VIM ranking for E~2~:E~3~ were the reverse of those for DOC. NOM molecular size and aromaticity (E~2~:E~3~) was best predicted by antecedent 30-day rain, followed by 7-day air temperatures and then sampling stage. The top three watershed characteristic predictors for E~2~:E~3~ were percent of the basin logged from 1980-2011, followed by percent underlain by metamorphic parent material (wark gneiss) which was nearly tied with average tree age (Figure \@ref(fig:RFplotE2E3)).
 
 \  
 
 ```{r RFplotE2E3, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:RFplotE2E3} Variable importance for predicting NOM aromaticity & size (E~2~:E~3~) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
+fig_cap = "\\label{fig:RFplotE2E3} Variable importance for predicting NOM aromaticity & molecular size (E~2~:E~3~) across six stream monitoring sites in the Leech River watershed. Variable importance measures were extracted from *randomForest* (in R) and determined by mean decrease in prediction accuracy (increase in the mean square error) in the absence of the predictor variable (i.e. type 1 importance measure)."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png")
 ```
@@ -240,13 +233,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E
 
 #### Predictors in relation to NOM concentration and character 
 
-When all variables were assessed together, sampling conditions were more important than Watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix, Figure \@ref(fig:RFallvars)). 
+When all variables were assessed together, sampling conditions were relatively more important than watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix, Figure \@ref(fig:RFallvars)). 
 
 \  
 
 ##### Sampling conditions
 
-The ranking of relative importance for sampling conditions were in reverse order for DOC (stage, temp, rain) and E~2~:E~3~ (rain, temp, stage). Like DOC, SAC~254~ was similarly influence most by sampling stage; and like E~2~:E~3~, SAC~254~ was more sensitive to antecedent wetness than antecedent air temperatures. The relative sensitivity of NOM concentration to stream stage points to hydrologic mass transport, whereas the sensitivity to antecedent wetness points to the importance of hydrologic connectivity between the terrestrial landscape and stream system for NOM molecular character. 
+The ranking of relative importance for sampling conditions were in reverse order for DOC (stage, temp, rain) and E~2~:E~3~ (rain, temp, stage). Like DOC, SAC~254~ was influence most by sampling stage; and like E~2~:E~3~, SAC~254~ was more sensitive to antecedent wetness than antecedent air temperatures. The relative sensitivity of NOM concentration to stream stage points to hydrologic mass transport, whereas the sensitivity to antecedent wetness points to the importance of hydrologic connectivity between the terrestrial landscape and stream system for NOM molecular character. 
 
 \  
 
@@ -271,7 +264,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png
 
 ###### Antecedent 7-day air temperature
 
-Antecedent 7-day mean air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10°C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix _XXX_, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
+Antecedent 7-day air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10°C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix _XXX_, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
 
 \  
 
@@ -291,7 +284,7 @@ Antecedent 30-day cumulative rain (i.e. antecedent wetness) was the sampling con
 
 \  
 
-Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ and antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
+Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ and antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris crk, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
 
 \  
 
@@ -316,7 +309,9 @@ Of watershed characteristics, the top predictors for NOM concentration and chara
 
 ###### Sub-basin slope
 
-Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. Across the six monitoring sites, the relationship between slope and these two variables  was not linear and an interesting pattern appeared, where the six monitoring basins were grouped in pairs with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. In general, lower sub-basin slope was related to higher DOC (Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
+Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. Across the six monitoring sites, the relationship between slope and these two variables was not linear but in general, lower sub-basin slope was related to higher DOC. An pattern appeared, where the six monitoring basins were grouped in pairs with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. 
+
+(Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
 
 \  
 
@@ -331,7 +326,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_slope.png
 
 ###### Parent material (metamorphic wark gneiss)
 
-Metamorphic parent material (wark gneiss) was inversely correlated (-0.92) to the metasedimentary Leech River Formation. The percent of wark gneiss in each sub-basin was ranked as the second most important watershed characteristic for predicting each of DOC, SAC~254~ and E~2~:E~3~.
+The percent of wark gneiss underlying each sub-basin was ranked as the second most important watershed characteristic for predicting each of DOC, SAC~254~ and E~2~:E~3~. Wark gneiss was inversely correlated (-0.92) to the metasedimentary Leech River Formation. 
  
 \  
 
@@ -350,7 +345,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 ###### Logging history and mean tree age 
 
-Of watershed characteristic variables, logging history (percent of basin harvested from 1980-2011) was ranked second for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~ and fourth for DOC. These two predictor variables were examined together because average tree age was partially due to the history of forest harvest.
+Of watershed characteristic variables, logging history (percent of basin harvested from 1980-2011) was ranked first for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~ and fourth for DOC. Tree age and logging history were examined together because average tree age was partially due to the history of forest harvest.
 
 \  
 
@@ -358,12 +353,12 @@ Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~
 
 \  
 
-Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge) it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but there error bars overlapped entirely).
+Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge), it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but their error bars overlapped entirely).
+
+__author note:__
 
 * it's also possible that the GIS layers for forest harvest and tree age were missing some details 
-
-
-what was the correlation when all variables combined??
+* what was the correlation when all variables combined??
 
 \  
 
@@ -378,24 +373,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-t
 
 ###### Drainage area
 
-Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentration and character were examined and no patterns were evident (Figure \@ref(fig:VIMareaBOX) ___ORRRR___ Figure \@ref(fig:VIMareaRIDGE)).
+Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentration and character were examined and no patterns were evident (Figure \@ref(fig:VIMareaRIDGE)).
 
 \  
-
-```{r VIMareaBOX, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:VIMareaBOX} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png")
-```
-
-\  
-
-OR
 
 ```{r VIMareaRIDGE, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:VIMareaRIDGE} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+fig_cap = "\\label{fig:VIMareaRIDGE} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed. Plots in the left-hand column include all monitoring sub-basins and the right-hand side shows only nested catchments to expand the compressed portion of the full plots. "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png")
 ```
@@ -404,30 +388,30 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-
 
 ##### Variable importance Summary
 
-Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface material was largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships. NOM concentration and character could be influenced by other parent materials, or combinations of parent materials, that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is actually a positive relationship between DOC and another parent material, likely the schist-like Leech River Formation. 
+Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface materials were largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is a positive relationship between NOM and another parent material, probably the schist-like Leech River Formation. 
 
 \ 
 
-Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. Like concentration, NOM character was driven by antecedent wetness but only up to a threshold of approximately 150 mm of 30-day antecedent rain. After this threshold, the relationship was no longer positive. In a similar way, NOM aromaticity increased with increasing sample collection stage up to approximately 60-75% of maximum stage at each site.
+Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. Like concentration, NOM character was driven by antecedent wetness but only up to a threshold of approximately 150 mm of 30-day antecedent rain. After this threshold, the relationship was no longer positive. In a similar way, NOM aromaticity increased with sampling stage up to approximately 60-75% of maximum stage at each site.
 
 \  
 
-#### Warm and wet: seasonal patterns and rain event
+#### Warm and wet: seasonal patterns and rain events
 
-Moisture and temperature, important to each of the three predictant variables, corresponded to different seasons. Given the evidence of strong seasonality for NOM character (Chapter 3), a comparison between the wet and dry season sample results was used to assess spatial difference between seasons for DOC, SAC~254~ and E~2~:E~3~. 
-
-\  
-
-During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks crk had greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris crk and Leech-head in SAC~254~ than in E~2~:E~3~. 
+Moisture and temperature, important to each of the three predictant variables, corresponded to different seasons. Given the evidence of strong seasonality for NOM character (Chapter 3), a comparison between wet and dry season sample results was used to assess spatial difference between seasons for DOC, SAC~254~ and E~2~:E~3~. 
 
 \  
 
-As we know from Chapter 3, DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest dry-season variance at the head (Weeks) and mouth (Tunnel). The dry season patterns of decreasing DOC and SAC~254~ from low- to high-order streams were apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downstream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differences suggest a possible shift in NOM source material, and/or a possible dilution effect.      
+During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks crk had greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris crk and Leech-head in SAC~254~ than in E~2~:E~3~. These results show that dry season aqueous NOM increased in aromaticity from upstream to downstream sites. 
+
+\  
+
+As we know from Chapter 3, DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest dry-season variance at the head (Weeks) and mouth (Tunnel). The dry season pattern of decreasing DOC from low- to high-order streams was apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downstream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differences support a shift in NOM source material, and/or a shift from NOM processing in the dry season and transport/dilution effects in the wet season.      
 
 \    
 
 ```{r seasonalNOM, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalNOM} Sample results over the dry and wet seasons for [A] dissolved organic carbon concentrations (DOC), [B] specific absorbance coefficient at 254 nm (SAC~254~, m^-1^), and [C] the quotient of SAC~250~/SAC~365~ (E~2~:E~3~). Note that each season has a differnt y-scale to clarify patterns. The inset in panel B is an elargement of SAC~254~ for all sites except Weeks."
+fig_cap = "\\label{fig:seasonalNOM} Sample results over the dry and wet seasons for [A] dissolved organic carbon concentrations (DOC), [B] specific absorbance coefficient at 254 nm (SAC~254~, m^-1^), and [C] the quotient of SAC~250~/SAC~365~ (E~2~:E~3~). Note that each season has a different y-scale to clarify patterns. The inset in panel B is an enlargement  of SAC~254~ for all sites except Weeks crk."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxplots-by-season.png")
 ```
@@ -435,9 +419,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxp
 \  
 
 
-##### Rising stage and NOM dynamics 
+##### Rising stage and aqueous NOM dynamics 
 
-Antecedent moisture and/or sampling stage was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked later than DOC during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). While E~2~:E~3~ indicated maximum aromaticity and molecular size occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
+Antecedent moisture and/or sampling stage was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked later than DOC during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). E~2~:E~3~ indicated maximum aromaticity and molecular size occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
 
 \  
 
@@ -452,7 +436,12 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>%
 
 \  
 
-Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six sites were temporally synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to evaluate the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks crk.
+Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six monitoring sites were synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to determine the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks crk.
+
+...
+\  
+
+early on, peak stage was more associated with DOC min, and later on it was more associated with DOC max.
 
 \  
 
@@ -556,6 +545,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_D
 DOC concentrations were highest early in the wet season with peak concentrations found in the first event-based samples, while aromaticity of NOM peaked in later events. For smaller and less aromatic NOM, peak rain events were third in the wet season while larger more aromatic NOM peaked in the final events of the sampled wet seasons. These results indicate that early wet-season rain events export DOC-rich, aliphatic NOM from sources that are likely autochthonous and quickly depleted. Later wet-season rain events transport larger, more aromatic NOM from source pools that are likely allochthonous humic material whose export relies on greater landscape saturation and hydrologic connectivity. While DOC decreased across the wet season, the highest DOC sample was found at the highest sampled stage approximately 80% of the time.    
 
 \  
+
+Perhaps dynamic variables (that changed with the predictant) were treated for regression while static variables were treated categorically. 
+
 
 For RF VIM assessment, predictor variables were separated based on whether they were static or dynamic with predictant variables because the combination of both types appeated to create bias in (not whether the input was numeric -- but rather whether the predictant changed (or not) with the predictor. 
 

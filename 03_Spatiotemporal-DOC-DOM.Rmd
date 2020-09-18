@@ -218,7 +218,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char
 \  
 
 ```{r wetSeasonPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetSeasonDOC} Wet season NOM concentration and character from six monitoring sites, comparing samples collected by Vertical Racks (event-based) and standard synoptic Grab sampling. Plot A shows concentration (as dissolved organic carbon (DOC) and plot B shows spectral absorbance coeffisient values at 254 nm (SAC~254~) which indicates aromaticity and reactivity."
+fig_cap = "\\label{fig:wetSeasonDOC} NOM concentration and character during the wet saeason at six monitoring sites, comparing samples collected by Vertical Racks (event-based) and standard synoptic Grab sampling. Plot A shows dissolved organic carbon (DOC) concentration and plot B shows spectral absorbance coefficient values at 254 nm (SAC~254~), which indicates NOM aromaticity and reactivity."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
