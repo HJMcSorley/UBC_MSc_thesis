@@ -6560,8 +6560,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-tree-age.png", wid
 *not enough data for Weeks?!
 
 ```{r}
-
-# pull the tunnel out
+# DOC
+# all sites
 a <- sixfilter_physiographic %>%
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(y = drainage_area_km2, x = NPOC_ppm)) +
@@ -6572,12 +6572,12 @@ a <- sixfilter_physiographic %>%
   guides(fill = guide_legend(nrow = 1)) +
   theme(legend.position = "top",
         text = element_text(size = 11)) +
-  labs(y = expression(Monitoring~site~drainage~area~(km^2)), x = "DOC (mg/L)" )
+  labs(y = expression(Drainage~area~(km^2)), x = "DOC (mg/L)" )
 
 # pull legend 
 a_legend <- cowplot::get_legend(a)
 
-# all together
+# sub-basins only
 b <- sixfilter_physiographic %>%
   filter(site != "Tunnel") %>% 
   filter(E2E3 > 3.5) %>% 
@@ -6588,12 +6588,91 @@ b <- sixfilter_physiographic %>%
   theme_bw() +
   theme(legend.position = "none",
         text = element_text(size = 11)) +
-  labs(y = expression(Sub-basin~drainage~area~(km^2)), x = "DOC (mg/L)" )
+  labs(y = "", 
+       x = "DOC (mg/L)",
+       title = "", subtitle = "nested catchments only")
 
 # put the sub-basin plot adjacent to all sites
-cowplot::plot_grid(a + theme(legend.position = "none"), 
-                   b, 
-                   nrow= 1)
+DOC_areas <- cowplot::plot_grid(a + theme(legend.position = "none"), b, nrow= 1)
+
+
+# ---
+# SAC254
+# all sites
+aa <- sixfilter_physiographic %>%
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = SAC254_Abs.m)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = expression(Drainage~area~(km^2)), 
+       x = expression(SAC[254]~(m^1)) )
+
+# sub-basins only
+bb <- sixfilter_physiographic %>%
+  filter(site != "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = SAC254_Abs.m)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = "", 
+       x = expression(SAC[254]~(m^-1)),
+       title = "", subtitle = "nested catchments only")
+
+# put the sub-basin plot adjacent to all sites
+SAc254_areas <- cowplot::plot_grid(aa, bb, nrow= 1)
+
+# ---
+# E2E3
+# all sites
+aaa <- sixfilter_physiographic %>%
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = E2E3)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = expression(Drainage~area~(km^2)), 
+       x = expression(E[2]:E[3]) )
+
+# sub-basins only
+bbb <- sixfilter_physiographic %>%
+  filter(site != "Tunnel") %>% 
+  filter(E2E3 > 3.5) %>% 
+  ggplot(aes(y = drainage_area_km2, x = E2E3)) +
+  theme_bw() +
+  ggridges::geom_density_ridges(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(y = "", 
+       x = expression(E[2]:E[3]),
+       title = "", subtitle = "nested catchments only")
+
+# put the sub-basin plot adjacent to all sites
+E2E3_areas <- cowplot::plot_grid(aaa, bbb, nrow= 1)
+
+# --- 
+# all together
+cowplot::plot_grid(DOC_areas, SAc254_areas, E2E3_areas,
+                   ncol = 1)
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png",
+       width = 6, height = 6, units = "in")
+                   
 
 ```
 
@@ -6673,8 +6752,7 @@ area_SAC254 <- cowplot::plot_grid(bb, b, ncol = 1, rel_heights = c(2,7), align =
 
 ```{r}
 
-area_DOC1 <- sixfilter_physiographic %>% 
-  filter(site != "Tunnel") %>% 
+area_DOC <- sixfilter_physiographic %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = drainage_area_km2, y = NPOC_ppm)) +
   theme_bw() +
@@ -6686,23 +6764,7 @@ area_DOC1 <- sixfilter_physiographic %>%
         text = element_text(size = 11)) +
   labs(x = "", y = "DOC (mg/L)" )
 
-area_DOC2 <- sixfilter_physiographic %>% 
-  filter(site == "Tunnel") %>% 
-  filter(E2E3 > 3.5) %>% 
-  ggplot(aes(x = drainage_area_km2, y = NPOC_ppm)) +
-  theme_bw() +
-  ylim(0, 15) +
-  geom_boxplot(aes(fill = site), alpha = 0.5) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "top",
-        text = element_text(size = 11), axis.text.y = element_blank()) +
-  labs(x = "", y = "", fill = "" )
-
-cowplot::plot_grid(area_DOC1, area_DOC2, nrow = 1, rel_widths = c(10,1))
-
 area_SAC254 <- sixfilter_physiographic %>% 
-  filter(site != "Tunnel") %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = drainage_area_km2, y = SAC254_Abs.m)) +
   theme_bw() +
@@ -6715,7 +6777,6 @@ area_SAC254 <- sixfilter_physiographic %>%
 
 
 area_E2E3 <- sixfilter_physiographic %>% 
-  filter(site != "Tunnel") %>% 
   filter(E2E3 > 3.5) %>% 
   ggplot(aes(x = drainage_area_km2, y = E2E3)) +
   theme_bw() +
@@ -9621,7 +9682,8 @@ RF_DOC_cond_RelImp1_MSE__DRYseason <- randomForest::importance(RF_DOC_condDRY, t
 
 RF : characteristics variables --- failures
 Surface DOC
-```{r}
+```
+{r}
 
 # select only watershed characteristic variables (essentially categorical (numeric) variables)
 surfaceCharacteristics_NPOC <- sixfilter_physiographic %>% 
@@ -9695,7 +9757,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_surface_DOC.png",
 ```
 
 same but with type=2 
-```{r}
+```
+{r}
 
 # --- RSS
 ## relative importance of features in predicting DOC
@@ -9736,7 +9799,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3A_RF_DOC_surfchar_RelImp2_RSE.
 ```
 
 E2E3 Surface
-```{r}
+```
+{r}
 
 # select only watershed characteristic variables (essentially categorical (numeric) variables)
 surfaceCharacteristics_E2E3 <- sixfilter_physiographic %>% 
@@ -9811,7 +9875,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_surface_E2E3.png",
 ```
 
 DOC RF surface -- seasonal 
-```{r}
+```
+{r}
 # wet season only -------------------------------------------------------
 # select only watershed characteristic variables (essentially categorical (numeric) variables)
 surfaceCharacteristics_NPOC_WET <- sixfilter_physiographic %>% 
@@ -9945,7 +10010,8 @@ RF_DOC_surfchar_RelImp1_MSE_DRY <- randomForest::importance(RF_DOC_chrc_surf_DRY
 ```
 
 Subsurface DOC
-```{r}
+```
+{r}
 # select subsurface predictor variables
 RF_subSurfaceCharacteristics_NPOC <- sixfilter_physiographic %>% 
   select(c("NPOC_ppm", # predict DOC
@@ -10015,7 +10081,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_subsurface_DOC.png",
 ```
 
 same but with type=2
-```{r}
+```
+{r}
 
 ## relative importance of features in predicting DOC
 # type 2 = mean decrease in node impurity
@@ -10051,7 +10118,8 @@ RF_DOC_chrc_SubSurf_RelImp2_RSE <- randomForest::importance(RF_DOC_chrc_SubSurf,
 ```
 
 E2E3 Subsurface
-```{r}
+```
+{r}
 # select subsurface predictor variables
 RF_subSurfaceCharacteristics_E2E3 <- sixfilter_physiographic %>%
   filter(!is.na(E2E3)) %>% 
@@ -10116,7 +10184,8 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_subsurface_E2E3.png",
 ```
 
 DOC RF subsurface - seasonal
-```{r}
+```
+{r}
 
 # wet season only -------
 # select subsurface predictor variables

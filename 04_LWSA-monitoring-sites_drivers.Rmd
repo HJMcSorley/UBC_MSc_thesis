@@ -378,20 +378,30 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-t
 
 ###### Drainage area
 
-Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentartion and character were examined and no patterns were evident (Figure \@ref(fig:VIMarea)).
+Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentration and character were examined and no patterns were evident (Figure \@ref(fig:VIMareaBOX) ___ORRRR___ Figure \@ref(fig:VIMareaRIDGE)).
 
 \  
 
-```{r VIMarea, fig.cap = fig_cap}
+```{r VIMareaBOX, fig.cap = fig_cap}
 
-fig_cap = "\\label{fig:VIMarea} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+fig_cap = "\\label{fig:VIMareaBOX} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png")
 ```
 
 \  
 
-  
+OR
+
+```{r VIMareaRIDGE, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:VIMareaRIDGE} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png")
+```
+
+\  
+
 ##### Variable importance Summary
 
 Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface material was largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships. NOM concentration and character could be influenced by other parent materials, or combinations of parent materials, that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is actually a positive relationship between DOC and another parent material, likely the schist-like Leech River Formation. 
