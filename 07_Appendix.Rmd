@@ -342,7 +342,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rai
 ## extended ch3 results
 ####### Results extended
 
-######## NOM sampling in nested catchments (from Ch.2)
+######## Ch.2 extended: NOM sampling in nested catchments
 
 Below the confluences of headwaters sites (Figure \@ref(fig:NOMnesty), plots A & B), the combination of Rack and Grab sampling did not capture the ranges of SAC~254~ observed in upstream Grab samples alone. At both sets of headwater sites, the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value =  0.0174). At higher order rivers, the combination of Rack and Grab samples at the Leech Tunnel site did capture the SAC~254~ ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:NOMnesty), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in SAC~254~ variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.105). 
 
@@ -369,6 +369,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot
 \
 
 ## extended chapter 4 results
+
+######## Ch.4 extended: RF VIM 
 
 Random Forest variable importance measure (VIM) treated static watershed characteristics categorically and treated dynamic sampling conditions as numeric variables to be used in regression. When conditions and characteristics were combined for RF VIM, the relative ranking of each predictant was changed compared to when conditions and characteristics were analyzed separately. While it was expected that the relative importance (as a percent) would shift when all predictants were combined, it was not expected that the relative ranking would change, and that suggests that these two groups (static and dynamic) of predictants should be separated for RF VIM. Compare plots for the two groups (Ch 4) to Figure \@ref(fig:RFallvars) and see how the relative rankings changed.
 

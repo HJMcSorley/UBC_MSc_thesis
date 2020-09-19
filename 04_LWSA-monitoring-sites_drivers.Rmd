@@ -45,8 +45,6 @@ The capacity to evaluate variable importance metrics sets RF apart from other da
 
 #### Hysteresis
 
-_update this because it's alluding to C-Q and you don't have Q_
-
 Storm events are understood to be a key driver for solute and particle mobilization in streams (e.g. @Aguilera2018; ...*__add more refs__). Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop, the magnitude, and the direction of slope [@Aguilera2018].    
 
 \  
@@ -181,7 +179,7 @@ A variable of random numbers was included with watershed characteristic and samp
 
 \  
 
-Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. While it was expected that the relative importance (as a percent) would shift when all predictant variables were combined, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix _XXXX_, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM, as was done here. Here, VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
+Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. While it was expected that the relative importance (as a percent) would shift when all predictant variables were combined, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix _XXXX_, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM. Here, variables were separated based on whether they were static or dynamic with predictant variables. The combination of dynamic and static predictor variables appeared to create bias relative VIM ranking. The key was not whether the input was numeric, but rather if the predictant changed (or not) with the predictor. It seems that dynamic variables (ones that changed with the predictant) were treated for regression while static variables were treated categorically. VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
 
 \  
 
@@ -438,11 +436,6 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>%
 
 Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six monitoring sites were synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to determine the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks crk.
 
-...
-\  
-
-early on, peak stage was more associated with DOC min, and later on it was more associated with DOC max.
-
 \  
 
 ```{r stageResponse}
@@ -472,7 +465,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simu
 
 \  
 
-Each of the six site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. In general DOC concentrations were lowest at the beginning of events and increased with a rise in stage (Figure \@ref(fig:extremaplot)). 
+Each of the six site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. In general DOC concentrations were lowest at the beginning of events and increased with a rise in stage (Figure \@ref(fig:extremaplot)). Early in the wet season, peak stage was more associated with minimum DOC, and later in the wet season peak stage was more associated with peak DOC. These results suggest dilution of NOM early in the wet season, and enrichment later in the wet season. 
 
 \  
 
@@ -483,12 +476,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-
 ```
 
 \  
-\  
 
-* Still to do:___look at individual events and pull out interesting facts (during this event, DOC concentration tripled or doubled, etc)... + differences among events___
-
-
-Changes in DOC during events varied from a little more than 1% DOC change to nearly 100% change during event response (Table \@ref(tab:DOCResponse)). In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not linear and not consistent. The relationships between spectral indicators of NOM character and stage showed less variation than DOC with stage at all sites; again, the relationships were not linear (Figure \@ref(fig:stageRelations)). Weeks crk maintained the most consistent NOM aromaticity and molecular weight (E~2~:E~3~) with changing stage
+For events where several samples were collected, the change in DOC concentration varied from a little more than 1% to nearly 100% (Table \@ref(tab:DOCResponse)). The smallest event-based concentration change occurred at Leech head (1.2%) and the Tunnel (1.4%). The largest event-based change in concentration was observed at West Leech (94.6%), and the second largest change occurred at Chris crk (82% change in DOC).  
 
 \  
 
@@ -501,8 +490,12 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
 
 \  
 
+At the Tunnel, Cragg crk and Chris crk, NOM concentration and aromaticity generally increased with stage; while at West Leech, aromaticity was inversely related to stage. Weeks crk maintained the most consistent NOM aromaticity and molecular weight (E~2~:E~3~) with changing stage (Figure \@ref(fig:stageRelations)). 
+
+\  
+
 ```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} Relationships between river stage and sample NOM concentrations and character, where connected lines show data density. Data for each variable were normalized (min-max normalization) to clarify relative scales in each relationship. None of the relationships were linear, some had larger variance and some variables remained consistent with changing stage."
+fig_cap = "\\label{fig:stageRelations} Relationships between river stage and sample NOM concentrations and character, where connected lines show data density. Data for each variable were normalized (min-max normalization) for comparison of relative scales in each relationship between sites."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DOC-NOM.png")
 ```
@@ -512,25 +505,22 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DO
 
 #### Hysteresis of NOM with antecedent wetness 
 
-Events 10 and 11 were relatively well represented by sampling and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain amounts (p = 0.732), durations (p = 0.837), and intensity (p = 0.549). 
-
-(Figure \@ref(fig:events1011))
+Events 10 and 11 were relatively well represented by sampling at each of the six sites and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain durations (p = 0.837), rain amounts (p = 0.732), rain intensity (p = 0.549), 
+DOC (p = 0.512), SAC~254~ (p= 0.218) and E~2~:E~3~ (p = 0.148). Samples were collected across the rising limb, near peak-flows, and at least one sample on the falling limb and at low flow (Figure \@ref(fig:events1011)).
 
 \  
 
 ```{r events1011, fig.cap = fig_cap}
-fig_cap = "\\label{fig:events1011} Stage and sample collection points six Leech watershed monitoring sites during rain events 10 and 11 (fall 2019). Vertical yellow lines indicate the start of each rain event. Results of samples in each event were compared to antecedent 30-day rain to assess hysteretic behaviour."
+fig_cap = "\\label{fig:events1011} Stage and sample collection points at six Leech watershed monitoring sites during rain events 10 and 11 (early fall 2019). Vertical yellow lines indicate the start of each rain event. Results of samples in each event were compared to antecedent 30-day rain to assess hysteretic behaviour."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png")
 ```
 
 \  
 
-Sample DOC concentrations from rain events 10 and 11 were plotted with their corresponding antecedent wetness (30-day rain) to explore possible hysteresis. The relationship of DOC concentration to antecedent wetness within a hydrologic event was interpreted in the same manner as a concentration-discharge (C-Q) relationship. Rapid flushing and dilution is indicated by a hysteresis loop with Clockwise rotation, and counter-clockwise rotation points to delayed material delivery and enrichment. Event 10 was the second measured rain event in the 2019/2020 wet season and had twice as much rain fall than event 11 (136 mm in event 10 compared to 68 mm in event 11, Table \@ref(tab:EventsTab)). Event 10 was longer in duration (6.4 days) compared to event 11 (2.3 days) with slightly lower intensity (21 vs 29 mm/24-hr). DOC concentrations were comparable between these two events (6.7 mg/L and 6.4 mg/L). 
+Sample DOC concentrations from rain events 10 and 11 were plotted with their corresponding antecedent wetness (30-day rain) to explore possible hysteresis (Figure \@ref(fig:hysteresisplots)). The relationship of DOC concentration to antecedent wetness within a hydrologic event was interpreted in the same manner as a concentration-discharge (C-Q) relationship. Rapid flushing and dilution are indicated by a hysteresis loop with clockwise rotation, and counterclockwise rotation points to delayed material delivery and enrichment. Event 10 was the second measured rain event in the 2019/2020 wet season and had twice as much rain fall than event 11 (136 mm in event 10 compared to 68 mm in event 11, Table \@ref(tab:EventsTab)). Event 10 was longer in duration (6.4 days) compared to event 11 (2.3 days) with slightly lower intensity (21 vs 29 mm/24-hr.). DOC concentrations were comparable between these two events (6.7 mg/L and 6.4 mg/L). There was a clockwise rotation pattern for DOC with antecedent wetness in event 10 and a counterclockwise rotation in event 11 (Figure \@ref(fig:hysteresisplots)). At the Tunnel, there was a change in loop direction at the end of the event. 
 
 \  
-
-There was a clockwise rotation pattern for DOC with antecedent wetness in event 10 and a counter clockwise rotation in event 11 (Figure \@ref(fig:hysteresisplots)). 
 
 ```{r hysteresisplots, fig.cap = fig_cap}
 fig_cap = "\\label{fig:hysteresisplots} Dissolved organic carbon (DOC) concentrations plotted with antecedent 30-day rain during events 10 and 11 at six monitoring sites in the Leech watershed."
@@ -542,57 +532,31 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_D
 
 ### Discussion
 
-DOC concentrations were highest early in the wet season with peak concentrations found in the first event-based samples, while aromaticity of NOM peaked in later events. For smaller and less aromatic NOM, peak rain events were third in the wet season while larger more aromatic NOM peaked in the final events of the sampled wet seasons. These results indicate that early wet-season rain events export DOC-rich, aliphatic NOM from sources that are likely autochthonous and quickly depleted. Later wet-season rain events transport larger, more aromatic NOM from source pools that are likely allochthonous humic material whose export relies on greater landscape saturation and hydrologic connectivity. While DOC decreased across the wet season, the highest DOC sample was found at the highest sampled stage approximately 80% of the time.    
+Of watershed characteristics, the amount of metamorphic parent material in each basin was the second most important predictor variable for NOM concentration and character. Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. This suggests that there is a more nuanced relationships between NOM concentrations and parent materials that couldn't be teased out in this RF analysis because of cross correlations between subsurface and other predictor variables. As the percent of wark gneiss was correlated to other parent materials, what is observed as an inverse relationship between DOC and amount of wark gneiss could potentially indicate a relationship of increasing DOC with the increase of the Leech River formation (argillite metagreywacke and metagreywacke), which was inversely correlated (-0.92) to wark gneiss coverage. 
+
+\ 
+
+Sampling conditions, especially stage and antecedent wetness, ranked among the most important for predicting each of DOC, SAC~254~ and E~2~:E~3~. Antecedent wetness is an important watershed driver for NOM export as it influences the availability of source material and impacts hydrologic connectivity, or flow paths [@McMillan2018]. The magnitude and direction of water quality changes in response to precipitation provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
 
 \  
 
-Perhaps dynamic variables (that changed with the predictant) were treated for regression while static variables were treated categorically. 
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Across the Leech WSA, peak stage was more associated with minimal DOC early in the wet seasons, whereas DOC tended to peak with stage later in the wet season. While DOC decreased across the wet season, the highest DOC sample was found at the highest sampled stage approximately 80% of the time. There was an apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of 30-day antecedent rain), which suggests a point at which humic NOM sources either reach maximum connectivity with the streams, or that the aromatic source pools were depleted.
 
-
-For RF VIM assessment, predictor variables were separated based on whether they were static or dynamic with predictant variables because the combination of both types appeated to create bias in (not whether the input was numeric -- but rather whether the predictant changed (or not) with the predictor. 
-
-\  
-
-Indeed, Random Forest variable importance measure showed that weather conditions, especially antecedent wetness, ranked among the most important for predicting each of DOC, SAC~254~ and E~2~:E~3~. Antecedent wetness is an important watershed driver for NOM export as it influences the availability of source material and impacts hydrologic connectivity, or flow paths [@McMillan2018]. Aromaticity of NOM increased with antecedent wetness and sampling stage up to a threshold level for each (approximately 75% of maximum stage and about 150 mm of 30-day antecedent rain). The apparent thresholds of sampling stage and antecedent wetness as drivers for NOM character suggest a point at which humic NOM sources either reach maximum connectivity with the streams, or that the aromatic source pools are depleted.
+* small catchment study with 80% of watersheds being related to PSC
 
 \  
 
-In general, DOC concentrations increased with increasing stage across the LWSA, thought the patterns were not necessarily linear and not always consistent. The relationships between spectral indicators of NOM character and stage showed tighter patterns than DOC concentration with stage at all sites, but again the relationships were not linear.
-
-\  the magnitude and direction of water quality changes in response to precipitation, which provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018].
-
-Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. Analysis of rising limb Rack samples showed that DOC increased with increasing stage and peak DOC coincided with peak sampling stage approximately 80% of the time.  
-
-
-\  
-
-although sampling stage was directly related to rain conditions, in that more rain generated greater stream rise, rain was relatively more important as a predictor for DOC concentration than sampling stage was... this indicates that it may not have been the stage at which samples were collected, but rather at the antecedent wetness conditions (if you consider rain a proxy for wetness, which seems reasonable). 
-
-
-
-\   
-
-A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited (i.e. depletion of terrestrial allochthonous NOM supply)  [@Zarnetske2018].
-
-\  
-
-``` gooder here:```
-Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. This suggests that there is a more nuanced relationships between NOM concentrations and parent materials that couldn't be teased out in this RF analysis because of cross correlations between subsurface and other predictor variables. As the percent of wark gneiss was correlated to other parent materials, what is observed as an inverse relationship between DOC and amount of wark gneiss could indicate another relationship, potentially of increasing DOC with the decrease of some other parent materials. Based on values presented in Table \@ref(tab:WTScharacterSubbasinTable) it could be a relationship with the Leech River formation (argillite metagreywacke and metagreywacke) which was inversely correlated (-0.92) to   
- wark gneiss coverage. 
+DOC concentrations were highest early in the wet season with peak concentrations found in the first event-based samples. Event-based NOM aromaticity, reactivity and molecular weight peaked later in the wet season; SAC~254~ peaked in the third rain event of the wet season and E~2~:E~3~ peaked in the final events of the sampled wet seasons. These results indicate that early wet-season rain events export DOC-rich, aliphatic NOM from sources that are likely autochthonous and quickly depleted. The antecedent wetness hysteresis loop of event 10 supports the hypothesis for dilution of near-stream (or in-stream) NOM. Later wet-season rain events transported larger, more aromatic NOM from source pools that are likely allochthonous humic material and whose export relied on greater landscape saturation and hydrologic connectivity. The hysteresis loop for event 11 supports the idea of NOM enrichment. 
  
- \  
+\  
 
 ___Future directions:___
 
-\  
-
-With additional Fire-weather data, it would be interesting to explore whether the variables for fire risk (humidity) were also predictors for increased NOM or DOC.
+With additional Fire-weather data, it would be interesting to explore whether the variables associated with increased fire risk (e.g. humidity) or mass wasting might also be predictors for NOM dynamics (or any other water quality parameter of interest).
 
 \  
 
-* matched sample filling-stage with continuous logger stage could be combined with rating curve to determine mass transport or loading... 
-
-Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
+In the future, vertical rack sampling (and matched sample filling-stage with continuous logger stage) could be combined with a rating curve to determine mass transport or loading. Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
 
 \  
 

@@ -4459,6 +4459,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_rack-trends.png",
 # (because the stage is arbitrarily references to the stilling well and it's the fluctuation that's important)
 stage_samples_norm <- stage_samples %>%
   ungroup() %>% 
+  filter(E2E3 > 1.25) %>%  # outlier
   filter(QAQC_flag == "OK") %>% 
   group_by(site) %>% 
   dplyr::mutate(norm_stg = (corr_stage_cm - min(corr_stage_cm, na.rm=T)) / (max(corr_stage_cm, na.rm=T) - min(corr_stage_cm, na.rm=T) ),
@@ -6192,7 +6193,7 @@ cowplot::plot_grid(stage_DOC, stage_SAC254, stage_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png",
-       width = 4, height = 6.5, units = "in")
+       width = 4, height = 5, units = "in")
 
 ```
 
@@ -6253,7 +6254,7 @@ cowplot::plot_grid(temp_DOC, temp_SAC254, temp_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_temp.png",
-       width = 4, height = 6.5, units = "in")
+       width = 4, height = 5, units = "in")
 
 ```
 
@@ -6353,7 +6354,7 @@ cowplot::plot_grid(train_DOC, train_SAC254, train_E2E3,
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png",
-       width = 5, height = 6.5, units = "in")
+       width = 4, height = 5, units = "in")
 
 ```
 
@@ -6577,7 +6578,7 @@ a <- sixfilter_physiographic %>%
   guides(fill = guide_legend(nrow = 1)) +
   theme(legend.position = "top",
         text = element_text(size = 11)) +
-  labs(y = expression(Drainage~area~(km^2)), x = "DOC (mg/L)" )
+  labs(y = expression(Drainage~area~(km^2)), x = "DOC (mg/L)", fill = "Site:" )
 
 # pull legend 
 a_legend <- cowplot::get_legend(a)
@@ -6649,7 +6650,7 @@ aaa <- sixfilter_physiographic %>%
   theme(legend.position = "none",
         text = element_text(size = 11)) +
   labs(y = expression(Drainage~area~(km^2)), 
-       x = expression(E[2]:E[3]) )
+       x = expression(E[2]:E[3]), caption = "A" )
 
 # sub-basins only
 bbb <- sixfilter_physiographic %>%
@@ -6664,15 +6665,18 @@ bbb <- sixfilter_physiographic %>%
         text = element_text(size = 11)) +
   labs(y = "", 
        x = expression(E[2]:E[3]),
-       title = "", subtitle = "nested catchments only")
+       title = "", subtitle = "nested catchments only", caption = "B")
 
 # put the sub-basin plot adjacent to all sites
 E2E3_areas <- cowplot::plot_grid(aaa, bbb, nrow= 1)
 
 # --- 
 # all together
-cowplot::plot_grid(DOC_areas, SAc254_areas, E2E3_areas,
-                   ncol = 1)
+sans <- cowplot::plot_grid(DOC_areas, SAc254_areas, E2E3_areas,
+                   ncol = 1, rel_heights = c(1,1,1.1))
+
+# add legend
+cowplot::plot_grid(a_legend, sans, ncol = 1, rel_heights = c(1,8))
 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png",
@@ -7638,6 +7642,7 @@ narrow_results %>%
   geom_density(aes(colour = site))+
   theme_bw()+
   theme(legend.position = "top") 
+
 # stage of the rest
 rest_results %>% 
   ggplot(aes(NPOC_ppm))+
@@ -7762,6 +7767,11 @@ subbset_Wilcoxon_tests <- bind_rows(
                               p.value > 0.05 ~ "NA")) # not significantly different (means are equal)
 # check it out
 subbset_Wilcoxon_tests
+
+# check mean p-values
+subbset_Wilcoxon_tests %>% 
+  group_by(Parameter) %>% 
+  summarise(mean = mean(p.value, na.rm = TRUE))
 
 # also
 # compare storm intensity and duration for these events

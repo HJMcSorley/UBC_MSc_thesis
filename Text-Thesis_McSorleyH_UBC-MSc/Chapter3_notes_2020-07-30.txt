@@ -88,7 +88,7 @@ intra-storm DOC (^13^C~DOC~) closely resemble riparian soil quality during that 
 Allochthonous inputs are dominant in headwater catchments [Aitkenhead et al., 1999; Billett et al., 2006)]and most of the export occurs during rain or melt events [Raymond and Saiers, 2010]
 
 
-I have no data from which to infer hydrologic connectivity between upland portions of the Leech catchments with the streams... just specualtion. 
+I have no data from which to infer hydrologic connectivity between upland portions of the Leech catchments with the streams... just speculation. 
 
 * autochthonous NOM could also originate near-stream in riparian areas
 
@@ -101,7 +101,7 @@ Hood et al., 2006; Inamdar and Mitchell, 2006; Inamdar et al., 2006
 
 For example, the release of microbial DOC may explain the DOC peaks observed in wet- land soils after dry summers (Kalbitz et al., 2000). As
 
---- meeee:
+--- meeee: ********************
 Results of this research show that Vertical Rack sampling stations coupled with synoptic grab sampling campaigns provide a reliable method for measuring water quality changes over time and across events. A key limitation of Vertical Rack sampling is isolation of siphon sample collection to only the rising hydrograph limb, additionally, high water can prohibit safe retrieval of colelcted samples from the Racks. Coupling mulitple monitoring sites provided good spatial resolution to accompany the event- and synoptic-based temporal resolution of sampling....
 
 I wonder if the higher molecular weight at the end of the wet season is indicative of potential intra-event shift from lower molecular weight NOM on the rising limb to higher MW, more aromatic NOM on the falling limb (possible shift between new/old water?)
@@ -140,7 +140,7 @@ Oswald et al. (2011), showed for a 0.8 km2 catchment in north- western Ontario, 
 
 Interpretations of hydrologic connectivity are often based on such changes in stream water chemistry (Uhlenbrook et al., 2004; Soulsby et al., 2007; Pacific et al., 2010).
 
-For in- stance, McGlynn and McDonnell (2003) used silica concentrations and isotope data for a 2.6 ha sub-catchment of the Maimai catchment in New Zealand to show that the contributions from the hillslopes were larger for an event with higher wetness conditions than for an event with drier initial conditions and were also larger on the falling limb of the hydrograph
+For instance, McGlynn and McDonnell (2003) used silica concentrations and isotope data for a 2.6 ha sub-catchment of the Maimai catchment in New Zealand to show that the contributions from the hillslopes were larger for an event with higher wetness conditions than for an event with drier initial conditions and were also larger on the falling limb of the hydrograph
 
 Zuecco et al. (2019) showed that the increase in subsurface connectivity was delayed compared to stream- flow (anticlockwise hysteresis) for two sub-catchments of the Studibach catchment in Switzerland, suggesting that hills- lope runoff may not be the dominant runoff source at the be- ginning of rainfall events for these small catchments.
 

@@ -195,7 +195,7 @@ Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) wer
 
 ### Foundational Results
 
-This section presents results used to informed all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and it's application in seasonal delineation and quality control for Vertical Rack sampling method development. 
+This section presents results used to informed all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and its application in seasonal delineation and quality control for Vertical Rack sampling method development. 
 
 \  
 
@@ -265,7 +265,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### NOM reactive character: SAC~254~ rather than SUVA~254~
 
-Comparison between disinfection byproduct formation potential (BDP-FP) with DOC, SUVA~254~ and SAC~254~ (Appendix #########) showed that SAC~254~ was a better correlated to DBP-FPs than was SUVA~254~ or DOC. Thus SUVA~254~ was largely omitted from results while SAC~254~ was included as an indicator of NOM aromaticity and reactivity. 
+Comparison between disinfection byproduct formation potential (BDP-FP) with DOC, SUVA~254~ and SAC~254~ (Appendix #########) showed that SAC~254~ was a better correlated to DBP-FPs than was SUVA~254~ or DOC. Thus, SUVA~254~ was largely omitted from results while SAC~254~ was included as an indicator of NOM aromaticity and reactivity. 
 
 \  
 

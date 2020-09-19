@@ -1,4 +1,6 @@
 
+Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. 
+
 antecedent 30-day rain MSE % = 12.87  // without stage: 13.5234 % MSE 
 antecedent 7-day rain MSE % = 11.66  // without stage: 12.0837 % MSE
 *these differences aren't huge but the change switched relative importance between rain and hold-time. 
@@ -208,3 +210,6 @@ ___end whacky section___
 
 
 Spatially, DOC and SAC~254~ decreased from low- to high-order streams during both wet and dry seasons; in contrast, E~2~:E~3~ had opposite patterns in the wet and dry seasons. From upstream to downstream, E~2~:E~3~ showed aromaticity increased in the dry-season and decreased in the wet-season. As indicators of aromaticity, the key difference between SAC~254~ and E~2~:E~3~ is that E~2~:E~3~ accounts for absorbance at 365 nm wavelength which corresponds to larger and more aromatic molecules. So, the different patterns observed for E~2~:E~3~ and SAC~254~ in the wet season suggests that relatively smaller aromatic NOM (measured by SAC~254~) was depleted along the reach  
+
+
+early on, peak stage was more associated with DOC min, and later on it was more associated with DOC max.
