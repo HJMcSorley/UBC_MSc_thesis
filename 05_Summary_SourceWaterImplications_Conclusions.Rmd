@@ -17,6 +17,10 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Discussion of results in context of drinking water supply
 
+Mean DOC among the six sites was essentially the same in both the wet and dry seasons (Chapter 3), but spatial patterns differed between the seasons. In the dry season, aqueous NOM aromaticity increased from upstream to downstream monitoring sites; while the wet season showed effects of dilution on both the quantity and quality of NOM. These seasonal differences support both a shift in NOM source material and a shift from NOM processing in the dry season and transport/dilution effects in the wet season.
+
+\  
+
 What are the implications for watershed management and future drinking water supply?
 
 Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.

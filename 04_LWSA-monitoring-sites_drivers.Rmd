@@ -282,7 +282,7 @@ Antecedent 30-day cumulative rain (i.e. antecedent wetness) was the sampling con
 
 \  
 
-Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ and antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris crk, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
+Fewer sample results existed for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ with antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For the available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris crk, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
 
 \  
 
@@ -301,15 +301,13 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain.png"
 
 ##### Watershed characteristics
 
-Of watershed characteristics, the top predictors for NOM concentration and character were a combination of mean sub-basin slope, metamorphic parent material (percent of basin), tree age (average), logging history (percent of basin harvested 1980-2011) and/or drainage area. 
+Of watershed characteristics, the top predictors for NOM concentration and character were a combination of mean sub-basin slope, metamorphic parent material (percent of basin), logging history (percent of basin harvested 1980-2011), tree age (average) and/or drainage area. 
 
 \  
 
 ###### Sub-basin slope
 
-Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. Across the six monitoring sites, the relationship between slope and these two variables was not linear but in general, lower sub-basin slope was related to higher DOC. An pattern appeared, where the six monitoring basins were grouped in pairs with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration. 
-
-(Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
+Sub-basin slope ranked most important as a predictor for DOC and SAC~254~. Across the six monitoring sites, the relationship between slope and these two variables was not linear but in general, lower sub-basin slope was related to higher DOC. A pattern appeared, where the six monitoring basins were grouped in pairs with two sites each between mean slopes of 9°- 10°, 10°- 11° and 11°- 12°. Within these pairs, the basin with lower slope had slightly greater NOM aromaticity, reactivity and concentration (Figure \@ref(fig:VIMslope)). Slope was negatively correlated to percent wetland (-0.73), and wetlands are known to be linked with high DOC concentrations and greater NOM aromaticity. Indeed, SAC~254~ indicated higher aromaticity in sub-basins with lower mean slope (Figure \@ref(fig:VIMslope)). While slope was not ranked as a strong predictor for E~2~:E~3~, the relationship between the two largely agreed with results for SAC~254~.
 
 \  
 
@@ -343,7 +341,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 ###### Logging history and mean tree age 
 
-Of watershed characteristic variables, logging history (percent of basin harvested from 1980-2011) was ranked first for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~ and fourth for DOC. Tree age and logging history were examined together because average tree age was partially due to the history of forest harvest.
+Logging history (percent of basin harvested from 1980-2011) was ranked first among watershed characteristics for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~. Tree age and logging history were examined together because average tree age was partially due to the history of forest harvest.
 
 \  
 
@@ -351,12 +349,7 @@ Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~
 
 \  
 
-Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge), it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but their error bars overlapped entirely).
-
-__author note:__
-
-* it's also possible that the GIS layers for forest harvest and tree age were missing some details 
-* what was the correlation when all variables combined??
+Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge), it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but their error bars overlapped entirely). It is possible that the GIS data for forest harvest and tree age were missing some details.
 
 \  
 
@@ -390,7 +383,7 @@ Of the watershed characteristics examined, the percent of each basin with metamo
 
 \ 
 
-Across the Leech WSA, warm conditions during the wet season were an important driver for DOC concentrations. Antecedent rain was positively related to DOC concentrations up to a 30-day accumulation of approximately 150 mm, at which point DOC concentrations declined with increasing antecedent wetness. This suggested a possible threshold at which dilution overtook NOM transport. Like concentration, NOM character was driven by antecedent wetness but only up to a threshold of approximately 150 mm of 30-day antecedent rain. After this threshold, the relationship was no longer positive. In a similar way, NOM aromaticity increased with sampling stage up to approximately 60-75% of maximum stage at each site.
+Across the Leech WSA, warm and wet conditions were an important driver for NOM concentration and character. Antecedent rain was positively related to DOC concentrations and sample aromaticity up to a threshold of approximately 150 mm of 30-day antecedent rain, at which point NOM concentration and aromaticity/reactivity/molecular weight declined with increasing wetness. This suggested a threshold at which dilution overtook NOM transport. In a similar way, NOM aromaticity increased with sampling stage up to approximately 60-75% of maximum stage at each site.
 
 \  
 
@@ -404,7 +397,7 @@ During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks crk had great
 
 \  
 
-As we know from Chapter 3, DOC concentrations decreased from headwaters to mouth in both the wet and dry seasons, with the greatest dry-season variance at the head (Weeks) and mouth (Tunnel). The dry season pattern of decreasing DOC from low- to high-order streams was apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downstream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differences support a shift in NOM source material, and/or a shift from NOM processing in the dry season and transport/dilution effects in the wet season.      
+The dry season pattern of decreasing DOC from low- to high-order streams was apparent in the wet season also. But the wet season spatial pattern of E~2~:E~3~ was almost the reverse of what was seen in the dry season. While dry season samples' E~2~:E~3~ showed increasing aromaticity from upstream to downstream, the wet season E~2~:E~3~ showed decreasing aromaticity from head to mouth. These seasonal differences support a shift in NOM source material, and/or a shift from NOM processing in the dry season and transport/dilution effects in the wet season.      
 
 \    
 
@@ -453,19 +446,19 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
 
 \  
 
-To determine is a similar harmony was present for fluctuations in DOC or spectral properties, the proportion of common DOC and stage extrema samples were calculated (Table \@ref(tab:synchDOCstage)). A proportion of 1 indicates perfect agreement between samples of extreme DOC and sample stage, and zero indicates complete asynchrony between DOC and stage highs and lows. Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. 
+To determine if a similar harmony was present for fluctuations in DOC or spectral properties, the proportion of common DOC and stage extrema samples were calculated (Table \@ref(tab:synchDOCstage)). A proportion of 1 indicates perfect agreement between samples of extreme DOC and sample stage, and zero indicates complete asynchrony between DOC and stage highs and lows. Most samples showed congruence between highs and lows of DOC with stage. West Leech was the only site which had a greater proportion of common maxima compared to minima, all other sites had more frequent occurrence of low DOC occurring at low stage that they did of high DOC occurring at high stage. 
 
 \  
 
 ```{r synchDOCstage}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(0,3,3),
+  knitr::kable(digits = c(0,4,4),
                caption = "Proportion of Samples for Which Peak Dissolved Organic Carbon (DOC) was Collected at the Highest Sample Stage.")
 ```
 
 \  
 
-Each of the six site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships. In general DOC concentrations were lowest at the beginning of events and increased with a rise in stage (Figure \@ref(fig:extremaplot)). Early in the wet season, peak stage was more associated with minimum DOC, and later in the wet season peak stage was more associated with peak DOC. These results suggest dilution of NOM early in the wet season, and enrichment later in the wet season. 
+Four of the six site's samples showed majority, but not absolute, agreement in extremes of DOC-stage relationships; Chris crk and Leech-head each had the same proportion of common maxima and minima. In general DOC concentrations were lowest at the beginning of events and increased with a rise in stage (Figure \@ref(fig:extremaplot)). Early in the wet season, peak stage was more associated with minimum DOC, and later in the wet season peak stage was more associated with peak DOC. These results suggest dilution of NOM early in the wet season, and enrichment later in the wet season. 
 
 \  
 
@@ -511,14 +504,14 @@ DOC (p = 0.512), SAC~254~ (p= 0.218) and E~2~:E~3~ (p = 0.148). Samples were col
 \  
 
 ```{r events1011, fig.cap = fig_cap}
-fig_cap = "\\label{fig:events1011} Stage and sample collection points at six Leech watershed monitoring sites during rain events 10 and 11 (early fall 2019). Vertical yellow lines indicate the start of each rain event. Results of samples in each event were compared to antecedent 30-day rain to assess hysteretic behaviour."
+fig_cap = "\\label{fig:events1011} Stage and sample collection points at six Leech watershed monitoring sites during rain events 10 and 11 (early fall 2019). Vertical yellow lines indicate the start of each rain event (event 10 and 11, respectively). Results of samples in each event were compared to antecedent 30-day rain to assess hysteretic behaviour of NOM with catchment wetness."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_sampling-events_10-11.png")
 ```
 
 \  
 
-Sample DOC concentrations from rain events 10 and 11 were plotted with their corresponding antecedent wetness (30-day rain) to explore possible hysteresis (Figure \@ref(fig:hysteresisplots)). The relationship of DOC concentration to antecedent wetness within a hydrologic event was interpreted in the same manner as a concentration-discharge (C-Q) relationship. Rapid flushing and dilution are indicated by a hysteresis loop with clockwise rotation, and counterclockwise rotation points to delayed material delivery and enrichment. Event 10 was the second measured rain event in the 2019/2020 wet season and had twice as much rain fall than event 11 (136 mm in event 10 compared to 68 mm in event 11, Table \@ref(tab:EventsTab)). Event 10 was longer in duration (6.4 days) compared to event 11 (2.3 days) with slightly lower intensity (21 vs 29 mm/24-hr.). DOC concentrations were comparable between these two events (6.7 mg/L and 6.4 mg/L). There was a clockwise rotation pattern for DOC with antecedent wetness in event 10 and a counterclockwise rotation in event 11 (Figure \@ref(fig:hysteresisplots)). At the Tunnel, there was a change in loop direction at the end of the event. 
+Sample DOC concentrations from rain events 10 and 11 were plotted with their corresponding antecedent wetness (30-day rain) to explore possible hysteresis (Figure \@ref(fig:hysteresisplots)). The relationship of DOC to antecedent wetness within a hydrologic event was interpreted in the same manner as a concentration-discharge (C-Q) relationship, where rapid flushing and dilution are indicated by a hysteresis loop with clockwise rotation, and counterclockwise rotation points to delayed material delivery and stream enrichment. Event 10 was the second measured rain event in the 2019/2020 wet season and had twice as much rain fall as event 11 (136 mm in event 10 compared to 68 mm in event 11, Table \@ref(tab:EventsTab)). Event 10 was longer in duration (6.4 days) compared to event 11 (2.3 days) with slightly lower intensity (21 vs 29 mm/24-hr.). Between these two events, mean DOC concentrations were comparable (6.7 mg/L and 6.4 mg/L). There was a clockwise rotation pattern for DOC with antecedent wetness in event 10 and a counterclockwise rotation in event 11 (Figure \@ref(fig:hysteresisplots)). At the Tunnel, there was a change in loop direction at the end of each event. 
 
 \  
 
@@ -532,25 +525,40 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_D
 
 ### Discussion
 
-Of watershed characteristics, the amount of metamorphic parent material in each basin was the second most important predictor variable for NOM concentration and character. Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. This suggests that there is a more nuanced relationships between NOM concentrations and parent materials that couldn't be teased out in this RF analysis because of cross correlations between subsurface and other predictor variables. As the percent of wark gneiss was correlated to other parent materials, what is observed as an inverse relationship between DOC and amount of wark gneiss could potentially indicate a relationship of increasing DOC with the increase of the Leech River formation (argillite metagreywacke and metagreywacke), which was inversely correlated (-0.92) to wark gneiss coverage. 
+Across the six monitoring sites in the Leech WSA, stream NOM concentration and character were influenced by warm and wet conditions and the parent material in each basin. 
 
 \ 
 
-Sampling conditions, especially stage and antecedent wetness, ranked among the most important for predicting each of DOC, SAC~254~ and E~2~:E~3~. Antecedent wetness is an important watershed driver for NOM export as it influences the availability of source material and impacts hydrologic connectivity, or flow paths [@McMillan2018]. The magnitude and direction of water quality changes in response to precipitation provides information about solute supply and hydrologic connectivity [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. 
+Sampling stage and antecedent wetness ranked among the most important variables for predicting NOM quantity and quality. Antecedent wetness is an important watershed driver for NOM export as it influences flow paths and hydrologic connectivity to source material [@McMillan2018]. Solute supply and hydrologic connectivity can be interpreted through the magnitude and direction of water quality changes in response to precipitation [@Vidon2008; @Abbott2018; @Creed2015; @Zarnetske2018]. In the Leech WSA, stage changed in response to precipitation and there was an apparent threshold (near 0.75 of peak sampling stage) that suggested a point at which terrestrial aromatic NOM pools had reached peak connectivity to the monitored streams. 
+
+\ 
+
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based changes in DOC concentration on the rising hydrograph limb varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). 
 
 \  
 
-A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source NOM. Alternatively, if DOC concentrations decrease with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Across the Leech WSA, peak stage was more associated with minimal DOC early in the wet seasons, whereas DOC tended to peak with stage later in the wet season. While DOC decreased across the wet season, the highest DOC sample was found at the highest sampled stage approximately 80% of the time. There was an apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of 30-day antecedent rain), which suggests a point at which humic NOM sources either reach maximum connectivity with the streams, or that the aromatic source pools were depleted.
+Across the Leech WSA stream samples with the highest DOC were collected at the highest sampled stage 83% of the time; there was also an 80% co-occurrence of low DOC with low sampling stage. Increasing concentrations with increasing stage indicate hydrologic connectivity to an rich supply of source NOM. Three of the six monitoring sites more often had low DOC collected at low stages that they did of high DOC occurring at high stages; the opposite was found at West Leech, where concentration and stage had a greater proportion of common maxima compared to common minima. The headwater sub-basin sites of Chris-crk and Leech-head had the same proportions of samples with common maxima and minima for DOC with stage. Peak stage was more often associated with minimal DOC early in the wet season, whereas DOC tended to peak with stage (or close to peak stage) later in the wet season. DOC concentrations were highest early in the wet season with peak concentrations found in the first event-based samples. Event-based NOM aromaticity, reactivity and molecular weight peaked later in the wet season: SAC~254~ peaked in the third rain event of the wet season and E~2~:E~3~ peaked in the final events of the sampled wet seasons.  
 
 * small catchment study with 80% of watersheds being related to PSC
 
+\   
+
+The observed temporal change in NOM concentration is evidence of early wet-season NOM being limited in supply and subject to rapid flushing, while late wet-season NOM in streams was drawn from a more sustainable pool of source material. The apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of antecedent 30-day rain), suggested a point at which humic NOM sources either reach maximum connectivity with the streams, or that the aromatic source pools were depleted.
+
+These results indicate that early wet-season rain events export DOC-rich, aliphatic NOM from sources that are likely autochthonous and quickly depleted. The antecedent wetness hysteresis loop of event 10 supports the hypothesis for dilution of near-stream (or in-stream) NOM early in the wet season. Later wet-season rain events transported larger, more aromatic NOM from source pools that are likely allochthonous humic material and whose export relied on greater landscape saturation and hydrologic connectivity. The hysteresis loop for event 11 supports the idea of stream NOM enrichment occurring as antecedent wetness increased (i.e. hydrologic connectivity increased). 
+
 \  
 
-DOC concentrations were highest early in the wet season with peak concentrations found in the first event-based samples. Event-based NOM aromaticity, reactivity and molecular weight peaked later in the wet season; SAC~254~ peaked in the third rain event of the wet season and E~2~:E~3~ peaked in the final events of the sampled wet seasons. These results indicate that early wet-season rain events export DOC-rich, aliphatic NOM from sources that are likely autochthonous and quickly depleted. The antecedent wetness hysteresis loop of event 10 supports the hypothesis for dilution of near-stream (or in-stream) NOM. Later wet-season rain events transported larger, more aromatic NOM from source pools that are likely allochthonous humic material and whose export relied on greater landscape saturation and hydrologic connectivity. The hysteresis loop for event 11 supports the idea of NOM enrichment. 
+Despite sub-basin DOC decreasing with increasing metamorphic representation, the absence of wark gneiss did not correspond to the site with highest DOC. The relationships observed between NOM and metamorphic parent material suggests a more complex relationship between subsurface watershed characteristics and NOM dynamics. The metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins.  
+
+
+
+\  
+
  
 \  
 
-___Future directions:___
+#### Future directions
 
 With additional Fire-weather data, it would be interesting to explore whether the variables associated with increased fire risk (e.g. humidity) or mass wasting might also be predictors for NOM dynamics (or any other water quality parameter of interest).
 

@@ -6400,6 +6400,48 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorphic.png",
 
 ```
 
+#### Leech Rv Formation
+```{r}
+LRF_DOC <- sixfilter_physiographic %>% 
+  ggplot(aes(x = geo_LeechRiverFormation_percent, y = NPOC_ppm)) +
+  theme_bw() +
+  geom_boxplot(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "top",
+        text = element_text(size = 11)) +
+  labs(x = "", y = "DOC (mg/L)")
+
+LRF_SAC254 <- sixfilter_physiographic %>% 
+  ggplot(aes(x = geo_LeechRiverFormation_percent, y = SAC254_Abs.m)) +
+  theme_bw() +
+  geom_boxplot(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(x = "", y = expression(SAC[254]~(m^-1)) )
+
+LRF_E2E3 <- sixfilter_physiographic %>% 
+  ggplot(aes(x = geo_LeechRiverFormation_percent, y = E2E3)) +
+  theme_bw() +
+  geom_boxplot(aes(fill = site), alpha = 0.5) +
+  scale_fill_brewer(palette="Set2") +
+  theme_bw() +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(x = "Leech River Formation, metasedimentary parent material (%)", 
+       y = expression(E[2]:E[3]) )
+
+# together
+cowplot::plot_grid(LRF_DOC, LRF_SAC254, LRF_E2E3,
+                   ncol = 1, align = "v", rel_heights = c(2, 1.3, 1.3))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_LRF-parentmaterial.png",
+       width = 4, height = 6, units = "in")
+
+```
 
 ### slope
 ```{r}
@@ -8153,7 +8195,7 @@ coincident_peaks <- sixfilter %>%
          sample != "Algae",      # remove sample containing whole algae (high DOC)
          QAQC_flag == "OK",      # remove samples with extended hold-time  
          sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5",# no reps
-         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm), NPOC_ppm != 0) %>%  # drop NAs
+         !is.na(sampleStage_cm), !is.na(NPOC_ppm), NPOC_ppm != 0) %>%  # drop NAs
   select(c(site, trip, event_ID, DateTime_sampled, sample, NPOC_ppm, sampleStage_cm, HoldTime_days, QAQC_flag, Hobo_Tmean_airDaily)) %>% 
   mutate(sample = as.character(sample)) %>% 
   group_by(site, trip, event_ID) %>% 
