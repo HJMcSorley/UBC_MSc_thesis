@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-## Summary & Conclusions
+## Concluding discussion: linking results and concepts  
 
 ```{r discussion-setup, warning = FALSE, message = FALSE, include = FALSE, package.startup.message = FALSE}
 

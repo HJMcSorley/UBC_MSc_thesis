@@ -193,7 +193,7 @@ Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) wer
 
 \  
 
-### Foundational Results
+### Foundational results
 
 This section presents results used to informed all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and its application in seasonal delineation and quality control for Vertical Rack sampling method development. 
 
@@ -333,7 +333,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 \  
 
-#### Foundational Results summary 
+#### Summary 
 
 Results of hold-time experiments suggest that early-wet-season ("first flush") samples may contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character (i.e. aromaticity, molecular size, reactivity); and while DOC concentrations were not statistically altered, there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in NOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%. 
 

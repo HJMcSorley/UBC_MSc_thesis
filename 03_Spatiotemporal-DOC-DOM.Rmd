@@ -50,7 +50,7 @@ Samples were also measured for phosphate concentration using a colourimetric (as
 
 \  
 
-#### Spatial patterns  
+#### Spatial patterns in NOM quantity and quality  
 
 From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation (RSD = std.dev/mean) for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. 
 
@@ -267,7 +267,7 @@ While concentrations remained similar on average over seasons, NOM character was
 
 \  
 
-### Conclusions and future directions 
+### Summary and future directions 
 
 The objective of this work was to design a sampling strategy to measure the ranges of NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of NOM concentrations and character (aromaticity and reactivity), and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams.
 

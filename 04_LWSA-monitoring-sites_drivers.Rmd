@@ -17,7 +17,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \ 
 
-### Synopsis / Introduction
+### Synopsis and introduction
 
 The previous chapter showed that across the Greater Victoria Water Supply Area (GVWSA), the character of natural organic matter (NOM) shifted from aliphatic in the dry season to aromatic during the wet seasons. Additionally, Chapter 3 results confirmed that event-based Rack samples had higher DOC concentrations than standard Grab samples. The seasonal character shift agreed with predictions of the river continuum concept (RCC), as did an observed spatial reduction in NOM molecular diversity from lower-order to higher-order streams [@Vannote1980; @Abbott2018; @Mosher2015; @Creed2015]. Elevated NOM in stormflow was expected (e.g. @Vidon2008; @Raymond2010) and is a key aspect of the pulse-shunt concept [@Raymond2016]. 
 
@@ -558,7 +558,7 @@ Despite sub-basin DOC decreasing with increasing metamorphic representation, the
  
 \  
 
-#### Future directions
+#### Summary and future directions
 
 With additional Fire-weather data, it would be interesting to explore whether the variables associated with increased fire risk (e.g. humidity) or mass wasting might also be predictors for NOM dynamics (or any other water quality parameter of interest).
 
@@ -567,8 +567,6 @@ With additional Fire-weather data, it would be interesting to explore whether th
 In the future, vertical rack sampling (and matched sample filling-stage with continuous logger stage) could be combined with a rating curve to determine mass transport or loading. Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
 
 \  
-
-### Conclusions
 
 * establishing connectivity among nested catchments as a baseline for experimental treatments (future)
 
