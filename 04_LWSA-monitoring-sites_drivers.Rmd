@@ -185,7 +185,7 @@ Sub-basin characteristics and conditions were evaluated independently as well as
 
 ##### DOC: concentration
 
-Across the Leech WSA monitoring sites, the condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and drainage area (Figure \@ref(fig:RFplotDOC)). 
+Across the Leech WSA monitoring sites, the condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and average tree age (Figure \@ref(fig:RFplotDOC)). 
 
 \  
 
@@ -200,7 +200,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-D
 
 ##### SAC~254~: reactivity & aromaticity
 
-Like concentration, SAC~254~ was best predicted by sampling stage. Unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were slope, percent of the basin underlain by metamorphic parent material (wark gneiss), and drainage area (Figure \@ref(fig:RFplotSAC254)).
+Like concentration, SAC~254~ was best predicted by sampling stage. Unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were slope, percent of the basin underlain by metamorphic parent material (wark gneiss), and logging history (Figure \@ref(fig:RFplotSAC254)).
 
 
 \  
@@ -341,7 +341,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_metamorph
 
 ###### Logging history and mean tree age 
 
-Logging history (percent of basin harvested from 1980-2011) was ranked first among watershed characteristics for predicting E~2~:E~3~ and fourth for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~. Tree age and logging history were examined together because average tree age was partially due to the history of forest harvest.
+Logging history (percent of basin harvested from 1980-2011) was ranked first among watershed characteristics for predicting E~2~:E~3~ and third for predicting SAC~254~. Average tree age was third in variable importance for predicting E~2~:E~3~ and DOC. Tree age and logging history were examined together because average tree age was partially due to the history of forest harvest.
 
 \  
 
@@ -358,21 +358,6 @@ Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respective
 fig_cap = "\\label{fig:VIMloggingtree} Sub-basin mean tree age as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-tree-age.png")
-```
-
-\  
-
-###### Drainage area
-
-Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentration and character were examined and no patterns were evident (Figure \@ref(fig:VIMareaRIDGE)).
-
-\  
-
-```{r VIMareaRIDGE, fig.cap = fig_cap}
-
-fig_cap = "\\label{fig:VIMareaRIDGE} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed. Plots in the left-hand column include all monitoring sub-basins and the right-hand side shows only nested catchments to expand the compressed portion of the full plots. "
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png")
 ```
 
 \  
@@ -529,7 +514,7 @@ The sampling conditions and watershed characteristics included in Random Forest 
  
 \  
 
-Sub-basin NOM concentration and aromaticity decreased with increasing representation of metamorphic wark gneiss parent material, but its absence did not correspond to the site with highest concentration or aromaticity. The patterns observed between NOM and metamorphic parent material suggests a more complex relationship between watershed characteristics and NOM dynamics. The metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins and wasn't included in RF VIM analyses.    
+Sub-basin NOM concentration and aromaticity decreased with increasing representation of metamorphic wark gneiss parent material, but its absence did not correspond to the site with highest concentration or aromaticity. The patterns observed between NOM and metamorphic parent material suggests a more complex relationship between watershed characteristics and NOM dynamics. The metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins and wasn't included in RF VIM analyses. There may be an effect on aqueous NOM associated with a combination of parent materials and soil development that wasn’t full elucidated in this analysis.      
 
 \  
 

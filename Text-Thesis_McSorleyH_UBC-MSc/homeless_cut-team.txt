@@ -1,3 +1,20 @@
+-> from Chapter 4 VIM Results
+
+###### Drainage area
+
+Sub-basin drainage area was ranked third for predicting DOC and SAC~254~, and fourth in variable importance for E~2~:E~3~. The relationships between drainage area and NOM concentration and character were examined and no patterns were evident (Figure \@ref(fig:VIMareaRIDGE)).
+
+\  
+
+```{r VIMareaRIDGE, fig.cap = fig_cap}
+
+fig_cap = "\\label{fig:VIMareaRIDGE} Sub-basin drainage area as a predictor for NOM concentration (DOC) and character (SAC~254~ & E~2~:E~3~) across six monitoring sites in the Leech watershed. Plots in the left-hand column include all monitoring sub-basins and the right-hand side shows only nested catchments to expand the compressed portion of the full plots. "
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area_ridges.png")
+```
+
+\
+
 
 Increasing DOC on the rising limb indicates that source material is not limited and flux is driven by hydrologic connectivity; whereas source limited conditions likely drive NOM dynamics if DOC concentration decreases on the rising limb [@Zarnetske2018]. 
 

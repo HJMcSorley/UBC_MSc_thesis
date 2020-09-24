@@ -5225,9 +5225,9 @@ staticVariables_DOC <- sixfilter_physiographic %>%
   select(c(NPOC_ppm, # predict DOC
            #geo_LeechRiverFormation_percent,
            #wetland_percent,
-           COLL_O.HFP_percent,
+           #COLL_O.HFP_percent,
            geo_metamorphic_percent,
-           #geo_igneous_percent,
+           geo_igneous_percent,
            drainage_area_km2,
            slope_mean_degrees,
            tree_age_average,
@@ -5398,7 +5398,7 @@ staticVariables_E2E3 <- sixfilter_physiographic %>%
   filter(!is.na(E2E3)) %>%
   select(c(E2E3, # predict SAC254
            #geo_LeechRiverFormation_percent,
-           COLL_O.HFP_percent,
+           #COLL_O.HFP_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
@@ -5483,7 +5483,7 @@ RFsep_E2E3 <- cowplot::plot_grid(RFplot_dynamic_E2E3, RFplot_static_E2E3,
                                  rel_heights = c(1, 1.6))
 
 # save it
-#ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", width = 6, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", width = 6, height = 4, units = "in")
 
 ```
 
@@ -5568,7 +5568,7 @@ staticVariables_SAC254 <- sixfilter_physiographic %>%
   filter(!is.na(SAC254_Abs.m)) %>%
   select(c(SAC254_Abs.m, # predict SAC254
            #geo_LeechRiverFormation_percent,
-           COLL_O.HFP_percent,
+           #COLL_O.HFP_percent,
            geo_metamorphic_percent,
            geo_igneous_percent,
            drainage_area_km2,
@@ -5654,7 +5654,7 @@ RFsep_SAC254 <- cowplot::plot_grid(RFplot_dynamic_SAC254, RFplot_static_SAC254,
                                    rel_heights = c(1, 1.6))
 
 # save it
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", width = 6, height = 4, units = "in")
+ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", width = 6, height = 4, units = "in")
 
 
 ```
