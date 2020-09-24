@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-## Concluding discussion: linking results and concepts  
+## Linking Research Results with Concepts of Forest Hydrology and Source Water Treatability
 
 ```{r discussion-setup, warning = FALSE, message = FALSE, include = FALSE, package.startup.message = FALSE}
 
@@ -15,7 +15,33 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
-### Discussion of results in context of drinking water supply
+### Synopsis of results
+
+#### Quantity and quality of NOM
+
+##### Spatiotemporal dynamics
+
+* upstream to downstream patterns in quality changed between seasons but seasonal mean quantities were essentially the same (and DOC exceeded source water guidelines for TOC).
+* 
+
+##### Drivers for variation
+
+* wetness connecting 
+
+### Drinking water supply lens
+
+* establishing connectivity among nested catchments as a baseline for experimental treatments (future)
+
+#### Seasonality and Leech River diversion for inter-basin water transfers
+
+#### 
+
+
+
+
+.
+.
+.
 
 Mean DOC among the six sites was essentially the same in both the wet and dry seasons (Chapter 3), but spatial patterns differed between the seasons. In the dry season, aqueous NOM aromaticity increased from upstream to downstream monitoring sites; while the wet season showed effects of dilution on both the quantity and quality of NOM. These seasonal differences support both a shift in NOM source material and a shift from NOM processing in the dry season and transport/dilution effects in the wet season.
 
