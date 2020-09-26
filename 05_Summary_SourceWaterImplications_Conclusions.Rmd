@@ -15,18 +15,66 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ```
 
+This chapter summarizes results from Chapters two to four, and discusses them in context of a forested drinking water supply with interpretation of watershed attributes, weather and climate and 
+
 ### Synopsis of results
 
-#### Quantity and quality of NOM
+Stream water samples were collected from across the Greater Victoria Water Supply Area (GVWSA) and aqueous natural organic matter (NOM) was evaluated for quantity and quality. 
+
+Vertical Racks for passive event sampling were coupled with synoptic Grab sampling campaigns to measuring water quality changes over time, through events, and across the GVWSA. A challenge of Vertical Rack sampling is that high water can prohibit safe retrieval of collected samples from the Racks. Coupling continuously recorded stage with manually recorded siphon bottle heights allowed for calculation of sample hold-times and quality control measures for samples that had exceeded an acceptable holding time. Siphon sampling by Vertical Racks is currently limited to the rising hydrograph limb, but the combination of Grab and Rack sampling can achieve good representation across the hydrograph.
+
+
+Natural organic matter (NOM) is a complex assembly of carbon-based molecules. The complicated medley that comprises NOM can be estimated by quantifying the organic carbon that forms its backbone. The molecular structure of NOM can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the NOM source. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while NOM from in-stream sources such as algae (i.e. autochthonous NOM) is typically less aromatic, more aliphatic and protein-like in structure.  
+
+The quantity and quality of NOM vary over space and time, and understanding the spatiotemporal patterns of concentrations and character can help to inform source drinking water management decisions and can provide information about watershed science with respect to the origins, transport and fate of aqueous parameters.
+
+
+
+
+
 
 ##### Spatiotemporal dynamics
 
+The sampling period spanned sixteen months, from October 2018 to February 2020. 
+
+Seasons were defined by the onset of sample collection by Vertical Racks, such that the wet season included antecedent wetness conditions and rain events that were substantial enough to create event response in each of the six Leech WSA monitoring site streams. Sampling began after the start of the 2018-2019 wet season, which ran until mid-May 2019. One dry season was sampled, the 2019 dry season (mid-May to late September 2019). 
+
+#### Quantity and quality of NOM
+
+The quantity of aqueous NOM was assessed as the concentration of dissolved organic carbon in each sample. 
+
+The quality of NOM was measured by UV-Vis spectrophotometry and the specific absorbance coefficient at 254 nm (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity (with respect to disinfection byproduct formation potential). And the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate aromaticity and molecular size. 
+
+It was assumed that the UV-Vis spectral absorbances for each stream water sample were due to the natural organic matter content, however it is possible that other water quality variables caused interference. For example, nitrogen species and dissolved iron can absorb light at the wavelengths common to NOM (i.e. 250 nm, 254 nm and 365 nm).
+
+
 * upstream to downstream patterns in quality changed between seasons but seasonal mean quantities were essentially the same (and DOC exceeded source water guidelines for TOC).
-* 
+
+
+* sub-basins in the west had stream NOM of more aromatic quality than the sub-basins in the east of the Leech WSA. In the wet season, when hydrologic connectivity was greatest, the West Leech sub-basin had aromaticity and molecular size comparable to that of the wetland and lake-dominated Weeks crk sub-basin; though in the dry season, Weeks crk maintained highly aromatic character of stream NOM while the other sub-basins had lower molecular wight, less aromatic NOM than was found at the Tunnel site. The dry season spatial pattern of NOM quality was not expected. Based on the RCC, it was expected that there would be a spatial reduction in NOM character from headwaters to mouth. However, in the dry season, samples collected at the highest order stream (at the future point of diversion) were more aromatic in NOM character than all of the nested catchments except for Weeks crk, which maintained highly aromatic NOM throughout the year due to proximity to the wetlands of Weeks Lake.  
+
+
+* storm responses: early in the wet season there was a decrease in NOM concentration with increasing flows (higher stage), and as the wet season progresses, stream NOM concentration and aromaticity increased with increasing flows.
+
+
+Spatial variation in fluvial water quality can be attributed to hydrological processes and watershed characteristics, as described by the river continuum concept and the pulse-shunt concept [@Vannote1980; @Raymond2016].
+
+Important watershed characteristics include geomorphic variables, physical impoundments, organic matter inputs and sources, mass transport, solar inputs, and processing by aquatic invertebrates and microbes [@Stanley2012; @Aiken2011; @Zarnetske2018]. 
+
+ 
+
+predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. 
+
+The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. 
+
+Spatial-scaling of NOM diversity is 
+
+
 
 ##### Drivers for variation
 
 * wetness connecting 
+* Watershed characteristics, such as sub-basin parent materials and forest structure (age and logging history) are likely responsible for some spatial variation in stream water quality. In conjunction with physical characteristics of the watershed, hydrologic conditions are primarily responsible for temporal variations observeds in stream water quality. 
 
 ### Drinking water supply lens
 
