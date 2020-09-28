@@ -522,11 +522,25 @@ Antecedent wetness is an important watershed driver for NOM export as it influen
 
 \  
 
-A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). Across the Leech WSA, stream samples with the highest DOC were collected at the highest sampled stage 83% of the time; and there was an 80% co-occurrence of low DOC with low sampling stage. These results indicate an overall pattern of increasing DOC with stage, suggesting that approximately 80% of the time streams were hydrologically connected to a rich supply of NOM. Furthermore, there was a positive relationship between sample aromaticity and stage at the Tunnel, where streamflow from all sub-basins' is integrated; when coupled with the observed stage-DOC dynamics, this indicates that the supply of NOM was humic in origin approximately 80% of the time.
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). 
 
 \  
 
-In three of the six monitoring sites, low DOC was more often collected at low stages than high DOC was at high stages; the opposite was found at West Leech, where concentration and stage had a greater proportion of common maxima compared to common minima. The headwater sub-basin sites of Chris-crk and Leech-head had the same proportions of samples with common maxima and minima of DOC and stage. The observed patterns of NOM concentration with stage changed across the wet season. Peak stage was more often associated with minimal DOC early in the wet season, whereas DOC tended to peak with stage (or close to peak stage) later in the wet season. The observed temporal change in NOM concentration is evidence of early wet-season NOM being limited in supply and subject to rapid flushing, while late wet-season NOM in streams was drawn from a more sustainable pool of source material. The apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of antecedent 30-day rain), suggested a point at which humic NOM sources either reached maximum connectivity with the streams, or that the aromatic source pools were depleted.
+*new*
+
+Hood et. al [-@Hood2006] measured ~200% increase in DOC during events in a small-basins (< 1 km^2^) study in the H. J. Andrews Experimental Forest on the west coast of Oregon, CA. While the same magnitude of change in DOC was not measured in the Leech WSA, the methods used by Hood et al [-@Hood2006] included continuous monitoring as opposed to this study which quantified discrete samples. It's possible that the changes in DOC that were not captured (i.e. in the stage between vertically staggered Rack bottles) could have shown greater deviation, or possibly, the magnitude of change in the Leech WSA was simply lower than in H.J. Andrews.  
+
+\  
+
+Across the Leech WSA, stream samples with the highest DOC were collected at the highest sampled stage 83% of the time; and there was an 80% co-occurrence of low DOC with low sampling stage. These results indicate an overall pattern of increasing DOC with stage, suggesting that approximately 80% of the time streams were hydrologically connected to a rich supply of NOM. Furthermore, there was a positive relationship between sample aromaticity and stage at the Tunnel, where streamflow from all sub-basins' is integrated; when coupled with the observed stage-DOC dynamics, this indicates that the supply of NOM was humic in origin approximately 80% of the time.
+
+\  
+
+In three of the six monitoring sites, low DOC was more often collected at low stages than high DOC was at high stages; the opposite was found at West Leech, where concentration and stage had a greater proportion of common maxima compared to common minima. The headwater sub-basin sites of Chris crk and Leech-head had the same proportions of samples with common maxima and minima of DOC and stage. The observed patterns of NOM concentration with stage changed across the wet season. Peak stage was more often associated with minimal DOC early in the wet season, whereas DOC tended to peak with stage (or close to peak stage) later in the wet season. The observed temporal change in NOM concentration is evidence of early wet-season NOM being limited in supply and subject to rapid flushing, while late wet-season NOM in streams was drawn from a more sustainable pool of source material. The apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of antecedent 30-day rain), suggested a point at which humic NOM sources either reached maximum connectivity with the streams, or that the aromatic source pools were depleted.
+
+```
+another possible explanation for the concentration-stage threshold could be indicative of a transition point in the event hydrograph from soil water contributions to throughfall and overland flow [@Penna2019].
+```
 
 \  
 
@@ -548,11 +562,11 @@ Approximately 80% of the time during hydrologic pulses in the wet season, monito
 
 \  
 
-In the future, vertical rack sampling (and matched sample filling-stage with continuous logger stage) could be combined with a rating curve to determine mass transport or loading. Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
+In the future, Vertical Rack sampling (and matched sample filling-stage with continuous logger stage) could be combined with a rating curve to determine mass transport or loading. Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
 
 \  
 
-It was assumed that the arithmetic mean of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations was representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix _XXXX_) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
+It was assumed that the arithmetic means of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations were representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix _XXXX_) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
 
 \  
 
