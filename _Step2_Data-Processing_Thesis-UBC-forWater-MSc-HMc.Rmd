@@ -29,7 +29,6 @@ library(gghighlight)# plot highlighting
 library(gridExtra)  # for plot & table layout options
 library(ggpmisc)    # linear regression line values (ggplot)
 library(ggpubr)     # Q-Q plots
-library(plotrix)    # for splitting a ggplot axis - to be used carefully
 library(car)        # stats: Companion to Applied Regression
 library(synchrony)  # stats for autocorrelated & non-independent data :)
 library(randomForest)
@@ -4683,7 +4682,7 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-boxpl
 # wrap by season
 label <- c(dry = "Dry season", wet = "Wet season")
 
-# all parameters together
+# DOC
 a <- sixfilter %>%
   filter(QAQC_flag == "OK",
          sample != "Algae") %>% 
@@ -4702,10 +4701,11 @@ a <- sixfilter %>%
              scales = "free_y") +  
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = "DOC (mg/L)", shape = "Sample collection method:")
+  labs(x = "", y = "DOC (mg/L)", shape = "Sample collection method:",
+       subtitle = "A")
 
-
-#### NOM wet season only
+# extract legend to add to top of combined variable plot
+legend <- cowplot::get_legend(a)
 
 # SAC254
 b <- sixfilter %>%
@@ -4728,7 +4728,8 @@ b <- sixfilter %>%
              scales = "free_y") +  
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = expression( SAC[254]~(m^-1) ), shape = "Sample collection method:")
+  labs(x = "", y = expression( SAC[254]~(m^-1) ),
+       subtitle = "B")
 
 # make an inset that doesn't include Weeks
 # change colours manually: brewer.pal(n = 6, name = 'Set2')
@@ -4751,7 +4752,7 @@ bb <- sixfilter %>%
         plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = "", shape = "Sample collection method:")
+  labs(x = "", y = "" )
 
 # just Cragg, West and Tunnel  
 bbb <- sixfilter %>%
@@ -4773,89 +4774,22 @@ bbb <- sixfilter %>%
         plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = "", shape = "Sample collection method:")
+  labs(x = "", y = "")
 
 
-# inset 
+# inset of SAC254 (bb on b)
 B <- cowplot::ggdraw() +
   draw_plot(b) +
   draw_plot(plot = bb,
             x = .2, # x location of inset placement
             y = .3, # y location of inset placement
             width = .3, # Inset width
-            height = .62, # Inset height
-            scale = 1) # Inset scale (1 = none)
-# inset on the inset!
-BB <- cowplot::ggdraw() +
-  draw_plot(B) +
-  draw_plot(plot = bbb,
-            x = .3, # x location of inset placement
-            y = .5, # y location of inset placement
-            width = .2, # Inset width
-            height = .42, # Inset height
-            scale = 1) # Inset scale (1 = none)
-
-
-# SUVA
-c <- sixfilter %>%
-  filter(QAQC_flag == "OK",
-         sample != "Algae") %>% 
-  filter(SUVA < 9) %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = site, y = SUVA, fill = site)) +
-  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
-  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
-  geom_boxplot(alpha = 0.5) +
-  scale_fill_brewer(palette="Set2") +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_blank(),
-        text = element_text(size = 11),
-        strip.background = element_blank(),
-        strip.text.x = element_blank()) +
-  facet_wrap(~rain_season, ncol = 2, nrow = 1,
-             labeller = labeller(rain_season = label),
-             scales = "free_y") +  
-  guides(fill = FALSE,
-         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = expression(SUVA[254]), shape = "Sample collection method:")
-
-# make an inset that doesn't include Weeks
-# change colours manually: brewer.pal(n = 6, name = 'Set2')
-cc <- sixfilter %>%
-  filter(site != "Weeks") %>% 
-  filter(QAQC_flag == "OK",
-         sample != "Algae") %>% 
-  filter(rain_season == "dry") %>% 
-  dplyr::filter(sample_type == "Rack" | sample_type == "Grab") %>%
-  ggplot(aes(x = site, y = SUVA, fill = site)) +
-  geom_jitter(aes(fill = site, shape = sample_type), alpha = 0.8) +
-  scale_shape_manual(values = c("Grab" = 21, "Rack" = 24))+ #circle, triangle
-  geom_boxplot(alpha = 0.5) +
-  scale_fill_manual(values = c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")) +
-  theme_bw() +
-  theme(legend.position = "none",
-        axis.text.x = element_blank(),
-        text = element_text(size = 10))+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"),
-        plot.background = element_rect(inherit.blank = TRUE, fill = NA)) +
-  guides(fill = FALSE,
-         shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = "", shape = "Sample collection method:")
-
-
-# inset 
-C <- cowplot::ggdraw() +
-  draw_plot(c) +
-  draw_plot(plot = cc,
-            x = .2, # x location of inset placement
-            y = .4, # y location of inset placement
-            width = .3, # Inset width
             height = .52, # Inset height
             scale = 1) # Inset scale (1 = none)
 
+
 # E2E3
-d <- sixfilter %>%
+c <- sixfilter %>%
   filter(QAQC_flag == "OK",
          sample != "Algae") %>% 
   filter(E2E3 > 3.6) %>% 
@@ -4876,21 +4810,19 @@ d <- sixfilter %>%
              scales = "free_y") +  
   guides(fill = FALSE,
          shape = guide_legend(override.aes = c("Grab" = 21, "Rack" = 24), size = 1.5))+
-  labs(x = "", y = expression(E[2]:E[3]), shape = "Sample collection method:")
+  labs(x = "", y = expression(E[2]:E[3]), 
+       subtitle = "C")
 
-# plot grid
-cowplot::plot_grid(a, B, C, d, ncol = 1, axis = "tb", 
-                   rel_widths = c(1,1,1,1),
-                   rel_heights = c(3,2,2,3))
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_NOM-DOC_boxplots-by-season.png",  width = 6, height = 7.5, unit = "in") 
 
-# Drop SUVA 254
-# plot grid
-cowplot::plot_grid(a, B, d, ncol = 1, axis = "tb", 
+# plot grid -- add legend to top plot
+A <- cowplot::plot_grid(legend,
+                        a + theme(legend.position = "none"),
+                        ncol = 1, rel_heights = c(1,8))
+
+# stack the three analyte seasonal plots
+cowplot::plot_grid(A, B, c, ncol = 1, axis = "tb", 
                    rel_widths = c(1,1,1),
-                   rel_heights = c(3,2,3),
-                   labels = "AUTO")
+                   rel_heights = c(1.15, 1, 1.25))
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxplots-by-season.png",  
        width = 6, height = 6, unit = "in") 
