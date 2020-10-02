@@ -1,3 +1,17 @@
+REPLACE (manual updates to in-text citations in knit docx):
+----------------------------------------------------------
+Matilainen, Vepsäläinen, and Sillanpää  --> Matilainen et al.
+Cory, Boyer, and McKnight  --> Cory et al.
+Baird, Eaton, and Rice  --> Baird et al.
+Aiken, Hsu-Kim, and Ryan  --> Aiken et al.
+Karanfil, Schlautman, and Erdogan  --> Karanfil et al.
+Karanfil, Erdogan, and Schlautman  --> Karanfil et al.
+Vidon, Wagner, and Soyeux  --> Vidon et al.
+Avagyan, Runkle, and Kutzbach  --> Avagyan et al. 
+Tyralis, Papacharalampous, and Langousis --> Tyralis et al.
+
+
+*********************
 2020-09-18 closed tabs
 library papers:
 
@@ -36,18 +50,5 @@ Control wildfire-induced Microcystis aeruginosa blooms by copper sulfate: Trade-
 Hydrologic and forest management controls on dissolved organic matter characteristics in headwater streams of old-growth forests in the Oregon Cascades
 
     Lee BLajtha K
-	
-	
-REPLACE
-Matilainen, Vepsäläinen, and Sillanpää  --> Matilainen et al.
-Cory, Boyer, and McKnight  --> Cory et al.
-Baird, Eaton, and Rice  --> Baird et al.
-Aiken, Hsu-Kim, and Ryan  --> Aiken et al.
-Karanfil, Schlautman, and Erdogan  --> Karanfil et al.
-Karanfil, Erdogan, and Schlautman  --> Karanfil et al.
-Vidon, Wagner, and Soyeux  --> Vidon et al.
-Avagyan, Runkle, and Kutzbach  --> Avagyan et al. 
-Tyralis, Papacharalampous, and Langousis --> Tyralis et al.
 
-The site with the second highest DOC range was the West Leech sub-basin (20.85 km2) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD).
 	

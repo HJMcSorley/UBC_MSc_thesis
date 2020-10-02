@@ -21,6 +21,33 @@ This chapter summarizes results from Chapters two to four and discusses them in 
 
 \  
 
+__Research Question 1.__   How does NOM concentration and character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have?
+
+__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of NOM concentrations and character.
+
+\  
+
+__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in NOM concentrations and character in the Leech watershed?
+
+__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between NOM and possible explanatory variables.
+
+\  
+
+__Research Question 3.__   What are the implications for watershed management and future drinking water supply?
+
+__Objective 3:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+
+\  
+
+Results of this research will contribute to baseline understanding and could be applied in further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. 
+
+*******************
+
+The primary objectives of this project were to characterize the range of hydrochemical dynamics and synchrony during rainfall response across the Leech watershed (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^). To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites acheived enhanced synoptic sampling program by collecting samples at multiple locations (near-simultaneously) across the watershed during rainfall-induced hydrologic surges, samples which would have been challenging and dangerous to collect manually. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. Results of synoptic sampling (including stormflow samples) were used to evaluate temporal trends with respect to seasonal dynaimcs of DOM characteristics. 
+
+*******************
+
+
 ### Recap and synopsis of results
 
 Stream water samples were collected from across the Greater Victoria Water Supply Area (GVWSA) and aqueous natural organic matter (NOM) was evaluated for concentration and character. The complex organic assembly that comprises NOM can be estimated by quantifying the organic carbon that forms its backbone. The molecular structure of NOM can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the source material. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while in-stream sources of NOM (i.e. autochthonous NOM), such as algae, is typically more aliphatic and protein-like in structure. The quantity of aqueous NOM was measured as the concentration of dissolved organic carbon (DOC) in each sample. The molecular quality of NOM was assessed by UV-Vis spectrophotometry; the specific absorbance coefficient at 254 nm (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity [@Weishaar2003; @Vidon2008; @Abbott2018], and the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate (inversely) aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008].
@@ -41,38 +68,33 @@ The sampling period spanned sixteen months, from October 2018 to February 2020. 
 
 \  
 
-Results from twelve synoptically sampled sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites which were equipped with vertical sampling racks (Chapter 4). Synoptic sampling results showed broad spatiotemporal patterns that were predicted by the river continuum concept (RCC), including higher NOM concentrations in headwaters with longitudinal reduction in concentration along the reach, and a seasonal character shift from autochthonous to allochthonous sources. Analyses of Leech WSA monitoring sites showed that the upstream-to-downstream NOM molecular character patterns changed between seasons, with an increase in aromaticity during the dry season and a decrease in the wet season. The decrease in NOM aromaticity from low to high order streams, observed in the wet seasons, was expected due to dilution effects. In contrast, it was not expected that higher order streams would have more aromatic NOM than lower order streams during the dry season. During downstream transport at low flows, is was expected that NOM would decrease in aromaticity due to abiotic or biotic oxidation (e.g. photodegradation, heterotrophic processing). The observed elevation in downstream NOM aromaticity during the dry season suggests humic inputs from NOM rich tributaries at higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes. .
+Results from twelve synoptically sampled sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites which were equipped with vertical sampling racks (Chapter 4). Synoptic sampling results showed broad spatiotemporal patterns that were predicted by the river continuum concept (RCC), including higher NOM concentrations in headwaters with longitudinal reduction in concentration along the reach, and a seasonal character shift from autochthonous to allochthonous sources. Analyses of Leech WSA monitoring sites showed that the upstream-to-downstream NOM molecular character patterns changed between seasons, with an increase in aromaticity during the dry season and a decrease in the wet season. The decrease in NOM aromaticity from low to high order streams, observed in the wet seasons, was expected due to dilution effects. In contrast, it was not expected that higher order streams would have more aromatic NOM than lower order streams during the dry season. During downstream transport at low flows, is was expected that NOM would decrease in aromaticity due to abiotic or biotic oxidation (e.g. photodegradation, heterotrophic processing). The observed elevation in downstream NOM aromaticity during the dry season suggests humic inputs from NOM rich tributaries at higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes. Another possible explanation for greater apparent dry season aromaticity (higher SAC~254~ and lower E~2~:E~3~) at lower reaches of higher order streams is UV-Vis interference. Like chromophoric NOM, the target analyte, other dissolved inorganic species (e.g. iron, nitrate, nitrite, bromide) also absorb light at and near 254 nm wavelength [@StdMet5910]. Concentrations of iron and nitrogen species were not evaluated, therefore their interference is only speculative and cannot be confirmed. However, full scan absorption data showed gradual decrease in absorbance with increasing wavelength with no major spikes (data not shown here), suggesting few interferences. Therefore, it seems more likely that the spectral indicies were indicative of greater NOM aromaticity at lower reaches in the dry months.    
 
 \  
 
-Spatial NOM patterns showed greater concentrations of more aromatic NOM in sub-basins draining the west of the Leech WSA, with lower concentrations of less aromatic NOM in basins draining from the east. 
+# you are here
+
+## spatial stuff
+
+* The site with the second highest DOC range was the West Leech sub-basin (20.85 km2) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD).
+* Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
+* Spatial NOM patterns showed greater concentrations of more aromatic NOM in sub-basins draining the west of the Leech WSA, with lower concentrations of less aromatic NOM in basins draining from the east. 
+* Spatial variation in fluvial water quality can be attributed to hydrological processes and watershed characteristics, as described by the river continuum concept and the pulse-shunt concept [@Vannote1980; @Raymond2016].
+* Important watershed characteristics include geomorphic variables, physical impoundments, organic matter inputs and sources, mass transport, solar inputs, and processing by aquatic invertebrates and microbes [@Stanley2012; @Aiken2011; @Zarnetske2018]. 
+* Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites
+* The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing.
 
 
+## temporal stuff
 
-Temporal patterns...
-
-Mean DOC was the same, on average, in the wet and dry seasons (6 ± 3 mg/L). 
-
-Although DOC exceeded source water guidelines for TOC (4 mg/L), ... RESERVOIR EFFECTS
-
-
+* Mean DOC was the same, on average, in the wet and dry seasons (6 ± 3 mg/L). 
+* seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season
 * In the wet season, when hydrologic connectivity was greatest, the West Leech sub-basin had aromaticity and molecular size comparable to that of the wetland and lake-dominated Weeks crk sub-basin; though in the dry season, Weeks crk maintained highly aromatic character of stream NOM while the other sub-basins had lower molecular wight, less aromatic NOM than was found at the Tunnel site. The dry season spatial pattern of NOM quality was not expected. Based on the RCC, it was expected that there would be a spatial reduction in NOM character from headwaters to mouth. However, in the dry season, samples collected at the highest order stream (at the future point of diversion) were more aromatic in NOM character than all of the nested catchments except for Weeks crk, which maintained highly aromatic NOM throughout the year due to proximity to the wetlands of Weeks Lake.  
-
-
 * storm responses: early in the wet season there was a decrease in NOM concentration with increasing flows (higher stage), and as the wet season progresses, stream NOM concentration and aromaticity increased with increasing flows.
-
-
-Spatial variation in fluvial water quality can be attributed to hydrological processes and watershed characteristics, as described by the river continuum concept and the pulse-shunt concept [@Vannote1980; @Raymond2016].
-
-Important watershed characteristics include geomorphic variables, physical impoundments, organic matter inputs and sources, mass transport, solar inputs, and processing by aquatic invertebrates and microbes [@Stanley2012; @Aiken2011; @Zarnetske2018]. 
-
- 
-
+* The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing...
 predicts a temporal shift in NOM character from autochthonous (e.g. algal) to allochthonous (e.g. humic material) sources, and a spatial reduction in NOM molecular diversity from headwaters to river mouth. 
+* Mean DOC among the six sites was essentially the same in both the wet and dry seasons (Chapter 3), but spatial patterns differed between the seasons. In the dry season, aqueous NOM aromaticity increased from upstream to downstream monitoring sites; while the wet season showed effects of dilution on both the quantity and quality of NOM. These seasonal differences support both a shift in NOM source material and a shift from NOM processing in the dry season and transport/dilution effects in the wet season.
 
-The river continuum concept (RCC) explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. 
-
-Spatial-scaling of NOM diversity is 
 
 
 
@@ -83,6 +105,8 @@ Data from six sub-basin stream monitoring sites in the Leech WSA were used to as
 * Aqueous NOM dynamics were largely driven by warm and wet conditions across the Leech WSA. 
 * wetness connecting 
 * Watershed characteristics, such as sub-basin parent materials and forest structure (age and logging history) are likely responsible for some spatial variation in stream water quality. In conjunction with physical characteristics of the watershed, hydrologic conditions are primarily responsible for temporal variations observeds in stream water quality. 
+* Although sampling stage was directly related to rain conditions, in that more rain generated greater stream rise, rain was relatively more important as a predictor for DOC concentration than sampling stage was... this indicates that it may not have been the stage at which samples were collected, but rather at the antecedent wetness conditions (if you consider rain a proxy for wetness, which seems reasonable). 
+* this indicates that greater saturation, which may be indicative of the connectivity between streams and the terrestrial environment, was more important than precipitation inputs in general.
 
 ... It appeared that when streams were near 75% of their maximum stage (therefore, approximately 0.75 of peak flow) humic source pools reached maximum connectivity with the streams... this could be explained by...
 * the apparent stage threshold for peak DOC (~0.75 of max sampling stage) suggests a point at which allochthonous (humic) NOM supply reached maximum connectivity with the streams. This threshold could also indicate a point at with the event hydrograph was separated from soil water contributions and throughflow to overland flow and throughfall [@Penna2019]. 
@@ -90,33 +114,15 @@ Data from six sub-basin stream monitoring sites in the Leech WSA were used to as
 
 ### Drinking water supply lens
 
-* establishing connectivity among nested catchments as a baseline for experimental treatments (future)
-
-#### Seasonality and Leech River diversion for inter-basin water transfers
-
-#### 
-
-
-
-
-.
-.
-.
-
-Mean DOC among the six sites was essentially the same in both the wet and dry seasons (Chapter 3), but spatial patterns differed between the seasons. In the dry season, aqueous NOM aromaticity increased from upstream to downstream monitoring sites; while the wet season showed effects of dilution on both the quantity and quality of NOM. These seasonal differences support both a shift in NOM source material and a shift from NOM processing in the dry season and transport/dilution effects in the wet season.
-
-\  
-
 What are the implications for watershed management and future drinking water supply?
 
-Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+--> Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
 
-
-
+* Although DOC exceeded source water guidelines for TOC (4 mg/L), ... RESERVOIR EFFECTS
+* establishing connectivity among nested catchments as a baseline for experimental treatments (future)
 * conflicting objectives and competing values (Peter Duinker's work)
   * managing temperate forests for timber removes carbon pools, managing for protection may increase the carbon, thus protection does not necessarily improve water quality. 
   * timber / carbon sequestration / water / biodiversity
-  
 * source water quality in rivers is unlikely to reflect the water at the intake tower
   * reservoir residence times
   * photodegradation
@@ -128,12 +134,7 @@ Provide context of how results can be used to inform watershed management planni
   * while river water quality will not identify source water quality (pre-treatment) it is important to know IN TANDEM with Sooke Res limnology to anticipate potnetial problems based on conditions in each & knowledge of likely or possible interactions
   
   
-***
-\  
-
-Longitudinal attenuation in DOC (decreasing concentrations from upstream to downstream) and SAC~254~ were observed across the sampling sites as was a seasonal shift from autochthonous NOM sources in the dry season to allochthonous NOM sources in the wet season. The structural changes to NOM that occurred seasonally are a strong indicator that site-specific calibrations should be performed at least a few times a year if DOC/NOM is monitoried by UV-Vis *in-situ*. DOC concentrations were typically higher than BC source water Guidelines suggest, however it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing. 
-
-***
+******
 
 #### Caveats and limitations
 
@@ -143,44 +144,14 @@ It was assumed that the UV-Vis spectral absorbances for each stream water sample
   
 ###	Concluding remarks
 
-___answer all these questions in summary___
-
-*__Research Question 1.__   How do DOC concentrations and NOM character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have on concentration of DOC and character of NOM?
-
-*__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of DOC concentrations and NOM character.
-
-\  
-
-*__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in DOC and NOM in the Leech watershed?
-
-*__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between DOC, NOM and key variables.
-
-\  
-
-__Research Question 3.__   What are the implications for watershed management and future drinking water supply?
-
-__Objective 3:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
 
 
-*******************
-
-
-
-* in progress: this section will be included in the next draft, following feedback on results
-
-The primary objectives of this project were to characterize the range of hydrochemical dynamics and synchrony during rainfall response across the Leech watershed (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^). To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites acheived enhanced synoptic sampling program by collecting samples at multiple locations (near-simultaneously) across the watershed during rainfall-induced hydrologic surges, samples which would have been challenging and dangerous to collect manually. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. Results of synoptic sampling (including stormflow samples) were used to evaluate temporal trends with respect to seasonal dynaimcs of DOM characteristics. 
-
-
-Despite the high RSD for headwaters sites, and the ~50% difference in area of these two sub-basins, LeechHead did show approximately the median of the two sub-basins DOC.
-
-
-Across the Leech Water Supply Area (LWSA), the timing of changes in temperature, river response and DOC concentrations and character were synchornized in the five nested catchments and Leech River Tunnel site (future point of diversion, or mouth of the WSA), however the mean values and magnitude of these changes differed between sites. 
+Across the Leech Water Supply Area (LWSA), the timing of changes in temperature, river response and DOC concentrations and character were synchronized in the five nested catchments and Leech River Tunnel site (future point of diversion, or mouth of the WSA), however the mean values and magnitude of these changes differed between sites. 
 
 
 Q) Across the LWSA, was the variance in DOC greater within each site or among all sites?
 
 Q) Was the variance in DOC greater at the watershed outlet than the variance in each subbasin?  
 
-*Seasonal trends and DOC over time
-Based on spectroscopic indications that dry season NOM was less aromatic in character, it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids).
+
 
