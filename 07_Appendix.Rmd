@@ -178,13 +178,7 @@ While UV-254 is a good indicator of NOM aromaticity and also appears to be corre
 ## Metals
 ######## Metals & DOC: collaborative sampling for Metals on behalf of the CRD
 
-Aquatic NOM can play an important role in the transport of metals because it has the physiochemical ability to act as a ligand to create coordinated complexes with metals. From November 2018 to July 2019, I collected eight sets of samples for metals analysis from the six sub-basin monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). Reports from BL Labs were provided by the CRD (for the samples collected in association with this research) and data were used to evaluate relationships between DOC and metals in solution. 
-
-\  
-### and DOC
-######### Metals & DOC 
-
-Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, seven sets of samples were collected from six sites in the LWSA for metals analysis. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories in Sidney, BC (formerly Maxxam Analytics Inc.). For each metals sample collected, a parallel Grab sample was collected and analyzed for DOC at UBC. A suite of total metals were included in the analyses, many of which were below detection limits. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations (Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L). 
+Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, eight sets of samples were collected from the six Leech WSA monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). A suite of total metals was included in the analyses and reports from BL Labs were provided by the CRD (for the samples collected in association with this research). Data were used to evaluate relationships between DOC and metals in solution. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations. Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L. 
 
 \  
 
@@ -217,6 +211,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv",
 ```
 
 \  
+
 ## FWx
 ######## FWx stations in the LWSA: ancilary data
 
