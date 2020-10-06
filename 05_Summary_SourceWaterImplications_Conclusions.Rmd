@@ -17,33 +17,22 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \  
 
-This chapter summarizes results from Chapters two to four and discusses them in context of a forested drinking water supply with interpretation of watershed attributes and environmental conditions as possible drivers for variability. Results are discussed through the lens of supplemental source drinking water and treatability.  
-
-\  
-
-__Research Question 1.__   How does NOM concentration and character vary among adjacent drainage basins and across nested sub-catchments in the Greater Victoria Water Supply Area, and what influence does seasonality have?
-
-__Objective 1:__   Design a sampling strategy to describe spatial and temporal patterns and variation of NOM concentrations and character.
-
-\  
-
-__Research Question 2.__   What are the primary drivers (e.g. watershed characteristics or conditions) for changes in NOM concentrations and character in the Leech watershed?
-
-__Objective 2:__   Relate water sample results to watershed characteristics and conditions to report on relationships between NOM and possible explanatory variables.
-
-\  
-
-__Research Question 3.__   What are the implications for watershed management and future drinking water supply?
-
-__Objective 3:__   Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
+This project characterized aqueous NOM concentration and character ranges across the GVWSA over sixteen months and explored mechanistic relationships between NOM and watershed variables across nested catchments (ranging in size from 9.6 to 37 km^2^) of the Leech WSA (~96 km^2^). Chapters two and three tackled the first research question, which focused on method refinement for measuring variability of NOM dynamics. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals, and passively collected whole water samples during stormflow on rising limbs of the hydrograph; and (2) twelve sites, which included the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial patterns and ranges of NOM concentrations and character.
 
 \  
 
 Results of this research will contribute to baseline understanding and could be applied in further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. 
 
-*******************
+\  
 
-The primary objectives of this project were to characterize the range of hydrochemical dynamics and synchrony during rainfall response across the Leech watershed (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^). To understand spatial and temporal patterns in hydrochemical dynamics, this research was tackled in two key ways: (1) six sub-basin sites were equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals and passively collected whole water samples during stormflow on rising limbs of the hydrograph;  and  (2) thirteen sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial range of DOC concentrations and DOM character. In addition to spatiotemporal dynamics, the sub-basin monitoring sites were used to evaluate hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites acheived enhanced synoptic sampling program by collecting samples at multiple locations (near-simultaneously) across the watershed during rainfall-induced hydrologic surges, samples which would have been challenging and dangerous to collect manually. DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments. Results of synoptic sampling (including stormflow samples) were used to evaluate temporal trends with respect to seasonal dynaimcs of DOM characteristics. 
+The second research question was examined in Chapter four where the relative importance of watershed characteristics and conditions were examined as predictors of NOM concentration and character in the Leech watershed sub-basin monitoring sites. 
+
+
+This chapter summarizes research results from Chapters two to four, and frames results in context of watershed management planning (e.g. for wildfire reduction strategies) and design of continued water quality monitoring for future supplemental drinking water supply via inter-basin transfers.
+
+hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites achieved enhanced synoptic sampling program by collecting samples at multiple locations (near-simultaneously) across the watershed during rainfall-induced hydrologic surges, samples which would have been challenging and dangerous to collect manually. 
+
+DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.  
 
 *******************
 
