@@ -9497,6 +9497,16 @@ cowplot::plot_grid(a, b, c,
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
        width = 6, height = 6.5, units = "in")
+
+
+# Correlations
+treatdat_long %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(UV254_m = UV254_cm*100 ) %>% 
+  mutate(SUVA254_m = (UV254_m/DOC_ppm) ) %>% 
+  select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>% 
+  cor()
+
 ```
 
 # Garbage I think
