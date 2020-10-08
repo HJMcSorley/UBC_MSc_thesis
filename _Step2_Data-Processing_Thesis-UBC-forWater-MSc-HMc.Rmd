@@ -9384,6 +9384,7 @@ metalslab %>%
             yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
             r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
   dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
+  #mutate(r = sqrt(r_sq)) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
 
 ```
@@ -9504,7 +9505,7 @@ treatdat_long %>%
   rename(UV254_cm = `UV254_cm-1`) %>% 
   mutate(UV254_m = UV254_cm*100 ) %>% 
   mutate(SUVA254_m = (UV254_m/DOC_ppm) ) %>% 
-  select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>% 
+  select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>%
   cor()
 
 ```

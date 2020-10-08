@@ -17,54 +17,62 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \  
 
-This project characterized aqueous NOM concentration and character ranges across the GVWSA over sixteen months and explored mechanistic relationships between NOM and watershed variables across nested catchments (ranging in size from 9.6 to 37 km^2^) of the Leech WSA (~96 km^2^). 
-
-This chapter summarizes research results from Chapters two to four, and frames results in context of watershed management planning (e.g. for wildfire reduction strategies) and design of continued water quality monitoring for future supplemental drinking water supply via inter-basin transfers. 
-
-Chapters two and three tackled the first research question, which focused on method refinement for measuring variability of NOM dynamics. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals, and passively collected whole water samples during stormflow on rising limbs of the hydrograph; and (2) twelve sites, which included the six sub-basin sites, were sampled synoptically every two to four weeks. Results of both the synoptic sampling and sub-basin monitoring were used to characterize the temporal and spatial patterns and ranges of NOM concentrations and character.
-
-The second research question was examined in Chapter four where the relative importance of watershed characteristics and conditions were examined as predictors of NOM concentration and character in the Leech watershed sub-basin monitoring sites. 
-
-
-
-hydrologic responses based on  river rise (stream stage) and local precipitation. The vertical racks installed at the sub-basin sites achieved enhanced synoptic sampling program by collecting samples at multiple locations (near-simultaneously) across the watershed during rainfall-induced hydrologic surges, samples which would have been challenging and dangerous to collect manually. 
-
-DOC was BBBB higher on the rising limb than in non-event samples 
-
-DOC concentration trends in stormflow were indicative of whether aqueous DOM was supply-limited or governed by hydrologic forcing. The data collected were used to elucidate spatiotemporal synchrony among sub-catchments.  
-
-*******************
-Results of this research will contribute to baseline understanding and could be applied in further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. 
+This project characterized aqueous NOM concentration and character ranges across the GVWSA over sixteen months and explored relationships between watershed variables and sample results across the Leech WSA. Chapters two and three tackled the first research question, which focused on method refinement for measuring variability of aqueous NOM. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals, and passively collected whole water samples during stormflow on rising limbs of the hydrograph; and (2) twelve sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. 
 
 \  
 
+Results from twelve sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites which were equipped with vertical sampling racks (Chapter 4). Relationships between sample results and watershed characteristics and sampling conditions were evaluated to identify drivers for changes in NOM concentration and character across the Leech WSA (~96 km^2^) and it's nested catchments (ranging in size from 9.6 to 37 km^2^). 
 
+\  
+
+This chapter summarizes research results from Chapters two to four, and provides context for how those results can be used to inform continued water quality monitoring and watershed management planning for future supplemental drinking water supply via inter-basin transfers. Results of this research will contribute to baseline understanding and could be applied in further exploration of forest management strategies, such as fire fuel management, and their impacts on source water quality and supply. 
+
+\  
 
 ### Recap and synopsis of results
 
-Stream water samples were collected from across the Greater Victoria Water Supply Area (GVWSA) and aqueous natural organic matter (NOM) was evaluated for concentration and character. The complex organic assembly that comprises NOM can be estimated by quantifying the organic carbon that forms its backbone. The molecular structure of NOM can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the source material. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while in-stream sources of NOM (i.e. autochthonous NOM), such as algae, is typically more aliphatic and protein-like in structure. The quantity of aqueous NOM was measured as the concentration of dissolved organic carbon (DOC) in each sample. The molecular quality of NOM was assessed by UV-Vis spectrophotometry; the specific absorbance coefficient at 254 nm (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity [@Weishaar2003; @Vidon2008; @Abbott2018], and the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate (inversely) aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008].
-
-\    
-
-Quantities and qualities of NOM vary over space and through time; understanding the spatiotemporal patterns of concentrations and character can help to inform source drinking water management decisions by providing insights to the origins, transport and fate of aqueous NOM and other parameters associated with it. For example, NOM can bind and transport metals in solution [@LaZerte1991; @Aiken2011] and DOC was positively correlated to the concentrations of total mercury, iron, manganese, and aluminum as well as (to a lesser degree) barium, copper, and arsenic (Appendix XXXX). Additionally, NOM in drinking source water supply is partially responsible for the formation of disinfection by-products (DBPs) in treated drinking water (Appendix NNNNN; @Yang2015; @Chow2008; @Beauchamp2018). 
+Vertical Racks for passive event rising limb event hydrograph sampling were coupled with synoptic Grab sampling campaigns to measuring water quality changes over 16 months, through events, and across the GVWSA. A challenge of Vertical Rack sampling is that high water can prohibit safe retrieval of collected samples from the Racks. Coupling continuously recorded stage with manually recorded siphon bottle heights allowed for calculation of sample hold-times and quality control measures for samples that had exceeded an acceptable holding time (Chapter 2). Siphon sampling by Vertical Racks is currently limited to the rising hydrograph limb, but the combination of synoptic Grab sampling with and Rack sampling achieved good representation of reliable samples across the hydrograph.
 
 \  
 
-Vertical Racks for passive event sampling were coupled with synoptic Grab sampling campaigns to measuring water quality changes over 16 months, through events, and across the GVWSA. A challenge of Vertical Rack sampling is that high water can prohibit safe retrieval of collected samples from the Racks. Coupling continuously recorded stage with manually recorded siphon bottle heights allowed for calculation of sample hold-times and quality control measures for samples that had exceeded an acceptable holding time (Chapter 2). Siphon sampling by Vertical Racks is currently limited to the rising hydrograph limb, but the combination of Grab and refined Rack sampling can achieve good representation of reliable samples across the hydrograph.
+Stream water samples were collected from across the Greater Victoria Water Supply Area (GVWSA) and aqueous natural organic matter (NOM) was evaluated for quantity and quality. Quantifying the organic carbon that forms NOM's backbone is a proxy for the quantity of complex organic assemblies that comprises NOM. The molecular structure of NOM (i.e., it's quality) can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the source material. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while in-stream sources of NOM (i.e. autochthonous NOM), such as algae, are typically more aliphatic in structure. In this research, the quantity of aqueous NOM was measured as the concentration of dissolved organic carbon (DOC) in each sample. The molecular quality of NOM was assessed by UV-Vis spectrophotometry. The specific absorbance coefficient at 254 nm wavelength (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity (Appendix VVVVVV; @Weishaar2003; @Vidon2008; @Abbott2018), and the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate (inversely) aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008].
+
+\    
+
+Quantities and qualities of NOM vary over space and through time; understanding the spatiotemporal patterns of concentrations and character can help to inform source drinking water management decisions by providing insights to the origins, transport and fate of aqueous NOM and other parameters associated with it. For example, NOM can bind and transport metals in solution [@LaZerte1991; @Aiken2011] and DOC was positively correlated (Appendix XXXX) to the concentrations of total mercury (r=1.00), iron (r=0.83), manganese (r=0.77), and aluminum (r=0.63) as well as (to a lesser degree) barium (r=0.47), copper (0.42), and arsenic (r=0.33). Additionally, NOM in drinking source water supply is partially responsible for the formation of disinfection by-products (DBPs) in treated drinking water (Appendix NNNNN; @Yang2015; @Chow2008; @Beauchamp2018). SAC~254~ was used as an indicator of DBP formation potential (r=0.68; Appendix VVVVVV). 
+
+\  
+
+Because NOM is tied to transport of contaminants and drinking water treatment challenges, understanding spatiotemporal dynamics of this master variable is important for maintaining drinking water security and mitigating treatment challenges. 
 
 \  
 
 #### Spatiotemporal dynamics in the quantity and quality of NOM
 
-The sampling period spanned sixteen months, from October 2018 to February 2020. Seasons were defined as 'wet' and 'dry' and were distinguished by the activity of passive Vertical Rack sample collection. The wet season was characterized by conditions that generated event responses which triggered rising-stage sample collection in the six Leech WSA monitoring site streams (Chapter 2). Based on this definition of seasons, Vertical Rack samples were only collected in the wet season (fall/winter/spring) while Grab samples were collected throughout the entire sampling period. Sampling began after the start of the 2018/2019 wet season, which extended until mid-May 2019. The dry season spanned from mid-May to late September 2019, which is when the 2019/2020 wet season began. 
+The sampling period spanned sixteen months, from October 2018 to February 2020. Seasons were defined as 'wet' and 'dry' and were distinguished by the activity of passive Vertical Rack sample collection. The wet season was characterized by conditions that generated event responses which triggered rising-stage sample collection in the six Leech WSA monitoring site streams (Chapter 2). Based on this definition of seasons, Vertical Racks collected rising limb samples only in the wet season (fall/winter/spring) while Grab samples were collected throughout the entire sampling period. During events, Grab samples were collected prior to stream rise, on the falling limb or between events, but not on the rising limb (not by design, but by happenstance). Sampling began after the start of the 2018/2019 wet season, which extended until mid-May 2019. The dry season spanned from mid-May to late September 2019, which is when the 2019/2020 wet season began. 
 
 \  
 
-Results from twelve synoptically sampled sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites which were equipped with vertical sampling racks (Chapter 4). Synoptic sampling results showed broad spatiotemporal patterns that were predicted by the river continuum concept (RCC), including higher NOM concentrations in headwaters with longitudinal reduction in concentration along the reach, and a seasonal character shift from autochthonous to allochthonous sources. Analyses of Leech WSA monitoring sites showed that the upstream-to-downstream NOM molecular character patterns changed between seasons, with an increase in aromaticity during the dry season and a decrease in the wet season. The decrease in NOM aromaticity from low to high order streams, observed in the wet seasons, was expected due to dilution effects. In contrast, it was not expected that higher order streams would have more aromatic NOM than lower order streams during the dry season. During downstream transport at low flows, is was expected that NOM would decrease in aromaticity due to abiotic or biotic oxidation (e.g. photodegradation, heterotrophic processing). The observed elevation in downstream NOM aromaticity during the dry season suggests humic inputs from NOM rich tributaries at higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes. Another possible explanation for greater apparent dry season aromaticity (higher SAC~254~ and lower E~2~:E~3~) at lower reaches of higher order streams is UV-Vis interference. Like chromophoric NOM, the target analyte, other dissolved inorganic species (e.g. iron, nitrate, nitrite, bromide) also absorb light at and near 254 nm wavelength [@StdMet5910]. Concentrations of iron and nitrogen species were not evaluated, therefore their interference is only speculative and cannot be confirmed. However, full scan absorption data showed gradual decrease in absorbance with increasing wavelength with no major spikes (data not shown here), suggesting few interferences. Therefore, it seems more likely that the spectral indicies were indicative of greater NOM aromaticity at lower reaches in the dry months.    
+Results showed spatiotemporal patterns that were predicted by the river continuum concept (RCC), including higher levels of NOM in headwaters with longitudinal reduction along stream reaches. While the average quantity of NOM was the same between seasons (6 ± 3 mg/L DOC), the quality of NOM differed. Aqueous NOM was larger, more aromatic and more reactive during the wet seasons than during the dry season; this seasonal character shift from autochthonous to allochthonous source quality was also predicted by the RCC.
 
 \  
 
-# you are here
+Spatially, in both wet and dry seasons, DOC concentrations decreased from low to higher order streams, but NOM quality had opposite longitudinal patterns in each season. From low to high order streams, there was an increase in aromaticity and molecular size (indicated by E~2~:E~3~) during the dry season and a decrease in the wet season. The wet season decrease in NOM aromaticity was expected to occur in tandem with the longitudinal decrease in DOC concentration, due to dilution effects along stream reaches. In contrast, it was not expected that higher order streams would have larger and more aromatic NOM than lower order streams during the dry season, especially when DOC concentrations showed the opposite pattern. During downstream transport at low flows, is was expected that NOM would decrease in aromaticity due to abiotic or biotic oxidation (e.g. photodegradation and/or heterotrophic processing). 
+
+It is possible that the simultaneous increase in absorbance and decrease in organic carbon 
+
+\ 
+
+The relative elevation in downstream NOM aromaticity and molecular size (higher SAC~254~ and lower E~2~:E~3~) during the dry season could be due to UV-Vis interference: like chromophoric NOM (the target analyte), other dissolved inorganic species (e.g. iron, nitrate, nitrite, bromide) also absorb light at wavelengths around 254 nm [@StdMet5910]. Concentrations of iron and nitrogen species were not measured, therefore their interference cannot be confirmed; however, the full scan absorption spectra (not shown here) displayed gradual decrease in absorbance with increasing wavelength with no major spikes, suggesting few interferences. Therefore, it seems more likely that the spectral indicies were indeed indicative of greater NOM aromaticity at lower reaches in the dry months, and were not due to aqueous species interference.  
+
+\  
+
+More aromatic NOM at lower reaches could have been due to humic inputs from NOM-rich tributaries feeding higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes.    
+
+\  
+
+More aromatic NOM in the wet season was likely sources from autochthonous terrestrial sources (e.g., humic and fluvic acids), while the less aromatic dry season NOM . it's quite possibly that the increase in summer DOC was due to autochthonous sources such as algae and cyanobacteria, while fall DOC was 
+
 
 ## spatial stuff
 
@@ -106,7 +114,9 @@ Data from six sub-basin stream monitoring sites in the Leech WSA were used to as
 
 ### Drinking water supply lens
 
-What are the implications for watershed management and future drinking water supply?
+
+Research Question 3. What are the implications for watershed management and future drinking water supply?
+
 
 --> Provide context of how results can be used to inform watershed management planning for wildfire reduction strategies and design of continued water quality monitoring for future inter-basin transfers.
 
