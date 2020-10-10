@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-## Linking Research Results with Concepts of Forest Hydrology and Source Water Treatability
+## Summary and Conclusions
 
 ```{r discussion-setup, warning = FALSE, message = FALSE, include = FALSE, package.startup.message = FALSE}
 

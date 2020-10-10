@@ -9405,7 +9405,7 @@ treatdat_UW <- treatdat_UW %>%
     day == "18" ~ "Feb 2020")) %>% 
   mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
   mutate(site = case_when(
-    site == "DCP" ~ "Deception-res",
+    site == "DCP" ~ "Deception",
     site == "TUN" ~ "Tunnel",
     site == "JDG" ~ "Judge",
     site == "RTH" ~ "Rithet")) %>% 
@@ -9415,7 +9415,18 @@ treatdat_UW <- treatdat_UW %>%
 treatdat <- sampleresults %>% 
   filter(sample == "Treatability") %>% 
   full_join(treatdat_UW, by = c("Date", "site")) %>% 
-  mutate(site = factor(site))
+  mutate(site = factor(site)) %>%  # -- new experimetnal (October 10, 2020)
+  select(site, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
+         # from U.W:
+         source, Sample_ID, pH,
+         `UV254_cm-1`, DOC_ppm, Zeta_Potential_mV, 
+         "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA",
+         TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date) %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(UV254_m = UV254_cm*100,
+         SUVA_UW = UV254_m/DOC_ppm) %>% 
+  select(-c(UV254_cm))
+  
 
 # pivot long
 treatdat_long <- treatdat_UW %>%
@@ -9427,7 +9438,7 @@ treatdat_long <- treatdat_UW %>%
     "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
 ```
 
-## plot; DOC/UV254 + DBP-FPs
+## plot DOC/UV254 + DBP-FPs
 ```{r}
 
 # plot DOC
@@ -9499,7 +9510,11 @@ cowplot::plot_grid(a, b, c,
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
        width = 6, height = 6.5, units = "in")
 
+```
 
+### correlations
+
+```{r}
 # Correlations
 treatdat_long %>% 
   rename(UV254_cm = `UV254_cm-1`) %>% 
@@ -9507,6 +9522,41 @@ treatdat_long %>%
   mutate(SUVA254_m = (UV254_m/DOC_ppm) ) %>% 
   select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>%
   cor()
+
+
+# is E2E3 correlated with SUVA ? -- for aromaticity 
+wut <- synopticfilter %>% 
+  filter(between(E2E3, 3,10) ) %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = E2E3, y = SUVA)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = expression(SUVA[254]), fill = "Sample type:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# nope
+
+# is SAC254 correlated with SUVA ? -- for aromaticity 
+wut <- synopticfilter %>% 
+  filter(SUVA<6) %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = SAC254_Abs.m, y = SUVA)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(SAC[254]), y = expression(SUVA[254]), fill = "Sample type:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# nope
 
 ```
 
