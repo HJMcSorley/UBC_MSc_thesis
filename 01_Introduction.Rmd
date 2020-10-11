@@ -19,7 +19,7 @@ Drinking water treatment requirements vary with source water quality, thus guide
 
 \  
 
-####   Aqueous natural organic matter in drinking source water supply
+####   Aqueous natural organic matter (NOM) in drinking source water supply
 
 Natural organic matter (NOM) comprises a dynamic collection of molecules that originate from a variety of sources, and aqueous NOM exists in complex and diverse combinations of particulate, colloidal and dissolved fractions [@Peuravuori1997; @Aiken2011; @Matilainen2011; @Ruhala2017]. NOM can be introduced to a water body from terrestrial sources (i.e. allochthonous NOM) or generated through in-stream processes (i.e. autochthonous NOM) which are often associated with autotrophic organisms like algae and cyanobacteria [@HealthCanada2019; @Epps1994]. Terrestrial organic matter (allochthonous NOM) includes humic and fluvic acids, tannins, and a wide variety of other compounds (e.g. phenols and lignin, hydrocarbons, proteins, carbohydrates, etc.), which enter fresh water through runoff [@Zarnetske2018; @HealthCanada2019]. 
 
@@ -45,7 +45,7 @@ NOM concentration and character vary widely in source water depending on source 
 
 \
  
-##### Spectroscopic assessment of NOM   
+##### Spectroscopic assessment of NOM molecular quality   
 
 The molecular structure of NOM can be assessed through spectrophotometry. For NOM to be detected by UV-Vis spectroscopy the molecules must absorb ultraviolet (UV) or visible (Vis) light, which is a physiochemical ability determined by the molecules electronic structure. UV-Vis absorption requires the presence of a conjugated pi-bond system (i.e. a chromophore), which is common in aromatic molecules. The wavelength of light absorption is proportional to the length of the molecule's conjugated system -- that is, a larger and/or more aromatic molecule will absorb UV-Vis light at longer wavelengths than a smaller, less aromatic molecule. So, higher molecular weight (chromophoric) NOM molecules will have stronger light absorption at longer wavelengths [@Helms2008]. A more concentrated sample will also lead to greater absorption intensity. Therefore, the UV-Vis spectrum of a water sample can provide valuable information about relative weights, aromaticity and relative concentrations of aqueous NOM [@Helms2008; @Cory2011; @Agren2008; @Karanfil2002; @Karanfil2003]. DOC concentration can be estimated from UV-Vis absorbance; a proxy that represents the chromophoric component of NOM which is proportional to the samples' average aromatic carbon component [@Helms2008]. 
 

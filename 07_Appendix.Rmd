@@ -212,7 +212,59 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv",
 
 \  
 
-## FWx
+## Weather and Climate
+
+####### Weather and Climate
+
+Based on the Pacific Climate Impacts Consortium (PCIC) weather anomaly data, the study period was 0.6° C warmer and 9.8% drier than normal. The PCIC (pacificclimate.org) provides BC climate data of monthly weather anomalies from 1970 onward; data assembled from BC Ministry of Environment and Climate Change’s Monitoring Program. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
+
+\  
+
+```{r PCICstns}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-stations.csv", 
+         col_names = TRUE) %>% 
+  knitr::kable(caption = "Pacific Climate Impacts Consortium British Columbia Weather Stations Used to Establish Climate Anomalies and Departures from Normal for the Study Period from Oct. 2018 to Feb. 2020", 
+               digits = c(0, 0, 5, 5))
+``` 
+
+\  
+
+Not all months had weather anomalies that were warmer and drier than normal (Table \@ref(tab:PCICanomalies)), but overall, the study period was 0.56 degrees warmer and 13.4% drier than normal. ...
+
+
+\  
+
+```{r PCICanomalies}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv", 
+         skip = 1, col_names = TRUE) %>% 
+  knitr::kable(caption = "Average Monthly Weather Anomalies from 1970 Onward from Bear Creek Reservoir and Shawnigan Lake Weather Stations", 
+               digits = c(0, 0, 2, 2, 1))
+``` 
+
+\ 
+
+
+
+the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal
+2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal
+2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal
+2019 wet season was 0.38 degrees warmer and 5 % drier than normal, with one extreme wet anomaly
+
+
+
+... (Table \@ref(tab:PCICdepartures)) ...
+
+\  
+
+```{r PCICdepartures}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv", 
+         skip = 1, col_names = TRUE) %>% 
+  knitr::kable(caption = "Average Weather Departures from CLimate Normals from Bear Creek Reservoir and Shawnigan Lake Weather Stations ", 
+               digits = c(0, 0, 2, 1))
+``` 
+
+\  
+
 ######## FWx stations in the LWSA: ancilary data
 
 There were two weather stations that operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
