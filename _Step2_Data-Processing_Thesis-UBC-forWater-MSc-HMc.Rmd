@@ -9418,7 +9418,7 @@ treatdat_full <- sampleresults %>%
   mutate(site = factor(site)) %>%  # -- new experimetnal (October 10, 2020)
   select(site, source, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
          # from U.W:
-         source, Sample_ID, pH,
+         source, Sample_ID, pH, Collection,
          `UV254_cm-1`, DOC_ppm, Zeta_Potential_mV, 
          THMs, TCM, TBM, DBCM, HAAs, DCAA, DBAA, TCAA, MCAA, MBAA, 
          Free_Chlorine_Final_mgL, day, Date) %>% 
@@ -9427,7 +9427,7 @@ treatdat_full <- sampleresults %>%
          SUVA_UW = UV254_m/DOC_ppm) %>% 
   select(-c(UV254_cm, DBAA, MBAA, TBM)) %>% # drop DBP-FP below detection limits (NAs) 
   filter(source == "02") %>%
-  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:MBAA),
+  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:MCAA),
                       values_to = "DBPfp_ugL") %>% 
   mutate(DBP = factor(DBP) ) #, levels = c("THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
 
@@ -9502,6 +9502,25 @@ c <- treatdat_long %>%
         axis.text.y = element_blank())+
   labs(x = expression(atop(SUVA[254], (L~{mg^-1}~{m}^-1)) ), 
        y = "",
+       shape = "Collection:")+
+  guides(#colour = ,
+    shape = guide_legend(nrow = 2))
+
+# plot E2E3 --- not useful.
+d <- treatdat_full %>% 
+  ggplot(aes(x = E2E3, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "right",
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(E[2]:E[3])), 
+       y = "DBP-FP",
        shape = "Collection:")+
   guides(#colour = ,
     shape = guide_legend(nrow = 2))
