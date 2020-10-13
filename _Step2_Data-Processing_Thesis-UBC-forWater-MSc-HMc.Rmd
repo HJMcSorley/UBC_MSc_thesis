@@ -9412,21 +9412,24 @@ treatdat_UW <- treatdat_UW %>%
   mutate(site = factor(site))
 
 # isolate and join to my UBC lab results for treatability samples
-treatdat <- sampleresults %>% 
+treatdat_full <- sampleresults %>% 
   filter(sample == "Treatability") %>% 
   full_join(treatdat_UW, by = c("Date", "site")) %>% 
   mutate(site = factor(site)) %>%  # -- new experimetnal (October 10, 2020)
-  select(site, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
+  select(site, source, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
          # from U.W:
          source, Sample_ID, pH,
          `UV254_cm-1`, DOC_ppm, Zeta_Potential_mV, 
-         "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA",
-         TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date) %>% 
+         THMs, TCM, TBM, DBCM, HAAs, DCAA, DBAA, TCAA, MCAA, MBAA, 
+         Free_Chlorine_Final_mgL, day, Date) %>% 
   rename(UV254_cm = `UV254_cm-1`) %>% 
   mutate(UV254_m = UV254_cm*100,
          SUVA_UW = UV254_m/DOC_ppm) %>% 
-  select(-c(UV254_cm))
-  
+  select(-c(UV254_cm, DBAA, MBAA, TBM)) %>% # drop DBP-FP below detection limits (NAs) 
+  filter(source == "02") %>%
+  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:MBAA),
+                      values_to = "DBPfp_ugL") %>% 
+  mutate(DBP = factor(DBP) ) #, levels = c("THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
 
 # pivot long
 treatdat_long <- treatdat_UW %>%
