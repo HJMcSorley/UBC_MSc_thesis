@@ -1,0 +1,13 @@
+Site Name,Water supply area (WSA),Monitoring site number,Latitude,Longitude,Interest / characteristic,Strahler Order,Drainage Area (km2),Elevation (m a.s.l),"Slope, median (degrees)","Slope, max (degrees)","Tree age (average, yrs)",Forest (%),Wetland (%),Open water (%),Wark gneiss (%),Argillite metagreywacke (%),Chert argillite volcanic (%),Metagreywacke (%),Metchosin volcanics (%),Colquitz gneiss (%),Gabbro stocks (%),Limestone (%)
+Weeks crk,Leech,1,48.57592,-123.844,Headwaters (Leech Rv.),3,11.52,521,8,44,52,94.5,4.2,2.9,13.6,64.2,22.2,0,0,0,0,0
+Chris crk,Leech,2,48.57691,-123.84,Headwaters (Leech Rv.),3,5.9,522,10,38,40,99,0.8,0.6,44.9,0,55.1,0,0,0,0,0
+Leech head,Leech,3,48.5666,-123.8257,Leech Rv. head,4,20.59,476,9,50,48,96.6,2.6,1.8,20.5,42.1,37.4,0,0,0,0,0
+Cragg crk,Leech,4,48.54856,-123.7714,Main tributary to Leech Rv.,4,28.06,509,9,40,59,97.8,1.6,0.9,77.6,0,22.4,0,0,0,0,0
+West Leech,Leech,5,48.50635,-123.7862,Main tributary to Leech Rv.,4,20.85,248,9,56,49,98.5,0.4,0.3,0,76.8,0,7.2,16,0,0,0
+Leech Tunnel,Leech,6,48.5069,-123.768,"Mainstem, future diversion point",5,95.3,207,10,61,53,97.6,1.1,0.7,30.6,45.1,17.9,1.6,4.2,0,0.7,0
+Judge crk,Sooke,synoptic only,48.58569,-123.6735,2nd largest tributary to Sooke Reservoir,3,8.33,200,9,42,72,92.7,1.1,0,27,0,0,0,0,72.4,0,0.6
+Rithet crk,Sooke,synoptic only,48.59123,-123.725,Largest tributary to Sooke Reservoir,4,11.12,252,11,48,132,99.4,0.5,0,79.2,0,0,0,0,20.3,0,0.4
+Deception (gulch),Sooke,synoptic only,48.51694,-123.7204,Future diversion terminus,3,4.02,195,13,49,71,87.7,9.3,0,61.2,38.8,0,0,0,0,0,0
+Jarvis crk,Leech,synoptic only,48.59677,-123.7981,Headwaters (Cragg Crk),2,1.51,742,5,21,37,93,4,0.000002,100,0,0,0,0,0,0,0
+Lazar crk,Leech,synoptic only,48.59179,-123.77,Headwaters (Cragg Crk),3,4.74,651,6,29,41,84,12,0.07,100,0,0,0,0,0,0,0
+Leech beach,Leech,synoptic only,48.50678,-123.7818,below confluence of West-Leech with Leech River mainstem,5,94.09,237,10,61,53,96,1.1,0.02,31,45.1,18.1,1.6,3.5,0,0.7,0

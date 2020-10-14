@@ -1,0 +1,13 @@
+Site_name,WSA,Latitude,Longitude,StrahlerOrder,Drainage_km2,Elevation_asl,Slope_median_degrees,WetlandCover_percent,OpenwaterCover_percent,Dominant_parentMaterial,Secondary_parentMaterial
+Weeks crk,Leech,48.57592,-123.844,3,11.52,521,8,4,2.9,Argillite Metagreywacke (64.2%),Chert Argillite Volcanic (22.2%)
+Chris crk,Leech,48.57691,-123.84,3,5.9,522,10,1,0.6,Chert Argillite Volcanic (55.1%),Wark Gneiss (44.9%)
+Leech head,Leech,48.5666,-123.8257,4,20.59,476,9,3,1.8,Argillite Metagreywacke (42.1),Chert Argillite Volcanic (37.4%)
+Cragg crk,Leech,48.54856,-123.7714,4,28.06,509,9,2,0.9,Wark Gneiss (77.6%),Chert Argillite Volcanic (22.4%)
+West Leech,Leech,48.50635,-123.7862,4,20.85,248,9,0,0.3,Argillite Metagreywacke (76.8%),Metchosin Volcanics (16%)
+Leech Tunnel,Leech,48.5069,-123.768,5,95.3,207,10,1,0.7,Argillite Metagreywacke (45.1%),Wark Gneiss (30.6%)
+Judge crk,Sooke,48.58569,-123.6735,3,8.33,200,9,1,0,Colquitz Gneiss (72.4),Wark Gneiss (27%)
+Rithet crk,Sooke,48.59123,-123.725,4,11.12,252,11,1,0,Wark Gneiss (79.2%)  ,Colquitz Gneiss (20.3%)
+Deception (gulch),Sooke,48.51694,-123.7204,3,4.02,195,13,9,0,Wark Gneiss (61.2%),Argillite Metagreywacke (38.8%)
+Jarvis crk,Leech,48.59677,-123.7981,2,1.51,742,5,4,0.000002,Wark Gneiss (100%),NA
+Lazar crk,Leech,48.59179,-123.77,3,4.74,651,6,12,0.07,Wark Gneiss (100%),NA
+Leech beach,Leech,48.50678,-123.7818,5,94.09,237,10,1,0.02,Argillite Metagreywacke (45.1%),Wark Gneiss (31%)

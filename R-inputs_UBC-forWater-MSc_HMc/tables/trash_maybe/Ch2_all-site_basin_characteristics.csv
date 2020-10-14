@@ -1,0 +1,26 @@
+Site Name,Weeks-crk,Chris-crk,Leech-head,Cragg-crk,West-Leech,Leech-Tunnel,Judge-crk,Rithet-crk,Deception-gulch,Jarvis-crk,Lazar-crk,Leech-beach
+Water supply area (WSA),Leech WSA,Leech WSA,Leech WSA,Leech WSA,Leech WSA,Leech WSA,Sooke WSA,Sooke WSA,Sooke WSA,Leech WSA,Leech WSA,Leech WSA
+Latitude,48.57592,48.57691,48.5666,48.54856,48.50635,48.5069,48.58569,48.59123,48.51694,48.59677,48.59179,48.50678
+Longitude,-123.84397,-123.83995,-123.82569,-123.77141,-123.78618,-123.768,-123.67354,-123.72496,-123.72041,-123.79805,-123.76997,-123.78181
+Sampling site type,Monitoring + synoptic,Monitoring + synoptic,Monitoring + synoptic,Monitoring + synoptic,Monitoring + synoptic,Monitoring + synoptic,Synoptic,Synoptic,Synoptic,Synoptic,Synoptic,Synoptic
+Monitoring site number,1,2,3,4,5,6,-,-,-,-,-,-
+Interest / characteristic,Headwaters (Leech Rv.),Headwaters (Leech Rv.),Leech Rv. head,Main tributary to Leech Rv.,Main tributary to Leech Rv.,"Mainstem, future diversion point",2nd largest tributary to Sooke Reservoir,Largest tributary to Sooke Reservoir,Future diversion terminus,Headwaters (Cragg Crk),Headwaters (Cragg Crk),below confluence of West-Leech with Leech River mainstem
+Strahler Order,3,3,4,4,4,5,3,4,3,2,3,5
+Drainage Area (km2),11.52,5.9,20.59,28.06,20.85,95.3,8.33,11.12,4.02,1.51,4.74,94.09
+Elevation (m a.s.l),521,522,476,509,248,207,200,252,195,742,651,237
+"Tree age (average, years)",52,40,48,59,49,53,72,132,71,37,41,53
+Percent Forest,94.5,99,96.6,97.8,98.5,97.6,92.7,99.4,87.7,93,84,96
+Percent Wetland,4.2,0.8,2.6,1.6,0.4,1.1,1.1,0.5,9.3,4,12,1.1
+Percent Open Water,2.9,0.6,1.8,0.9,0.3,0.7,0,0,0,0.000002,0.07,0.02
+Wark-Gneiss (%),13.6,44.9,20.5,77.6,0,30.6,27,79.2,61.2,100,100,31
+Argillite-Metagreywacke (%),64.2,0,42.1,0,76.8,45.1,0,0,38.8,0,0,45.1
+Chert-Argillite-Volcanic (%),22.2,55.1,37.4,22.4,0,17.9,0,0,0,0,0,18.1
+Metagreywacke (%),0,0,0,0,7.2,1.6,0,0,0,0,0,1.6
+Metchosin Volcanics (%),0,0,0,0,16,4.2,0,0,0,0,0,3.5
+Colquitz Gneiss (%),0,0,0,0,0,0,72.4,20.3,0,0,0,0
+Sooke Gabbro (%),0,0,0,0,0,0.7,0,0,0,0,0,0.7
+Limestone (%),0,0,0,0,0,0,0.6,0.4,0,0,0,0
+"slope, mean (degrees)",9.1,10.5,10.2,9.46,11.3,11.8,9.2,12.3,13.8,5.4,6.9,11.7
+"slope, st.dev. (± °)",7,6.2,7.1,6.1,7.9,8.5,5.6,7.3,7.7,3.9,4.8,8.1
+"slope, median (degrees)",8,10,9,9,9,10,9,11,13,5,6,10
+"slope, max (degrees)",44,38,50,40,56,61,42,48,49,21,29,61
