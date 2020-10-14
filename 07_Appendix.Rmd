@@ -216,54 +216,55 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv",
 
 ####### Weather and Climate
 
-Based on the Pacific Climate Impacts Consortium (PCIC) weather anomaly data, the study period was 0.6° C warmer and 9.8% drier than normal. The PCIC (pacificclimate.org) provides BC climate data of monthly weather anomalies from 1970 onward; data assembled from BC Ministry of Environment and Climate Change’s Monitoring Program. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
+The Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
 
 \  
 
 ```{r PCICstns}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-stations.csv", 
          col_names = TRUE) %>% 
+  rename("Station_name" = Station_name,
+         "Elevation_asl" = Elevation_asl,
+         "Latitude (°W)" = Latitude,
+         "Longitude (°N)" = Longitude ) %>% 
   knitr::kable(caption = "Pacific Climate Impacts Consortium British Columbia Weather Stations Used to Establish Climate Anomalies and Departures from Normal for the Study Period from Oct. 2018 to Feb. 2020", 
                digits = c(0, 0, 5, 5))
 ``` 
 
 \  
 
-Not all months had weather anomalies that were warmer and drier than normal (Table \@ref(tab:PCICanomalies)), but overall, the study period was 0.56 degrees warmer and 13.4% drier than normal. ...
-
-
-\  
-
-```{r PCICanomalies}
-read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv", 
-         skip = 1, col_names = TRUE) %>% 
-  knitr::kable(caption = "Average Monthly Weather Anomalies from 1970 Onward from Bear Creek Reservoir and Shawnigan Lake Weather Stations", 
-               digits = c(0, 0, 2, 2, 1))
-``` 
-
-\ 
-
-
-
-the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal
-2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal
-2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal
-2019 wet season was 0.38 degrees warmer and 5 % drier than normal, with one extreme wet anomaly
-
-
-
-... (Table \@ref(tab:PCICdepartures)) ...
+Based on the PCIC weather anomaly data, the study period (October 2018 through to February 2020) was 0.56 degrees warmer and 13.4% drier than normal (Table \@ref(tab:PCICdepartures)). On average, each of the sampled wet seasons were drier than normal (26% and 5%) and the dry season was 1.4% wetter than normal. Prior to the start of the project, the summer/dry-season was 38% drier than normal and 1.6°C warmer.     
 
 \  
 
 ```{r PCICdepartures}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv", 
          skip = 1, col_names = TRUE) %>% 
+  rename("Sampling season" = Sampling_season,
+         "Date range" = Date_range,
+         "Temperature departure (°C)" = temp_depart,
+         "Precipitation departure (%)" = precip_depart) %>% 
   knitr::kable(caption = "Average Weather Departures from CLimate Normals from Bear Creek Reservoir and Shawnigan Lake Weather Stations ", 
                digits = c(0, 0, 2, 1))
 ``` 
 
 \  
+
+While not all months had weather anomalies that were warmer and drier than normal, the majority of months did (Table \@ref(tab:PCICanomalies)). In the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal; the 2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal; the 2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal; and the 2019 wet season was 0.38 degrees warmer and 5% drier than normal, with two precipitation anomalies that departed from normal by more than 100%: Sept 2019 was 108% wetter than normal and January 2020 was 136% wetter than normal) 
+
+\  
+
+```{r PCICanomalies}
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv", 
+         skip = 1, col_names = TRUE) %>% 
+  rename("Min. temp. departure (°C)" = temp_min_depart,
+         "Max. temp. departure (°C)" = temp_max_depart,
+         "Precipitation departure (%)" = precip_depart ) %>% 
+  knitr::kable(caption = "Average Monthly Weather Anomalies from 1970 Onward from Bear Creek Reservoir and Shawnigan Lake Weather Stations", 
+               digits = c(0, 0, 2, 2, 1))
+``` 
+
+\ 
 
 ######## FWx stations in the LWSA: ancilary data
 

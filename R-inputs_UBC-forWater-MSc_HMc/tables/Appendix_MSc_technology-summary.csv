@@ -1,0 +1,14 @@
+technology summary table,,,
+"McSorley MSc, UBC, 2018-2020",,,
+,,,
+Location,Device / Instrument ,Software (Version),Application
+Office,computer,Windows 10,operating system
+Office,computer,R (4.0.2),Programming language used for Data Analysis
+Office,computer,QGIS desktop (3.1.2 with Grass 7.8.2),Geospatial data analysis and mapping
+Office,computer,RStudio (1.3.959),IDE for R programming language
+Office,cloud/computer,GitHub,Version control (through RStudio)
+Field (monitoring sites),Odyssey capacitance water level logger,Odyssey Data Logging Software (2.0.0.2),Stream level monitoring
+Field (monitoring sites),Hobo TidbiT field temperature sensors,HOBOware Pro (3.7.17),Air and water temperature recording
+Field (monitoring sites),Reconyx Trail Cams,SD card & reader,Site monitoring
+Laboratory,Shimadzu TOC-V,TOC-Control,DOC quantification via NPOC
+Laboratory,Sc::an Spectro::lyser,"ana::pro (Version 5.9h, 1.0.z)",NOM characterization (UV-Vis spectroscopy)
