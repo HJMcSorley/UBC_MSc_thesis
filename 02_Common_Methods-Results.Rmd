@@ -55,8 +55,8 @@ Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl
 ```{r siteCharacteristics}
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics_simple.csv", col_names = TRUE) %>%
-  knitr::kable(#digits = 1,
-    col.names = c("Site name",	"Water supply area (WSA)",	"Latitude",	"Longitude",	"Strahler order",	"Drainage km^2^",	"Elevation (m a.s.l.)",	"Slope median (degrees)",	"Wetland cover (%)",	"Open water (%)",	"Dominant parent material (%)",	"Secondary parent material (%)"),
+  knitr::kable(col.names = c("Site name",	"Water supply area (WSA)",	"Latitude",	"Longitude",	"Strahler order",	"Drainage km^2^",	"Elevation (m a.s.l.)",	"Slope median (degrees)",	"Wetland cover (%)",	"Open water (%)",	"Dominant parent material (%)",	"Secondary parent material (%)"),
+               digits = c(0,0,5,5,0,2,0,1,3,3,0,0),
                caption = "Watershed Characteristics of Twelve Synoptic Sampling Sites Across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC")
 ```  
 
@@ -185,10 +185,7 @@ The spectral quotient E~2~:E~3~ is inversely related to aromaticity and molecula
 
 ### Defining seasons 
 
-Coastal BC climate is characterized by a predominantly wet season and dry season, and the timing and length of seasons can vary year to year. Here, seasons were defined by sampling method restrictions such that the "wet" season was defined by conditions that generated stream responses significant enough to collect Vertical Rack samples for Vertical Racks to collect rising limb samples, and the "dry" season was defined by the absence of stream response substantial enough for Rack sampler collection. 
-
-by conditions  generated stream responses significant enough 
-, and the dry season was defined by baseflow conditions where stream response was not detected at the Vertical Racks
+Coastal BC climate is characterized by a predominantly wet season and dry season, and the timing and length of seasons can vary year to year. Here, seasons were defined by sampling method restrictions such that the "wet" season was defined by conditions that generated stream responses significant enough for Vertical Racks to collect rising limb samples, and the "dry" season was defined by baseflow conditions where stream response was not detected at the Vertical Racks. 
 
 \ 
 
@@ -241,9 +238,9 @@ October 2018 through to February 2020 (the study period) was warmer and drier th
 
 \  
 
-#### Seasonal delineation  
+#### Seasonal delineation & Rack sample collection  
 
-There were 18 rain events of sufficient magnitude for Vertical Rack sample collection; the conditions that corresponded to these major rain events were precipitation accumulating to 50 mm or more with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)). 
+The wet seasons included 18 rain events big enough to trigger Vertical Rack sample collection. Rack samples were collected for rain events 50 mm and larger, with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)).  
 
 \  
 
@@ -258,12 +255,12 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
 
 \  
 
-The sixteen-month study period was separated into "wet" and "dry" seasons based on detectable stream response at each monitoring site and across the GVWSA, stream response was primarily driven by the presence of major rain events (Table \@ref(tab:EventsTable)). However, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included when delineating the 2018/2019 wet season, despite the lack of defined rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, with streamflow governed by snowmelt rather than rainfall during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
+The sixteen-month study period was separated into "wet" and "dry" seasons based on detectable stream response at each monitoring site and across the GVWSA. Stream response was primarily driven by the presence of major rain events (Table \@ref(tab:EventsTable)); however, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included when delineating the 2018/2019 wet season, despite the lack of defined rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, with streamflow governed by snowmelt rather than rainfall during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
 
 \  
 
 ```{r seasonalMegaPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites. Vertical yellow lines indicate seasons, distinguished by stormflow Vertical Rack sampling (wet season). The dashed yellow line shows the 2018/2019 wet season separation of rain and snowmelt dominated streamflow. The 'first flush' period indicates the first event and beginning of the 2019/2020 wet season. " 
+fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites. Vertical yellow lines indicate seasons, distinguished by stormflow Vertical Rack sampling (wet season). The dashed yellow line shows the 2018/2019 wet season separation of rain and rain/snowmelt dominated streamflow." 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
 ```
@@ -272,7 +269,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### NOM reactive character: SAC~254~ rather than SUVA~254~
 
-Comparison between disinfection byproduct formation potential (BDP-FP) with DOC, SUVA~254~ and SAC~254~ (Appendix #########) showed that SAC~254~ was a better correlated to DBP-FPs (r=0.68) than was SUVA~254~ (r=0.36) or DOC (r=0.50). Thus, SUVA~254~ was largely omitted from results while SAC~254~ was included as an indicator of NOM aromaticity and reactivity. 
+Comparison between disinfection byproduct formation potential (BDP-FP) with DOC, SUVA~254~ and SAC~254~ showed that SAC~254~ was better correlated to DBP-FPs (r=0.68) than was SUVA~254~ (r=0.36) or DOC (r=0.50). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~   
 
 \  
 

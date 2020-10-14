@@ -127,92 +127,10 @@ Originating in the west of the Leech River watershed, West Leech River is a 4th 
 This research site was at the point of future diversion, the Leech River Tunnel. The Leech is a 5th order river, and this research site had a drainage area of approximately 96 km^2^ (the entire watershed above the point of diversion). The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised, but overall the river is wider than is is deep. The Tunnel site was approximately 1 km downstream of the West Leech confluence. 
 
 \  
-## Treatability
-########   Treatability: forWater coordinated treatability analyses for disinfection by-product formation potentials (DBP-FP)
 
-Four of the synoptic sampling sites were selected as treatability sampling sites, where source water was collected and shipped to collaborative researchers in the forWater Network for analyses of drinking water treatability metrics. The four treatability sites were: 
+## Ch 2 results
 
-\  
-
-1. Leech River at the future point of diversion (near Leech Tunnel inlet)
-2. Deception Reservoir, downstream from Deception Gulch (outlet of Leech Tunnel)
-3. Rithet Creek (main tributary to Sooke Reservoir)
-4. Judge Creek (2nd largest tributary to Sooke Reservoir)
-
-\  
-
-These sites were selected to represent future supplemental source water , the future balancing reservoir between the Leech and Sooke water supply areas, and the current tributary source waters to the Sooke Reservoir.
-
-\  
-
-Sets of samples were collected during winter of the 2020 water year (November 12, 2019 and February 18, 2020) and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes (THMs) and haloacetic acids (HAAs) in μg/L), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), and Zeta Potential (mV). Relationships between disinfection by-product formation potentials (DBP-FPs), UV-absorbance at 254nm, and DOC concentrations were examined. 
-
-\ 
-
-At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM.
-
-\  
-### results
-######### Results: Treatability & DOC
-
-Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). 
-
-\  
-
-Results from two sets of samples at four selected sites showed DBP-FPs were weakly correlated to DOC concentrations and SUVA~254~ and more strongly correlated to SAC~254~ (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and SAC~254~ indicates that while DOC concentration is an important indicator of source water treatability challenges, the aromaticity of source water NOM may be an even more important driver. 
-
-\  
-
-```{r treatability, fig.cap = fig_cap}
-fig_cap = "\\label{fig:treatability} *Plots of disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column) and UV absorbance at 254 nm (right column). Samples collected at four sites on two occasions.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png")
-```
-
-\  
-
-While UV-254 is a good indicator of NOM aromaticity and also appears to be correlated to DBP-FPs, naturally occurring aqueous chemicals (such as nitrate and iron) can interfere with spectroscopic analyses and lead to positive bias in DOM estimates. While aqueous nitrate may lead to an over estimate absorbance-based DOM concentrations, aqueous nitrogen can also play an important roll as a precursor to nitrogenous-DBPs when in combination with NOM, which could make UV{254} an even better indicator of DBP-FP.     
-
-\  
-
-## Metals
-######## Metals & DOC: collaborative sampling for Metals on behalf of the CRD
-
-Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, eight sets of samples were collected from the six Leech WSA monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). A suite of total metals was included in the analyses and reports from BL Labs were provided by the CRD (for the samples collected in association with this research). Data were used to evaluate relationships between DOC and metals in solution. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations. Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L. 
-
-\  
-
-```{r metalsug, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsug} *Concentrations of total metals (in μg/L) and dissolved organic carbon.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
-```
-
-\  
-
-```{r metalsmg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsmg} *Concentrations of total metals (in mg/L) and dissolved organic carbon.*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
-```
-
-\  
-
-DOC concentrations had strong positive relationships with total mercury, iron, manganese, aluminum. While the relationships were not as strong, DOC was also positively related to concentrations of barium, copper, and arsenic. There was a weak inverse relationship between DOC with silicon and potassium (Table \@ref(tab:metalsdata)). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for drinking source water quality guidelines [@BC2019].
-
-\  
-
-```{r metalsdata}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv", 
-         col_names = TRUE) %>% 
-  knitr::kable(digits = c(1, 1, 0, 2, 2, 4), 
-               col.names = c("Metal", "unit", "count", "slope", "Y intercept", "R squared"),
-               caption = "*Relationships between total metals with dissolved organic carbon*")
-```
-
-\  
-
-## Weather and Climate
+### Weather and Climate
 
 ####### Weather and Climate
 
@@ -386,6 +304,92 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rai
 ```
 
 \  
+
+### Treatability
+########   Treatability: forWater coordinated treatability analyses for disinfection by-product formation potentials (DBP-FP)
+
+Four of the synoptic sampling sites were selected as treatability sampling sites, where source water was collected and shipped to collaborative researchers in the forWater Network for analyses of drinking water treatability metrics. The four treatability sites were: 
+
+\  
+
+1. Leech River at the future point of diversion (near Leech Tunnel inlet)
+2. Deception Reservoir, downstream from Deception Gulch (outlet of Leech Tunnel)
+3. Rithet Creek (main tributary to Sooke Reservoir)
+4. Judge Creek (2nd largest tributary to Sooke Reservoir)
+
+\  
+
+These sites were selected to represent future supplemental source water , the future balancing reservoir between the Leech and Sooke water supply areas, and the current tributary source waters to the Sooke Reservoir.
+
+\  
+
+Sets of samples were collected during winter of the 2020 water year (November 12, 2019 and February 18, 2020) and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, samples were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes (THMs) and haloacetic acids (HAAs) in μg/L), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), and Zeta Potential (mV). Relationships between disinfection by-product formation potentials (DBP-FPs), UV-absorbance at 254nm, and DOC concentrations were examined. 
+
+\ 
+
+At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM.
+
+\  
+### results
+######### Results: Treatability & DOC
+
+Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). 
+
+\  
+
+Results from two sets of samples at four selected sites showed DBP-FPs were weakly correlated to DOC concentrations and SUVA~254~ and more strongly correlated to SAC~254~ (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and SAC~254~ indicates that while DOC concentration is an important indicator of source water treatability challenges, the aromaticity of source water NOM may be an even more important driver. 
+
+\  
+
+```{r treatability, fig.cap = fig_cap}
+fig_cap = "\\label{fig:treatability} *Plots of disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column) and UV absorbance at 254 nm (right column). Samples collected at four sites on two occasions.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png")
+```
+
+\  
+
+While UV-254 is a good indicator of NOM aromaticity and also appears to be correlated to DBP-FPs, naturally occurring aqueous chemicals (such as nitrate and iron) can interfere with spectroscopic analyses and lead to positive bias in DOM estimates. While aqueous nitrate may lead to an over estimate absorbance-based DOM concentrations, aqueous nitrogen can also play an important roll as a precursor to nitrogenous-DBPs when in combination with NOM, which could make UV{254} an even better indicator of DBP-FP.     
+
+\  
+
+## Metals
+######## Metals & DOC: collaborative sampling for Metals on behalf of the CRD
+
+Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, eight sets of samples were collected from the six Leech WSA monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). A suite of total metals was included in the analyses and reports from BL Labs were provided by the CRD (for the samples collected in association with this research). Data were used to evaluate relationships between DOC and metals in solution. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations. Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L. 
+
+\  
+
+```{r metalsug, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:metalsug} *Concentrations of total metals (in μg/L) and dissolved organic carbon.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
+```
+
+\  
+
+```{r metalsmg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
+fig_cap = "\\label{fig:metalsmg} *Concentrations of total metals (in mg/L) and dissolved organic carbon.*"
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
+```
+
+\  
+
+DOC concentrations had strong positive relationships with total mercury, iron, manganese, aluminum. While the relationships were not as strong, DOC was also positively related to concentrations of barium, copper, and arsenic. There was a weak inverse relationship between DOC with silicon and potassium (Table \@ref(tab:metalsdata)). All metals concentrations were below maximum allowable concentrations and aesthetic objectives for drinking source water quality guidelines [@BC2019].
+
+\  
+
+```{r metalsdata}
+read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv", 
+         col_names = TRUE) %>% 
+  knitr::kable(digits = c(1, 1, 0, 2, 2, 4), 
+               col.names = c("Metal", "unit", "count", "slope", "Y intercept", "R squared"),
+               caption = "*Relationships between total metals with dissolved organic carbon*")
+```
+
+\  
+
 
 ## extended ch3 results
 ####### Results extended

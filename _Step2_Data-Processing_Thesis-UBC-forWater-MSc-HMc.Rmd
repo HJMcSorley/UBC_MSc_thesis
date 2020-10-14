@@ -2231,8 +2231,8 @@ season_meanrain_plot <- subbasin_meanrain_plot +
              xintercept = as.Date(last_2018_rainevent), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
+  #geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid",  # final draft edits, remove first flush
+  #           xintercept = as.Date(start_FF2019), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_wet2019), size = 0.65)+
   # labels
@@ -2242,8 +2242,8 @@ season_meanrain_plot <- subbasin_meanrain_plot +
            y = 125, size = 3)+
   annotate("text", label = "2019 dry season", x = as.Date(start_dry2019)+65, 
            y = 125, size = 3)+
-  annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
-           y = 80, angle = 90, size = 3)+
+  #annotate("text", label = "first flush", x = as.Date(start_FF2019)+10, 
+  #         y = 80, angle = 90, size = 3)+
   annotate("text", label = "2019/2020 wet season", x = as.Date(start_wet2019)+75, 
            y = 125, size = 3) +
   theme(text = element_text(size = 11))
@@ -2262,8 +2262,8 @@ season_stage_sample_plot <- stage_samples %>%
              xintercept = last_2018_rainevent, size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = start_dry2019, size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = start_FF2019, size = 0.65)+
+  #geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+  #           xintercept = start_FF2019, size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = start_wet2019, size = 0.65)+
   facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
@@ -2284,8 +2284,8 @@ season_snow_plot <- subasin_snow_plot +
              xintercept = as.Date(last_2018_rainevent), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
+  #geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+  #           xintercept = as.Date(start_FF2019), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_wet2019), size = 0.65)
 # and temp
@@ -2294,8 +2294,8 @@ season_meantemp_plot <- subasin_meantemp_plot +
              xintercept = as.Date(last_2018_rainevent), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_dry2019), size = 0.65)+
-  geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
-             xintercept = as.Date(start_FF2019), size = 0.65)+
+  #geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
+  #           xintercept = as.Date(start_FF2019), size = 0.65)+
   geom_vline(colour = forWater_colours1["MyOrange"], linetype = "solid", 
              xintercept = as.Date(start_wet2019), size = 0.65)
 
@@ -9579,6 +9579,58 @@ wut <- synopticfilter %>%
                aes(label =  (..rr.label..)), 
                parse = TRUE, rr.digits = 4)
 # nope
+
+# is E2E3 correlated with zetapotential ? 
+wut <- treatdat_full %>% 
+  filter(between(E2E3, 3, 10) ) %>% # drop outliers
+  ggplot(aes(x = E2E3, y = Zeta_Potential_mV)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# yeah, kind of!! R^2 = 0.5297
+
+# how about E2E3 with free chlorine?
+wut <- treatdat_full %>% 
+  filter(between(E2E3, 3, 10) ) %>% # drop outliers
+  ggplot(aes(x = E2E3, y = Free_Chlorine_Final_mgL)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = "Free Chlorine, Final (mg/L)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# Nope
+
+
+# is SUVA254 correlated with zetapotential ? 
+wut <- treatdat_full %>% 
+  ggplot(aes(x = SUVA_UW y = Zeta_Potential_mV)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(SUVA[254]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+
+# Nope R2 = 0.171
 
 ```
 
