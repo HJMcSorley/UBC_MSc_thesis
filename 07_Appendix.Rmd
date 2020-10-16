@@ -293,7 +293,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx
 
 ####### Antecedent 30-day rain and stream stage
 
-In Chapter 4, I used antecedent rain like a surrogate for stream discharge in a proxy Q-C hysteresis evaluation. This seemed reasonable because in the Leech WSA rain is a main contributor to streamflow. For each sample collected at each of the six monitoring sites, the relationship between antecedent rain (from LWSA Fwx mean of Chris Creek and Martin's Gulch rain data) and measured stage loosely resembles the shape of an expected rating curve (Figure \@ref(fig:Ant30RainStage)).
+In Chapter 4, antecedent rain was used like a surrogate for stream discharge in a proxy Q-C hysteresis evaluation. This seemed reasonable because in the Leech WSA rain is a main contributor to streamflow. For each sample collected at each of the six monitoring sites, the relationship between antecedent rain (from LWSA Fwx mean of Chris Creek and Martin's Gulch rain data) and measured stage loosely resembles the shape of an expected rating curve (Figure \@ref(fig:Ant30RainStage)).
 
 \  
 
@@ -302,6 +302,12 @@ fig_cap = "\\label{fig:Ant30RainStage} Relationship between sample stage and ant
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png")
 ```
+
+\  
+
+######## Additional sampling and analysis
+
+At UBC, stream samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
 
 \  
 
@@ -330,7 +336,11 @@ Sets of samples were collected during winter of the 2020 water year (November 12
 At the University of Alberta, field-filtered samples were analyzed using a spectrofluorometer (for excitation emission matrices spectra), as well as an Fourier transform ion cyclotron resonance mass spectrometer to determine molecular characteristics of the DOM.
 
 \  
+
 ### results
+
+\  
+
 ######### Results: Treatability & DOC
 
 Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). 

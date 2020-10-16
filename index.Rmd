@@ -1,5 +1,5 @@
 --- 
-title: "Spatial and temporal variation in natural organic matter concentration and character across the Leech River watershed, a second growth forested drinking water supply area on Vancouver Island, BC: an assessment of dissolved organic carbon and spectral properties"
+title: "Spatial and temporal variation in natural organic matter quantity (as dissolved organic carbon) and quality (via UV-Vis spectroscopy) across the Leech River watershed, a second growth forested drinking water supply area on Vancouver Island, BC"
 author: "Hannah J. McSorley"
 date: "2020"
 site: bookdown::bookdown_site
@@ -37,6 +37,14 @@ Key points:
 * refined method of vertical Rack passive sampling of rising stage in streams
 * there were seasonal differences in spatial patterns to NOM character, although the dry and wet season mean concentrations were the same.
 * mixing and reservoir effects will change riverine water quality prior to intake at the tower
+
+\  
+
+...
+Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals like NOM represent an important link between ecosystem processes, land-use, hydrology, and water resources. These water-quality signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019].  
+...
+
+\  
 
 ***to be updated following completion of results*** 
 

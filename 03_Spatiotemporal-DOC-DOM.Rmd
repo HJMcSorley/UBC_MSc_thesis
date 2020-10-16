@@ -25,17 +25,17 @@ The methods defined in Chapter 2 were used to collect and analyze surface water 
 
 ### Methods
 
-All samples were collected by methods described in Chapter 2, and all data was flagged and filtered based on quality assurance described therein. Here, NOM is assessed based on concentrations of dissolved organic carbon (DOC) and character is indicated by SAC~254~ (reactivity & aromaticity) and E~2~:E~3~ (molecular size & aromaticity). 
+All samples were collected by methods described in Chapter 2, and all data were flagged and filtered based on quality assurance described therein. Here, NOM is assessed based on concentrations of dissolved organic carbon (DOC) and character is indicated by SAC~254~ (reactivity & aromaticity) and E~2~:E~3~ (molecular size & aromaticity). 
 
 \  
 
-Synoptic sample results were evaluated for spatial patterns by comparing low- to high-order streams, between the Leech and Sooke portions of the GVWSA, and by sampling methods at upstream and downstream sites. To assess temporal patterns, results were examined over the full study period (Oct 2018 to Feb 2020), and grouped by sampling season (wet & dry seasons). For shorter scale temporal pattern assessment, rising limb event-based Rack samples from the six monitoring sites in the Leech WSA were compared to inter-event sampling results (i.e. standard Grab samples). 
+Synoptic sample results were evaluated for spatial patterns by comparing low- to high-order streams, between the Leech and Sooke portions of the GVWSA, and by sampling methods at upstream and downstream sites. To assess temporal patterns, results were examined over the full study period (Oct 2018 to Feb 2020), and grouped by wet and dry seasons. For shorter scale temporal pattern assessment, rising limb event-based Rack samples from the six monitoring sites in the Leech WSA were compared to inter-event sampling results (i.e. standard Grab samples). 
 
 \  
 
 ### Results
 
-From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed by UV-Vis for NOM character assessment (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and instrument-sharing limitations. Of the samples collected and analyzed, DOC data were reduced by 9.2% (to 387 samples) during Hold-time quality control checks (described in Chapter 2) and UV-Vis data were reduced by 19.5% (to 256 samples). Quality control resulted in a 9% reduction in UV-Vis data and an additional 10.5% was unfortunately lost during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10% (_n_ = 20).  
+From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed by UV-Vis for NOM character assessment (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and constraints in instrument availability. Of the samples collected and analyzed, DOC data were reduced by 9.2% (to 387 samples) during hold-time quality control checks (described in Chapter 2). UV-Vis data were reduced by 19.5% (to 256 samples) through hold-time quality control (9% reduction in UV-Vis data) and, unfortunately, an additional 10.5% was lost during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10% (n = 20).  
 
 \  
 
@@ -46,21 +46,17 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_
 
 \  
 
-Samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
-
-\  
-
 #### Spatial patterns in NOM quantity and quality  
 
 From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation (RSD = std.dev/mean) for DOC in each of the synoptically sampled sites was at least 24% and at most 71%, indicating a wide range of variance among the sites. 
 
 \  
 
-The headwaters sites of Weeks creek (11.52 km^2^ sub-basin) and Jarvis creek (1.51 km^2^ sub-basin) had the highest DOC concentrations of the twelve sampling sites (means of 9.9 mg/L and 9.7 mg/L, respectively). The lowest DOC concentrations were recorded at the sampling sites of the Rithet crk sub-basin (11.12 km^2^) and the Leech Tunnel sub-basin (95.3 km^2^) and their means (5.4 mg/L and 4.8 mg/L, respectively) were not unlike other streams of 3rd order or above (overall average 5.18 mg/L). The greatest range in DOC concentrations was measured at the Rithet crk site, which had a mean of 5.4 ± 3.9 mg/L (relative standard deviation, RSD, of 71%). The site with the second highest DOC range was the West Leech sub-basin (20.85 km^2^) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD). Between these two sites with the highest DOC variance, the West Leech -- a monitoring site -- was more heavily sampled than Rithet -- a synoptic sampling site alone (Table \@ref(tab:synopticDOCdata)).  
+The headwaters sites of Weeks creek (11.52 km^2^ sub-basin) and Jarvis creek (1.51 km^2^ sub-basin) had the highest DOC concentrations of the twelve sampling sites (means of 9.9 mg/L (n=49) and 9.7 mg/L (n=12), respectively). The lowest DOC concentrations were recorded at the sampling sites of the Rithet crk sub-basin (11.12 km^2^) and the Leech Tunnel sub-basin (95.3 km^2^) and their means (5.4 mg/L (n=13) and 4.8 mg/L (n=64), respectively) were not unlike other streams of 3rd order or above (overall average 5.18 mg/L). The greatest range in DOC concentrations was measured at the Rithet crk site which had a relative standard deviation (RSD) of 71%. The site with the second highest DOC range was the West Leech sub-basin (20.85 km^2^) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD). Between these two sites with the highest DOC variance, the West Leech (n=57) -- a monitoring site -- was more heavily sampled than Rithet (n=13) -- a synoptic sampling site alone (Table \@ref(tab:synopticDOCdata)).  
 
 \  
 
-Mean DOC concentrations were similar between Judge crk (8.33 km^2^ sub-basin) and Rithet crk, the Sooke WSA main tributaries (mean DOC of 5.7 ± 1.1 mg/L and 5.4 ± 3.9 mg/L, respectively). Comparing these Sooke WSA main tributary sites to the future supplemental supply (Leech Tunnel site), mean DOC was similar among the three, but slightly higher in the Sooke WSA than at the Leech Tunnel (4.8 ± 1.8 mg/L), though the number of samples collected at the Tunnel was much greater (Table \@ref(tab:synopticDOCdata)).  
+Mean DOC concentrations were similar between the Sooke WSA main tributaries to Sooke Reservoir: Judge crk (5.7 ± 1.1 mg/L, n=6) and Rithet crk (5.4 ± 3.9, n = 13). Comparing these Sooke WSA main tributary sites to the future supplemental supply Leech Tunnel site, mean DOC was similar among the three, but slightly higher in the Sooke WSA than at the Leech Tunnel (4.8 ± 1.8 mg/L). Though these three sites were sampled over the same span of time, the number of samples collected at the Tunnel (n=64) was much greater due to less intense focus on the Sooke WSA and Vertical Rack sampling at the Leech Tunnel (Table \@ref(tab:synopticDOCdata)).  
 
 \  
 
@@ -68,7 +64,7 @@ Mean DOC concentrations were similar between Judge crk (8.33 km^2^ sub-basin) an
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 1, 1),
                caption = "Dissolved Organic Carbon Concentrations (DOC) Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
-               col.names = c("Site", "Description", "Count", 
+               col.names = c("Site", "Description", "n", 
                              "Mean DOC (mg/L)", "sd (±)", "Relative sd (± %)", 
                              "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)"))
 
@@ -76,7 +72,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary.csv", c
 
 \  
 
-Overall, DOC decreased from low-order headwater streams to higher-order downstream sites (Table \@ref(tab:synopticDOCdata), Figure \@ref(fig:synopticBox)). Like concentration, there was an overall reduction in NOM character (i.e. aromaticity, reactivity, and/or molecular size) from upstream to downstream sites (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). The lowest absolute measurement for NOM aromaticity occurred at the Cragg crk site (minimum SAC~254~ 4.69 m^-1^, maximum E~2~:E~3~ of 5.03). Cragg crk also had among the lowest mean aromaticity, though it tied with Judge crk (mean E~2~:E~3~ of 4.59), abd both were very close to Lazar crk (mean E~2~:E~3~ of 4.55, and mean SAC~254~ 10.6 m^-1^). Surprisingly, while the Cragg crk site recorded the lowest absolute (and had among the lowest average) aromaticity, it's headwater sites (Jarvis and Lazar creeks) had samples with the most aromatic character. Lazar crk had one of the most aromatic samples of all measured samples (lowest recorded E~2~:E~3~, 3.77), and the other headwater creek in Cragg basin, Jarvis creek, had the other most aromatic sample measured by SAC~254~ (41.7 m^-1^). So, Lazar crk had the lowest aromatic NOM on average, but it also had one of the most aromatic samples of all (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Indeed, Lazar had the greatest range in E~2~:E~3~ values with 9% RSD. Overall, the most diversity in aromaticity measured by SAC~254~ were recorded in samples from the headwater sites of Chris crk (50% RSD), Jarvis (47% RSD) and Lazar (45% RSD). And the site with the greatest average aromaticity was Weeks crk (mean SAC~254~ 30.3 m^-1^, mean E~2~:E~3~ 4.27).
+Overall, DOC decreased from low-order headwater streams to higher-order downstream sites (Table \@ref(tab:synopticDOCdata), Figure \@ref(fig:synopticBox)). Similar to DOC concentration, there was an overall reduction in aromaticity, reactivity, and molecular size of NOM from upstream to downstream sites (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). The greatest diversity in NOM reactivity, measured by SAC~254~, were recorded in headwater samples from Chris crk (50% RSD), Jarvis crk (47% RSD) and Lazar crk (45% RSD). The site with the greatest average reactivity, aromaticity and molecular weight NOM was Weeks crk (mean SAC~254~ 30.3 m^-1^, mean E~2~:E~3~ 4.3 ± 0.2).
+
+\  
+
+The lowest absolute measurement for NOM aromaticity, molecular size and reactivity occurred at the Cragg crk site (maximum E~2~:E~3~ of 5.03, minimum SAC~254~ 4.69 m^-1^). Cragg crk also had among the lowest mean aromaticity and molecular weight NOM (E~2~:E~3~ of 4.59 ± 0.22), though it was very similar to Judge crk (E~2~:E~3~ of 4.59 ± 0.05). Unlike Cragg crk's low aromaticity and molecular weight NOM, it's headwater sites (Jarvis and Lazar) had samples with highly aromatic and reactive NOM character. Jarvis crk had the most reactive NOM sample (max SAC~254~ 41.7 m^-1^) and the other headwater creek in Cragg basin, Lazar crk, had one of the most aromatic samples of all (lowest recorded E~2~:E~3~, 3.77). Lazar crk sub-basin had the greatest proportion of wetlands (12% by area), and had the greatest range in NOM aromaticity and molecular size (E~2~:E~3~ values with 9% RSD); despite having one of the most aromatic samples of all, Lazar crk also had the lowest average aromatic NOM (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Field observations included dry-season and early wet season algae blooms (Appendix __XXXX__) in Jarvis crk, Lazar crk and Cragg crk (and other small streams draining the west side of Survey Mountain).  
 
 \  
 
