@@ -4083,6 +4083,11 @@ b <- sixfilter %>%
 full_join(a, b, by = c("sample_type") ) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char_overall.csv")
 
+```
+
+Each site
+```{r}
+
 # -- each site
 
 
@@ -4100,8 +4105,23 @@ conc_wet <- sixfilter %>%
             DOCmedian = median(NPOC_ppm, na.rm = T), 
             DOCmax = max(NPOC_ppm, na.rm = T)) %>%
   ungroup() %>% 
+  bind_rows(
+    sixfilter %>%
+      filter(QAQC_flag == "OK",
+             rain_season == "wet") %>% 
+      filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+      group_by(site) %>% 
+      summarize(sample_type = "overall",
+                conc_count = n(), 
+                DOCmean = mean(NPOC_ppm, na.rm = T), 
+                RSD = (sd(NPOC_ppm, na.rm = T)/DOCmean)*100,
+                DOCmin = min(NPOC_ppm, na.rm = T), 
+                DOCmedian = median(NPOC_ppm, na.rm = T), 
+                DOCmax = max(NPOC_ppm, na.rm = T)) %>%
+      ungroup()  ) %>% 
   mutate(mean_RSD = paste0(round(DOCmean, 2), " ± ", round(RSD, 0), "%")) %>% 
-  select(site, sample_type, conc_count, mean_RSD, DOCmin, DOCmedian, DOCmax) 
+  select(site, sample_type, conc_count, mean_RSD, DOCmin, DOCmedian, DOCmax) %>% 
+  dplyr::arrange(site)
 
 
 # Character
@@ -4119,9 +4139,23 @@ char_wet <- sixfilter %>%
             SACmedian = median(SAC254_Abs.m, na.rm = T), 
             SACmax = max(SAC254_Abs.m, na.rm = T)) %>%
   ungroup() %>% 
+  bind_rows(
+    sixfilter %>%
+      filter(QAQC_flag == "OK",
+             rain_season == "wet") %>% 
+      filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+      group_by(site) %>% 
+      summarize(sample_type = "overall",
+                char_count = n(),
+            SACmean = mean(SAC254_Abs.m, na.rm = T), 
+            SACRSD = (sd(SAC254_Abs.m, na.rm = T)/SACmean)*100,
+            SACmin = min(SAC254_Abs.m, na.rm = T), 
+            SACmedian = median(SAC254_Abs.m, na.rm = T), 
+            SACmax = max(SAC254_Abs.m, na.rm = T)) %>%
+      ungroup()  ) %>% 
   mutate(mean_RSD_SAC = paste0(round(SACmean, 2), " ± ", round(SACRSD, 0), "%")) %>% 
-  select( site, sample_type, char_count, 
-          mean_RSD_SAC, SACmin, SACmedian, SACmax) 
+  select(site, sample_type, char_count, mean_RSD_SAC, SACmin, SACmedian, SACmax) %>% 
+  dplyr::arrange(site)
 
 
 # --- THIS IS THE ONE
