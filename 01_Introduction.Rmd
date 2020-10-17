@@ -34,7 +34,7 @@ Molecular structures of NOM can contain varying ratios of nitrogen, silica, oxyg
 
 \  
 
-In addition to acting as a precursor for DBPs, DOC (therefore NOM) has been called a master variable (or the “great modulator”) due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Stanley2012; @Zarnetske2018; @Ruhala2017; @Kellerman2018]. Indeed, NOM is an energy source for aquatic heterotrophs, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes which, in turn, effect aquatic microbial communities [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012; @Cory2011]. 
+In addition to acting as a precursor for DBPs, DOC (therefore NOM) has been called a master variable (or the “great modulator”) due to it's terrestrial-aquatic linkages, influence on water chemistry and role in contaminant transport [@Stanley2012; @Zarnetske2018; @Ruhala2017; @Kellerman2018; @LaZerte1991]. Indeed, NOM is an energy source for aquatic heterotrophs, it has the ability to bind and transport contaminants in solution (e.g. metals, hydrophobic organic pollutants, nutrients), can influence stream pH and aquatic light and temperature regimes which, in turn, effect aquatic microbial communities [@Matilainen2010; @Oni2013; @Aiken2011; @Weishaar2003; @LaZerte1991; @Palleiro2013; @Stanley2012; @Cory2011]. 
 
 \  
 
@@ -152,7 +152,7 @@ __Objective 1:__   Design a sampling strategy to describe spatial and temporal p
 
 \  
 
-__Research Question 2.__   What are the primary drivers within watershed characteristics (e.g slope or land-cover) and sampling conditions (e.g. antecedent rain) for changes in NOM quantity and quality in the Leech watershed?
+__Research Question 2.__   What are the primary drivers within watershed characteristics (e.g slope or land-cover) and hydroclimatic conditions (e.g. antecedent rain) for changes in NOM quantity and quality in the Leech watershed?
 
 __Objective 2:__   Explore relationships between water sample results of NOM quantity and quality to watershed characteristics and sampling conditions to identify explanatory variables.
 
