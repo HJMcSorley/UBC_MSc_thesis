@@ -15,17 +15,16 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 ```
 
-##Technology summary
 ####### Technology summary
 
-Digital equipment used in this thesis are summarized here.  
+Digital equipment used in this thesis are summarized in Table \@ref(tab:techsumm).  
 
 \  
 
-```{r}
+```{r techsumm}
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/MSc_technology-summary.csv", skip = 3, col_names = TRUE) %>% 
-  knitr::kable()
+  knitr::kable(caption = "Summary of hardware and sofware used in this thesis project")
 ```
 
 \  
@@ -37,13 +36,15 @@ Some data were normalized to allow for relative comparison between sites where a
 Equation 1: $$normalized ~ X_{i} = \frac { (X_{i} - X_{min}) }{ (X_{max} - X_{min}) }$$
 
 
-## forWater CRD
+\  
+
+
 ####### NSERC forWater Network & the Capital Regional District 
 
 The forWater NSERC Network for source water protection strategies is a transdisciplinary, cross-Canada, applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, so forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatment demands as they relate to forested source water. 
 
 \  
-## GVWSA
+
 ######## Greater Victoria Regional Water Supply System, CRD
 
 The Capital Regional District (CRD) owns and operates the water supply system for the Greater Victoria region. As a water purveyor, CRD supplies an average of 130 million liters of treated water to customers each day (130,000 m^3^day^-1^) [@CapitalRegionDistrict2017]. The provision of safe and sustainable drinking water has three tiers of regulation above the CRD: federal, provincial, and regional. Federally, Health Canada publishes Canadian Drinking Water Quality Guidelines which outline quantitative bounds for microbial, chemical, radiological parameters and physical aesthetic characteristics for safe drinking water. The province of British Columbia sets requirements for planning, reporting and regualting of drinking water providers through the Drinking Water Protection Act and the Water Sustainability Act, and the Public Health Act and Regulations. Regionally, the CRD reports to the Vancouver Island Health Authority (Island Health) regarding water quality information and provincial legislation.    
@@ -55,7 +56,7 @@ The Leech River watershed is a sub-catchment of the Sooke River watershed (~25% 
 In 1977, the CRD obtained a provincial water licence authorizing the diversion of up to 30.6 million cubic meters per year from the Leech River to the Sooke Reservoir [@Ussery2015]. Based on the 2017 strategic plan statement of a daily average water supply of 130,000 m^3^ [-@CapitalRegionDistrict2017], the Leech water license could contribute about 65% of 2017 average water supply. The license allows diversion only as long as minimum flows (>5.7 m^3^s^-1^) are maintained to protect fish and downstream ecology [@Ussery2015]. Based on current hydroclimatic dynamics, the water license flow requirements will exclude the summer months from inter-basin transfer and limit streamflow diversion to the winter (November to approximately April). The Leech Tunnel was constructed in the 1980's to transfer Leech River water into the Sooke Reservoir. The Tunnel is not currently operational, and it's anticipated that inter-basin transfer won't be required until 2050 or later. 
 
 \  
-## LeechWSA details
+
 ######## Leech water supply area monitoring sites: details and observations 
 
 The Leech River watershed ("the Leech") is located on south-east Vancouver Island, British Columbia, Canada. Like most of coastal BC, it is in the Coastal Western Hemlock Biogeoclimatic Zone. The hydroclimatic regime of the Leech is pluvial (i.e. rain-dominated). Annual rainfall is typically between xxxx - yyyy mm (~2500 mm/yr). This areas has a strong seasonal distribution of rainfall: approximately 90% of rain falls from September to April, with only about 10% of annual rainfall occurring from May to August [*REFS*]. Across the Leech, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. While the majority of precipitaiton falls as rain, snow does accumulate for short periods at higher elevations. 
@@ -108,6 +109,8 @@ Cragg Creek is a mainstem river that originates in the northeast of the Leech Ri
 
 A fall algae bloom was observed in Cragg Creek November 2019, and was also observed in most of the streams and creeks draining the east side of Survey Mountain. The Algae was identified by CRD microbiologist Huy Nguyen as Draparnaldia, a green-algal species, that occurs mostly in clean, cool (often spring-fed) streams (personal communication ***REF***).  
 
+\  
+
 ```{r Draparnaldia, fig.cap = fig_cap}
 fig_cap = "\\label{fig:Draparnaldia} *Draparnaldia species of green algae (nic-named 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019*"
 
@@ -128,11 +131,13 @@ This research site was at the point of future diversion, the Leech River Tunnel.
 
 \  
 
-## Ch 2 results
+######## Field protocol
 
-### Weather and Climate
+Following the installation of a vertical sampling rack, the field protocol was to visit the site approximately biweekly (or more frequently, based on storms) to check, collect and set the rack. Every time a site was visited, a grab sample was also collected. When a bottle was placed on its rack (attached by 3" hose clamp), the filling stage (height of intake tube crown) was recorded relative to the central still well tape. Bottles were staggered, generally from water level to approximately 120 cm above water level (as experience showed that a bottle should always be placed above the stage of anticipated peak streamflow). Following a rain event, each site was revisited to collect rack samples; for full bottles, the siphon lid was replaced with a labelled HDPE lid and samples were transported in a cooler with ice packs back to the lab and refrigerated until analysis.     
 
-####### Weather and Climate
+\  
+
+####### Weather and Climate (Chapter 2 results extended)
 
 The Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
 
@@ -184,7 +189,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv",
 
 \ 
 
-######## FWx stations in the LWSA: ancilary data
+######## FWx stations in the LWSA: ancillary data
 
 There were two weather stations that operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
 
@@ -209,7 +214,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 ``` 
 
 \  
-## Linear Wx regress
+
 ####### Linear regression for air temperatures at vertical racks
 
 TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30 minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
@@ -234,7 +239,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-l
 ```
 
 \  
-## linear regress
+
 ######## Linear regression: air temperature estimation 
 
 Air temperatures recorded at each of the six sites were compared to LWSA FWx for the overlapping period (August 24, 2019 to February 20, 2020). Overall, FWx temperatures were slightly higher than those recorded at each site installation. Figure \@ref(fig:TidbiTFWxridges) shows the density distribution of air temperature measured at each site compared to the LWSA FWx mean. 
@@ -291,27 +296,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx
 
 \  
 
-####### Antecedent 30-day rain and stream stage
-
-In Chapter 4, antecedent rain was used like a surrogate for stream discharge in a proxy Q-C hysteresis evaluation. This seemed reasonable because in the Leech WSA rain is a main contributor to streamflow. For each sample collected at each of the six monitoring sites, the relationship between antecedent rain (from LWSA Fwx mean of Chris Creek and Martin's Gulch rain data) and measured stage loosely resembles the shape of an expected rating curve (Figure \@ref(fig:Ant30RainStage)).
-
-\  
-
-```{r Ant30RainStage}
-fig_cap = "\\label{fig:Ant30RainStage} Relationship between sample stage and antecedent 30-day rain at the six Leech WSA monitoring sites."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png")
-```
-
-\  
-
 ######## Additional sampling and analysis
 
 At UBC, stream samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
 
 \  
 
-### Treatability
 ########   Treatability: forWater coordinated treatability analyses for disinfection by-product formation potentials (DBP-FP)
 
 Four of the synoptic sampling sites were selected as treatability sampling sites, where source water was collected and shipped to collaborative researchers in the forWater Network for analyses of drinking water treatability metrics. The four treatability sites were: 
@@ -337,10 +327,6 @@ At the University of Alberta, field-filtered samples were analyzed using a spect
 
 \  
 
-### results
-
-\  
-
 ######### Results: Treatability & DOC
 
 Dissolved organic matter -- particularly high molecular weight aromatic compounds -- are precursors to disinfection by-products (DBPs), which are formed during chlorination of source drinking water. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore source water NOM could have important implications for treatability. To assess the potential of source water to form potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for treatability analyses (specifically, DBP formation potentials (DBP-FPs)). 
@@ -363,7 +349,6 @@ While UV-254 is a good indicator of NOM aromaticity and also appears to be corre
 
 \  
 
-## Metals
 ######## Metals & DOC: collaborative sampling for Metals on behalf of the CRD
 
 Aqueous natural organic matter (NOM) can play an important role in transportation of metals in solution because it has the physiochemical ability to act as a ligand and create coordinated complexes with metals. From November 2018 to July 2019, eight sets of samples were collected from the six Leech WSA monitoring sites. Metals samples were collected on behalf of the CRD and were analyzed at Bureau Veritas Laboratories (BL Labs, formerly Maxxam Analytics Inc., Sidney, BC). For each metals sample collected, a parallel Grab sample was analyzed for DOC (at UBC). A suite of total metals was included in the analyses and reports from BL Labs were provided by the CRD (for the samples collected in association with this research). Data were used to evaluate relationships between DOC and metals in solution. Samples which had detectable metals concentrations were plotted against parallel sample DOC concentrations. Figure \@ref(fig:metalsug) shows DOC with total metals in μg/L, and Figure \@ref(fig:metalsmg) shows metals in mg/L. 
@@ -400,11 +385,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv",
 
 \  
 
-
-## extended ch3 results
-####### Results extended
-
-######## Ch.3 extended: NOM sampling in nested catchments
+######## NOM sampling in nested catchments (Chapter 3 results extended)
 
 Below the confluences of headwaters sites (Figure \@ref(fig:NOMnesty), plots A & B), the combination of Rack and Grab sampling did not capture the ranges of SAC~254~ observed in upstream Grab samples alone. At both sets of headwater sites, the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value =  0.0174). At higher order rivers, the combination of Rack and Grab samples at the Leech Tunnel site did capture the SAC~254~ ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:NOMnesty), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in SAC~254~ variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.105). 
 
@@ -430,8 +411,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot
 
 \
 
-## E2E3 over time (loess)
-######### E2E3 over time
+######### E~2~:E~3~ over time
+
+The spectral proxy for NOM aromaticity and molecular size was plotted over time in the same fashion as DOC in Chapter 3 (Figure \@ref(fig:E2E3loessAll)).
+
+\  
 
 ```{r E2E3loessAll, fig.cap = fig_cap}
 fig_cap = "\\label{fig:E2E3loessAll} *Trends in E2:E3 (spectral NOM indicator), where E2:E3 values are inversely related to NOM aromaticity and molecular weightaromaticity and molecular weight indicator) over sixteen months at twelve sites across the Greater Victoria Water Supply Area. Trend line shows locally weighted smoothing (loess, local polynomial regression).*"
@@ -439,9 +423,25 @@ fig_cap = "\\label{fig:E2E3loessAll} *Trends in E2:E3 (spectral NOM indicator), 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_E2E3-loess-trend.png")
 ```
 
-## extended chapter 4 results
+\  
 
-######## Ch.4 extended: RF VIM 
+####### Random Forests: extended background
+
+\  
+
+A Random Forest is a collection of decision trees, that collectively comprise a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Strobl2009]. Breiman's Random Forests (RF) is a machine learning algorithm for practical applications, which is popular for its accuracy in real-world systems [@Tyralis2019; @Biau2016] and does not require independence among samples; as such, it is appropriate for analysis of nested catchments, which by definition are not independent. RF has been widely published in hydrologic and water resource research in recent years, particularly in streamflow and water quality studies [see @Tyralis2019 and references therein]. In RF, a set of predictor variables (features) are used to predict the outcome of another variable (the predictant) through supervised learning algorithms which are grouped as either regression or classification, depending on whether the variables are quantitative (i.e. numeric) or qualitative [@Breiman2001; @Tyralis2019]. 
+
+\  
+
+The RF algorithm learns from many independent Classification And Regression Trees which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision trees are created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the final forest prediction is equal to the average of individual tree predictions [@Tyralis2019; @Biau2016]. 
+
+\  
+
+The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. The relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, the variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE, type 1) or the increase in sum of square errors (SSE, type 2). Type 1 of VIM is calculated by permutation [@Liaw2018] and type 2 is assessed as a decrease in node impurity; for classification problems this is measured by the Gini index and for regression, it's measures by the residual sum of squares [@Liaw2018]. The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate (Chapter 4, 'RF quality control' section). Despite the ability of RF to handle non-independent real world data, bias can result from cross-correlations among predictor variables, and mixing categorical and quantitative data may result in bias towards variables with many categories or many missing values [@Strobl2008]. Therefore, some predictor refinement is important and was conducted in the Chapter 4 analysis. 
+
+\  
+
+######## Random Forests Variable Importance Measure (Chapter 4 results extended) 
 
 Random Forest variable importance measure (VIM) treated static watershed characteristics categorically and treated dynamic sampling conditions as numeric variables to be used in regression. When conditions and characteristics were combined for RF VIM, the relative ranking of each predictant was changed compared to when conditions and characteristics were analyzed separately. While it was expected that the relative importance (as a percent) would shift when all predictants were combined, it was not expected that the relative ranking would change, and that suggests that these two groups (static and dynamic) of predictants should be separated for RF VIM. Compare plots for the two groups (Ch 4) to Figure \@ref(fig:RFallvars) and see how the relative rankings changed.
 
@@ -477,23 +477,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain-bysi
 
 \  
 
-#### Random Forests: background
-
-\  
-
-A Random Forest is a collection of decision trees, that collectively comprise a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Strobl2009]. Breiman's Random Forests (RF) is a machine learning algorithm for practical applications, which is popular for its accuracy in real-world systems [@Tyralis2019; @Biau2016] and does not require independence among samples; as such, it is appropriate for analysis of nested catchments, which by definition are not independent. RF has been widely published in hydrologic and water resource research in recent years, particularly in streamflow and water quality studies [see @Tyralis2019 and references therein]. In RF, a set of predictor variables (features) are used to predict the outcome of another variable (the predictant) through supervised learning algorithms which are grouped as either regression or classification, depending on whether the variables are quantitative (i.e. numeric) or qualitative [@Breiman2001; @Tyralis2019]. 
-
-\  
-
-The RF algorithm learns from many independent Classification And Regression Trees which undergo bootstrap-aggregating ("bagging") with randomization; meaning that no single tree includes all the data, which reduces over-fitting and improves prediction performance [@Breiman2001; @Tyralis2019; @Biau2016]. In RF, many decision trees are created, each one generated by randomly sampling from the full data set (with replacement) and each tree is trained until only one possible solution remains (i.e. leaf nodes contain one deciding variable). For problems of regression (i.e. quantitative numeric variables, such as the data in this thesis), the final forest prediction is equal to the average of individual tree predictions [@Tyralis2019; @Biau2016]. 
-
-\  
-
-The capacity to evaluate variable importance metrics sets RF apart from other data-driven models that focus on prediction [@Tyralis2019]. The relative importance of each feature can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, the variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. This is achieved based on either the increase in mean square error (MSE, type 1) or the increase in sum of square errors (SSE, type 2). Type 1 of VIM is calculated by permutation [@Liaw2018] and type 2 is assessed as a decrease in node impurity; for classification problems this is measured by the Gini index and for regression, it's measures by the residual sum of squares [@Liaw2018]. The SSE method may be more appropriate for categorical variables than quantitative variables, for which MSE method appears to be more appropriate (Chapter 4, 'RF quality control' section). Despite the ability of RF to handle non-independent real world data, bias can result from cross-correlations among predictor variables, and mixing categorical and quantitative data may result in bias towards variables with many categories or many missing values [@Strobl2008]. Therefore, some predictor refinement is important and was conducted in the Chapter 4 analysis. 
-
-\  
-
-#### Hysteresis
+####### Hysteresis (Chapter 4 bonus)
 
 Storm events are understood to be a key driver for solute and particle mobilization in streams [e.g. @Aguilera2018]. Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge (i.e. C-Q)  is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop (i.e. clockwise vs. counterclockwise), the magnitude, and the direction of slope [@Aguilera2018].    
 
@@ -511,7 +495,7 @@ Using end-member mixing, with hydrometric monitoring and carbon isotope (δ^13^C
 
 \  
 
-##### Methods: Hysteresis
+######## Methods: Hysteresis
 
 Hydrochemical hysteresis is most often evaluated through C-Q relationships, but the concept of hysteresis applies to any time-based predictor and effected values. The principle of hysteresis is based on a lag between a driving force (e.g. discharge, Q) and the analyte that is driven to change (e.g. solute concentration, C). Ideally, streamflow data would accompany all sample data collected for this research, however that was not the case. Stage data was collected, and given the strong relationship between stage and discharge, stage can be evaluated as an indicator for Q. Similarly, because streamflow in the Leech WSA is governed by precipitation, antecedent wetness (rain) could be proxy data in a hysteresis analysis. Conditions that were calculated to be most important for predicting NOM concentration and character were plotted with their predictant to assess possible hysteresis; this was only possible for dynamic conditions with variable measurements (i.e. not static watershed characteristics predictors).
 
@@ -521,10 +505,9 @@ For a C-Q hysteresis loop, clockwise rotation indicates rapid flushing and dilut
 
 \
 
-##### Results: Hysteresis of NOM with antecedent wetness 
+######## Results: Hysteresis of NOM with antecedent wetness 
 
-Events 10 and 11 were relatively well represented by sampling at each of the six sites and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain durations (p = 0.837), rain amounts (p = 0.732), rain intensity (p = 0.549), 
-DOC (p = 0.512), SAC~254~ (p= 0.218) and E~2~:E~3~ (p = 0.148). Samples were collected across the rising limb, near peak-flows, and at least one sample on the falling limb and at low flow (Figure \@ref(fig:events1011)).
+Events 10 and 11 were relatively well represented by sampling at each of the six sites and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain durations (p = 0.837), rain amounts (p = 0.732), rain intensity (p = 0.549), DOC (p = 0.512), SAC~254~ (p= 0.218) and E~2~:E~3~ (p = 0.148). Samples were collected across the rising limb, near peak-flows, and at least one sample on the falling limb and at low flow (Figure \@ref(fig:events1011)).
 
 \  
 
@@ -548,112 +531,18 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_D
 
 \  
 
-
-
-
-## possible trash
-####### possible trash
-
-### sampling methods
-#######   Sampling methods extended
-
-In river systems, peak flows are critical times for mass transport of dissolved and suspended materials. Therefore water quality sampling should include proportional representation of stormflow pulses relative to between-storm flows and baseflow. Sampling programs can range from low-cost synoptic grab sampling campaigns to high-cost programmable pump samplers (e.g. ISCO). Synoptic grab sampling was completed across the six primary Leech research sites, as well as four supplemental sites. In addition to synoptic sampling, passive sampling techniques were employed to collect stormflow samples.  
+The antecedent wetness hysteresis loop of event 10 supports the hypothesis for dilution of near-stream (or in-stream) NOM early in the wet season. Later wet-season rain events transported larger, more aromatic NOM from source pools that were likely allochthonous humic material and whose export relied on greater landscape saturation and hydrologic connectivity. The hysteresis loop for event 11 supported the idea of stream NOM enrichment occurring as antecedent wetness increased (i.e. hydrologic connectivity increased). 
 
 \  
-### vertical racks
-######## Vertical racks
 
-The benefits of using these vertical racks as a method of sampling include: low cost (about $500 CND per installation), low power (two 1/2-AA batteries in each logger), self-contained (no external power source or data logger required), customizable design, passive sampling (no pumps). The downsides of using this technique are similar to any autosampler, in that someone must visit the field sites regularly for set-up and collection of samples, but because there are minimal powered components, mis-firing is not an issue. The only reason a sample wouldn't be collected was if the stream stage did not reach a bottles intake. The primary drawback of this technique is that sampling is limitied to the rising limb of the hydrograph, which limits the elucidation of stormflow water quality dynamics. There is some uncertainty about timing between sample collection and sample retrieval, every effort was made to return to each research site following precipitation events to retrieve collected samples, and it was assummed that any sample held on the rack was stable due to low air and river temperatures during the wet season. The assumption of river-as-a-refrigerator was addressed by deploying temperature sensors on each vertical rack (August 2019), and also with hold-time experiments.  
+Antecedent rain was used like a surrogate for stream discharge in a proxy Q-C hysteresis evaluation. This seemed reasonable because in the Leech WSA rain is a main contributor to streamflow. For each sample collected at each of the six monitoring sites, the relationship between antecedent rain (from LWSA Fwx mean of Chris Creek and Martin's Gulch rain data) and measured stage loosely resembles the shape of an expected rating curve (Figure \@ref(fig:Ant30RainStage)).
 
 \  
-## prototype
-######## Prototype for falling limb passive sampling
 
-_Development of a modified siphon sampler designed for passive water collection on the falling limb of hydrograph_
+```{r Ant30RainStage}
+fig_cap = "\\label{fig:Ant30RainStage} Relationship between sample stage and antecedent 30-day rain at the six Leech WSA monitoring sites."
 
-In keeping with goals of low-cost, low-powered passive sampling, a falling-limb sampler was designed based on principles of the rising limb siphon sampler. The rising limb sampler collects a discrete water sample when river stage exceeds the crown of the inlet tube, so long as the vent is unobstructed; obstruction of the siphon sampler vent was the key component of the falling limb sampler prototype design. There were a half-dozen iterations in design prior to the model which was field-deployed in the Leech WSA (winter 2019). Each design iteration included a valve on the siphon vent which remained closed as the river rose, and opened when stream stage dropped below a certain point (allowing air to exit the sample bottle and a water sample to be collected). A number of valve options were explored, including: an external tube plug, in internal tube plug, and a self-sealing silicone bite-valve (i.e. Camelback Big Bite^TM^ for hydration packs). The final design iteration used a tube pinch valve (SP Science) to close and open the air vent. The mechanism that triggers the vent valve to open is a simple fixed pulley, where the valve is connected to a weighted-cup by a wire that passes through two loops which alter the direction of force.  The river rises and fills the cup with stream water, the cup remains full when the river recedes, and when the stream drops low enough that the full cup is no longer buoyant, the weight of water in the cup exerts a force on the lever of the pinch-valve, causing it to release the vent tube and triggering sample collection. The vent valve and trigger mechanism are contained in a 4" sewer pipe (a "filling well"), which was attached to supplemental support bars on the vertical rack. One prototype was field deployed at Cragg Creek (subbasin site 4) as a proof of concept and work will continue to improve the design and operation.
-
-\  
-### field protocol
-######## Field protocol
-
-Following the installation of a vertical sampling rack, the field protocol was to visit the site approximately biweekly (or more frequently, based on storms) to check, collect and set the rack. Every time a site was visited, a grab sample was also collected. When a bottle was placed on its rack (attached by 3" hose clamp), the filling stage (height of intake tube crown) was recorded relative to the central still well tape. Bottles were staggered, generally from water level to approximately 120 cm above water level (as experience showed that a bottle should always be placed above the stage of anticipated peak streamflow). Following a rain event, each site was revisited to collect rack samples; for full bottles, the siphon lid was replaced with a labelled HDPE lid and samples were transported in a cooler with ice packs back to the lab and refrigerated until analysis.     
-
-\ 
-### Malahat Wx
-######## Malahat 5 year weather
-
-* NOTE: replace this seciton with data from the PCIC on climate normals and departure from norms during my study period.
-
-The LWSA weather stations were recently installed and therefore data during the study period could not be compared to a record from previous years. A nearby weather station operated by the BC Ministry of Transportation and Infrastructure (Malahat, station ID 62091) had data available from late 2013 which was used to check if weather during the study period departed from previous year trends. Figure \@ref(fig:WxMalahat) shows Malahat weather data, which are summarized in Table \@ref(tab:WxMalahat-data).
-
-```{r WxMalahat, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:WxMalahat} *Five year weather from nearby Malahat station (MoTI ID 62091).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png")
 ```
-
-\  
-
-```{r WxMalahat-data}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(1, 2, 1, 1),
-               caption = "*Annual weather data from Malahat station (MoTI ID 62091)*")
-```
-
-\  
-
-Malahat weather station data were grouped by years 2016-2017 and 2018-2019 to check if there was a statistical difference in precipitation and air temperature for the two years prior to this study compared to the two years associated with this study (Figure \@ref(fig:MalahatTestBox)). Table \ref(tab:MalahatTest) summarizes the results Wilcoxon rank sum test comparing these two sets. Based on this two-set, two-year comparison, it was determined that precipitation during the 2018-2019 period was different than the 2016-2017 period.    
-
-
-```{r MalahatTestBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:MalahatTestBox} *Weather from the Malahat station for two year periods prior to and during this study (MoTI ID 62091).*"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
-```
-
-\  
-
-```{r MalahatTest}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv", col_names = TRUE) %>% 
-  knitr::kable(digits = c(1, 12),
-               caption = "*Results of Wilcoxon test for Malahat weather data before and during the study period*")
-```
-
-\  
-## spatial variance
-######## Spatial variance in DOC concentrations
-
-As the Leech River Tunnel will be the point of diversion for future inter-basin transfers from Leech water supply area (LWSA) to the Sooke Reservoir basin, the Tunnel (site 6) is the effective outlet of the LWSA where runoff from each nested catchment is integrated. Similarly, Weeks and ChrisCrk (sites 1 & 2) are integrated at LeechHead (site 3), which is just below the headwaters' confluence. Sites were categorized based on their relative position in the Leech river system and evaluated for DOC range and variability (Table \@ref(tab:subbasinDOCtunnelint)). 
-
-\  
-
-```{r subbasinDOCtunnelint}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-Subbasin_summary_CategoryIntegration.csv", col_names = TRUE) %>% 
-  knitr::kable(col.names = c("Site", "Basin type", "Sample count", "Mean DOC (mg/L)", "Stdev (± mg/L DOC)", "RSD (± %)", "Min. (mg/L)", "Median (mg/L)", "Max. (mg/L)"),
-               digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2),
-               caption = "*Summary of DOC across the six LWSA research sites with each nested catchment classified by basin type.*")
-```
-
-\  
-
-The relative standard deviation (RSD) in DOC observed at LeechHead was lower than that of the two headwater sites upstream, and median DOC observed at LeechHead was very near to the median for the headwaters sites. Overall, there was greater variance among headwater sites than there was within each headwater site. For the higher order rivers, the variance observed at each mainstem was comparable to the variance among the three mainstems. Results of Levene's test confirmed that variance in DOC concentrations was not homogeneous across the six sites of the LWSA (p-value = 8.2^-10^).[^4] 
-
-\  
-
-To identify which pairs of sites had equal DOC variance Levene's test was applied to sample DOC results. Table \@ref(tab:LevenesDOC) classifies each site comparison by basin-type and summarizes resulting Levene's test p-values for each pair. Of the nine comparisons made among the six sites, all pairs with WestLeech (site 5) and/or Weeks (site 1) did not have homogeneous variance with any other sites, while all other combinations of sites showed homoscedasticity in DOC. Both heteroscedastic sub-basins drain the west side of LWSA. 
-
-[^4]:Levene's test is used to check for homogeneity of variance (homoscedasticity), it's an alternative to the Bartlett’s test that's less sensitive to departures from normality in the data.
-
-\  
-
-```{r LevenesDOC}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/DOC-stats_variance-LeveneTests.csv", col_names = TRUE) %>%
-  knitr::kable(digits = c(5),
-               caption = "*Results of Levene's test comparing DOC variance between pairs of sites. Significance stars indicate confidence levels: *** 99% (alpha = 0.01); ** 95% (alpha = 0.05); * 90% (alpha = 0.1), 90% confidence was the threshold for supporting the null hypothesis of homoscedasticity.*")
-```
-
-
-
 
 \ 

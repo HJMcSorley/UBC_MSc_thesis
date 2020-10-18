@@ -285,11 +285,15 @@ While the absolute magnitude of DOC varied among sites, NOM quantity across the 
 
 \  
 
-DOC concentrations increased over the summer, reaching highs for the start of the wet season.  Overall, there was negligible difference in NOM concentrations between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. Overall, stream DOC was higher than the recommended 4 mg/L TOC for source water quality [@BC2019]. However, reservoir dynamics would likely alter the concentration and character of stream DOC prior to intake for drinking water treatment [@Stanley2012; @Aiken1995]. 
+DOC concentrations increased over the summer, reaching highs for the start of the wet season.  Overall, there was negligible difference in NOM concentrations between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. In general, stream DOC concentrations were higher than the recommended 4 mg/L of TOC for source water quality [@BC2019]. However, reservoir dynamics would likely alter the concentration and character of stream DOC prior to intake for drinking water treatment [@Stanley2012; @Aiken1995]. 
 
 \  
 
 Seasonal changes in the relationship between DOC and SAC~254~ were observed across the GVWSA and indicated that wet-season NOM was predominantly humic content and dry-season NOM was more aliphatic. These observations support a shift in NOM source pools from autochthonous in the dry (summer) period to allochthonous in the wet season, when the landscape was more connected to the river systems. The seasonal shifts observed in this project agree with the shift from autochthonous to allochthonous NOM that is predicted by the river continuum concept [@Vannote1980; @Meyer1983].
+
+\  
+
+Rising limb samples generally had greater DOC concentrations and more reactive character than samples colelcted at other flows. Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes will allow for a more detailed understanding of relationships between streamflow and NOM transport (Chapter 4).
 
 \  
 
@@ -300,10 +304,6 @@ The objective of this work was to design a sampling strategy to measure the rang
 \  
 
 The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method can achieve good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be informative to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Expanded comparisons between the Leech Tunnel site, with Rithet and Judge crks would be particularly informative if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegredation of NOM).  
-
-\  
-
-Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes will allow for a more detailed understanding of relationships between streamflow and NOM transport (Chapter 4). In a west coast small-basins (< 1 km^2^) study in the H. J. Andrews Experimental Forest (Oregon, CA) pre-storm DOC was measured at three sites as 1-2 mg/L with increases to 5-7 mg/L (~200% increase) during events [@Hood2006].
 
 \  
 

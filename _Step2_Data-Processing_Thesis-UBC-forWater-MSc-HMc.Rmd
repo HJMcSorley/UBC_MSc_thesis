@@ -7775,6 +7775,76 @@ hystPlot_E2E3_temp <- cowplot::plot_grid(e10temp_E2E3, e11temp_E2E3, ncol = 2)
 
 ```
 
+## Stage and DOC max/min samples
+
+```{r}
+
+# Maxima
+peaksss1 <- stage_samples %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
+  group_by(site, trip, event_ID) %>% 
+  # summarize maxima
+  summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
+            sample = sample[which.max(NPOC_ppm)],
+            sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
+  full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample",  "event_ID")) %>% 
+  arrange(DateTime) %>% ungroup()
+
+# Minima joined to Maxima for full extrema set
+# peaks in stage_sample = peaksSS
+peaksss <- stage_samples %>% 
+  filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
+         sample_type == "Grab" | sample_type == "Rack", 
+         sample != "Algae",      # remove sample containing whole algae (high DOC)
+         QAQC_flag == "OK",      # remove samples with extended hold-time  
+         sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
+         !is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
+  group_by(site, trip, event_ID) %>%
+  # summarize minima
+  summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
+            sample = sample[which.min(NPOC_ppm)],
+            sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
+  full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample", "event_ID")) %>% 
+  arrange(DateTime) %>% 
+  ungroup()
+
+
+# big plot with all max and min and lines for subset
+# stage and sample extrema at each site by sampling event
+peaksss %>% 
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), shape = 21, size = 2.5, na.rm = TRUE) +
+  geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), shape = 22, size = 2.5, na.rm = TRUE) +
+  geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), shape = 24, size = 2, na.rm = TRUE) +
+  #geom_vline(xintercept = narrow_trips_start, size = 0.7)+
+  #geom_vline(xintercept = narrow_trips_end, size = 0.7) +
+  # change colour of points -- matches alphabetically (max, min, sample)
+  scale_fill_manual(values = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey")) + 
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
+  labs(y = "River Stage (cm)", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") +
+  theme(text = element_text(size = 11),
+        axis.text.x = element_text(angle = 25, hjust = 1),
+        legend.position = "top") +
+  # colour for point outlines:
+  scale_color_manual(breaks = c("max DOC", "min DOC", "sample"), values = c("black", "black", "black"))+ 
+  # legend:
+  guides(colour = guide_legend("key:"),
+         fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
+# save 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png",
+       width = 7.5, height = 8, units = "in")
+
+```
+
+
 ## hysteresis plots summary
 ```
 # compare DOC to spectral ps
@@ -8737,39 +8807,7 @@ narrow in on specific (well-sampled) events
 {r}
 # for plots, add max_DOC by trip and event to stage_sample dataframe
 
-# Maxima
-peaksss1 <- stage_samples %>% 
-filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-sample_type == "Grab" | sample_type == "Rack", 
-sample != "Algae",      # remove sample containing whole algae (high DOC)
-QAQC_flag == "OK",      # remove samples with extended hold-time  
-sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
-!is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-group_by(site, trip, event_ID) %>% 
-# summarize maxima
-summarise(maxDOC_stage = sampleStage_cm[which.max(NPOC_ppm)],
-sample = sample[which.max(NPOC_ppm)],
-sampleStage_cm = sampleStage_cm[which.max(NPOC_ppm)]) %>% 
-full_join(stage_samples %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample",  "event_ID")) %>% 
-arrange(DateTime) %>% ungroup()
 
-# Minima joined to Maxima for full extrema set
-# peaks in stage_sample = peaksSS
-peaksss <- stage_samples %>% 
-filter(rain_season == "wet",   # remove baseflow samples (no stage peaks)
-sample_type == "Grab" | sample_type == "Rack", 
-sample != "Algae",      # remove sample containing whole algae (high DOC)
-QAQC_flag == "OK",      # remove samples with extended hold-time  
-sample != "R1", sample != "R2", sample != "R3", sample != "R4", sample != "R5", # unique only
-!is.na(sampleStage_cm), !is.na(sampleStage_cm), !is.na(NPOC_ppm)) %>%  # drop NAs
-group_by(site, trip, event_ID) %>%
-# summarize minima
-summarise(minDOC_stage = sampleStage_cm[which.min(NPOC_ppm)],
-sample = sample[which.min(NPOC_ppm)],
-sampleStage_cm = sampleStage_cm[which.min(NPOC_ppm)]) %>% 
-full_join(peaksss1 %>% group_by(site, trip), by = c("site", "trip", "sampleStage_cm", "sample", "event_ID")) %>% 
-arrange(DateTime) %>% 
-ungroup()
 
 # -----
 # trip 17-21 -- stage and samples at each site by sampling event
@@ -8832,35 +8870,6 @@ geom_vline(xintercept = narrow_trips_end, size = 0.7)
 # save 
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/stage-samples-with_narrow_events_9-12.png",
 width = 6.5, height = 7, units = "in")
-
-# OR --- big plto with all max and min and lines for subset
-# -----
-# stage and sample extrema at each site by sampling event
-peaksss %>% 
-ggplot(aes(x = DateTime))+
-geom_line(aes(y = corr_stage_cm), size = 0.6, colour = forWater_colours2["DeepBlue"])+
-theme_bw()+
-geom_point(aes(y = sampleStage_cm, colour = "sample", fill = "sample"), shape = 21, size = 2.5, na.rm = TRUE) +
-geom_point(aes(y = minDOC_stage, colour = "min DOC", fill = "min DOC"), shape = 22, size = 2.5, na.rm = TRUE) +
-geom_point(aes(y = maxDOC_stage, colour = "max DOC", fill = "max DOC"), shape = 24, size = 2, na.rm = TRUE) +
-geom_vline(xintercept = narrow_trips_start, size = 0.7)+
-geom_vline(xintercept = narrow_trips_end, size = 0.7) +
-# change colour of points -- matches alphabetically (max, min, sample)
-scale_fill_manual(values = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey")) + 
-facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right") +
-labs(y = "River Stage (cm)", x = "")+
-scale_x_datetime(date_labels = "%Y %b %d", date_breaks = "2 months", date_minor_breaks = "1 months") +
-theme(text = element_text(size = 12),
-axis.text.x = element_text(angle = 30, hjust = 1),
-legend.position = "top") +
-# colour for point outlines:
-scale_color_manual(breaks = c("max DOC", "min DOC", "sample"), values = c("black", "black", "black"))+ 
-# legend:
-guides(colour = guide_legend("key:"),
-fill = guide_legend("key:", override.aes = list(shape = c(24, 22, 21), fill = c(forWater_colours2["MyOrange"], forWater_colours2["Green"], "grey"))))
-# save 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png",
-width = 7.5, height = 8, units = "in")
 
 ```
 

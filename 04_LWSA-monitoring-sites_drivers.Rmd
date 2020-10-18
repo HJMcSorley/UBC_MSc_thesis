@@ -360,7 +360,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_NOM-DOC_boxp
 
 ##### Rising stage and aqueous NOM dynamics 
 
-Antecedent moisture and/or sampling stage was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while SAC~254~ peaked later than DOC during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). E~2~:E~3~ indicated maximum aromaticity and molecular size occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
+Antecedent moisture and/or sampling stage was important for each of the three predictant variables evaluated though RF VIM. Across the Leech WSA, the highest DOC concentration occurred in the earliest events of each wet season (events 1 & 9, Table \@ref(tab:EventsTab)), while NOM reactivity (SAC~254~) peaked later, during the third major event in the 2019/2020 wet season (event 11, Table \@ref(tab:EventsTab)). Maximum NOM aromaticity and molecular size (E~2~:E~3~) occurred during the last major events, at the end of each wet season (events 3 & 17, Table \@ref(tab:EventsTab)).
 
 \  
 
@@ -375,7 +375,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>%
 
 \  
 
-Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six monitoring sites were synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to determine the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, rate of change in stage was greatest at the highest order stream, the Tunnel site, and smallest at Weeks crk.
+Streams across the Leech WSA responded harmoniously to precipitation with synchronous changes in stage. Over the full sixteen-month study period, stage changes at the six monitoring sites were synchronized and confirmed to be congruent with high confidence (p-value < 0.001, based on 1050 randomizations) via Kendall's coefficient of concordance (Kendall's W = 0.9721) and Spearman's ranked correlation (ρ = 0.9666). Rates of change in stream response were calculated for each site to determine the fastest and slowest times to peak stage and relative magnitudes of stage change (Table \@ref(tab:stageResponse)). As expected, stage changed at the fastest rate in the highest order stream, the Tunnel site, and slowest rate at Weeks crk.
 
 \  
 
@@ -411,7 +411,7 @@ Four of the six site's samples showed majority, but not absolute, agreement in e
 \  
 
 ```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:extremaplot} Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period. Black vertical lines indicate a subset of samples that were assessed more closely."
+fig_cap = "\\label{fig:extremaplot} Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
 ```
@@ -431,18 +431,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
 
 \  
 
-At the Tunnel, Cragg crk and Chris crk, NOM concentration and aromaticity generally increased with stage; while at West Leech, aromaticity was inversely related to stage. Weeks crk maintained the most consistent NOM aromaticity and molecular weight (E~2~:E~3~) with changing stage (Figure \@ref(fig:stageRelations)). 
 
-\  
-
-```{r stageRelations, fig.cap = fig_cap}
-fig_cap = "\\label{fig:stageRelations} Relationships between river stage and sample NOM concentrations and character, where connected lines show data density. Data for each variable were normalized (min-max normalization) for comparison of relative scales in each relationship between sites."
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_StageNorm_DOC-NOM.png")
-```
-
-
-\
 
 ### Discussion 
 
@@ -450,7 +439,7 @@ The sampling conditions and watershed characteristics included in Random Forest 
  
 \  
 
-Sub-basin NOM concentration and aromaticity decreased with increasing representation of metamorphic wark gneiss parent material, but its absence did not correspond to the site with highest concentration or aromaticity. The patterns observed between NOM and metamorphic parent material suggests a more complex relationship between watershed characteristics and NOM dynamics. The metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins and wasn't included in RF VIM analyses. There may be an effect on aqueous NOM associated with a combination of parent materials and soil development that wasn’t full elucidated in this analysis.      
+NOM quantity and quality in each sub-basin was inversely realted to representation of metamorphic wark gneiss parent material, but the absence of wark gneiss did not correspond to the site with greatest NOM quantity or reactive and aromatic character. The patterns observed between NOM and metamorphic parent material suggests a more complex relationship between watershed characteristics and NOM dynamics. The metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins and wasn't included in RF VIM analyses. There may be an effect on aqueous NOM associated with a combination of parent materials and soil development that wasn’t full elucidated in this analysis.      
 
 \  
 
@@ -460,11 +449,7 @@ Antecedent wetness is an important watershed driver for NOM export as it influen
 
 A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). 
 
-\  
-
-*new*
-
-Hood et. al [-@Hood2006] measured ~200% increase in DOC during events in a small-basins (< 1 km^2^) study in the H. J. Andrews Experimental Forest on the west coast of Oregon, CA. While the same magnitude of change in DOC was not measured in the Leech WSA, the methods used by Hood et al [-@Hood2006] included continuous monitoring as opposed to this study which quantified discrete samples. It's possible that the changes in DOC that were not captured (i.e. in the stage between vertically staggered Rack bottles) could have shown greater deviation, or possibly, the magnitude of change in the Leech WSA was simply lower than in H.J. Andrews.  
+In a west coast small-basins (< 1 km^2^) study in the H. J. Andrews Experimental Forest (Oregon, CA) pre-storm DOC was measured at three sites as 1-2 mg/L with increases to 5-7 mg/L (~200% increase) during events [@Hood2006]. In the Leech WSA, DOC concentrations at the onset of stream rise were higher (2-6 mg/L) as were peak rising limb concentrations (6-16 mg/L), resulting in relative rising limb DOC changes bring less dramatic (<100% increase) than Hood et. al found [-@Hood2006]. While the same relative magnitude of change in DOC was not measured in the Leech WSA, the methods used by Hood et al [-@Hood2006] included continuous monitoring as opposed to this study which quantified discrete samples. It's possible that the changes in DOC that were not captured (i.e. in the stage between vertically staggered Rack bottles) could have shown greater deviation. Or, the magnitude of change in the Leech WSA could simply be lower than in H.J. Andrews, possibly due to realtively higher baseline DOC concentrations.
 
 \  
 
@@ -472,19 +457,11 @@ Across the Leech WSA, stream samples with the highest DOC were collected at the 
 
 \  
 
-In three of the six monitoring sites, low DOC was more often collected at low stages than high DOC was at high stages; the opposite was found at West Leech, where concentration and stage had a greater proportion of common maxima compared to common minima. The headwater sub-basin sites of Chris crk and Leech-head had the same proportions of samples with common maxima and minima of DOC and stage. The observed patterns of NOM concentration with stage changed across the wet season. Peak stage was more often associated with minimal DOC early in the wet season, whereas DOC tended to peak with stage (or close to peak stage) later in the wet season. The observed temporal change in NOM concentration is evidence of early wet-season NOM being limited in supply and subject to rapid flushing, while late wet-season NOM in streams was drawn from a more sustainable pool of source material. The apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of antecedent 30-day rain), suggested a point at which humic NOM sources either reached maximum connectivity with the streams, or that the aromatic source pools were depleted.
-
-```
-another possible explanation for the concentration-stage threshold could be indicative of a transition point in the event hydrograph from soil water contributions to throughfall and overland flow [@Penna2019].
-```
+In three of the six monitoring sites, low DOC was more often collected at low stages than high DOC was at high stages; the opposite was found at West Leech, where concentration and stage had a greater proportion of common maxima compared to common minima. The headwater sub-basin sites of Chris crk and Leech-head had the same proportions of samples with common maxima and minima of DOC and stage. These patterns changed across the wet season. Peak stage was more often associated with minimal DOC early in the wet season, whereas DOC tended to peak with stage (or close to peak stage) later in the wet season. These observed temporal changes in NOM concentration with stage is additional evidence of early wet-season NOM being limited in supply and subject to rapid flushing, while late wet-season NOM in streams was drawn from a more sustainable pool of source material. The apparent stage and wetness threshold for NOM concentration and character (approximately 75% of maximum stage and about 150 mm of antecedent 30-day rain), suggested a point at which humic NOM sources either reached maximum connectivity with the streams, or that the aromatic source pools were depleted. Aanother possible explanation for the concentration-stage threshold could be indicative of a transition point in the event hydrograph from soil water contributions to throughfall and overland flow [@Penna2019].
 
 \  
 
-The quantity of stream NOM was greatest early in the wet season, with peak concentrations found in the first event-based samples; while NOM aromaticity, reactivity and molecular weight peaked later in the wet season. Coupled with the other results, this indicates that early wet-season rain events exported high concentrations of aliphatic NOM from sources that were likely autochthonous and quickly depleted. The antecedent wetness hysteresis loop of event 10 supports the hypothesis for dilution of near-stream (or in-stream) NOM early in the wet season. Later wet-season rain events transported larger, more aromatic NOM from source pools that were likely allochthonous humic material and whose export relied on greater landscape saturation and hydrologic connectivity. The hysteresis loop for event 11 supported the idea of stream NOM enrichment occurring as antecedent wetness increased (i.e. hydrologic connectivity increased). 
-
-\  
-
-Between the wet and dry season, there were opposite spatial patterns for NOM molecular size and aromatic character. NOM aromaticity increased from upstream to downstream in the dry season, while the wet season showed decreasing aromaticity from head to mouth. The different seasonal patterns in NOM quality support a change in source material and a shift from NOM processing in the dry season to dilution effects in the wet season.
+The quantity of stream NOM was greatest early in the wet season, with peak DOC concentrations found in the first event-based samples; while NOM aromaticity, reactivity and molecular weight peaked later in the wet season. Coupled with the other results, this indicates that early wet-season rain events exported high concentrations of aliphatic NOM from sources that were likely autochthonous and quickly depleted. Between the wet and dry season, there were opposite spatial patterns for NOM molecular size and aromatic character. NOM aromaticity increased from upstream to downstream in the dry season, while the wet season showed decreasing aromaticity from head to mouth. The different seasonal patterns in NOM quality support a change in source material and a shift from NOM processing in the dry season to dilution effects in the wet season.
 
 \  
 
@@ -506,4 +483,6 @@ It was assumed that the arithmetic means of precipitation measured at Chris Cree
 
 \  
 
-With additional weather data (e.g. humidity), it would be interesting to explore whether the variables associated with increased fire risk or mass wasting might also be predictors for NOM dynamics (or any other water quality parameter of interest). The security of drinking water supply quality depends on weather, which is also a major player in other risks to the forested watershed. With greater understanding of the conditions and characteristics that drive water quality dynamics, an index system could be created that incorporates predictors for drinking water supply quality with those for forested watershed threats (e.g. wildfire or windthrow).  
+With additional weather data (e.g. humidity), it would be interesting and informative to explore whether the variables associated with increased fire risk or mass wasting might also be predictors for NOM dynamics (or any other water quality parameter of interest). The security of drinking water supply quality depends on weather, which is also a major player in other risks to the forested watershed. With greater understanding of the conditions and characteristics that drive water quality dynamics, an index system could be created that incorporates predictors for drinking water supply quality with those for forested watershed threats (e.g. wildfire or windthrow).  
+
+\  
