@@ -23,7 +23,7 @@ Digital equipment used in this thesis are summarized in Table \@ref(tab:techsumm
 
 ```{r techsumm}
 
-read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/MSc_technology-summary.csv", skip = 3, col_names = TRUE) %>% 
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_MSc_technology-summary.csv", skip = 3, col_names = TRUE) %>% 
   knitr::kable(caption = "Summary of hardware and sofware used in this thesis project")
 ```
 

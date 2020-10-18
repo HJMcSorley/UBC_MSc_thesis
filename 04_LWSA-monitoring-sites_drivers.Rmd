@@ -92,7 +92,7 @@ Following RF VIM analyses, the variables with relatively greatest predictor impo
 
 \  
 
-#### Evaluating local extrema
+#### Evaluating local extrema sample stage and DOC
 
 Results in the previous chapter showed elevated NOM in event-based samples. To explore the relationship between DOC and event flows, a peak-to-peak comparison was done to see if DOC concentrations peaked with stream stage during events. As DOC was quantified from discrete stream samples the temporal synchrony of peaks could not be evaluated in the same manner as stage, which was continuously recorded. However, each river sample was matched to stage and had a corresponding timestamp, thus inferences could be made based on relationships between peak DOC and stage. To determine if local DOC extrema (maxima and minima concentrations) were captured in conjunction with the local extrema of sampled flows (minima and maxima of sample stage), manual synchrony tests were run on sample results. For each site, results of samples were grouped by collection period and rain event to identify samples with extreme DOC concentrations as well as samples collected at extreme stage (max/min). Samples corresponding to maxima and minima DOC and stage were compared to determine how often they overlapped (i.e. was the sample with max DOC also the sample collected at the highest stage?).
 
