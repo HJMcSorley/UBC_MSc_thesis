@@ -9494,6 +9494,26 @@ treatdat_long <- treatdat_UW %>%
                       values_to = "DBPfp_ugL") %>% 
   mutate(DBP = factor(DBP, levels = c(
     "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
+
+
+# correlations
+treatdat_UW %>% 
+  filter(source == "02") %>%
+  rename(SAC254_cm = 'UV254_cm-1') %>% 
+  mutate(SAC254_m = SAC254_cm*100, 
+         SUVA254 = SAC254_m/DOC_ppm) %>%
+  select(SAC254_m, DOC_ppm, SUVA254, THMs, BDCM, TCM, HAAs, DCAA, TCAA) %>% 
+  #select(-c(source, Sample_ID, day, site, Date, Collection, TBM, DBAA, DBCM, MCAA, MBAA) ) %>% 
+  #select(-c(pH, Turbidity_NTU, Zeta_Potential_mV, Free_Chlorine_Final_mgL, SAC254_cm)) %>% 
+  rename(SAC254 = SAC254_m, 
+         DOC = DOC_ppm, 
+         SUVA254 = SUVA254) %>% 
+  cor() %>% 
+  tibble() %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv", 
+            col_names = TRUE)
+
+
 ```
 
 ## plot DOC/UV254 + DBP-FPs
