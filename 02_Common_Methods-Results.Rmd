@@ -17,16 +17,12 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Introduction
 
-A combination of synoptic and event-based sampling was used to capture the broad spatial characteristics of aqueous NOM dynamics across the GVWSA. The sampling design considered both limitations in ability to manually collect data and resource constraints to sample continuously.
+A combination of synoptic and event-based sampling was used to capture the broad spatial characteristics of aqueous NOM dynamics across the GVWSA. The sampling design considered both limitations in ability to manually collect data and resource constraints to sample continuously. This chapter details methods and foundational results that were common to all subsequent chapters. 
 
 \  
 
 
 Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA). Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech WSA. 
-
-\  
-
-This chapter details methods and foundational results that were common to all subsequent chapters. Spectral properties were evaluated 
 
 \  
 
@@ -55,9 +51,9 @@ Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl
 ```{r siteCharacteristics}
 
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristics_simple.csv", col_names = TRUE) %>%
-  knitr::kable(col.names = c("Site name",	"Water supply area (WSA)",	"Latitude",	"Longitude",	"Strahler order",	"Drainage km^2^",	"Elevation (m a.s.l.)",	"Slope median (degrees)",	"Wetland cover (%)",	"Open water (%)",	"Dominant parent material (%)",	"Secondary parent material (%)"),
-               digits = c(0,0,5,5,0,2,0,1,3,3,0,0),
-               caption = "Watershed Characteristics of Twelve Synoptic Sampling Sites Across the Leech and Sooke Water Supply Areas (WSA), Greater Victoria, BC")
+  knitr::kable(col.names = c("Site name",	"Latitude",	"Longitude",	"Strahler order",	"Drainage km^2^",	"Elevation (m a.s.l.)",	"Slope median (degrees)",	"Wetland cover (%)",	"Open water (%)",	"Dominant parent material (%)",	"Secondary parent material (%)"),
+               digits = c(0,5,5,0,2,0,1,3,3,0,0),
+               caption = "Watershed characteristics of synoptic sampling sites in the Leech and Sooke portions of Greater Victoria water supply areas")
 ```  
 
 
@@ -119,7 +115,7 @@ The hold-time experiments included replicate surface water sample collection (_n
 
 \  
 
-Air temperature data collected at each Vertical Rack were used as part of the hold-time assessment for sample stability. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data ___(Appendix ######)___.
+Air temperature data collected at each Vertical Rack were used as part of the hold-time assessment for sample stability. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data (Appendix D2).
 
 \  
 
@@ -175,7 +171,7 @@ NOM molecular character was judged through a combination of specific UV-absorban
 
 ###### Spectral indices of NOM character
 
-More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Specific ultraviolet absorbance at 254 nm (SUVA~254~) is an indicator of NOM aromaticity relative to concentration and is calculated by dividing SAC~254~ by DOC concentration (units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m)). Both SAC~254~ and SUVA~254~ are possible indicators of NOM reactivity and as such, each was calculated and evaluated with respect to disinfection by-product formation potential (DBP-FP, more details in _Appendix ####_) and the one most correlated to DBP-FP was selected for continued analysis.
+More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Specific ultraviolet absorbance at 254 nm (SUVA~254~) is an indicator of NOM aromaticity relative to concentration and is calculated by dividing SAC~254~ by DOC concentration (units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m)). Both SAC~254~ and SUVA~254~ are possible indicators of NOM reactivity and as such, each was calculated and evaluated with respect to disinfection by-product formation potential (DBP-FP, more details in Appendix E1) and the one most correlated to DBP-FP was selected for continued analysis.
 
 \  
 
@@ -185,7 +181,7 @@ The spectral quotient E~2~:E~3~ is inversely related to aromaticity and molecula
 
 #### Collaborative analyses for treatability and metals
 
-Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix _HHHH_ for Network details and _IIII_ for metals details). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.   
+Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.   
 
 \  
 
@@ -216,20 +212,20 @@ The Capital Regional District (CRD) provided data from two fire-weather ("FWx") 
 ```{r StnSummary}
 read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
          col_names = TRUE) %>% 
-  knitr::kable(caption = "CRD Fire Weather Station (FWx) Summary of Features")
+  knitr::kable(caption = "CRD fire-weather station (FWx) summary of features")
 
 ```
 
 \  
 
-Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix for summary of data from each FWx station). It was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
+Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix D2 for summary of data from each FWx station). It was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
 
 \  
 
 ```{r meanWxLWSAdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(1, 1, 1, 2, 1, 1, 1, 1),
-               caption = "Average Weather Data from Chris Creek and Martin's Gulch Fire-weather Stations in Leech Water Supply Area in 2018, 2019, and the Period of 2020 Included in This Project")
+               caption = "Average weather data from Chris Creek and Martin's Gulch fire-weather stations in Leech Water Supply Area in 2018, 2019, and the period of 2020 included in this project")
 ```
 
 \  
@@ -242,7 +238,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 
 \  
 
-October 2018 through to February 2020 (the study period) was warmer and drier than historical climate normals according to the Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) which assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. On average. the study period was 0.56 degrees warmer and 13.4% drier than normal (Appendix __XXXX__).
+October 2018 through to February 2020 (the study period) was warmer and drier than historical climate normals according to the Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) which assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. On average. the study period was 0.56 degrees warmer and 13.4% drier than normal (Appendix D).
 
 \  
 
@@ -257,7 +253,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
          col_names = TRUE) %>% 
   select(-c("Storm number")) %>% 
   knitr::kable(digits = c(0, 0, 1, 1, 0), 
-               caption = "Rain Events Defined by Vertical Rack Sample Collection (corresponding to a threshold of 50 mm accumulation with 14-hour inter-event period)" )
+               caption = "Rain events defined by Vertical Rack sample collection (corresponding to a threshold of 50 mm accumulation with 14-hour inter-event period)" )
 
 ```
 
@@ -277,15 +273,15 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### Collaborative analyses for treatability and metals
 
-Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix _CCCCC_ for full details) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539).  Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~ was not well correlated to DBP-FP but was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size [@Peuravuori1997; @Helms2008].   
+Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix E1 for full details) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539).  Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~ was not well correlated to DBP-FP but was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size [@Peuravuori1997; @Helms2008].   
 
 \  
 
-Results of collaborative sample analysis with the CRD (see Appendix _HHHH_) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport, and reinforces the importance of monitoring DOC concentration in source water supply. 
+Results of collaborative sample analysis with the CRD (see Appendix E2) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport, and reinforces the importance of monitoring DOC concentration in source water supply. 
 
 \  
 
-#### Vertical Rack sampling quality control
+#### Vertical Rack sampling quality assurance
 
 ##### Trail cameras and circulating dye-test
 

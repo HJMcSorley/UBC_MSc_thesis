@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Watershed Characteristics and Sampling Conditions as Driving Forces for Dynamics of Aqueous Natural Organic Matter Across the Leech River Watershed 
+##	Watershed Characteristics and Sampling Conditions as Driving Forces for Aqueous Natural Organic Dynamics Across the Leech River Watershed 
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \ 
 
-### Synopsis and introduction
+### Synopsis 
 
 The previous chapter showed that across the Leech WSA and portions of the Sooke Reservoir watershed, the character of natural organic matter (NOM) shifted from predominantly aliphatic in the dry season to predominantly aromatic during the wet seasons. The seasonal character shift agreed with predictions of the river continuum concept (RCC), as did an observed spatial reduction in NOM molecular diversity from lower-order to higher-order streams [@Vannote1980; @Abbott2018; @Mosher2015; @Creed2015]. Results also confirmed that rising limb event-based Rack samples had higher DOC concentrations than non-rising limb samples. Elevated NOM in stormflow was expected (e.g. @Vidon2008; @Raymond2010) and is a key aspect of the pulse-shunt concept [@Raymond2016]. While seasonality and hydrologic pulses were expected to drive changes in aqueous NOM dynamics, differences in surfce and subsurface characteristics among the sub-basins could also be responsible for spatial variation in NOM dynamics.    
 
@@ -70,7 +70,7 @@ The watershed characteristics included in Table \@ref(tab:WTScharacterSubbasinTa
 
 #### Random Forests
 
-Breiman's Random Forests (RF) is a machine learning algorithm which composes a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Breiman2001; @Strobl2009]. RF does not require independence among samples and is unique in it's capacity to evaluate variable importance metrics [@Tyralis2019; @Biau2016]. The relative importance of each feature in RF can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature. Through the RF algorithm, variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001].
+Breiman's Random Forests (RF) is a machine learning algorithm which composes a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Breiman2001; @Strobl2009]. RF does not require independence among samples and is unique in its capacity to evaluate variable importance metrics [@Tyralis2019; @Biau2016]. The relative importance of each feature in RF can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature (see Appendix G1 for extended background and details). Through the RF algorithm, variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. 
 
 \  
 
@@ -80,7 +80,7 @@ RF variable importance measures (VIMs) were used to assess the relative importan
 
 \  
 
-Sampling stages for each site were scaled (min-max-normalized) to account for differences between Vertical Rack installations and to allow for comparison between sites (example calculation in Appendix _XXXX_). For antecedent rain and air temperatures, different periods of time were considered in exploratory data analysis. Intervals of 3, 5, 7, 14, 21 and 30 days prior to sample collection were evaluated for cross-correlations and relative VIM results.  
+Sampling stages for each site were scaled (min-max-normalized) to account for differences between Vertical Rack installations and to allow for comparison between sites (example calculation in Appendix B). For antecedent rain and air temperatures, different periods of time were considered in exploratory data analysis. Intervals of 3, 5, 7, 14, 21 and 30 days prior to sample collection were evaluated for cross-correlations and relative VIM results.  
 
 \  
 
@@ -138,7 +138,7 @@ A variable of random numbers was included with watershed characteristic and samp
 
 ##### RF variable groupings
 
-Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. While it was expected that the relative importance (as a percent) would shift when all predictant variables were combined, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix _XXXX_, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM. Here, variables were separated based on whether they were static or dynamic with predictant variables. The combination of dynamic and static predictor variables appeared to create bias relative VIM ranking. The key was not whether the input was numeric, but rather if the predictant changed (or not) with the predictor. It seems that dynamic variables (ones that changed with the predictant) were treated for regression while static variables were treated categorically. VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
+Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. While it was expected that the relative importance (as a percent) would shift when all predictant variables were combined, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix G2, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM. Here, variables were separated based on whether they were static or dynamic with predictant variables. The combination of dynamic and static predictor variables appeared to create bias relative VIM ranking. The key was not whether the input was numeric, but rather if the predictant changed (or not) with the predictor. It seems that dynamic variables (ones that changed with the predictant) were treated for regression while static variables were treated categorically. VIM results are presented for the three predictants (DOC, SAC~254~, E~2~:E~3~) with conditions and characteristics grouped separately. 
 
 \  
 
@@ -192,9 +192,9 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E
 
 \  
 
-#### Predictors in relation to NOM concentration and character 
+#### Predictors in relation to NOM quantity and quality 
 
-When all variables were assessed together, sampling conditions were relatively more important than watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix, Figure \@ref(fig:RFallvars)). 
+When all variables were assessed together, sampling conditions were relatively more important than watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix G2, Figure \@ref(fig:RFallvars)). 
 
 \  
 
@@ -225,7 +225,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png
 
 ###### Antecedent 7-day air temperature
 
-Antecedent 7-day air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10°C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix _XXX_, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
+Antecedent 7-day air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10°C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix G2, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
 
 \  
 
@@ -245,7 +245,7 @@ Antecedent 30-day cumulative rain (i.e. antecedent wetness) was the sampling con
 
 \  
 
-Fewer sample results were obtained for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ with antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For these available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris crk, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix _XXXXX_, Figure \@ref(fig:VIMrainSites)). 
+Fewer sample results were obtained for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ with antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For these available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris crk, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix G2, Figure \@ref(fig:VIMrainSites)). 
 
 \  
 
@@ -368,7 +368,7 @@ Antecedent moisture and/or sampling stage was important for each of the three pr
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>% 
   select(-c("mean SUVA")) %>% 
   knitr::kable(digits = c(0,0,1,1,1,0,2,2,2), 
-               caption = "Rain Events (Threshold of 50 mm and 14-hour Inter-event Period) Defined by Vertical Rack Sample Collection Across the Six monitoring Sites of the Leech WSA",
+               caption = "Rain events (with a threshold of 50 mm and 14-hour inter-event period) defined by Vertical Rack sample collection across the six monitoring sites of the Leech WSA",
                col.names = c("Major event no.", "Start Date", "Duration (days)", "Rainfall (mm)", "Intensity (mm/24-hr)", "Samples collected", "mean DOC (mg/L)", "mean SAC~254~", "mean E~2~:E~3~"))
 
 ```
@@ -389,7 +389,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_response_stage-summary.csv",
                              "largest change in stage (cm)", 
                              "minimum rate of stage change (cm/hr)", 
                              "maximum rate of stage change (cm/hr)"),
-               caption = "Summary of Stream Response to Rain Events Across Six Monitoring sites in the Leech Water Supply Area.")
+               caption = "Summary of stream response to rain events across six monitoring sites in the Leech Water Supply Area")
 ```
 
 \  
@@ -401,7 +401,7 @@ To determine if a similar harmony was present for fluctuations in DOC or spectra
 ```{r synchDOCstage}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/synchrony_DOC-stage_extrema-simultaneous.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0,4,4),
-               caption = "Proportion of Samples for Which Peak Dissolved Organic Carbon (DOC) was Collected at the Highest Sample Stage.")
+               caption = "Proportion of samples for which the highest dissolved organic carbon (DOC) concentration was collected at the highest sample stage")
 ```
 
 \  
@@ -411,7 +411,7 @@ Four of the six site's samples showed majority, but not absolute, agreement in e
 \  
 
 ```{r extremaplot, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:extremaplot} Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period."
+fig_cap = "\\label{fig:extremaplot} Stage and samples collected, highlighting samples with maximum and minimum DOC concentrations for each rain event and collection period"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/extrema_peakDOC-stage_plot.png")
 ```
@@ -426,7 +426,7 @@ For events where several samples were collected, the change in DOC concentration
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = 1, 
                col.names = c("site", "lowest DOC in stormflow (mg/L)", "highest DOC in stormflow (mg/L)", "smallest change in DOC (mg/L)", "largest change in DOC (mg/L)", "smallest difference in DOC during stormflow (%)", "largest difference in DOC during stormflow (%)"),
-               caption = "Summary of DOC Changes Within Stormflow Response to Precipitation Events Across the Leech WSA (Samples from Wet Season Only). ")
+               caption = "Summary of DOC changes within stormflow response to precipitation events across the Leech WSA (samples from wet season only) ")
 ```
 
 \  
@@ -479,7 +479,7 @@ In the future, Vertical Rack sampling (and matched sample filling-stage with con
 
 \  
 
-It was assumed that the arithmetic means of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations were representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix _XXXX_) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
+It was assumed that the arithmetic means of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations were representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix C2) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
 
 \  
 

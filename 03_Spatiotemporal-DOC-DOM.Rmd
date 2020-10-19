@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Spatial and Temporal Patterns in NOM Concentration and Character Across the Greater Victoria Water Supply Areas
+##	Spatial and Temporal Patterns in NOM Quantity and Quality Across the Greater Victoria Water Supply Areas
 
 ```{r, include = FALSE, package.startup.message = FALSE}
 
@@ -55,7 +55,7 @@ From October 2018 to February 2020, across the GVWSA 426 river samples were coll
 
 ```{r samplecount}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "Summary of Samples Collected and Number Included in Data Analysis") 
+  knitr::kable(caption = "Summary of samples collected and number included in data analysis following sample hold-time quality assurance filtering ") 
 ```
 
 \  
@@ -81,7 +81,7 @@ Mean DOC concentrations were similar between the Sooke WSA main tributaries to S
 ```{r synopticDOCdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 1, 1),
-               caption = "Dissolved Organic Carbon Concentrations (DOC) Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
+               caption = "Dissolved organic carbon concentrations (DOC) across twelve synoptically sampled sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "n", 
                              "Mean DOC (mg/L)", "sd (±)", "Relative sd (± %)", 
                              "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)"))
@@ -94,14 +94,14 @@ Overall, DOC decreased from low-order headwater streams to higher-order downstre
 
 \  
 
-The lowest absolute measurement for NOM aromaticity, molecular size and reactivity occurred at the Cragg crk site (maximum E~2~:E~3~ of 5.03, minimum SAC~254~ 4.69 m^-1^). Cragg crk also had among the lowest mean aromaticity and molecular weight NOM (E~2~:E~3~ of 4.59 ± 0.22), though it was very similar to Judge crk (E~2~:E~3~ of 4.59 ± 0.05). Unlike Cragg crk's low aromaticity and molecular weight NOM, it's headwater sites (Jarvis and Lazar) had samples with highly aromatic and reactive NOM character. Jarvis crk had the most reactive NOM sample (max SAC~254~ 41.7 m^-1^) and the other headwater creek in Cragg basin, Lazar crk, had one of the most aromatic samples of all (lowest recorded E~2~:E~3~, 3.77). Lazar crk sub-basin had the greatest proportion of wetlands (12% by area), and had the greatest range in NOM aromaticity and molecular size (E~2~:E~3~ values with 9% RSD); despite having one of the most aromatic samples of all, Lazar crk also had the lowest average aromatic NOM (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Field observations included dry-season and early wet season algae blooms (Appendix __XXXX__) in Jarvis crk, Lazar crk and Cragg crk (and other small streams draining the west side of Survey Mountain).  
+The lowest absolute measurement for NOM aromaticity, molecular size and reactivity occurred at the Cragg crk site (maximum E~2~:E~3~ of 5.03, minimum SAC~254~ 4.69 m^-1^). Cragg crk also had among the lowest mean aromaticity and molecular weight NOM (E~2~:E~3~ of 4.59 ± 0.22), though it was very similar to Judge crk (E~2~:E~3~ of 4.59 ± 0.05). Unlike Cragg crk's low aromaticity and molecular weight NOM, it's headwater sites (Jarvis and Lazar) had samples with highly aromatic and reactive NOM character. Jarvis crk had the most reactive NOM sample (max SAC~254~ 41.7 m^-1^) and the other headwater creek in Cragg basin, Lazar crk, had one of the most aromatic samples of all (lowest recorded E~2~:E~3~, 3.77). Lazar crk sub-basin had the greatest proportion of wetlands (12% by area), and had the greatest range in NOM aromaticity and molecular size (E~2~:E~3~ values with 9% RSD); despite having one of the most aromatic samples of all, Lazar crk also had the lowest average aromatic NOM (Table \@ref(tab:synopticNOMdata), Figure \@ref(fig:synopticBox)). Field observations included dry-season and early wet season algae blooms (Appendix C2) in Jarvis crk, Lazar crk and Cragg crk (and other small streams draining the west side of Survey Mountain).  
 
 \  
 
 ```{r synopticNOMdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_NOM-Synoptic-summary.csv", col_names = TRUE) %>% 
   knitr::kable(digits = c(0, 0, 0, 1, 1, 0, 2, 2, 2, 2, 0, 2, 2), 
-               caption = "Spectral Properties of Natural Organic Matter (NOM) Character Across Twelve Synoptically Sampled Sites in the Greater Victoria Water Supply Area",
+               caption = "Spectral properties of natural organic matter (NOM) character across twelve synoptically sampled sites in the Greater Victoria Water Supply Area",
                col.names = c("Site", "Description", "Count", 
                              "SAC~254~ Mean (m^-1^)", "stdev (±)", "RSD (± %)",
                              "SAC~254~ Min. (m^-1^)", "SAC~254~ Max. (m^-1^)",
@@ -126,7 +126,7 @@ Below the confluence of headwaters sites, the combination of Rack and Grab sampl
 
 \  
 
-The combination of Vertical Rack and Grab sampling at the Leech Tunnel captured the same variance in DOC that was observed in standard Grab samples at three upstream sites: Leech-head, Cragg crk, West Leech (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homoscedasticity confirmed that there was no difference in DOC variance at the downstream Rack and Grab combination compared to Grab-sampling-only at upstream sub-basins (p-value 0.165). Similar patterns were seen for SAC~254~ but not E~2~:E~3~ (Appendix ####).  
+The combination of Vertical Rack and Grab sampling at the Leech Tunnel captured the same variance in DOC that was observed in standard Grab samples at three upstream sites: Leech-head, Cragg crk, West Leech (Figure \@ref(fig:abcDOCbox), plot C). Levene's test for homoscedasticity confirmed that there was no difference in DOC variance at the downstream Rack and Grab combination compared to Grab-sampling-only at upstream sub-basins (p-value 0.165). Similar patterns were seen for SAC~254~ but not E~2~:E~3~ (Appendix F).  
 
 \  
 
@@ -201,7 +201,7 @@ The seasonal shift in NOM source pools indicates that if spectral estimates of c
 
 \  
 
-#### Spatiotemporal NOM patterns and event-based sampling in the Leech watershed
+#### Leech WSA spatiotemporal patterns and event-based sampling
 
 \  
 
@@ -242,7 +242,7 @@ West Leech showed the greatest difference in DOC collected as Grab samples (4.2	
 ```{r wetDOCinstallSites}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char_by-site.csv", col_names = TRUE) %>%
   knitr::kable(digits = c(0,0,0,0,2,2,2,0,0,2,2,2),
-               caption = "Wet Season Stream NOM Concentration and Character (as DOC & SAC~254~, respectively) by Sample Collection Method at Each of the Six Monitoring Sites in the Leech Watershed",
+               caption = "Wet season stream NOM quantity and quality (as DOC & SAC~254~, respectively) by sample collection method at each of six monitoring sites in the Leech watershed",
                col.names = c("Site", "Sample type", "DOC sample count", 
                              "Mean DOC (mg/L) ± RSD (%)", 
                              "Min. DOC (mg/L)", "Median DOC (mg/L)", "Max. DOC (mg/L)",

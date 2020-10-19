@@ -5296,7 +5296,7 @@ RFplot_all_DOC <- RF_DOC_allChrc_RelImp1_MSE %>%
                                "Surface characteristics", 
                                "Parent material")) +
   theme_bw() +
-  theme(legend.position = "top", text = element_text(size = 12))+
+  theme(legend.position = "top", text = element_text(size = 11))+
   labs(y = "Relative importance in predicting DOC (%)", x = "", fill = "Predictor variable group") +
   guides(fill = guide_legend(nrow = 3, byrow=TRUE))
 
@@ -5786,11 +5786,11 @@ RFsep_DOC <- cowplot::plot_grid(RFplot_dynamic_DOC, RFplot_static_DOC,
                                 rel_heights = c(1, 1.6))
 
 # add legend (RF_group_legend)
-D <- cowplot::plot_grid(RF_group_legend, RFsep_DOC, ncol = 1, rel_heights = c(1, 5))
+D <- cowplot::plot_grid(RF_group_legend, RFsep_DOC, ncol = 1, rel_heights = c(1, 4.5))
 
 # save it
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-DOC.png", 
-       width = 6, height = 4, units = "in")
+       width = 6, height = 6, units = "in")
 
 ```
 
@@ -5963,7 +5963,7 @@ RFsep_E2E3 <- cowplot::plot_grid(RFplot_dynamic_E2E3, RFplot_static_E2E3,
 E <- cowplot::plot_grid(RF_group_legend, RFsep_E2E3, ncol = 1, rel_heights = c(1, 5))
 
 # save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", width = 6, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E2E3.png", width = 6, height = 6, units = "in")
 
 ```
 
@@ -6136,7 +6136,7 @@ RFsep_SAC254 <- cowplot::plot_grid(RFplot_dynamic_SAC254, RFplot_static_SAC254,
 S <- cowplot::plot_grid(RF_group_legend, RFsep_SAC254, ncol = 1, rel_heights = c(1, 5))
 
 # save it
- ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", width = 6, height = 4, units = "in")
+ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-SAC254.png", width = 6, height = 6, units = "in")
 
 
 ```

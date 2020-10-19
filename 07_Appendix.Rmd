@@ -112,7 +112,7 @@ A fall algae bloom was observed in Cragg Creek November 2019, and was also obser
 \  
 
 ```{r Draparnaldia, fig.cap = fig_cap}
-fig_cap = "\\label{fig:Draparnaldia} *Draparnaldia species of green algae (nic-named 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019*"
+fig_cap = "\\label{fig:Draparnaldia} Draparnaldia species of green algae (nic-named 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019"
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCrk_2019-11-13.png")
 ```
@@ -121,7 +121,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_Cragg
 
 ######### West Leech (site 5)
 
-Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River).
+Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River). During sampling trips, different weather patterns were consistently observed at the West Leech monitoring site compared to other sampling sites in the Leech watershed. For example, consistent rain was sometimes falling at the West Leech site, when other sites in the Leech were dry. 
 
 \  
 
@@ -137,7 +137,9 @@ Following the installation of a vertical sampling rack, the field protocol was t
 
 \  
 
-####### Weather and Climate (Chapter 2 results extended)
+####### Weather and Climate (Chapter 2 results extended, ancillary data)
+
+######## Climate normals and weather anomalies
 
 The Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
 
@@ -150,7 +152,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-stations.csv",
          "Elevation_asl" = Elevation_asl,
          "Latitude (°W)" = Latitude,
          "Longitude (°N)" = Longitude ) %>% 
-  knitr::kable(caption = "Pacific Climate Impacts Consortium British Columbia Weather Stations Used to Establish Climate Anomalies and Departures from Normal for the Study Period from Oct. 2018 to Feb. 2020", 
+  knitr::kable(caption = "Pacific Climate Impacts Consortium British Columbia weather stations used to establish weather anomalies and departures from normal for the study period from Oct. 2018 to Feb. 2020", 
                digits = c(0, 0, 5, 5))
 ``` 
 
@@ -167,7 +169,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv",
          "Date range" = Date_range,
          "Temperature departure (°C)" = temp_depart,
          "Precipitation departure (%)" = precip_depart) %>% 
-  knitr::kable(caption = "Average Weather Departures from CLimate Normals from Bear Creek Reservoir and Shawnigan Lake Weather Stations ", 
+  knitr::kable(caption = "Average weather departures from climate normals from Bear Creek Reservoir and Shawnigan Lake weather stations", 
                digits = c(0, 0, 2, 1))
 ``` 
 
@@ -183,13 +185,13 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv",
   rename("Min. temp. departure (°C)" = temp_min_depart,
          "Max. temp. departure (°C)" = temp_max_depart,
          "Precipitation departure (%)" = precip_depart ) %>% 
-  knitr::kable(caption = "Average Monthly Weather Anomalies from 1970 Onward from Bear Creek Reservoir and Shawnigan Lake Weather Stations", 
+  knitr::kable(caption = "Average monthly weather anomalies from 1970 onward at Bear Creek Reservoir and Shawnigan Lake weather stations", 
                digits = c(0, 0, 2, 2, 1))
 ``` 
 
 \ 
 
-######## FWx stations in the LWSA: ancillary data
+######## FWx stations in the LWSA
 
 There were two weather stations that operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
 
@@ -199,8 +201,8 @@ The CRD provided weather station data from Chris Creek and Martin's Gulch weathe
 
 \  
  
-```{r WxLWSA, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:WxLWSA} *Weather from FWx stations in the Leech water supply area. Coloured sections of plots highlight the field study period of this project.*"
+```{r WxLWSA, fig.cap = fig_cap}
+fig_cap = "\\label{fig:WxLWSA} Weather from FWx stations in the Leech water supply area. Coloured sections of plots highlight the field study period of this project"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
 ```
@@ -209,20 +211,20 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA.png")
 
 ```{r WxLWSAdata}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names = TRUE) %>% 
-  knitr::kable(caption = "Annual weather from CRD FWx stations in the Leech water supply area*", 
+  knitr::kable(caption = "Annual weather from CRD FWx stations in the Leech water supply area", 
                digits = c(0, 0, 1, 2, 1, 1, 1, 1))
 ``` 
 
 \  
 
-####### Linear regression for air temperatures at vertical racks
+######### Linear regression for air temperatures at Vertical Racks
 
 TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30 minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
 
 \ 
 
-```{r TidbiTairwaterLine, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:TidbiTairwaterLine}*Temperatures recorded in air and water on vertical racks at each research site.*"
+```{r TidbiTairwaterLine, fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTairwaterLine} Temperatures recorded in air and water on vertical racks at each research site"
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-time_daily.png")
 ```
 
@@ -232,22 +234,20 @@ While loggers were installed in both positions (air and water) on each rack at t
 
 \  
 
-```{r TidbiTairwaterBox, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:TidbiTairwaterBox}*Temperatures recorded in air and water on vertical racks at each research site.*"
+```{r TidbiTairwaterBox, fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTairwaterBox} Temperatures recorded in air and water on vertical racks at each research site "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png")
 ```
 
 \  
 
-######## Linear regression: air temperature estimation 
-
 Air temperatures recorded at each of the six sites were compared to LWSA FWx for the overlapping period (August 24, 2019 to February 20, 2020). Overall, FWx temperatures were slightly higher than those recorded at each site installation. Figure \@ref(fig:TidbiTFWxridges) shows the density distribution of air temperature measured at each site compared to the LWSA FWx mean. 
 
 \  
 
-```{r TidbiTFWxridges, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:TidbiTFWxridges}*Density distribution of air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations.*"
+```{r TidbiTFWxridges, fig.cap = fig_cap}
+fig_cap = "\\label{fig:TidbiTFWxridges} Density distribution of air temperatures recorded at each sub-basin compared to mean LWSA air temperatures from CRD fire weather stations "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridgeplot-subbasins.png")
 ```
@@ -262,7 +262,7 @@ Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air tempera
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx-Tdaily_Wilcoxon-pvalues.csv",
          col_names = TRUE) %>% 
   knitr::kable(digits = c(0,4),
-               caption = "*Relationships between mean daily air temperature recorded at each monitoring site compared to mean LWSA air temperature recorded by Chris Creek and Martin's Gulch fire weather stations.*")
+               caption = "Relationships between mean daily air temperature recorded at each monitoring site compared to mean LWSA air temperature recorded by Chris Creek and Martin's Gulch fire weather stations")
                
 ```
 
@@ -276,7 +276,7 @@ Despite some differences between FWx and Hobo site data, the overlapping FWx and
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.csv", col_names = TRUE) %>% 
   #mutate(p.value = format(p.value, digits = 2)) %>% 
   knitr::kable(digits = c(0,1,1,1,1,1,1,1),
-               caption = "*Summary of predicted air temperature at each site compared to mean LWSA temperature from CRD FWx stations for the same time period*",
+               caption = "Summary of predicted air temperature at each site compared to mean LWSA temperature from CRD FWx stations for the same time period",
                col.names = c("Site", "Error (%)", 
                              "Median Temp. (°C)", 
                              "Estimated Median (°C)",
@@ -288,15 +288,15 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/TidbiT-FWx_lm_prediction-errors.
 
 \  
 
-```{r HoboFWxLinearReg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:HoboFWxLinearReg}*Linear regression relationships between mean daily air temperature recorded at each monitoring site compared to mean LWSA air temperature recorded by Chris Creek and Martin's Gulch fire weather stations*"
+```{r HoboFWxLinearReg, fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoboFWxLinearReg} Linear regression relationships between mean daily air temperature recorded at each monitoring site compared to mean Leech WSA air temperature recorded by Chris Creek and Martin's Gulch fire weather stations "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Temp_TidbiTs-FWx_lm-scatter.png")
 ```
 
 \  
 
-####### Additional sampling and analysis
+####### Additional sampling and analysis (Chapter 2 extended)
 
 At UBC, stream samples were also measured for phosphate concentration using a colourimetric (ascorbic acid) orthophosphate test kit (HACH PO-19); all water samples had ortho-phosphate concentrations below the detectable limit (0.1 mg/L).
 
@@ -338,7 +338,7 @@ Results from two sets of samples at four selected sites showed DBP-FPs were weak
 \  
 
 ```{r treatability, fig.cap = fig_cap}
-fig_cap = "\\label{fig:treatability} Disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column) and spectral absorbance coefficient at 254 nm (SAC~254~) and specific UV absorbance at 254nm (SUVA~254~). Duplicate samples collected at four sites in the Leech WSA on two occasions. DBPs assessed: total trihalomethanes (THM), including trichloromethane (TCM), bromodichloromethane (BDCM); and total haloacetic acids (HAAs) including dichloroacetic acid (DCAA), trichloroacetic acid (TCAA)."
+fig_cap = "\\label{fig:treatability} Disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column), spectral absorbance coefficient at 254 nm (SAC~254~) and specific UV absorbance at 254nm (SUVA~254~). Duplicate samples collected at four sites in the Leech WSA on two occasions. DBPs include: total trihalomethanes (THM), trichloromethane (TCM), bromodichloromethane (BDCM), total haloacetic acids (HAAs), dichloroacetic acid (DCAA), trichloroacetic acid (TCAA)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png")
 ```
@@ -348,12 +348,12 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatab
 ```{r DBPcor}
 read.table("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv") %>% 
   knitr::kable(digits = c(5), 
-               caption = "Correlation coefficients for disinfection byproducts with spectral absorbance coefficient at 254 nm (SAC~254~), dissolved organic carbon concentration (DOC), and specific UV absorbance at 254 nm (SUVA~254~). DBP-FP values that were below detection were not included in the matrix. ")
+               caption = "Correlation coefficients for disinfection byproducts with spectral absorbance coefficient at 254 nm (SAC~254~), dissolved organic carbon concentration (DOC), and specific UV absorbance at 254 nm (SUVA~254~). DBP-FP values that were below detection were not included in the matrix ")
 ```
 
 \  
 
-It's important to note that while SAC~254~ is related to aqueous NOM and DOC, naturally occurring aqueous nitrate and iron can interfere with spectroscopic analyses and lead to positive bias in SAC~254~. However, aqueous nitrogen, in combination with NOM, can also play an important roll as a precursor to nitrogenous-DBPs, which could potentially make SAC~254~ an even better indicator of DBP-FP. It would be interesting to evaluate nitrogenous DBPs in realtion to SAC~254~, NOM, and DBP-FPs.      
+It's important to note that while SAC~254~ is related to aqueous NOM and DOC, naturally occurring aqueous nitrate and iron can interfere with spectroscopic analyses and lead to positive bias in spectroscopy. Dissolved or colloidal nitrate, nitrite and iron species can absorb light at 250 nm, 254 nm or 365 nm, the wavelengths common to NOM absorption [@StdMet5910]. However, aqueous nitrogen, in combination with NOM, can also play an important roll as a precursor to nitrogenous-DBPs, which could potentially make SAC~254~ an even better indicator of DBP-FP. It would be interesting to evaluate nitrogenous DBPs in realtion to SAC~254~, NOM, and DBP-FPs. 
 
 \  
 
@@ -363,16 +363,16 @@ Aqueous natural organic matter (NOM) can play an important role in transportatio
 
 \  
 
-```{r metalsug, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsug} *Concentrations of total metals (in μg/L) and dissolved organic carbon.*"
+```{r metalsug, fig.cap = fig_cap}
+fig_cap = "\\label{fig:metalsug} Concentrations of total metals (in μg/L) and dissolved organic carbon (DOC) concentrations in stream water samples collected across the Leech WSA"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
 ```
 
 \  
 
-```{r metalsmg, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:metalsmg} *Concentrations of total metals (in mg/L) and dissolved organic carbon.*"
+```{r metalsmg, fig.cap = fig_cap}
+fig_cap = "\\label{fig:metalsmg} Concentrations of total metals (in mg/L) and dissolved organic carbon (DOC) concentrations in stream water samples collected across the Leech WSA "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
 ```
@@ -387,21 +387,19 @@ DOC concentrations had strong positive relationships with total mercury, iron, m
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv", 
          col_names = TRUE) %>% 
   knitr::kable(digits = c(1, 1, 0, 2, 2, 4), 
-               col.names = c("Metal", "unit", "count", "slope", "Y intercept", "R squared"),
-               caption = "*Relationships between total metals with dissolved organic carbon*")
+               col.names = c("Metal", "unit", "n", "slope", "Y intercept", "R squared"),
+               caption = "Linear relationships between total metals with dissolved organic carbon in stream water samples collected across the Leech WSA")
 ```
 
 \  
 
-######## NOM sampling in nested catchments (Chapter 3 results extended)
+####### NOM sampling in nested catchments (Chapter 3 extended)
 
 Below the confluences of headwaters sites (Figure \@ref(fig:NOMnesty), plots A & B), the combination of Rack and Grab sampling did not capture the ranges of SAC~254~ observed in upstream Grab samples alone. At both sets of headwater sites, the variance obtained by combining Rack and Grab samples downstream was not the same as upstream Grab sampling variance (Levene's test for homoscedasticity p-value =  0.0174). At higher order rivers, the combination of Rack and Grab samples at the Leech Tunnel site did capture the SAC~254~ ranges observed in Grab samples at three upstream river sites (Figure \@ref(fig:NOMnesty), plot C). Levene's test for homogeneity of variance (homoscedasticity) confirmed that there was no difference in SAC~254~ variance in the downstream Rack/Grab combination results compared to Grab-only from upstream (p-value 0.105). 
-
 \  
 
-
-```{r NOMnesty, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:NOMnesty}*Grab sample SAC~254~ at upstream locations compared to Rack and Grab sample SAC~254~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring.*"
+```{r NOMnesty, fig.cap = fig_cap}
+fig_cap = "\\label{fig:NOMnesty} Grab sample SAC~254~ at upstream locations compared to Rack and Grab sample SAC~254~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-boxplot_up-down_metcompar.png")
 
@@ -411,29 +409,17 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_SAC254-boxpl
 
 No apparent trend was seen in the E~2~:E~3~ characteristic for aromaticity/molecular size (Figure \@ref(fig:aroma)). There were similar variances in E~2~:E~3~ values across all groupings (Levene's p-values 0.1225, 0.09551, 0.09298 for sets A, B, C). 
 
-```{r aroma, out.width = "100%", fig.pos="h", fig.cap = fig_cap}
-fig_cap = "\\label{fig:aroma}*Grab sample E~2~:E~3~ at upstream locations compared to Rack and Grab sample E~2~:E~3~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring.*"
+```{r aroma, fig.cap = fig_cap}
+fig_cap = "\\label{fig:aroma} Grab sample E~2~:E~3~ at upstream locations compared to Rack and Grab sample E~2~:E~3~ below their confluence(s). A and B show grab samples from headwaters (HW) compared to downstream (DS) monitoring sites; C shows upstream river sites (US) compared to mainstem monitoring "
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch2_E2E3-boxplot_up-down_metcompar.png")
 ```
 
-\
-
-######### E~2~:E~3~ over time
-
-The spectral proxy for NOM aromaticity and molecular size was plotted over time in the same fashion as DOC in Chapter 3 (Figure \@ref(fig:E2E3loessAll)).
-
 \  
 
-```{r E2E3loessAll, fig.cap = fig_cap}
-fig_cap = "\\label{fig:E2E3loessAll} *Trends in E2:E3 (spectral NOM indicator), where E2:E3 values are inversely related to NOM aromaticity and molecular weightaromaticity and molecular weight indicator) over sixteen months at twelve sites across the Greater Victoria Water Supply Area. Trend line shows locally weighted smoothing (loess, local polynomial regression).*"
+####### Random Forests (Chapter 4 extended)
 
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/CH2_E2E3-loess-trend.png")
-```
-
-\  
-
-####### Random Forests: extended background
+######## Random Forests background
 
 \  
 
@@ -449,12 +435,12 @@ The capacity to evaluate variable importance metrics sets RF apart from other da
 
 \  
 
-######## Random Forests Variable Importance Measure (Chapter 4 results extended) 
+######## Random Forests Variable Importance Measure 
 
 Random Forest variable importance measure (VIM) treated static watershed characteristics categorically and treated dynamic sampling conditions as numeric variables to be used in regression. When conditions and characteristics were combined for RF VIM, the relative ranking of each predictant was changed compared to when conditions and characteristics were analyzed separately. While it was expected that the relative importance (as a percent) would shift when all predictants were combined, it was not expected that the relative ranking would change, and that suggests that these two groups (static and dynamic) of predictants should be separated for RF VIM. Compare plots for the two groups (Ch 4) to Figure \@ref(fig:RFallvars) and see how the relative rankings changed.
 
 
-```{r RFallvars}
+```{r RFallvars, fig.cap = fig_cap}
 fig_cap = "\\label{fig:RFallvars} Random Forest variable importance measure for NOM concentration and character using combined predictant types (dynamic conditions and static watershed chaaracteristics), which altered the relative importance ranking compared to when the groups were assessed separately"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RFplot-summary_DOC-E2E3-SAC254.png")
@@ -462,9 +448,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RFp
 
 \  
 
-Enough samples were collected in both the dry and wet seasons for DOC assessment to tease apart a wet season increase in DOC with increasing antecedent air temperatures, while there was no apaprent trend in the dry season (Figure \@ref(fig:RFtempDOC)). 
+Enough samples were collected for DOC assessment in both the dry and wet seasons to see a pattern of wet season increase in DOC with increasing antecedent air temperatures; there was no clear pattern in the dry season (Figure \@ref(fig:RFtempDOC)). 
 
-```{r RFtempDOC}
+\  
+
+```{r RFtempDOC, fig.cap = fig_cap}
 fig_cap = "\\label{fig:RFtempDOC} Antecedent 7-day air temperature as a predictor variable for concentrations of dissolved organic carbon in the wet and dry seasons of the Leech Water Supply Area (including loess trend lines)"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_DOCtemp.png")
@@ -472,7 +460,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_
 
 \  
 
-30-day antecedent rain by site...(Figure \@ref(fig:VIMrainSites))
+The relationships between NOM proxy parameters (DOC, SAC~254~ and E~2~:E~3~) with 30-day antecedent rain were slightly different at each site (Figure \@ref(fig:VIMrainSites)). Generally, DOC decreased with increasing 30-day antecedent rain at all site above approximately 200mm of accumulated rain. There were insufficient data at each site to tease out clear patterns with SAC~254~ or E~2~:E~3~. 
 
 \  
 
@@ -486,6 +474,8 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain-bysi
 \  
 
 ####### Hysteresis (Chapter 4 bonus)
+
+######## Background
 
 Storm events are understood to be a key driver for solute and particle mobilization in streams [e.g. @Aguilera2018]. Material transport (be it in solution or suspension) tends to show a non-linear relationship to discharge, in that concentrations do not necessarily peak in congruence with flow. This hysteretic behaviour, where the relationship between concentration and discharge (i.e. C-Q)  is different on the rising limb versus the falling limb of the hydrograph, creates a hysteresis loop that can reveal information about origins and transport of aquatic material, relative to the point of measurement [@Vaughan2019; @Evans1998; @Aguilera2018]. Concentration-discharge hysteresis may be due to episodic flushing of material or from component mixing processes [@Evans1998]. Information about flow-paths and source pools can be obtained from four elements of the C-Q relationship plot: the shape (linear, circular, figure-eight), the direction of a hysteresis loop (i.e. clockwise vs. counterclockwise), the magnitude, and the direction of slope [@Aguilera2018].    
 
@@ -503,7 +493,7 @@ Using end-member mixing, with hydrometric monitoring and carbon isotope (δ^13^C
 
 \  
 
-######## Methods: Hysteresis
+######## Methods
 
 Hydrochemical hysteresis is most often evaluated through C-Q relationships, but the concept of hysteresis applies to any time-based predictor and effected values. The principle of hysteresis is based on a lag between a driving force (e.g. discharge, Q) and the analyte that is driven to change (e.g. solute concentration, C). Ideally, streamflow data would accompany all sample data collected for this research, however that was not the case. Stage data was collected, and given the strong relationship between stage and discharge, stage can be evaluated as an indicator for Q. Similarly, because streamflow in the Leech WSA is governed by precipitation, antecedent wetness (rain) could be proxy data in a hysteresis analysis. Conditions that were calculated to be most important for predicting NOM concentration and character were plotted with their predictant to assess possible hysteresis; this was only possible for dynamic conditions with variable measurements (i.e. not static watershed characteristics predictors).
 
@@ -513,7 +503,7 @@ For a C-Q hysteresis loop, clockwise rotation indicates rapid flushing and dilut
 
 \
 
-######## Results: Hysteresis of NOM with antecedent wetness 
+######## Results and discussion: Hysteresis of NOM with antecedent wetness 
 
 Events 10 and 11 were relatively well represented by sampling at each of the six sites and were found to be representative of other rain events as well. Wilcoxon tests showed events 10 and 11 were not statistically different from the other sampling events, with the same mean rain durations (p = 0.837), rain amounts (p = 0.732), rain intensity (p = 0.549), DOC (p = 0.512), SAC~254~ (p= 0.218) and E~2~:E~3~ (p = 0.148). Samples were collected across the rising limb, near peak-flows, and at least one sample on the falling limb and at low flow (Figure \@ref(fig:events1011)).
 
@@ -532,7 +522,7 @@ Sample DOC concentrations from rain events 10 and 11 were plotted with their cor
 \  
 
 ```{r hysteresisplots, fig.cap = fig_cap}
-fig_cap = "\\label{fig:hysteresisplots} Dissolved organic carbon (DOC) concentrations plotted with antecedent 30-day rain during events 10 and 11 at six monitoring sites in the Leech watershed."
+fig_cap = "\\label{fig:hysteresisplots} Dissolved organic carbon (DOC) concentrations plotted with antecedent 30-day rain during events 10 and 11 at six monitoring sites in the Leech watershed"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_hysteresis_DOC-wetness.png")
 ```

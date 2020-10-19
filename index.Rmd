@@ -48,6 +48,14 @@ Streams are intrinsically linked to their watersheds through dynamic biotic-abio
 
 ...
 
+The sampling period spanned sixteen months, from October 2018 to February 2020. Seasons were defined as 'wet' and 'dry' and were distinguished by the activity of passive Vertical Rack sample collection. The wet season was characterized by conditions that generated event responses which triggered rising-stage sample collection in the six Leech WSA monitoring site streams (Chapter 2). Based on this definition of seasons, Vertical Racks collected rising limb samples only in the wet season (fall/winter/spring) while Grab samples were collected throughout the entire sampling period. During events, Grab samples were collected prior to stream rise, on the falling limb or between events, but not on the rising limb (not by design, but by happenstance). Sampling began after the start of the 2018/2019 wet season, which extended until mid-May 2019. The dry season spanned from mid-May to late September 2019, the start of the 2019/2020 wet season. 
+
+...
+
+
+
+
+
 Quantifying the organic carbon that forms NOM's backbone is a proxy for the quantity of complex organic assemblies that comprises NOM. The molecular structure of NOM (i.e. it's quality) can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the source material. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while in-stream sources of NOM (i.e. autochthonous NOM), such as algae, are typically more aliphatic in structure. In this research, the quantity of aqueous NOM was measured as the concentration of dissolved organic carbon (DOC) in each sample. The molecular quality of NOM was assessed by UV-Vis spectrophotometry. The specific absorbance coefficient at 254 nm wavelength (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity (Appendix VVVVVV; @Weishaar2003; @Vidon2008; @Abbott2018), and the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate (inversely) aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008].
 
 ...
