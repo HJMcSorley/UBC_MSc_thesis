@@ -17,13 +17,26 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 \  
 
-This project characterized aqueous NOM concentration and character ranges across the Greater Victoria Water Supply Area (GVWSA) over sixteen months and explored relationships between watershed variables and sample results across the Leech WSA. Chapters two and three tackled the first research question, which focused on method refinement for measuring variability of aqueous NOM. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals, and passively collected whole water samples during stormflow on rising limbs of the hydrograph; and (2) twelve sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. 
+This project set out to characterize spatial and temporal dynamics in aqueous NOM quantity and quality across the Greater Victoria Water Supply Area (GVWSA), and to explored relationships between watershed variables and sample results across the Leech WSA. Chapters two and three tackled the first research question, which focused on method refinement for measuring variability and ranges of aqueous NOM. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with vertical racks which logged river stage, air and water temperature at 10-minute intervals, and passively collected whole water samples during stormflow on the rising limb of the hydrograph; and (2) twelve sites, including the six sub-basin sites, were sampled synoptically every two to four weeks. 
 
 \  
 
-Results from twelve sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites which were equipped with vertical sampling racks (Chapter 4). Relationships between sample results and watershed characteristics and sampling conditions were evaluated to identify drivers for changes in NOM concentration and character across the Leech WSA (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^). 
+Results from twelve sites across the GVWSA were used to assess broad spatial and temporal patterns in stream NOM dynamics (Chapter 3). More in-depth analyses were completed for six of those sites in tthe Leech WSA, which were equipped with vertical sampling racks (Chapter 4). Sample results were related to watershed characteristics and sampling conditions to identify drivers for NOM dynamics across the Leech WSA (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^). 
 
 \  
+
+The key findings included:
+- Vertical Rack stream water sample stability depended on the field conditions the sample is held under and the sample content: early wet-season NOM was more labile and likely to change in DOC concentration than later season samples. 
+- The spectral absorbance coefficient at 254 nm (SAC~254~) was a better indicator of disinfection byproduct formation potential (DBP-FP) than was the concentration of dissolved organic carbon (DOC) or specific UV absorbance at 254 nm (SUVA~254~).
+- In each season, DOC concentration was loosely correlated to air temperature, with higher concentrations occurring at warmer temperatures and lower concentrations occurring at lower temperatures. The seasonal averages in DOC concentration were approximately equal (6 ± 3 mg/L). 
+- There was a seasonal shift in NOM character, from predominantly aliphatic in the dry season to predominantly aromatic in the wet season. 
+- NOM quantity decreased from upstream to downstream in both seasons, as did NOM reactivity. However, while NOM molecular size and aromaticity decreased from low to high order streams in the wet season, the reverse was observed in the dry season. 
+- In the Leech WSA, streams draining the west of the watershed had higher DOC concentrations of more reactive and aromatic NOM compared to streams draining from the east. A key difference between the two sides of the watershed is dominant parent material, where basins predominantly underlain by wark gneiss had lower DOC concentrations and those underlain by the Leech River formation (metagreywacke) had higher DOC concentrations. Random Forest (RF) variable importance measure (VIM) determined that subsurface parent material was a key driver for NOM quantity and quality.  
+
+\  
+
+
+
 
 ### Recap and synopsis of results
 

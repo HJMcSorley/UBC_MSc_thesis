@@ -3682,6 +3682,57 @@ cowplot::plot_grid(a, d, nrow = 2, align = "v")
 
 ```
 
+##### Bonus temp and DOC
+
+```{r}
+# daily mean temp and DOC
+wut <- LWSA_meanWx %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  right_join(synopticfilter, by = c('Date', 'rain_season') ) %>% 
+  group_by(Date, site, rain_season) %>% 
+  summarise(mean_T = mean(Temp_mean, na.rm = TRUE),
+            mean_DOC = mean(NPOC_ppm, na.rm = TRUE)) %>%
+  ungroup() 
+
+# monthly means
+wutwut <- wut %>%
+  mutate(month = lubridate::month(Date)) %>% 
+  group_by(month, site, rain_season) %>% 
+  summarise(mean_T = mean(mean_T, na.rm = TRUE),
+            mean_DOC = mean(mean_DOC, na.rm = TRUE)) %>%
+  ungroup() 
+
+
+# plot DOC and mean temp
+# wrap by season
+label <- c(dry = "Dry season", wet = "Wet season") 
+
+# plot
+wutwut %>% 
+  #filter(rain_season == "wet") %>% 
+  ggplot(aes(x = mean_T, y = mean_DOC))+ #, colour = site
+  geom_point()+
+  theme_bw()+
+  #facet_wrap(~site, nrow = 2, scales = "free_y")+
+  theme(legend.position = "none")+
+  #geom_smooth(method = "lm", colour = "blue")+
+  stat_poly_eq(formula = y ~ x, 
+              aes(#label = ..rr.label..), 
+              label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")),
+              parse = TRUE, rr.digits = 4) +
+  labs(x = "monthly mean air temperature (°C)", y = "monthly mean DOC (mg/L) by site" )+
+  facet_wrap(~rain_season, scales = "free_x",
+             labeller = labeller(rain_season = label))
+
+# save plot 
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOCvsTemp.png", width = 6, height = 4, units = "in")
+
+
+```
+
+
+
+
 ### Seasonal dynamics 
 
 throw this away, I think:
@@ -3767,7 +3818,7 @@ tibble("category" = c("total", "wet season", "dry season", "first-flush"),
 
 #### [1:1] scatter 
 ```{r}
-# how many samples were colelcted by season for which both NPOC and SAC254 data were avaialble and OK?
+# how many samples were collected by season for which both NPOC and SAC254 data were available and OK?
 synopticfilter %>%
   filter(sample_type == "Grab" | sample_type == "Rack",
          !is.na(NPOC_ppm) & !is.na(SAC254_Abs.m)) %>% 
@@ -5049,7 +5100,7 @@ antecedent_Wx <- LWSA_meanWx %>%
   mutate(Date = as_date(DateTime)) %>% 
   group_by(Date) %>% 
   summarise(daily_rain = sum(Rn15_mean, na.rm = TRUE),
-            daily_mean_T = mean(Temp_mean, na.rm = TRUE)) %>%  # temp too, why not
+            daily_mean_T = mean(Temp_mean, na.rm = TRUE)) %>%  
   ungroup() %>% 
   arrange(Date) %>% 
   # add a 7 day antecedent rain for each day
@@ -7022,6 +7073,39 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_drainage-area.png",
        width = 4, height = 6, units = "in")
 ```
 
+## Bonus -- temp and DOC
+
+```{r}
+# daily mean temp and DOC
+wut <- LWSA_meanWx %>% 
+  mutate(Date = as_date(DateTime)) %>% 
+  right_join(sixfilter, by = c("Date", 'rain_season') ) %>% 
+  group_by(Date, site, rain_season) %>% 
+  summarise(mean_T = mean(Temp_mean, na.rm = TRUE),
+            mean_DOC = mean(NPOC_ppm, na.rm = TRUE)) %>%
+  ungroup() 
+
+# monthly means
+wutwut <- wut %>%
+  mutate(month = lubridate::month(Date)) %>% 
+  group_by(month, site) %>% 
+  summarise(mean_T = mean(mean_T, na.rm = TRUE),
+            mean_DOC = mean(mean_DOC, na.rm = TRUE)) %>%
+  ungroup() 
+
+# plot DOC and mean temp
+wut %>% 
+  filter(rain_season == "wet") %>% 
+  ggplot(aes(x = mean_T, y = mean_DOC, colour = site))+
+  geom_point()+
+  theme_bw()+
+  facet_wrap(~site, nrow = 2, scales = "free_y")+
+  theme(legend.position = "none")+
+  stat_poly_eq(formula = y ~ x, 
+              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+              parse = TRUE, rr.digits = 4) 
+
+```
 
 ## Old (by predictant)
 ### DOC
@@ -8341,6 +8425,1007 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/DOC_trend_bassin-type-facet_loess
 
 
 
+
+# APPENDIX PLOTS
+
+## Malahat Wx
+
+Longer data record from the Malahat weather station (for comparison).
+
+```{r, malahat-wx}
+
+# malahat weather
+malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
+                         skip = 16,
+                         col_names = TRUE,
+                         col_types = list("f", "c", "d", "d")) %>% 
+  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
+         Date = lubridate::as_date(Datetime),
+         Year = lubridate::year(Datetime))
+
+# summary: malahat_data precip + air temp 
+malahat_data %>% 
+  filter(Analysis == "Precipitation Amount (mm)", 
+         between(Year, 2014, 2019)) %>% 
+  group_by(Year) %>%
+  summarise(total_precip = sum(Value, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  right_join((
+    malahat_data %>% 
+      dplyr::filter(Analysis == "Temperature (Mean) (celsius)", 
+                    between(Year, 2014, 2019)) %>% 
+      group_by(Year) %>%
+      summarise(annual_mean_temp = mean(Value, na.rm = TRUE),
+                temp_sd = sd(Value))) %>% 
+      ungroup(), 
+    by = "Year") %>%
+  filter(Year != "2013", Year != "2020") %>% 
+  dplyr::rename("year" = Year, 
+                "annual precip. (mm)" = total_precip, 
+                "mean air temp. (°C)" = annual_mean_temp, 
+                "std.dev. (± °C)" = temp_sd) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv")
+
+
+# plots
+# plot malahat rain and highlight my study period
+malahat_rn <- malahat_data %>% 
+  filter(Analysis == "Precipitation Amount (mm)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_col(colour = "#09A4D2") +
+  scale_y_reverse() +
+  labs(x = "", y = "Rain (mm/day)") +
+  theme_bw() +
+  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
+  theme(legend.position = "none") +
+  gghighlight::gghighlight(Datetime > "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838"))
+
+# plot malahat temperature and highlight my study period
+malahat_temp <- malahat_data %>% 
+  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
+  ggplot(aes(x = Datetime, y = Value)) +
+  geom_line(colour = "#f4AB0E") +
+  geom_hline(yintercept = 0,
+             linetype = "dotted") +
+  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
+  theme_bw() +
+  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
+  gghighlight::gghighlight(Datetime > "2018-10-23",
+                           unhighlighted_params = list(colour = "#3B3838"))
+
+# stack with cowplot
+cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
+# save plot
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
+
+
+### lag-years: Wilcoxon's rank sum test
+#{r}
+# check for normality
+# The central limit theorem:
+## sampling distribution tends to be normal if the sample is large enough (n > 30)
+malahat_data %>% 
+  filter(!is.na(Value),
+         Analysis == "Precipitation Amount (mm)" | Analysis == "Temperature (Mean) (celsius)") %>% 
+  group_by(Year, Analysis) %>% 
+  summarise(count = n())
+# could assume normal distribution because each year has daily values (>>30)
+
+# visually check for normality 
+malahat_data %>% 
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", 
+                   palette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" ),
+                   facet.by = "Analysis")
+## Precipitation was not normally distributed (seasonality)
+
+# tidy wilcoxon tests: lag-year 
+## solution from:
+## https://stackoverflow.com/questions/32477863/r-run-t-test-on-previous-years-by-group-using-dplyr
+
+# t-test comparing each year to the last year
+Malahat_test_lagyear <- malahat_data %>% 
+  filter(Year != 2013, Year != 2020,  # incomplete data sets
+         !is.na(Value)) %>%  # remove missing values 
+  select(Analysis, Year) %>% 
+  arrange(Analysis, Year) %>% 
+  distinct() %>% 
+  group_by(Analysis) %>% 
+  mutate(lag_year = lag(Year)) %>% 
+  filter(!is.na(lag_year)) %>% 
+  group_by(Analysis, Year, lag_year) %>% 
+  do(tidy(wilcox.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
+                      malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
+
+# identify signficantly different years
+Malahat_test_lagyear %>% 
+  filter(p.value < 0.10)
+
+# 2015 was an incredible drought year, so it makes sense that 2015-2016 would differ
+
+
+#### Wx pre & during MSc
+
+# group
+malahat_test_data <- malahat_data %>% 
+  filter(!is.na(Value),
+         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data 
+  mutate(set = case_when(Year == 2016 | Year == 2017 ~ "pre",
+                         Year == 2018 | Year == 2019 ~ "MSc"),
+         set = as_factor(set)) %>% 
+  filter(!is.na(set)) 
+
+# subset for tests
+pre_MSc <- malahat_test_data %>% filter(set == "pre")
+MSc <- malahat_test_data %>% filter(set == "MSc")
+
+
+
+##### plots
+# plot sets
+malahat_test_data %>% 
+  ggplot(aes(x = set, y = Value, fill = set))+
+  geom_boxplot(alpha = 0.8)+
+  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
+                    labels = c(pre = "2016-2017", MSc = "2018-2019"),
+                    name = "Year span")+
+  labs(y = "value", x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  facet_wrap(~Analysis)
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
+
+# looks like precip is not normally distributed because of seasons
+# Tests for normality 
+# Pre-MSc
+pre_MSc %>% 
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", palette = c("#648326", "#f4AB0E", "#62ACC8", "#535353"),
+                   facet.by = "Analysis")
+
+# during
+MSc %>% 
+  mutate(Year = as_factor(Year)) %>% 
+  ggpubr::ggqqplot(data = ., x = "Value", 
+                   color = "Year", palette = c("#648326", "#f4AB0E"),
+                   facet.by = "Analysis")
+
+
+
+##### tests
+# t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
+# ggpubr::ggqqplot() to check for normality
+## if points fall approximately along the reference line, assume normality
+
+# t-tests for temperature (normally distributed)
+# Wilcoxon signed rank test for Precip (not normally distributed)
+# make a tibble for tidiness
+# note: snow data was only available 2017-2019 -- not included
+Malahat_testMSc_Wx <- bind_rows(
+  # rain
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Precipitation Amount (mm)"], 
+                   MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"],
+  )) %>% 
+    mutate(Parameter = "rain"),
+  # air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Mean) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
+    mutate(Parameter = "temp_mean"),
+  # Min air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Min.) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Min.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_min"),
+  # Max air temp
+  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Max.) (celsius)"], 
+                   MSc$Value[MSc$Analysis == "Temperature (Max.) (celsius)"])) %>% 
+    mutate(Parameter = "temp_max")) %>% 
+  # pull values of interest to summarize
+  select(Parameter, p.value) %>% 
+  mutate(signifcance = case_when(p.value < 0.01 ~ "at 99%",
+                                 p.value < 0.05 ~ "at 95%",
+                                 p.value < 0.1 ~ "at 90%",
+                                 p.value > 0.1 ~ "NA")) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
+
+# interpretation
+# null hypothesis = both means are equal
+# if the p-value is less than the significance level critical value, reject the null hypothesis 
+
+```
+
+
+
+## Nitrate & DOC
+```{r}
+# nitrate and DOC
+a <- synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "none",
+        text = element_text(size = 11)) +
+  labs(x = "DOC (mg/L)", y = "Nitrate (mg/L)", fill = "Sample type:")+
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+
+# nitrate and DOC
+b <- synopticfilter %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = DOCeq_ppm, y = NO3.Neq_ppm)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
+  labs(x = "DOC eqiv. (estimated mg/L)", y = "", fill = "Sample type:")+
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+
+# stack
+cowplot::plot_grid(a, b, nrow = 1, rel_widths = c(1,1.3))
+#save image
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png",
+       width = 6, height = 4, units = "in") 
+
+```
+
+## Metals 
+
+plot: ug/L metals+DOC in solution
+```{r}
+# filter out the parameters with insufficient data
+# plot DOC against metals concentrations 
+
+# ug/L
+metalslab %>% 
+  filter(metal_parameters == "Total Aluminum (Al)"|
+           metal_parameters == "Total Barium (Ba)"|
+           metal_parameters == "Total Copper (Cu)"|
+           metal_parameters == "Total Iron (Fe)"|
+           metal_parameters == "Total Mercury (Hg)"|
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"
+  ) %>%
+  mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
+                                   levels = c("Total Mercury (Hg)",
+                                              "Total Iron (Fe)",
+                                              "Total Manganese (Mn)",
+                                              "Total Aluminum (Al)",
+                                              "Total Barium (Ba)",
+                                              "Total Copper (Cu)",
+                                              "Total Arsenic (As)",
+                                              "Total Strontium (Sr)",
+                                              "Total Silicon (Si)"
+                                   ))) %>% 
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free") +
+  theme_bw() +
+  theme(text = element_text(size = 12)) +
+  labs(y = "metals concentrations (μg/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
+## to get equations include these lines:
+#stat_poly_eq(formula = y ~ x, 
+#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+#              parse = TRUE, rr.digits = 4) #+
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
+
+```
+
+plot: mg/L metals+DOC in solution
+```{r}
+# mg/L
+metalslab %>% 
+  filter(metal_parameters == "Total Magnesium (Mg)"|
+           metal_parameters == "Total Calcium (Ca)" |
+           metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)") %>%
+  # order as you want to see them in plots
+  mutate(metal_parameters = factor(metal_parameters, 
+                                   levels = c("Total Magnesium (Mg)",
+                                              "Total Potassium (K)",
+                                              "Total Hardness (CaCO3)",
+                                              "Total Calcium (Ca)",
+                                              "Total Sodium (Na)"
+                                   ))) %>%
+  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
+  geom_jitter() +
+  #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
+  facet_wrap(~metal_parameters, scales = "free", ncol = 3) +
+  theme_bw() +
+  labs(y = "metals concentrations (mg/L)", x = "DOC (mg/L)") +
+  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
+## to get equations include these lines:
+#stat_poly_eq(formula = y ~ x, 
+#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
+#              parse = TRUE, rr.digits = 4) #+
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
+```
+
+table: correlation metals/DOC 
+```{r}
+# make a summary table of Metals regression
+metalslab %>% 
+  filter(metal_parameters == "Total Aluminum (Al)"|
+           metal_parameters == "Total Barium (Ba)"|
+           metal_parameters == "Total Copper (Cu)"|
+           metal_parameters == "Total Iron (Fe)"|
+           metal_parameters == "Total Mercury (Hg)"|
+           metal_parameters == "Total Manganese (Mn)"|
+           metal_parameters == "Total Silicon (Si)"|
+           metal_parameters == "Total Arsenic (As)"|
+           metal_parameters == "Total Strontium (Sr)"|
+           metal_parameters == "Total Magnesium (Mg)"|
+           metal_parameters == "Total Calcium (Ca)" |
+           metal_parameters == "Total Potassium (K)"|
+           metal_parameters == "Total Sodium (Na)"|
+           metal_parameters == "Total Hardness (CaCO3)"
+  ) %>%
+  group_by(metal_parameters) %>% 
+  filter(!is.na(metals_values)) %>% 
+  summarise(unit = first(UNITS), 
+            count = n(), 
+            slope = coefficients(lm(formula = metals_values ~ NPOC_ppm))[2],
+            yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
+            r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
+  dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
+  #mutate(r = sqrt(r_sq)) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
+
+```
+
+## Treatability
+```{r}
+
+# add date, timing, update site names
+treatdat_UW <- treatdat_UW %>% 
+  filter(source == "02") %>%   ## turns out, everything was included in second report
+  mutate(day = substr(Sample_ID, 1, 2),
+         site = substr(Sample_ID, 20, 22)) %>% 
+  mutate(Date = case_when(
+    day == "12" ~ as_date("2019-11-12"),
+    day == "18" ~ as_date("2020-02-18"))) %>% 
+  mutate(Collection = case_when(
+    day == "12" ~ "Nov 2019",
+    day == "18" ~ "Feb 2020")) %>% 
+  mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
+  mutate(site = case_when(
+    site == "DCP" ~ "Deception",
+    site == "TUN" ~ "Tunnel",
+    site == "JDG" ~ "Judge",
+    site == "RTH" ~ "Rithet")) %>% 
+  mutate(site = factor(site))
+
+# isolate and join to my UBC lab results for treatability samples
+treatdat_full <- sampleresults %>% 
+  filter(sample == "Treatability") %>% 
+  full_join(treatdat_UW, by = c("Date", "site")) %>% 
+  mutate(site = factor(site)) %>%  # -- new experimetnal (October 10, 2020)
+  select(site, source, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
+         # from U.W:
+         source, Sample_ID, pH, Collection,
+         `UV254_cm-1`, DOC_ppm, Zeta_Potential_mV, 
+         THMs, TCM, TBM, DBCM, HAAs, DCAA, DBAA, TCAA, MCAA, MBAA, 
+         Free_Chlorine_Final_mgL, day, Date) %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(UV254_m = UV254_cm*100,
+         SUVA_UW = UV254_m/DOC_ppm) %>% 
+  select(-c(UV254_cm, DBAA, MBAA, TBM)) %>% # drop DBP-FP below detection limits (NAs) 
+  filter(source == "02") %>%
+  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:MCAA),
+                      values_to = "DBPfp_ugL") %>% 
+  mutate(DBP = factor(DBP) ) #, levels = c("THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
+
+# pivot long
+treatdat_long <- treatdat_UW %>%
+  filter(source == "02") %>% 
+  select(-c(source, Sample_ID, pH, Turbidity_NTU, Zeta_Potential_mV, TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date)) %>%
+  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:TCAA),
+                      values_to = "DBPfp_ugL") %>% 
+  mutate(DBP = factor(DBP, levels = c(
+    "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
+
+```
+
+## plot DOC/UV254 + DBP-FPs
+```{r}
+
+# plot DOC
+a <- treatdat_long %>% 
+  ggplot(aes(x = DOC_ppm, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, ncol = 1, strip.position = "right", 
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "none",
+        strip.text.y = element_blank(),
+        strip.background = element_blank())+
+  labs(x = "DOC \n(ppm)", 
+       y = "DBP-FPs (ppb)",
+       colour = "Sampling site:")+
+  guides(shape = FALSE,
+         colour = FALSE)
+
+# plot UV-254
+b <- treatdat_long %>% 
+  ggplot(aes(x = `UV254_cm-1`, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "none",
+        strip.text.y = element_blank(),
+        strip.background = element_blank(),
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(SAC[254], (m^-1)) ), 
+       y = "",
+       shape = "Collection:")+
+  guides(colour = FALSE,
+         shape = FALSE)
+
+# plot SUVA-254
+c <- treatdat_long %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(SUVA254_m = ( (UV254_cm*100) / DOC_ppm)) %>% 
+  ggplot(aes(x = SUVA254_m, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "right",
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(SUVA[254], (L~{mg^-1}~{m}^-1)) ), 
+       y = "",
+       shape = "Collection:")+
+  guides(#colour = ,
+    shape = guide_legend(nrow = 2))
+
+# plot E2E3 --- not useful.
+d <- treatdat_full %>% 
+  ggplot(aes(x = E2E3, y = DBPfp_ugL))+
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5)+
+  scale_colour_brewer(palette="Set2") +
+  theme_bw()+
+  facet_wrap(~DBP, strip.position = "right", ncol = 1,
+             scales = "free_y")+
+  theme(text = element_text(size = 11),
+        legend.position = "right",
+        axis.text.y = element_blank())+
+  labs(x = expression(atop(E[2]:E[3])), 
+       y = "DBP-FP",
+       shape = "Collection:")+
+  guides(#colour = ,
+    shape = guide_legend(nrow = 2))
+
+# join side by side
+cowplot::plot_grid(a, b, c, 
+                   ncol = 3, align = "h", rel_widths = c(1.25, 1, 2.15)) 
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
+       width = 6, height = 6.5, units = "in")
+
+```
+
+### correlations
+
+```{r}
+
+# correlations
+treatdat_UW %>% 
+  filter(source == "02") %>%
+  rename(SAC254_cm = 'UV254_cm-1') %>% 
+  mutate(SAC254_m = SAC254_cm*100, 
+         SUVA254 = SAC254_m/DOC_ppm) %>%
+  select(SAC254_m, DOC_ppm, SUVA254, THMs, BDCM, TCM, HAAs, DCAA, TCAA) %>% 
+  #select(-c(source, Sample_ID, day, site, Date, Collection, TBM, DBAA, DBCM, MCAA, MBAA) ) %>% 
+  #select(-c(pH, Turbidity_NTU, Zeta_Potential_mV, Free_Chlorine_Final_mgL, SAC254_cm)) %>% 
+  rename(SAC254 = SAC254_m, 
+         DOC = DOC_ppm, 
+         SUVA254 = SUVA254) %>% 
+  cor() %>% 
+  write.table(file = "R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv")
+
+
+# Correlations
+treatdat_long %>% 
+  rename(UV254_cm = `UV254_cm-1`) %>% 
+  mutate(UV254_m = UV254_cm*100 ) %>% 
+  mutate(SUVA254_m = (UV254_m/DOC_ppm) ) %>% 
+  select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>%
+  cor()
+
+
+# is E2E3 correlated with SUVA ? -- for aromaticity 
+wut <- synopticfilter %>% 
+  filter(between(E2E3, 3,10) ) %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = E2E3, y = SUVA)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = expression(SUVA[254]), fill = "Sample type:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# nope
+
+# is SAC254 correlated with SUVA ? -- for aromaticity 
+wut <- synopticfilter %>% 
+  filter(SUVA<6) %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
+  ggplot(aes(x = SAC254_Abs.m, y = SUVA)) +  
+  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(SAC[254]), y = expression(SUVA[254]), fill = "Sample type:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# nope
+
+# is E2E3 correlated with zetapotential ? 
+wut <- treatdat_full %>% 
+  filter(between(E2E3, 3, 10) ) %>% # drop outliers
+  ggplot(aes(x = E2E3, y = Zeta_Potential_mV)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# yeah, kind of!! R^2 = 0.5297
+
+# how about E2E3 with free chlorine?
+wut <- treatdat_full %>% 
+  filter(between(E2E3, 3, 10) ) %>% # drop outliers
+  ggplot(aes(x = E2E3, y = Free_Chlorine_Final_mgL)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(E[2]:E[3]), y = "Free Chlorine, Final (mg/L)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+# Nope
+
+
+# is SUVA254 correlated with zetapotential ? 
+wut <- treatdat_full %>% 
+  ggplot(aes(x = SUVA_UW, y = Zeta_Potential_mV)) +  
+  geom_point(aes(colour = site,
+                 shape = Collection),
+             size = 2.5) +
+  theme_bw() +
+  scale_fill_brewer(palette="Set2") +
+  theme(legend.position = "right",
+        text = element_text(size = 11)) +
+  labs(x = expression(SUVA[254]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
+  stat_poly_eq(formula = y ~ x, 
+               aes(label =  (..rr.label..)), 
+               parse = TRUE, rr.digits = 4)
+
+# Nope R2 = 0.171
+
+```
+
+# Garbage I think
+
+##### Wx questionable objects
+```{r, Wx-Stn_summaries}
+# I want to know precip totals over the study period
+# by month and by season
+# use rain to define storm events
+
+# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
+rn_MScTotal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime),
+         year = lubridate::year(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx",
+         date >= "2018-10-23") %>% 
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup() 
+
+# rain seasons rainfalls
+rn_seasonal <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(month = lubridate::month(DateTime),
+         year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year, rain_season) %>% 
+  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# annual rainfalls
+rn_annual <- precip_data %>% 
+  mutate(date = lubridate::as_date(DateTime)) %>% 
+  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
+  mutate(year = lubridate::year(DateTime)) %>%
+  group_by(StationName, year) %>% 
+  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+# water-year rainfalls (Oct 1 - Sept 30)
+rn_wateryr <- LWSA_meanWx %>%
+  mutate(Year = lubridate::year(DateTime),
+         month = lubridate::month(DateTime),
+         water_year = case_when(
+           between(month, 1, 9) & Year == "2018" ~ "2018",
+           between(month, 10, 12) & Year == "2018" ~ "2019",
+           between(month, 1, 9) & Year == "2019" ~ "2019",
+           between(month, 10, 12) & Year == "2019" ~ "2020",
+           between(month, 1, 9) & Year == "2020" ~ "2020")) %>%
+  #filter(water_year != "2018") %>% 
+  group_by(water_year) %>% 
+  dplyr::summarise(annual_precip_mm = sum(Rn_1_mean, na.rm = TRUE),
+                   max_snow_m = max(SnowDep_mean, na.rm = TRUE),
+                   annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
+                   temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
+  ungroup() #%>% 
+#write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
+
+```
+
+
+RF can generate biased VIM (variable importance measure) when different types of predictant data are used (e.g. numeric and categorical). 
+
+Watershed characteristics data is mostly categorical (even though they're numbers they are static percent covers in each sampling basin), therefore separate characteristic data from analytical and measured data (conditions) 
+
+RF : DOC conditions variables
+```{r}
+# select only condition variables
+conditions_NPOC <- sixfilter_physiographic %>% 
+  select(c("NPOC_ppm", # predict DOC
+           "event_ID",               # when
+           "sampleStage_normalized", # what depth -- this is correlated (0.6) with rain*
+           "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
+           "antecedent_7day_temp",   # how warm
+           "HoldTime_days")) #%>%     # held how long
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(RF_conditions_NPOC))
+
+
+# --- RF
+# NPOC_ppm is dependent variable
+# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
+
+## Run RF
+RF_DOC_cond <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC, 
+                                          na.action = randomForest::na.roughfix,
+                                          mtry = ceiling(length(data)/2), # no. of features
+                                          ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                          importance = TRUE,
+                                          proximity = TRUE,
+                                          corr.bias = TRUE) # experimental 
+
+
+# Variable importance measure (VIM)
+## relative importance of features in predicting DOC
+
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_DOC_cond_RelImp1_MSE <- randomForest::importance(RF_DOC_cond, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "Rain event" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "Hold-time days" = "HoldTime_days",
+                                "sampling stage" = "sampleStage_normalized"),  
+         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
+
+# make a VIM plot ---
+RFplot_condit <- RF_DOC_cond_RelImp1_MSE %>% 
+  ggplot(aes(predictor, MSE_percent)) +
+  coord_flip()+
+  geom_bar(stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1, 
+           fill = forWater_colours2["SkyBlue"],
+           alpha = 0.8) +
+  theme_bw() +
+  theme(text = element_text(size = 11)) +
+  labs(y = "variable importance in predicting DOC (%)", x = "")
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions_DOC.png", 
+       width = 6, height = 5, units = "in")
+
+```
+
+same thing but using type=2 method (heavily weights random numbers as important)
+```{r}
+
+# VIM type 2 = mean decrease in node impurity by sum of square errors
+# plot relative importance of RSS_percent -- more sensitive to correlated values --- Gini index (random numbers high!)
+RF_DOC_cond_RelImp2_RSE <- randomForest::importance(RF_DOC_cond, type = 2) %>% 
+  as.data.frame() %>% 
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         RSS = IncNodePurity) %>% # residual sum of squares
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "Rain event" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "Hold-time days" = "HoldTime_days",
+                                "sampling stage" = "sampleStage_normalized"),  
+         RSS_percent = RSS/sum(RSS)*100, # percent RSS 
+         predictor = fct_reorder(predictor, RSS, .desc=FALSE)) %>% 
+  ggplot(aes(predictor, RSS_percent)) +
+  coord_flip()+
+  geom_bar(stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], 
+           fill = forWater_colours2["SkyBlue"],
+           alpha = 0.8) +
+  theme_bw() +
+  labs(y = "variable importance (%)", x = "", size = 12)
+
+# save this one too 
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3A_RF_DOC_cond_RelImp2_RSE.png", width = 6, height = 5, units = "in")
+
+```
+
+E2E3 conditions variables
+```{r}
+
+# select only condition variables
+conditions_E2E3 <- sixfilter_physiographic %>% 
+  filter(!is.na(E2E3)) %>% 
+  select(c("E2E3", # predict E2E3
+           "event_ID",               # when
+           "sampleStage_normalized", # what depth -- this is correlated (0.6) with rain*
+           "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
+           "antecedent_7day_temp",   # how warm
+           "HoldTime_days")) #%>%     # held how long
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# check for correlations
+# view(cor(RF_conditions_E2E3))
+
+
+# --- RF
+# E2E3 is dependent variable
+# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
+
+## Run RF
+RF_E2E3_cond <- randomForest::randomForest(E2E3 ~ ., data = conditions_E2E3, 
+                                           na.action = randomForest::na.roughfix,
+                                           mtry = ceiling(length(data)/2), # no. of features
+                                           ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                           importance = TRUE,
+                                           proximity = TRUE,
+                                           corr.bias = TRUE) # experimental 
+
+
+# Variable importance measure (VIM)
+## relative importance of features in predicting E2E3
+
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_E2E3_cond_RelImp1_MSE <- randomForest::importance(RF_E2E3_cond, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "Rain event" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "Hold-time days" = "HoldTime_days",
+                                "sampling stage" = "sampleStage_normalized"),  
+         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
+
+# make a VIM plot ---
+RFplot_condit_E2E3 <- RF_E2E3_cond_RelImp1_MSE %>% 
+  ggplot(aes(predictor, MSE_percent)) +
+  coord_flip()+
+  geom_bar(stat = "identity", position = "dodge",
+           colour = forWater_colours2["Gray"], size = 1, 
+           fill = forWater_colours2["SkyBlue"],
+           alpha = 0.8) +
+  theme_bw() +
+  theme(text = element_text(size = 11)) +
+  labs(y = "variable importance in predicting E2:E3 (%)", x = "")
+
+# save it
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions_E2E3.png", 
+       width = 6, height = 5, units = "in")
+
+```
+
+
+DOC RF conditions -- seasonal
+```{r}
+# wet season only ------------------------------------------------------------
+# select only condition variables 
+conditions_NPOC_wet <- sixfilter_physiographic %>% 
+  filter(rain_season == "wet") %>% 
+  select(c("NPOC_ppm", # predict DOC
+           "event_ID",               
+           "sampleStage_normalized", 
+           "antecedent_30day_rain",   
+           "antecedent_7day_temp",   
+           "HoldTime_days")) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# --- RF
+# NPOC_ppm is dependent variable
+# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
+
+## Run RF
+RF_DOC_condWET <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_wet, 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), # no. of features
+                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) # experimental 
+
+
+# Variable importance measure (VIM)
+## relative importance of features in predicting DOC
+
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_DOC_cond_RelImp1_MSE__WETseason <- randomForest::importance(RF_DOC_condWET, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "Rain event" = "event_ID",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "Hold-time days" = "HoldTime_days",
+                                "sampling stage" = "sampleStage_normalized"),  
+         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% # arrange by MSE%
+  # make a VIM plot ---
+  ggplot(aes(predictor, MSE_percent)) +
+  coord_flip()+
+  geom_bar(stat = "identity", position = "dodge",
+           colour = forWater_colours2["DeepBlue"], size = 1,
+           fill = forWater_colours2["SkyBlue"],
+           alpha = 0.8) +
+  theme_bw() +
+  labs(y = "variable importance (%)", x = "", size = 12)
+
+# save it
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_DOC_cond_RelImp1_MSE__WETseason.png", width = 6, height = 5, units = "in")
+
+
+
+
+
+# dry season only ------------------------------------------------------------
+# select only condition variables 
+conditions_NPOC_dry <- sixfilter_physiographic %>% 
+  filter(rain_season == "dry") %>% 
+  select(c("NPOC_ppm", # predict DOC
+           "sampleStage_normalized", 
+           "antecedent_30day_rain",   
+           "antecedent_7day_temp",   
+           "HoldTime_days")) # %>%     
+# add a column of random values as as QA -- this should not be found to be important
+# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
+
+# --- RF
+# NPOC_ppm is dependent variable
+# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
+# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
+
+## Run RF
+RF_DOC_condDRY <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_dry, 
+                                             na.action = randomForest::na.roughfix,
+                                             mtry = ceiling(length(data)/2), # no. of features
+                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
+                                             importance = TRUE,
+                                             proximity = TRUE,
+                                             corr.bias = TRUE) # experimental 
+
+
+# Variable importance measure (VIM)
+## relative importance of features in predicting DOC
+
+## type 1 = mean square error (MSE) as decrease in accuracy
+RF_DOC_cond_RelImp1_MSE__DRYseason <- randomForest::importance(RF_DOC_condDRY, type = 1) %>% 
+  as.data.frame() %>%  # rather than matrix
+  rownames_to_column() %>% 
+  select(predictor = rowname,
+         MSE = "%IncMSE") %>% # percent increase in mean square error
+  mutate(predictor = fct_recode(predictor,
+                                "QA-QC (random numbers)" = "QA_RandNum",
+                                "antecedent 7-day air temp" = "antecedent_7day_temp",
+                                "antecedent 30-day rain" = "antecedent_30day_rain",
+                                "Hold-time days" = "HoldTime_days",
+                                "sampling stage" = "sampleStage_normalized"),  
+         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
+         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% # arrange by MSE%
+  # make a VIM plot ---
+  ggplot(aes(predictor, MSE_percent)) +
+  coord_flip()+
+  geom_bar(stat = "identity", position = "dodge",
+           colour = forWater_colours2["MyOrange"], size = 1, 
+           fill = forWater_colours2["SkyBlue"],
+           alpha = 0.8) +
+  theme_bw() +
+  labs(y = "variable importance (%)", x = "", size = 12)
+
+# save it
+# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_DOC_cond_RelImp1_MSE__DRYseason.png", width = 6, height = 5, units = "in")
+
+
+# --- 
+# put these seasonal plots together to compare (not direct)
+# seasons
+# s <- cowplot::plot_grid(RF_DOC_cond_RelImp1_MSE__WETseason, RF_DOC_cond_RelImp1_MSE__DRYseason, ncol = 2 )
+
+```
+
 # half-attempted -- maybe come back to this
 ```
 # do the same but for stage
@@ -9074,1007 +10159,6 @@ HT_max = max(HoldTime_days, na.rm = T))
 
 
 
-# APPENDIX PLOTS
-
-## Malahat Wx
-
-Longer data record from the Malahat weather station (for comparison).
-
-```{r, malahat-wx}
-
-# malahat weather
-malahat_data <- read_csv("R-inputs_UBC-forWater-MSc_HMc/Malahat_station-data-11596.csv", 
-                         skip = 16,
-                         col_names = TRUE,
-                         col_types = list("f", "c", "d", "d")) %>% 
-  mutate(Datetime = lubridate::ymd_hms(Datetime, tz = TZ, truncated = 1),
-         Date = lubridate::as_date(Datetime),
-         Year = lubridate::year(Datetime))
-
-# summary: malahat_data precip + air temp 
-malahat_data %>% 
-  filter(Analysis == "Precipitation Amount (mm)", 
-         between(Year, 2014, 2019)) %>% 
-  group_by(Year) %>%
-  summarise(total_precip = sum(Value, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  right_join((
-    malahat_data %>% 
-      dplyr::filter(Analysis == "Temperature (Mean) (celsius)", 
-                    between(Year, 2014, 2019)) %>% 
-      group_by(Year) %>%
-      summarise(annual_mean_temp = mean(Value, na.rm = TRUE),
-                temp_sd = sd(Value))) %>% 
-      ungroup(), 
-    by = "Year") %>%
-  filter(Year != "2013", Year != "2020") %>% 
-  dplyr::rename("year" = Year, 
-                "annual precip. (mm)" = total_precip, 
-                "mean air temp. (°C)" = annual_mean_temp, 
-                "std.dev. (± °C)" = temp_sd) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_malahat-summary.csv")
-
-
-# plots
-# plot malahat rain and highlight my study period
-malahat_rn <- malahat_data %>% 
-  filter(Analysis == "Precipitation Amount (mm)") %>% 
-  ggplot(aes(x = Datetime, y = Value)) +
-  geom_col(colour = "#09A4D2") +
-  scale_y_reverse() +
-  labs(x = "", y = "Rain (mm/day)") +
-  theme_bw() +
-  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
-  theme(legend.position = "none") +
-  gghighlight::gghighlight(Datetime > "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838"))
-
-# plot malahat temperature and highlight my study period
-malahat_temp <- malahat_data %>% 
-  filter(Analysis == "Temperature (Mean) (celsius)") %>% 
-  ggplot(aes(x = Datetime, y = Value)) +
-  geom_line(colour = "#f4AB0E") +
-  geom_hline(yintercept = 0,
-             linetype = "dotted") +
-  labs(x = "", y = expression('Mean daily air temp ('*~degree*C*')')) +
-  theme_bw() +
-  scale_x_datetime(date_breaks = "12 months", date_minor_breaks = "1 months")+
-  gghighlight::gghighlight(Datetime > "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838"))
-
-# stack with cowplot
-cowplot::plot_grid(malahat_rn, malahat_temp, ncol = 1, align = "v")
-# save plot
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat.png")
-
-
-### lag-years: Wilcoxon's rank sum test
-#{r}
-# check for normality
-# The central limit theorem:
-## sampling distribution tends to be normal if the sample is large enough (n > 30)
-malahat_data %>% 
-  filter(!is.na(Value),
-         Analysis == "Precipitation Amount (mm)" | Analysis == "Temperature (Mean) (celsius)") %>% 
-  group_by(Year, Analysis) %>% 
-  summarise(count = n())
-# could assume normal distribution because each year has daily values (>>30)
-
-# visually check for normality 
-malahat_data %>% 
-  filter(Year != 2013, Year != 2020,  # incomplete data sets
-         !is.na(Value),
-         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data
-  mutate(Year = as_factor(Year)) %>% 
-  ggpubr::ggqqplot(data = ., x = "Value", 
-                   color = "Year", 
-                   palette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" ),
-                   facet.by = "Analysis")
-## Precipitation was not normally distributed (seasonality)
-
-# tidy wilcoxon tests: lag-year 
-## solution from:
-## https://stackoverflow.com/questions/32477863/r-run-t-test-on-previous-years-by-group-using-dplyr
-
-# t-test comparing each year to the last year
-Malahat_test_lagyear <- malahat_data %>% 
-  filter(Year != 2013, Year != 2020,  # incomplete data sets
-         !is.na(Value)) %>%  # remove missing values 
-  select(Analysis, Year) %>% 
-  arrange(Analysis, Year) %>% 
-  distinct() %>% 
-  group_by(Analysis) %>% 
-  mutate(lag_year = lag(Year)) %>% 
-  filter(!is.na(lag_year)) %>% 
-  group_by(Analysis, Year, lag_year) %>% 
-  do(tidy(wilcox.test(malahat_data$Value[malahat_data$Year == .$Year & malahat_data$Analysis == .$Analysis],
-                      malahat_data$Value[malahat_data$Year == .$lag_year & malahat_data$Analysis == .$Analysis])))
-
-# identify signficantly different years
-Malahat_test_lagyear %>% 
-  filter(p.value < 0.10)
-
-# 2015 was an incredible drought year, so it makes sense that 2015-2016 would differ
-
-
-#### Wx pre & during MSc
-
-# group
-malahat_test_data <- malahat_data %>% 
-  filter(!is.na(Value),
-         Analysis != "Surface Snow Depth (Point) (cm)") %>% ## insufficient data 
-  mutate(set = case_when(Year == 2016 | Year == 2017 ~ "pre",
-                         Year == 2018 | Year == 2019 ~ "MSc"),
-         set = as_factor(set)) %>% 
-  filter(!is.na(set)) 
-
-# subset for tests
-pre_MSc <- malahat_test_data %>% filter(set == "pre")
-MSc <- malahat_test_data %>% filter(set == "MSc")
-
-
-
-##### plots
-# plot sets
-malahat_test_data %>% 
-  ggplot(aes(x = set, y = Value, fill = set))+
-  geom_boxplot(alpha = 0.8)+
-  scale_fill_manual(values = c(forWater_colours2[["SkyBlue"]], forWater_colours2[["MyOrange"]]),
-                    labels = c(pre = "2016-2017", MSc = "2018-2019"),
-                    name = "Year span")+
-  labs(y = "value", x = "")+
-  theme_bw()+
-  theme(legend.position = "top")+
-  facet_wrap(~Analysis)
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_Malahat_plot_pre-MSc-2years.png")
-
-# looks like precip is not normally distributed because of seasons
-# Tests for normality 
-# Pre-MSc
-pre_MSc %>% 
-  mutate(Year = as_factor(Year)) %>% 
-  ggpubr::ggqqplot(data = ., x = "Value", 
-                   color = "Year", palette = c("#648326", "#f4AB0E", "#62ACC8", "#535353"),
-                   facet.by = "Analysis")
-
-# during
-MSc %>% 
-  mutate(Year = as_factor(Year)) %>% 
-  ggpubr::ggqqplot(data = ., x = "Value", 
-                   color = "Year", palette = c("#648326", "#f4AB0E"),
-                   facet.by = "Analysis")
-
-
-
-##### tests
-# t-tests or Wilcoxon to compare 2014-2017 to 2018-2019
-# ggpubr::ggqqplot() to check for normality
-## if points fall approximately along the reference line, assume normality
-
-# t-tests for temperature (normally distributed)
-# Wilcoxon signed rank test for Precip (not normally distributed)
-# make a tibble for tidiness
-# note: snow data was only available 2017-2019 -- not included
-Malahat_testMSc_Wx <- bind_rows(
-  # rain
-  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Precipitation Amount (mm)"], 
-                   MSc$Value[MSc$Analysis == "Precipitation Amount (mm)"],
-  )) %>% 
-    mutate(Parameter = "rain"),
-  # air temp
-  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Mean) (celsius)"], 
-                   MSc$Value[MSc$Analysis == "Temperature (Mean) (celsius)"])) %>% 
-    mutate(Parameter = "temp_mean"),
-  # Min air temp
-  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Min.) (celsius)"], 
-                   MSc$Value[MSc$Analysis == "Temperature (Min.) (celsius)"])) %>% 
-    mutate(Parameter = "temp_min"),
-  # Max air temp
-  tidy(wilcox.test(pre_MSc$Value[pre_MSc$Analysis == "Temperature (Max.) (celsius)"], 
-                   MSc$Value[MSc$Analysis == "Temperature (Max.) (celsius)"])) %>% 
-    mutate(Parameter = "temp_max")) %>% 
-  # pull values of interest to summarize
-  select(Parameter, p.value) %>% 
-  mutate(signifcance = case_when(p.value < 0.01 ~ "at 99%",
-                                 p.value < 0.05 ~ "at 95%",
-                                 p.value < 0.1 ~ "at 90%",
-                                 p.value > 0.1 ~ "NA")) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Malahat_Wilcoxtest_pre-MSc-2years.csv")
-
-# interpretation
-# null hypothesis = both means are equal
-# if the p-value is less than the significance level critical value, reject the null hypothesis 
-
-```
-
-
-
-## Nitrate & DOC
-```{r}
-# nitrate and DOC
-a <- synopticfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = NPOC_ppm, y = NO3.Neq_ppm)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "none",
-        text = element_text(size = 11)) +
-  labs(x = "DOC (mg/L)", y = "Nitrate (mg/L)", fill = "Sample type:")+
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-
-# nitrate and DOC
-b <- synopticfilter %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = DOCeq_ppm, y = NO3.Neq_ppm)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11),
-        axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()) +
-  labs(x = "DOC eqiv. (estimated mg/L)", y = "", fill = "Sample type:")+
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-
-# stack
-cowplot::plot_grid(a, b, nrow = 1, rel_widths = c(1,1.3))
-#save image
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/nitrate-DOC_scatter.png",
-       width = 6, height = 4, units = "in") 
-
-```
-
-## Metals 
-
-plot: ug/L metals+DOC in solution
-```{r}
-# filter out the parameters with insufficient data
-# plot DOC against metals concentrations 
-
-# ug/L
-metalslab %>% 
-  filter(metal_parameters == "Total Aluminum (Al)"|
-           metal_parameters == "Total Barium (Ba)"|
-           metal_parameters == "Total Copper (Cu)"|
-           metal_parameters == "Total Iron (Fe)"|
-           metal_parameters == "Total Mercury (Hg)"|
-           metal_parameters == "Total Manganese (Mn)"|
-           metal_parameters == "Total Silicon (Si)"|
-           metal_parameters == "Total Arsenic (As)"|
-           metal_parameters == "Total Strontium (Sr)"
-  ) %>%
-  mutate(metal_parameters = factor(metal_parameters, # order as you want to see them in plots
-                                   levels = c("Total Mercury (Hg)",
-                                              "Total Iron (Fe)",
-                                              "Total Manganese (Mn)",
-                                              "Total Aluminum (Al)",
-                                              "Total Barium (Ba)",
-                                              "Total Copper (Cu)",
-                                              "Total Arsenic (As)",
-                                              "Total Strontium (Sr)",
-                                              "Total Silicon (Si)"
-                                   ))) %>% 
-  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
-  geom_jitter() +
-  #geom_hline(aes(yintercept = MAC), na.rm = TRUE, colour = "red")+ ## to check MAC
-  facet_wrap(~metal_parameters, scales = "free") +
-  theme_bw() +
-  theme(text = element_text(size = 12)) +
-  labs(y = "metals concentrations (μg/L)", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
-## to get equations include these lines:
-#stat_poly_eq(formula = y ~ x, 
-#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-#              parse = TRUE, rr.digits = 4) #+
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_ugL_scatterplots.png")
-
-```
-
-plot: mg/L metals+DOC in solution
-```{r}
-# mg/L
-metalslab %>% 
-  filter(metal_parameters == "Total Magnesium (Mg)"|
-           metal_parameters == "Total Calcium (Ca)" |
-           metal_parameters == "Total Potassium (K)"|
-           metal_parameters == "Total Sodium (Na)"|
-           metal_parameters == "Total Hardness (CaCO3)") %>%
-  # order as you want to see them in plots
-  mutate(metal_parameters = factor(metal_parameters, 
-                                   levels = c("Total Magnesium (Mg)",
-                                              "Total Potassium (K)",
-                                              "Total Hardness (CaCO3)",
-                                              "Total Calcium (Ca)",
-                                              "Total Sodium (Na)"
-                                   ))) %>%
-  ggplot(aes(x = NPOC_ppm, y = metals_values)) +
-  geom_jitter() +
-  #geom_hline(aes(yintercept = MAC), na.rm = TRUE)  ## to check MAC
-  facet_wrap(~metal_parameters, scales = "free", ncol = 3) +
-  theme_bw() +
-  labs(y = "metals concentrations (mg/L)", x = "DOC (mg/L)") +
-  stat_smooth(method=lm, formula = y ~ x, colour = forWater_colours2[1]) #+
-## to get equations include these lines:
-#stat_poly_eq(formula = y ~ x, 
-#              aes(label = paste0("atop(",..eq.label.., ",", ..rr.label.., ")")), 
-#              parse = TRUE, rr.digits = 4) #+
-
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/metals-doc_mgL_scatterplots.png")
-```
-
-table: correlation metals/DOC 
-```{r}
-# make a summary table of Metals regression
-metalslab %>% 
-  filter(metal_parameters == "Total Aluminum (Al)"|
-           metal_parameters == "Total Barium (Ba)"|
-           metal_parameters == "Total Copper (Cu)"|
-           metal_parameters == "Total Iron (Fe)"|
-           metal_parameters == "Total Mercury (Hg)"|
-           metal_parameters == "Total Manganese (Mn)"|
-           metal_parameters == "Total Silicon (Si)"|
-           metal_parameters == "Total Arsenic (As)"|
-           metal_parameters == "Total Strontium (Sr)"|
-           metal_parameters == "Total Magnesium (Mg)"|
-           metal_parameters == "Total Calcium (Ca)" |
-           metal_parameters == "Total Potassium (K)"|
-           metal_parameters == "Total Sodium (Na)"|
-           metal_parameters == "Total Hardness (CaCO3)"
-  ) %>%
-  group_by(metal_parameters) %>% 
-  filter(!is.na(metals_values)) %>% 
-  summarise(unit = first(UNITS), 
-            count = n(), 
-            slope = coefficients(lm(formula = metals_values ~ NPOC_ppm))[2],
-            yint_DOC = coefficients(lm(formula = metals_values ~ NPOC_ppm))[1],
-            r_sq = summary(lm(formula = metals_values ~ NPOC_ppm))$r.squared) %>% 
-  dplyr::arrange(desc(r_sq)) %>%  # strongest correlation to weakest
-  #mutate(r = sqrt(r_sq)) %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/metals-doc_correlations.csv")
-
-```
-
-## Treatability
-```{r}
-
-# add date, timing, update site names
-treatdat_UW <- treatdat_UW %>% 
-  filter(source == "02") %>%   ## turns out, everything was included in second report
-  mutate(day = substr(Sample_ID, 1, 2),
-         site = substr(Sample_ID, 20, 22)) %>% 
-  mutate(Date = case_when(
-    day == "12" ~ as_date("2019-11-12"),
-    day == "18" ~ as_date("2020-02-18"))) %>% 
-  mutate(Collection = case_when(
-    day == "12" ~ "Nov 2019",
-    day == "18" ~ "Feb 2020")) %>% 
-  mutate(Collection = factor(Collection, levels = c("Nov 2019", "Feb 2020"))) %>% 
-  mutate(site = case_when(
-    site == "DCP" ~ "Deception",
-    site == "TUN" ~ "Tunnel",
-    site == "JDG" ~ "Judge",
-    site == "RTH" ~ "Rithet")) %>% 
-  mutate(site = factor(site))
-
-# isolate and join to my UBC lab results for treatability samples
-treatdat_full <- sampleresults %>% 
-  filter(sample == "Treatability") %>% 
-  full_join(treatdat_UW, by = c("Date", "site")) %>% 
-  mutate(site = factor(site)) %>%  # -- new experimetnal (October 10, 2020)
-  select(site, source, NPOC_ppm, SAC254_Abs.m, E2E3, SUVA, # mine
-         # from U.W:
-         source, Sample_ID, pH, Collection,
-         `UV254_cm-1`, DOC_ppm, Zeta_Potential_mV, 
-         THMs, TCM, TBM, DBCM, HAAs, DCAA, DBAA, TCAA, MCAA, MBAA, 
-         Free_Chlorine_Final_mgL, day, Date) %>% 
-  rename(UV254_cm = `UV254_cm-1`) %>% 
-  mutate(UV254_m = UV254_cm*100,
-         SUVA_UW = UV254_m/DOC_ppm) %>% 
-  select(-c(UV254_cm, DBAA, MBAA, TBM)) %>% # drop DBP-FP below detection limits (NAs) 
-  filter(source == "02") %>%
-  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:MCAA),
-                      values_to = "DBPfp_ugL") %>% 
-  mutate(DBP = factor(DBP) ) #, levels = c("THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
-
-# pivot long
-treatdat_long <- treatdat_UW %>%
-  filter(source == "02") %>% 
-  select(-c(source, Sample_ID, pH, Turbidity_NTU, Zeta_Potential_mV, TBM, DBCM, MCAA, MBAA, DBAA, Free_Chlorine_Final_mgL, day, Date)) %>%
-  tidyr::pivot_longer(names_to = "DBP", cols = c(THMs:TCAA),
-                      values_to = "DBPfp_ugL") %>% 
-  mutate(DBP = factor(DBP, levels = c(
-    "THMs", "TCM", "BDCM", "HAAs", "DCAA", "TCAA")))
-
-
-# correlations
-treatdat_UW %>% 
-  filter(source == "02") %>%
-  rename(SAC254_cm = 'UV254_cm-1') %>% 
-  mutate(SAC254_m = SAC254_cm*100, 
-         SUVA254 = SAC254_m/DOC_ppm) %>%
-  select(SAC254_m, DOC_ppm, SUVA254, THMs, BDCM, TCM, HAAs, DCAA, TCAA) %>% 
-  #select(-c(source, Sample_ID, day, site, Date, Collection, TBM, DBAA, DBCM, MCAA, MBAA) ) %>% 
-  #select(-c(pH, Turbidity_NTU, Zeta_Potential_mV, Free_Chlorine_Final_mgL, SAC254_cm)) %>% 
-  rename(SAC254 = SAC254_m, 
-         DOC = DOC_ppm, 
-         SUVA254 = SUVA254) %>% 
-  cor() %>% 
-  tibble() %>% 
-  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv", 
-            col_names = TRUE)
-
-
-```
-
-## plot DOC/UV254 + DBP-FPs
-```{r}
-
-# plot DOC
-a <- treatdat_long %>% 
-  ggplot(aes(x = DOC_ppm, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, ncol = 1, strip.position = "right", 
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "none",
-        strip.text.y = element_blank(),
-        strip.background = element_blank())+
-  labs(x = "DOC \n(ppm)", 
-       y = "DBP-FPs (ppb)",
-       colour = "Sampling site:")+
-  guides(shape = FALSE,
-         colour = FALSE)
-
-# plot UV-254
-b <- treatdat_long %>% 
-  ggplot(aes(x = `UV254_cm-1`, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "none",
-        strip.text.y = element_blank(),
-        strip.background = element_blank(),
-        axis.text.y = element_blank())+
-  labs(x = expression(atop(SAC[254], (m^-1)) ), 
-       y = "",
-       shape = "Collection:")+
-  guides(colour = FALSE,
-         shape = FALSE)
-
-# plot SUVA-254
-c <- treatdat_long %>% 
-  rename(UV254_cm = `UV254_cm-1`) %>% 
-  mutate(SUVA254_m = ( (UV254_cm*100) / DOC_ppm)) %>% 
-  ggplot(aes(x = SUVA254_m, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "right",
-        axis.text.y = element_blank())+
-  labs(x = expression(atop(SUVA[254], (L~{mg^-1}~{m}^-1)) ), 
-       y = "",
-       shape = "Collection:")+
-  guides(#colour = ,
-    shape = guide_legend(nrow = 2))
-
-# plot E2E3 --- not useful.
-d <- treatdat_full %>% 
-  ggplot(aes(x = E2E3, y = DBPfp_ugL))+
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5)+
-  scale_colour_brewer(palette="Set2") +
-  theme_bw()+
-  facet_wrap(~DBP, strip.position = "right", ncol = 1,
-             scales = "free_y")+
-  theme(text = element_text(size = 11),
-        legend.position = "right",
-        axis.text.y = element_blank())+
-  labs(x = expression(atop(E[2]:E[3])), 
-       y = "DBP-FP",
-       shape = "Collection:")+
-  guides(#colour = ,
-    shape = guide_legend(nrow = 2))
-
-# join side by side
-cowplot::plot_grid(a, b, c, 
-                   ncol = 3, align = "h", rel_widths = c(1.25, 1, 2.15)) 
-# save
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
-       width = 6, height = 6.5, units = "in")
-
-```
-
-### correlations
-
-```{r}
-# Correlations
-treatdat_long %>% 
-  rename(UV254_cm = `UV254_cm-1`) %>% 
-  mutate(UV254_m = UV254_cm*100 ) %>% 
-  mutate(SUVA254_m = (UV254_m/DOC_ppm) ) %>% 
-  select(UV254_m, DOC_ppm, SUVA254_m, DBPfp_ugL) %>%
-  cor()
-
-
-# is E2E3 correlated with SUVA ? -- for aromaticity 
-wut <- synopticfilter %>% 
-  filter(between(E2E3, 3,10) ) %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = E2E3, y = SUVA)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11)) +
-  labs(x = expression(E[2]:E[3]), y = expression(SUVA[254]), fill = "Sample type:") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-# nope
-
-# is SAC254 correlated with SUVA ? -- for aromaticity 
-wut <- synopticfilter %>% 
-  filter(SUVA<6) %>% 
-  filter(QAQC_flag == "OK") %>% 
-  filter(sample_type == "Grab" | sample_type == "Rack") %>% 
-  ggplot(aes(x = SAC254_Abs.m, y = SUVA)) +  
-  geom_point(aes(fill = sample_type), shape = 21, size = 1.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11)) +
-  labs(x = expression(SAC[254]), y = expression(SUVA[254]), fill = "Sample type:") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-# nope
-
-# is E2E3 correlated with zetapotential ? 
-wut <- treatdat_full %>% 
-  filter(between(E2E3, 3, 10) ) %>% # drop outliers
-  ggplot(aes(x = E2E3, y = Zeta_Potential_mV)) +  
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11)) +
-  labs(x = expression(E[2]:E[3]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-# yeah, kind of!! R^2 = 0.5297
-
-# how about E2E3 with free chlorine?
-wut <- treatdat_full %>% 
-  filter(between(E2E3, 3, 10) ) %>% # drop outliers
-  ggplot(aes(x = E2E3, y = Free_Chlorine_Final_mgL)) +  
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11)) +
-  labs(x = expression(E[2]:E[3]), y = "Free Chlorine, Final (mg/L)" , colour = "Sampling site:") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-# Nope
-
-
-# is SUVA254 correlated with zetapotential ? 
-wut <- treatdat_full %>% 
-  ggplot(aes(x = SUVA_UW, y = Zeta_Potential_mV)) +  
-  geom_point(aes(colour = site,
-                 shape = Collection),
-             size = 2.5) +
-  theme_bw() +
-  scale_fill_brewer(palette="Set2") +
-  theme(legend.position = "right",
-        text = element_text(size = 11)) +
-  labs(x = expression(SUVA[254]), y = "Zeta Potential (mV)" , colour = "Sampling site:") +
-  stat_poly_eq(formula = y ~ x, 
-               aes(label =  (..rr.label..)), 
-               parse = TRUE, rr.digits = 4)
-
-# Nope R2 = 0.171
-
-```
-
-# Garbage I think
-
-##### Wx questionable objects
-```{r, Wx-Stn_summaries}
-# I want to know precip totals over the study period
-# by month and by season
-# use rain to define storm events
-
-# calculate total rainfall at each of the wx-stns (survey mountain went in in late)
-rn_MScTotal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime),
-         year = lubridate::year(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx",
-         date >= "2018-10-23") %>% 
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_MSc_mm = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup() 
-
-# rain seasons rainfalls
-rn_seasonal <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
-  mutate(month = lubridate::month(DateTime),
-         year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year, rain_season) %>% 
-  dplyr::summarise(rain_seasonal = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# annual rainfalls
-rn_annual <- precip_data %>% 
-  mutate(date = lubridate::as_date(DateTime)) %>% 
-  filter(StationName != "Survey Mtn Wx", date >= "2018-10-23") %>% 
-  mutate(year = lubridate::year(DateTime)) %>%
-  group_by(StationName, year) %>% 
-  dplyr::summarise(rain_monthly = sum(Rn_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-# water-year rainfalls (Oct 1 - Sept 30)
-rn_wateryr <- LWSA_meanWx %>%
-  mutate(Year = lubridate::year(DateTime),
-         month = lubridate::month(DateTime),
-         water_year = case_when(
-           between(month, 1, 9) & Year == "2018" ~ "2018",
-           between(month, 10, 12) & Year == "2018" ~ "2019",
-           between(month, 1, 9) & Year == "2019" ~ "2019",
-           between(month, 10, 12) & Year == "2019" ~ "2020",
-           between(month, 1, 9) & Year == "2020" ~ "2020")) %>%
-  #filter(water_year != "2018") %>% 
-  group_by(water_year) %>% 
-  dplyr::summarise(annual_precip_mm = sum(Rn_1_mean, na.rm = TRUE),
-                   max_snow_m = max(SnowDep_mean, na.rm = TRUE),
-                   annual_mean_temp = mean(Temp_mean, na.rm = TRUE),
-                   temp_sd = sd(Temp_mean, na.rm = TRUE)) %>% 
-  ungroup() #%>% 
-#write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA_WaterYear-summary.csv", col_names = TRUE)
-
-```
-
-
-RF can generate biased VIM (variable importance measure) when different types of predictant data are used (e.g. numeric and categorical). 
-
-Watershed characteristics data is mostly categorical (even though they're numbers they are static percent covers in each sampling basin), therefore separate characteristic data from analytical and measured data (conditions) 
-
-RF : DOC conditions variables
-```{r}
-# select only condition variables
-conditions_NPOC <- sixfilter_physiographic %>% 
-  select(c("NPOC_ppm", # predict DOC
-           "event_ID",               # when
-           "sampleStage_normalized", # what depth -- this is correlated (0.6) with rain*
-           "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
-           "antecedent_7day_temp",   # how warm
-           "HoldTime_days")) #%>%     # held how long
-# add a column of random values as as QA -- this should not be found to be important
-# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
-
-# check for correlations
-# view(cor(RF_conditions_NPOC))
-
-
-# --- RF
-# NPOC_ppm is dependent variable
-# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
-
-## Run RF
-RF_DOC_cond <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC, 
-                                          na.action = randomForest::na.roughfix,
-                                          mtry = ceiling(length(data)/2), # no. of features
-                                          ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                          importance = TRUE,
-                                          proximity = TRUE,
-                                          corr.bias = TRUE) # experimental 
-
-
-# Variable importance measure (VIM)
-## relative importance of features in predicting DOC
-
-## type 1 = mean square error (MSE) as decrease in accuracy
-RF_DOC_cond_RelImp1_MSE <- randomForest::importance(RF_DOC_cond, type = 1) %>% 
-  as.data.frame() %>%  # rather than matrix
-  rownames_to_column() %>% 
-  select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
-  mutate(predictor = fct_recode(predictor,
-                                "QA-QC (random numbers)" = "QA_RandNum",
-                                "Rain event" = "event_ID",
-                                "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
-                                "sampling stage" = "sampleStage_normalized"),  
-         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
-         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
-
-# make a VIM plot ---
-RFplot_condit <- RF_DOC_cond_RelImp1_MSE %>% 
-  ggplot(aes(predictor, MSE_percent)) +
-  coord_flip()+
-  geom_bar(stat = "identity", position = "dodge",
-           colour = forWater_colours2["Gray"], size = 1, 
-           fill = forWater_colours2["SkyBlue"],
-           alpha = 0.8) +
-  theme_bw() +
-  theme(text = element_text(size = 11)) +
-  labs(y = "variable importance in predicting DOC (%)", x = "")
-
-# save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions_DOC.png", 
-       width = 6, height = 5, units = "in")
-
-```
-
-same thing but using type=2 method (heavily weights random numbers as important)
-```{r}
-
-# VIM type 2 = mean decrease in node impurity by sum of square errors
-# plot relative importance of RSS_percent -- more sensitive to correlated values --- Gini index (random numbers high!)
-RF_DOC_cond_RelImp2_RSE <- randomForest::importance(RF_DOC_cond, type = 2) %>% 
-  as.data.frame() %>% 
-  rownames_to_column() %>% 
-  select(predictor = rowname,
-         RSS = IncNodePurity) %>% # residual sum of squares
-  mutate(predictor = fct_recode(predictor,
-                                "QA-QC (random numbers)" = "QA_RandNum",
-                                "Rain event" = "event_ID",
-                                "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
-                                "sampling stage" = "sampleStage_normalized"),  
-         RSS_percent = RSS/sum(RSS)*100, # percent RSS 
-         predictor = fct_reorder(predictor, RSS, .desc=FALSE)) %>% 
-  ggplot(aes(predictor, RSS_percent)) +
-  coord_flip()+
-  geom_bar(stat = "identity", position = "dodge",
-           colour = forWater_colours2["Gray"], 
-           fill = forWater_colours2["SkyBlue"],
-           alpha = 0.8) +
-  theme_bw() +
-  labs(y = "variable importance (%)", x = "", size = 12)
-
-# save this one too 
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3A_RF_DOC_cond_RelImp2_RSE.png", width = 6, height = 5, units = "in")
-
-```
-
-E2E3 conditions variables
-```{r}
-
-# select only condition variables
-conditions_E2E3 <- sixfilter_physiographic %>% 
-  filter(!is.na(E2E3)) %>% 
-  select(c("E2E3", # predict E2E3
-           "event_ID",               # when
-           "sampleStage_normalized", # what depth -- this is correlated (0.6) with rain*
-           "antecedent_30day_rain",   # how wet --- this is correlated (0.6) with stage*
-           "antecedent_7day_temp",   # how warm
-           "HoldTime_days")) #%>%     # held how long
-# add a column of random values as as QA -- this should not be found to be important
-# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
-
-# check for correlations
-# view(cor(RF_conditions_E2E3))
-
-
-# --- RF
-# E2E3 is dependent variable
-# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
-
-## Run RF
-RF_E2E3_cond <- randomForest::randomForest(E2E3 ~ ., data = conditions_E2E3, 
-                                           na.action = randomForest::na.roughfix,
-                                           mtry = ceiling(length(data)/2), # no. of features
-                                           ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                           importance = TRUE,
-                                           proximity = TRUE,
-                                           corr.bias = TRUE) # experimental 
-
-
-# Variable importance measure (VIM)
-## relative importance of features in predicting E2E3
-
-## type 1 = mean square error (MSE) as decrease in accuracy
-RF_E2E3_cond_RelImp1_MSE <- randomForest::importance(RF_E2E3_cond, type = 1) %>% 
-  as.data.frame() %>%  # rather than matrix
-  rownames_to_column() %>% 
-  select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
-  mutate(predictor = fct_recode(predictor,
-                                "QA-QC (random numbers)" = "QA_RandNum",
-                                "Rain event" = "event_ID",
-                                "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
-                                "sampling stage" = "sampleStage_normalized"),  
-         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
-         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) # arrange by MSE%
-
-# make a VIM plot ---
-RFplot_condit_E2E3 <- RF_E2E3_cond_RelImp1_MSE %>% 
-  ggplot(aes(predictor, MSE_percent)) +
-  coord_flip()+
-  geom_bar(stat = "identity", position = "dodge",
-           colour = forWater_colours2["Gray"], size = 1, 
-           fill = forWater_colours2["SkyBlue"],
-           alpha = 0.8) +
-  theme_bw() +
-  theme(text = element_text(size = 11)) +
-  labs(y = "variable importance in predicting E2:E3 (%)", x = "")
-
-# save it
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RFplot_conditions_E2E3.png", 
-       width = 6, height = 5, units = "in")
-
-```
-
-
-DOC RF conditions -- seasonal
-```{r}
-# wet season only ------------------------------------------------------------
-# select only condition variables 
-conditions_NPOC_wet <- sixfilter_physiographic %>% 
-  filter(rain_season == "wet") %>% 
-  select(c("NPOC_ppm", # predict DOC
-           "event_ID",               
-           "sampleStage_normalized", 
-           "antecedent_30day_rain",   
-           "antecedent_7day_temp",   
-           "HoldTime_days")) # %>%     
-# add a column of random values as as QA -- this should not be found to be important
-# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
-
-# --- RF
-# NPOC_ppm is dependent variable
-# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
-
-## Run RF
-RF_DOC_condWET <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_wet, 
-                                             na.action = randomForest::na.roughfix,
-                                             mtry = ceiling(length(data)/2), # no. of features
-                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                             importance = TRUE,
-                                             proximity = TRUE,
-                                             corr.bias = TRUE) # experimental 
-
-
-# Variable importance measure (VIM)
-## relative importance of features in predicting DOC
-
-## type 1 = mean square error (MSE) as decrease in accuracy
-RF_DOC_cond_RelImp1_MSE__WETseason <- randomForest::importance(RF_DOC_condWET, type = 1) %>% 
-  as.data.frame() %>%  # rather than matrix
-  rownames_to_column() %>% 
-  select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
-  mutate(predictor = fct_recode(predictor,
-                                "QA-QC (random numbers)" = "QA_RandNum",
-                                "Rain event" = "event_ID",
-                                "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
-                                "sampling stage" = "sampleStage_normalized"),  
-         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
-         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% # arrange by MSE%
-  # make a VIM plot ---
-  ggplot(aes(predictor, MSE_percent)) +
-  coord_flip()+
-  geom_bar(stat = "identity", position = "dodge",
-           colour = forWater_colours2["DeepBlue"], size = 1,
-           fill = forWater_colours2["SkyBlue"],
-           alpha = 0.8) +
-  theme_bw() +
-  labs(y = "variable importance (%)", x = "", size = 12)
-
-# save it
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_DOC_cond_RelImp1_MSE__WETseason.png", width = 6, height = 5, units = "in")
-
-
-
-
-
-# dry season only ------------------------------------------------------------
-# select only condition variables 
-conditions_NPOC_dry <- sixfilter_physiographic %>% 
-  filter(rain_season == "dry") %>% 
-  select(c("NPOC_ppm", # predict DOC
-           "sampleStage_normalized", 
-           "antecedent_30day_rain",   
-           "antecedent_7day_temp",   
-           "HoldTime_days")) # %>%     
-# add a column of random values as as QA -- this should not be found to be important
-# mutate(QA_RandNum = sample(200, size = nrow(.), replace = TRUE))  # -- remove after checking 
-
-# --- RF
-# NPOC_ppm is dependent variable
-# mtry = (length(RF_conditions)-1)/3 = number of features/3 ~= 10 (or = num.features)
-# mtry : at each node, mtry variables are selected at random and are searched through for best split then the largest tree possible is grown (un-pruned)
-
-## Run RF
-RF_DOC_condDRY <- randomForest::randomForest(NPOC_ppm ~ ., data = conditions_NPOC_dry, 
-                                             na.action = randomForest::na.roughfix,
-                                             mtry = ceiling(length(data)/2), # no. of features
-                                             ntree = 5000,  # ntree default = 500 (but Breiman says "Don't be stingy")
-                                             importance = TRUE,
-                                             proximity = TRUE,
-                                             corr.bias = TRUE) # experimental 
-
-
-# Variable importance measure (VIM)
-## relative importance of features in predicting DOC
-
-## type 1 = mean square error (MSE) as decrease in accuracy
-RF_DOC_cond_RelImp1_MSE__DRYseason <- randomForest::importance(RF_DOC_condDRY, type = 1) %>% 
-  as.data.frame() %>%  # rather than matrix
-  rownames_to_column() %>% 
-  select(predictor = rowname,
-         MSE = "%IncMSE") %>% # percent increase in mean square error
-  mutate(predictor = fct_recode(predictor,
-                                "QA-QC (random numbers)" = "QA_RandNum",
-                                "antecedent 7-day air temp" = "antecedent_7day_temp",
-                                "antecedent 30-day rain" = "antecedent_30day_rain",
-                                "Hold-time days" = "HoldTime_days",
-                                "sampling stage" = "sampleStage_normalized"),  
-         MSE_percent = MSE/sum(MSE)*100,  # percent MSE 
-         predictor = fct_reorder(predictor, MSE_percent, .desc=FALSE)) %>% # arrange by MSE%
-  # make a VIM plot ---
-  ggplot(aes(predictor, MSE_percent)) +
-  coord_flip()+
-  geom_bar(stat = "identity", position = "dodge",
-           colour = forWater_colours2["MyOrange"], size = 1, 
-           fill = forWater_colours2["SkyBlue"],
-           alpha = 0.8) +
-  theme_bw() +
-  labs(y = "variable importance (%)", x = "", size = 12)
-
-# save it
-# ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_RF_DOC_cond_RelImp1_MSE__DRYseason.png", width = 6, height = 5, units = "in")
-
-
-# --- 
-# put these seasonal plots together to compare (not direct)
-# seasons
-# s <- cowplot::plot_grid(RF_DOC_cond_RelImp1_MSE__WETseason, RF_DOC_cond_RelImp1_MSE__DRYseason, ncol = 2 )
-
-```
 
 RF : characteristics variables --- failures
 Surface DOC

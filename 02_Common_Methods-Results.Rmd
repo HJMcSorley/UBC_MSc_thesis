@@ -67,7 +67,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Ch2_all-site_basin_characteristic
 
 ####    Synoptic sampling 
 
-Synoptic samples from the 12 sampling sites were generally collected every two to four weeks, over a one- to two-day period, from October 2018 to Februaru 2020. Surface water was collected manually in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance. 
+Synoptic samples from the 12 sampling sites were generally collected every two to four weeks, over a one- to two-day period, from October 2018 to February 2020. Surface water was collected manually in triple-rinsed acid-washed 250 mL high-density polyethylene (HDPE) wide-mouth amber bottles. Samples were capped with minimal head-space and transported in coolers with ice to the lab for analysis of dissolved organic carbon (DOC) concentrations and spectroscopic absorbance. 
 
 \  
 
@@ -81,7 +81,7 @@ Six of the sampling sites in the Leech WSA were selected for more intensive moni
 
 \  
 
-Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10 minute intervals. Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT v2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken hourly to confirm if streamflow was well mixed and to monitor installations.
+Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10 minute intervals. Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT v2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken every 15 minutes to confirm if streamflow was well mixed and to monitor installations.
 
 \  
 
@@ -93,7 +93,7 @@ knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.
 
 \  
 
-Siphon sample bottle design was based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). The siphon system was created by modifying lids of 250 mL amber HDPE wide-mouth bottles to include an inlet and exhaust tube. Two 1/4" (O.D.) stainless steel tubes (14 cm and 22 cm length), each with a 180$^\circ$ bend at the top end, were inserted into a pre-drilled cap. The taller tube formed the air vent, the shorter acted as the water inlet (Figure \@ref(fig:verticalRack)). The sample bottle filled when water reached the top of the inlet tube bend. When a siphon bottle was submerged below the filling height, a sample was collected in less than 60 seconds. To ensure a water-tight seal around the inlet and exhaust tubes, marine epoxy was applied to the outside of siphon caps and inert silicone sealant was added to the inside of lids. The siphon samplers collected stream water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice). Sampled water filled each siphon bottle with approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
+Siphon sample bottle design was based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). The siphon system was created by modifying lids of 250 mL amber HDPE wide-mouth bottles to include an inlet and exhaust tube. Two 1/4" (O.D.) stainless steel tubes (14 cm and 22 cm length), each with a 180° bend at the top end, were inserted into a pre-drilled cap. The taller tube formed the air vent, the shorter acted as the water inlet (Figure \@ref(fig:verticalRack)). The sample bottle filled when water reached the top of the inlet tube bend. When a siphon bottle was submerged below the filling height, a sample was collected in less than 60 seconds. To ensure a water-tight seal around the inlet and exhaust tubes, marine epoxy was applied to the outside of siphon caps and inert silicone sealant was added to the inside of lids. The siphon samplers collected stream water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice). Sampled water filled each siphon bottle with approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
 
 \  
 
@@ -277,7 +277,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### Collaborative analyses for treatability and metals
 
-Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix _CCCCC_ for full details) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~ was not well correlated to DBP-FP but was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size [@Peuravuori1997; @Helms2008].    
+Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix _CCCCC_ for full details) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539).  Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~ was not well correlated to DBP-FP but was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size [@Peuravuori1997; @Helms2008].   
 
 \  
 
@@ -289,9 +289,17 @@ Results of collaborative sample analysis with the CRD (see Appendix _HHHH_) show
 
 ##### Trail cameras and circulating dye-test
 
-Trail cameras installed at four of the six monitoring sites provided observations of streamflow during Rack sample collection. Images (captured hourly) showed highly turbulent flows across rising limb stages. Therefore, the assumption that Vertical Rack samples were collected from well-mixed, un-stratified water was accepted. 
+Trail cameras installed at four of the six monitoring sites provided observations of streamflow during Rack sample collection. Images (captured every 15 minutes) showed highly turbulent flows across rising limb stages (Figure \@ref(fig:turbflows)). Therefore, the assumption that Vertical Rack samples were collected from well-mixed, un-stratified water was accepted. 
 
 \  
+
+```{r turbflows, fig.cap = fig_cap}
+fig_cap = "\\label{fig:HoldTimeAirPlot} Trail camera images from four of the six Leech WSA monitoring sites showing turbulent flows upstream of and around Vertical Rack installations, satisfying the assumption of well-mixed water columns."
+
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_turbulent-flows.png")
+```
+
+\    
 
 Discrete sample collection was validated in the lab using food colouring and a flow-through bucket system. A siphon sampler bottle was submerged in a container filled with circulating tap water; following siphon sample collection, food colouring was added to the system and circulated for 15 minutes, then the sample bottle was removed from this dye chamber and the colour of the sample inside the siphon bottle was visually compared to the dyed water that had circulated around it. This test was repeated five times with different siphon-lid bottles. There was no dye present in any of the siphon sample bottles following the tests. Thus, the assumption of discrete siphon sample collection was accepted.  
 
@@ -360,5 +368,9 @@ Hold-times were calculated for each sample as the time between sample collection
 \  
 
 In future studies, more in-depth ‘discrete sample collection’ validation tests could be performed with similar food colouring and flow-through bucket system. Possible avenues to explore could include pressure effects of mixing for siphon sample bottles submerged at increasing depths, and spectroscopic analysis of water for more precise verification of any sample mixing post-collection. Additional Hold-time tests could also be performed for more refined method development; the primary suggestion for this includes repeated trials with the same hold-time interval (e.g. 10 days) over different weather and stream conditions (e.g. replicate sets in early-, mid-, and late- wet-season).
+
+\  
+
+DOC has been called a master variable for its influence on water chemistry and role in contaminant transport [@Stanley2012; @Zarnetske2018; @Ruhala2017; @Kellerman2018; @LaZerte1991]. This statement was supported by correlations between DOC concentration and aqueous metals in the Leech WSA streams. Relationships between DOC, SAC~254~ and SUVA~254~ clarified that SAC~254~ was better correlated to most DBP-FPs that the other two measured NOM proxy variables. These results are in agreement with findings by Chow et al. [-@Chow2008], and clarify that SAC~254~ should be used as an indicator of NOM reactivity with respect to DBP-FP, rather than SUVA~254~. 
 
 \  

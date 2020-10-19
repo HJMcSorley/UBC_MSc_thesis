@@ -156,11 +156,19 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-loess-tr
 
 \  
 
-There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparse period, appears to match with the overall pattern observed in available data.
+There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparse period, appears to match with the overall pattern observed in available data. Indeed, in each sampling season, mean monthly DOC at each site was loosely correlated (r≈0.52) to mean monthly air temperature (Figure \@ref(fig:DOCvsTemp)), where low temperatures corresponded to low concentrations, and higher concentrations occurring at higher temperatures.
 
 \  
 
-Despite DOC fluctuation over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L, Table \@ref(tab:seasonalSummary)). However, there were far fewer DOC samples collected in the dry season (_n_ = 55) than during the wet season (_n_ = 311). In a similar ratio, there were fewer spectral NOM characteristic samples collected in the dry season (_n_ = 25) than wet (_n_ = 139). While concentrations remained similar on average over seasons, NOM character was considerably more reactive in the wet season (SAC~254~ 18.33 m^-1^ ± 44%) than in the dry season (8.99 m^-1^ ± 63%; Table \@ref(tab:seasonalSummary)). 
+```{r DOCvsTemp, fig.cap = fig_cap}
+fig_cap = "\\label{fig:DOCvsTemp} Mean monthly dissolved organic carbon (DOC) concentrations versus mean monthly air temperature at twelve sites across the Greater Victoria Water Supply Area, separated into dry and wet seasons."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOCvsTemp.png")
+```
+
+\  
+
+Despite fluctuation in DOC concentrations over time, there was almost no difference between mean DOC concentrations during the wet and dry seasons (6.13 mg/L compared to 6.14 mg/L, Table \@ref(tab:seasonalSummary)). However, there were far fewer DOC samples collected in the dry season (_n_ = 55) than during the wet season (_n_ = 311). In a similar ratio, there were fewer spectral NOM characteristic samples collected in the dry season (_n_ = 25) than wet (_n_ = 139). While concentrations remained similar on average over seasons, NOM character was considerably more reactive in the wet season (SAC~254~ 18.33 m^-1^ ± 44%) than in the dry season (8.99 m^-1^ ± 63%; Table \@ref(tab:seasonalSummary)). 
 
 \  
 

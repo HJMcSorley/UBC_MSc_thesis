@@ -333,15 +333,7 @@ Dissolved organic matter -- particularly high molecular weight aromatic compound
 
 \  
 
-Results from two sets of samples at four selected sites showed DBP-FPs were weakly correlated to DOC concentrations and SUVA~254~ and more strongly correlated to SAC~254~ (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and SAC~254~ indicates that while DOC concentration is an important indicator of source water treatability challenges, SAC~254~ is a better indicator of NOM reactivity with respect to DBP-FPs. In particular, SAC~254~ was well correlated with 
-total trihalomethanes (THM), including trichloromethane (TCM), bromodichloromethane (BDCM); 
-and total haloacetic acids (HAAs) including dichloroacetic acid (DCAA), trichloroacetic acid (TCAA)
-but was poorly correlated to 
-
-
-(Table \@ref(tab:DBPcor))
-
-Some DBP-FP results were below detection, including tribromomethane (TBM), dibromoacetic acid (DBAA), dibromochloromethane (DBCM), monochloroacetic acid (MCAA), monobromoacetic acid (MBAA). 
+Results from two sets of samples at four selected sites showed DBP-FPs were weakly correlated to DOC concentrations and SUVA~254~ and more strongly correlated to SAC~254~ (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and SAC~254~ indicates that while DOC concentration is an important indicator of source water treatability challenges, SAC~254~ is a better indicator of NOM reactivity with respect to DBP-FPs (Table \@ref(tab:DBPcor), Figure \@ref(fig:treatability)). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); and was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Below levels of detection (thus not shows here) were DBP-FP results for tribromomethane (TBM), dibromoacetic acid (DBAA), dibromochloromethane (DBCM), monochloroacetic acid (MCAA), monobromoacetic acid (MBAA). 
 
 \  
 
@@ -354,16 +346,14 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatab
 \  
 
 ```{r DBPcor}
-read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv", 
-            col_names = TRUE) %>% 
-  knitr::kable(#digits = c(1, 1, 0, 2, 2, 4), 
-               #col.names = c("Metal", "unit", "count", "slope", "Y intercept", "R squared"),
+read.table("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix_DBPcorrelations.csv") %>% 
+  knitr::kable(digits = c(5), 
                caption = "Correlation coefficients for disinfection byproducts with spectral absorbance coefficient at 254 nm (SAC~254~), dissolved organic carbon concentration (DOC), and specific UV absorbance at 254 nm (SUVA~254~). DBP-FP values that were below detection were not included in the matrix. ")
 ```
 
 \  
 
-Naturally occurring aqueous chemicals (such as nitrate and iron) can interfere with spectroscopic analyses and lead to positive bias in spectral indices of NOM (e.g. SAC~254~). Aqueous nitrogen, in combination with NOM, can also play an important roll as a precursor to nitrogenous-DBPs, which could make SAC~254~ an even better indicator of DBP-FP.     
+It's important to note that while SAC~254~ is related to aqueous NOM and DOC, naturally occurring aqueous nitrate and iron can interfere with spectroscopic analyses and lead to positive bias in SAC~254~. However, aqueous nitrogen, in combination with NOM, can also play an important roll as a precursor to nitrogenous-DBPs, which could potentially make SAC~254~ an even better indicator of DBP-FP. It would be interesting to evaluate nitrogenous DBPs in realtion to SAC~254~, NOM, and DBP-FPs.      
 
 \  
 
