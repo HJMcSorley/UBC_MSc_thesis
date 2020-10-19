@@ -32,6 +32,11 @@ library(knitr)    # for tidy tables
 _(max 350 words) - roman numeral TOC_
 
 
+This project set out to characterize spatial and temporal dynamics in aqueous NOM quantity and quality across the Greater Victoria Water Supply Area (GVWSA), and to explore relationships between watershed variables and sample results across the Leech WSA. Chapters two and three tackled the first research question, which focused on method refinement for measuring variability and ranges of aqueous NOM. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with Vertical Racks which logged river stage at 10-minute intervals, air and water temperature, and passively collected whole water samples during stormflow on the rising limb of the hydrograph; and (2) twelve sites, including the six sub-basin sites, were synoptically sampled every two to four weeks. 
+
+\  
+
+
 Key points:
 
 * refined method of vertical Rack passive sampling of rising stage in streams
