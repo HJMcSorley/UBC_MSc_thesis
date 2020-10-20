@@ -181,7 +181,7 @@ The spectral quotient E~2~:E~3~ is inversely related to aromaticity and molecula
 
 #### Collaborative analyses for treatability and metals
 
-Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.   
+Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). Results from forWater DBP-FP experiments (_n_ = 8) were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.   
 
 \  
 
