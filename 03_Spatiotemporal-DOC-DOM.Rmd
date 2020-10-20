@@ -254,12 +254,10 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_wet-season-summary_conc-char
 \  
 
 ```{r wetSeasonPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:wetSeasonDOC} NOM concentration and character during the wet saeason at six monitoring sites, comparing samples collected by Vertical Racks (event-based) and standard synoptic Grab sampling. Plot A shows dissolved organic carbon (DOC) concentration and plot B shows spectral absorbance coefficient values at 254 nm (SAC~254~), which indicates NOM aromaticity and reactivity."
+fig_cap = "\\label{fig:wetSeasonDOC} NOM quantity and reactive quality during the wet saeason at six monitoring sites, comparing samples collected by Vertical Racks (rising-stage event-based samples) and standard synoptic Grab sampling (non-rising limb). Plot A shows dissolved organic carbon (DOC) concentration and plot B shows spectral absorbance coefficient values at 254 nm (SAC~254~), which indicates aromatic NOM reactivity."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_subbasin_GvsR_WETseason-ridgeplot.png")
 ```
-
-\  
 
 \  
 
@@ -283,7 +281,7 @@ Data from the West Leech suggests that the pulse shunt concept [@Raymond2016] is
 
 \  
 
-Overall, lower DOC was observed in the streams draining from the eastern portion of the Leech WSA catchment (Cragg and Chris crks) and higher DOC was observed in the streams draining from the west (West Leech and Weeks crk). While it is possible that aspect played a role in these spatial difference, the difference in subsurface geology in the west and east basins of the Leech WSA may have played an important role in NOM differences, this is explored in Chapter 4. 
+Overall, lower DOC was observed in the streams draining from the eastern portion of the Leech WSA catchment (Cragg and Chris crks) and higher DOC was observed in the streams draining from the west (West Leech and Weeks crk). While it is possible that aspect played a role in these spatial differences, the difference in subsurface geology in the west and east basins of the Leech WSA may have played an important role in NOM differences, this is explored in Chapter 4. 
 
 \  
 
@@ -301,7 +299,7 @@ Seasonal changes in the relationship between DOC and SAC~254~ were observed acro
 
 \  
 
-Rising limb samples generally had greater DOC concentrations and more reactive character than samples colelcted at other flows. Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes will allow for a more detailed understanding of relationships between streamflow and NOM transport (Chapter 4).
+Rising limb samples generally had greater DOC concentrations and more reactive character than samples collected at other flows. Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes will allow for a more detailed understanding of relationships between streamflow and NOM transport (Chapter 4).
 
 \  
 
@@ -311,7 +309,7 @@ The objective of this work was to design a sampling strategy to measure the rang
 
 \  
 
-The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method can achieve good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be informative to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Expanded comparisons between the Leech Tunnel site, with Rithet and Judge crks would be particularly informative if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegredation of NOM).  
+The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method can achieve good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be informative to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Expanded comparisons between the Leech Tunnel site, with Rithet and Judge crks would be particularly informative if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegradation of NOM).  
 
 \  
 

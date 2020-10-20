@@ -36,6 +36,14 @@ This project set out to characterize spatial and temporal dynamics in aqueous NO
 
 \  
 
+Results from across the twelve synoptically samples sites were used to assess broad spatial and temporal patterns in stream NOM dynamics. More in-depth analyses were completed for the six monitoring sites, where sample results were related to watershed characteristics and hydrometric sampling conditions to identify drivers for NOM dynamics across the Leech WSA (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^).
+
+\  
+
+\  
+
+Results showed spatial patterns that were predicted by the river continuum concept (RCC), including higher levels of NOM in headwaters with attenuation in quantity along stream reaches. Longitudinal reduction in DOC (decreasing concentrations from upstream to downstream) were observed across the GVWSA sampling sites.
+
 
 Key points:
 

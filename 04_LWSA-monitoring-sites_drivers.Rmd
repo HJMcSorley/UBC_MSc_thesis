@@ -146,7 +146,7 @@ Sub-basin characteristics and conditions were evaluated independently as well as
 
 #### Random Forest variable importance
 
-##### DOC: concentration
+##### Predicting DOC concentration: NOM quantity 
 
 Across the Leech WSA monitoring sites, the hydroclimatic condition with greatest influence on NOM concentration (DOC) was found to be sampling stage, followed by antecedent 7-day air temperature and then antecedent wetness (30-day rain). The top three watershed characteristic predictors for NOM concentrations were slope, percent of the basin underlain by metamorphic parent material and average tree age (Figure \@ref(fig:RFplotDOC)). 
 
@@ -161,7 +161,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-D
 
 \  
 
-##### SAC~254~: reactivity & aromaticity
+##### Predicting SAC~254~: aromatic NOM reactivity
 
 Like DOC, SAC~254~ was best predicted by sampling stage; unlike DOC, SAC~254~ was relatively more sensitive to antecedent rain than air temperatures. The top three watershed characteristic predictors for NOM aromaticity and reactivity (SAC~254~) were slope, percent of the basin underlain by metamorphic parent material (wark gneiss), and logging history (Figure \@ref(fig:RFplotSAC254)).
 
@@ -177,7 +177,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-S
 
 \  
 
-##### E~2~:E~3~: molecular size & aromaticity
+##### Predicting E~2~:E~3~: NOM molecular size & aromaticity
 
 Sampling conditions VIM ranking for E~2~:E~3~ were the reverse of those for DOC. NOM molecular size and aromaticity (E~2~:E~3~) was best predicted by antecedent 30-day rain, followed by 7-day air temperatures and then sampling stage. The top three watershed characteristic predictors for E~2~:E~3~ were percent of the basin logged from 1980-2011, followed by percent underlain by metamorphic parent material (wark gneiss) which was nearly tied with average tree age (Figure \@ref(fig:RFplotE2E3)).
 
@@ -312,7 +312,7 @@ Sub-basin area harvested between 1980 and 2011 was positively related to E~2~:E~
 
 \  
 
-Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge), it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different (___statistically??___); Cragg crk had greater molecular weight NOM than West Leech (but their error bars overlapped entirely). It is possible that the GIS data for forest harvest and tree age were missing some details, or that the average tree age was not a good indicator variable.
+Chris crk and Cragg crk sub-basins had the youngest and oldest trees, respectively; yet, these two sites had very similar averages for NOM concentration and character, though Chris crk had slightly higher molecular weight NOM. While Cragg crk sub-basin had, on average, the oldest trees (likely due to old growth maintained on Horton Ridge), it was West Leech that was the least-harvested sub-basin of the six monitoring sites. Cragg crk and West Leech had similar mean DOC and SAC~254~ values but mean E~2~:E~3~ was different; Cragg crk had greater molecular weight NOM than West Leech (but their error bars overlapped entirely). It is possible that the GIS data for forest harvest and tree age were missing some details, or that the average tree age was not a good indicator variable.
 
 \  
 

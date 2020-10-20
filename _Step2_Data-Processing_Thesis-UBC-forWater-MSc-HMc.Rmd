@@ -3725,7 +3725,7 @@ wutwut %>%
              labeller = labeller(rain_season = label))
 
 # save plot 
-ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOCvsTemp.png", width = 6, height = 4, units = "in")
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOCvsTemp.png", width = 5.5, height = 3.5, units = "in")
 
 
 ```
@@ -4361,7 +4361,7 @@ a <- sixfilter %>%
         text = element_text(size = 12)) +
   facet_wrap(~sample_type, ncol = 1,
              labeller = labeller(sample_type = label1)) +  
-  labs(y = "", x = "DOC (mg/L)", subtitle = "A) NOM Concentration")
+  labs(y = "", x = "DOC (mg/L)", subtitle = "A) NOM Quantity")
 
 
 # --- character
@@ -4380,7 +4380,7 @@ b <- sixfilter %>%
         text = element_text(size = 12)) +
   facet_wrap(~sample_type, ncol = 1,
              labeller = labeller(sample_type = label2)) +  
-  labs(y = "", x = expression(SAC[254]~(m^-1)), subtitle = "B) NOM Character" )
+  labs(y = "", x = expression(SAC[254]~(m^-1)), subtitle = "B) NOM Quality" )
 
 
 # --- both side by each

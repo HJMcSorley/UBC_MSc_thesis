@@ -77,7 +77,7 @@ Six of the sampling sites in the Leech WSA were selected for more intensive moni
 
 \  
 
-Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10 minute intervals. Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT v2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken every 15 minutes to confirm if streamflow was well mixed and to monitor installations.
+Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10-minute intervals. Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT V2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken every 15 minutes to confirm if streamflow was well mixed and to monitor installations.
 
 \  
 
@@ -97,7 +97,7 @@ Each site was visited during synoptic sampling campaigns and acid-washed sample 
 
 \  
 
-Each siphon bottle's filling-stage was referenced to level-logger data to determine the date and time of collection for each rising-stage sample. The timestamps were used to asses temporal variability in DOC & NOM (later Chapters) and to inform quality management of samples (below).   
+Each siphon bottle's filling-stage was referenced to level-logger data to determine the date and time of collection for each rising-stage sample. The timestamps were used to assess temporal variability in DOC & NOM (later Chapters) and to inform quality management of samples.   
 
 \  
 
@@ -277,7 +277,7 @@ Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix E1 
 
 \  
 
-Results of collaborative sample analysis with the CRD (see Appendix E2) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport, and reinforces the importance of monitoring DOC concentration in source water supply. 
+Results of collaborative sample analysis with the CRD (see Appendix E2) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
 
 \  
 
@@ -286,8 +286,6 @@ Results of collaborative sample analysis with the CRD (see Appendix E2) showed t
 ##### Trail cameras and circulating dye-test
 
 Trail cameras installed at four of the six monitoring sites provided observations of streamflow during Rack sample collection. Images (captured every 15 minutes) showed highly turbulent flows across rising limb stages (Figure \@ref(fig:turbflows)). Therefore, the assumption that Vertical Rack samples were collected from well-mixed, un-stratified water was accepted. 
-
-\  
 
 ```{r turbflows, fig.cap = fig_cap}
 fig_cap = "\\label{fig:HoldTimeAirPlot} Trail camera images from four of the six Leech WSA monitoring sites showing turbulent flows upstream of and around Vertical Rack installations, satisfying the assumption of well-mixed water columns."
