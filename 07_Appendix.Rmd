@@ -537,7 +537,7 @@ Antecedent rain was used like a surrogate for stream discharge in a proxy Q-C hy
 
 \  
 
-```{r Ant30RainStage}
+```{r Ant30RainStage, fig.cap = fig_cap}
 fig_cap = "\\label{fig:Ant30RainStage} Relationship between sample stage and antecedent 30-day rain at the six Leech WSA monitoring sites."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rain-norm.stage.png")
