@@ -63,6 +63,12 @@ cbPalette <- c(grey = "#999999",
                darkblue = "#0072B2", 
                red = "#D55E00", 
                pink = "#CC79A7")
+
+
+# define fixed dates
+project_start <- ymd_hms("2018-10-23 01:00:00", tz = TZ) # first overlapping field day
+project_end <- ymd_hms("2020-02-18 15:00:00", tz = TZ) # last overlapping field day
+
 ```
 
 Define a function for number extraction from alphanumerics.
@@ -383,7 +389,7 @@ mean_rainplot <- LWSA_meanWx %>%
   dplyr::summarise(daily_rn = sum(Rn_1_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
   ggplot(aes(x = date, y = daily_rn)) +
-  geom_col(colour = "#09A4D2") +
+  geom_col(colour = forWater_colours2["DeepBlue"]) +
   scale_y_reverse() +
   labs(x = "", y = "Rain (mm/day)") +
   theme_bw() +
@@ -391,7 +397,7 @@ mean_rainplot <- LWSA_meanWx %>%
   theme(legend.position = "none")+
   scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL)+
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) +
+                           unhighlighted_params = list(colour = forWater_colours2["Gray"])) +
   geom_vline(xintercept = as_date("2018-10-23"), 
              colour = brewer.pal(8, "Dark2")[4],
              linetype = "dashed", size = 0.75) +
@@ -404,15 +410,17 @@ mean_snowplot <- LWSA_meanWx %>%
   group_by(date) %>% 
   dplyr::summarise(daily_SnowMax = max(SnowDepth_mean, na.rm = TRUE)) %>% 
   ungroup()  %>% 
+  filter(daily_SnowMax > 0) %>% 
   ggplot(aes(x = date, y = daily_SnowMax)) +
-  geom_col(colour = "grey60") +
-  labs(x = "", y = 'Snow (m)') +
+  #geom_col(colour = forWater_colours1["MainBlue"]) + # Bill said make it a line plot
+  geom_line(colour = forWater_colours1["MainBlue"]) + 
+  labs(x = "", y = 'Cumulative Snow (m)') +
   theme_bw() +
   theme(text = element_text(size = 11)) +
   theme(legend.position = "none")+
   scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months", labels = NULL)+ 
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838")) +
+                           unhighlighted_params = list(colour = forWater_colours2["Gray"])) +
   geom_vline(xintercept = as_date("2018-10-23"), 
              colour = brewer.pal(8, "Dark2")[4],
              linetype = "dashed", size = 0.75)
@@ -434,7 +442,7 @@ mean_tempplot <- LWSA_meanWx %>%
         axis.text.x = element_text(angle = 30, hjust = 1)) +
   scale_x_date(date_breaks = "2 months", date_minor_breaks = "1 months")+
   gghighlight::gghighlight(date >= "2018-10-23",
-                           unhighlighted_params = list(colour = "#3B3838"))+
+                           unhighlighted_params = list(colour = forWater_colours2["Gray"])) +
   geom_vline(xintercept = as_date("2018-10-23"), 
              colour = brewer.pal(8, "Dark2")[4],
              linetype = "dashed", size = 0.75)
@@ -523,6 +531,15 @@ c <- bind_rows(a, b) %>% write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWS
 
 ## RAIN EVENTS
 ```{r}
+# Bill suggested determining what percent of total rainfall was in each Event
+rain_proj_total <- LWSA_meanWx_dat %>% 
+  filter(dplyr::between(DateTime, project_start, project_end) ) %>% 
+  mutate(year = lubridate::year(DateTime)) %>% 
+  #group_by(year) %>% 
+  summarise(project_total_rain = sum(Rn15_mean, na.rm = TRUE)) %>% 
+  pull()
+
+# get Event variables right
 majEvents_summary <- events %>%
   mutate(duration = difftime(EndDate, StartDate, units = "hours"),
          duration_days = as.numeric(difftime(EndDate, StartDate, units = "days")),
@@ -530,18 +547,22 @@ majEvents_summary <- events %>%
          intensity_mmhr = rain/duration_hours,
          intensity_mm24hr = rain/duration_days,
          startDate = as_date(StartDate),
-         endDate = as_date(EndDate)) %>% 
+         endDate = as_date(EndDate),
+         percent_total_rain = (rain/rain_proj_total)*100 ) %>% 
   mutate(ID = as_factor(ID))
 
 # make a table
 events_table <- majEvents_summary %>% 
-  mutate(duration_days = round(as.numeric(duration_days), 1)) %>% 
+  mutate(duration_days = round(as.numeric(duration_days), 1),
+         percent_total_rain = paste(round(percent_total_rain, 1), '%')) %>% 
   select('Storm number' = stormnum,
          'Major event no.' = ID,
          'Start Date' = startDate,
          'Duration (days)' = duration_days,
+         'Intensity (mm/24-hr)' = intensity_mm24hr,
          'Rainfall (mm)' = rain,
-         'Intensity (mm/24-hr)' = intensity_mm24hr) %>%
+         'Percent of total rain for the study period' = percent_total_rain
+         ) %>%
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
             col_names = TRUE) 
 
@@ -675,9 +696,8 @@ Hobo %>%
 
 # need FWx for each site before Hobo TidbiTs were installed
 # range: start = "2018-10-23" & end = "2019-08-23"
-project_start <- ymd_hms("2018-10-23 01:00:00", tz = TZ) # first overlapping field day
+# already defined: 'project_start' and 'project_end'
 Hobo_start <- ymd_hms("2019-08-24 01:00:00", tz = TZ)  # all TidbiTs deployed
-project_end <- ymd_hms("2020-02-18 15:00:00", tz = TZ) # last overlapping field day
 
 # create a dataframe of full DateTimes
 Hobo_FWx_joiner <- 
