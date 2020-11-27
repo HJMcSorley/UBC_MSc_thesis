@@ -64,6 +64,8 @@ cbPalette <- c(grey = "#999999",
                red = "#D55E00", 
                pink = "#CC79A7")
 
+# assign timezone
+TZ <- "Etc/GMT+8"
 
 # define fixed dates
 project_start <- ymd_hms("2018-10-23 01:00:00", tz = TZ) # first overlapping field day
@@ -85,9 +87,6 @@ NumberXtract <- function(alphnum){
 
 # Load datasets
 ```{r, input-files, message=FALSE}
-# assign timezone
-TZ <- "Etc/GMT+8"
-
 # File Inputs
 #Results of data wrangling (01) were saved as .csv files for tidy loading. 
 # read all compiled data files & format
@@ -7382,6 +7381,49 @@ ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_E2E3-predictor-5-metamorph
 
 ```
 # Hysteresis
+
+just curious --- plot stage samples with values of DOC on points
+```{r}
+# first wet season
+stage_samples %>% 
+  filter(Date >= "2018-10-24", Date <= "2019-02-01") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
+  
+  geom_text(aes(y = sampleStage_cm, label = NPOC_ppm))+
+  
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+# second wet season -- there are some interesting things in here
+stage_samples %>% 
+  filter(Date >= "2019-10-10", Date <= "2019-12-17") %>%  
+  ggplot(aes(x = DateTime))+
+  geom_line(aes(y = corr_stage_cm), colour = forWater_colours2["DeepBlue"], size = 0.6)+ 
+  theme_bw()+
+  geom_point(aes(y = sampleStage_cm), shape = 21, fill = "white", na.rm = TRUE)+
+  
+  geom_text(aes(y = sampleStage_cm, label = NPOC_ppm))+
+  
+  facet_wrap(~site, ncol = 1, scales = "free_y", strip.position = "right")+
+  labs(y = "River Stage (cm) and Sample Collection", x = "")+
+  scale_x_datetime(date_labels = "%Y %b %d",
+                   date_breaks = "2 months",
+                   date_minor_breaks = "1 months")+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 30, hjust = 1), plot.margin = unit(c(0,0,0,0), "cm"),
+        legend.position = "none")
+
+```
+
 
 ```{r}
 
