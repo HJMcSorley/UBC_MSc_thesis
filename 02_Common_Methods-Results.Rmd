@@ -167,7 +167,7 @@ NOM molecular character was judged through a combination of specific UV-absorban
 
 ###### Spectral indices of NOM character
 
-More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Specific ultraviolet absorbance at 254 nm (SUVA~254~) is an indicator of NOM aromaticity relative to concentration and is calculated by dividing SAC~254~ by DOC concentration (units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m)). Both SAC~254~ and SUVA~254~ are possible indicators of NOM reactivity and as such, each was calculated and evaluated with respect to disinfection by-product formation potential (DBP-FP, more details in Appendix E1) and the one most correlated to DBP-FP was selected for continued analysis.
+More aromatic NOM molecules (i.e. humic substances) will absorb more energy at 254 nm wavelength than less-aromatic molecules, so the spectral absorbance coefficient (SAC~254~) is a common indicator of aromaticity. Specific ultraviolet absorbance at 254 nm (SUVA~254~) is an indicator of NOM aromaticity relative to concentration and is calculated by dividing SAC~254~ by DOC concentration (units of liter per milligram carbon per meter (Lmg-C^-1^m^-1^, i.e. L/mg-m)). Both SAC~254~ and SUVA~254~ are possible indicators of NOM reactivity and as such, each was calculated and evaluated with respect to disinfection by-product formation potential (DBP-FP, more details in Appendix C1) and the one most correlated to DBP-FP was selected for continued analysis.
 
 \  
 
@@ -177,11 +177,11 @@ The spectral quotient E~2~:E~3~ is inversely related to aromaticity and molecula
 
 #### Collaborative analyses for treatability and metals
 
-Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.  
+Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix C for details). To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.  
 
 \  
 
-Aqueous NOM, particularly high molecular weight aromatic compounds, are precursors to chlorinated DBPs. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore NOM could have important implications for treatability. To assess sample reactivity with respect to forming potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for analyses of DBP-FPs (Appendix E1). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. 
+Aqueous NOM, particularly high molecular weight aromatic compounds, are precursors to chlorinated DBPs. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore NOM could have important implications for treatability. To assess sample reactivity with respect to forming potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for analyses of DBP-FPs (Appendix C1). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. 
 
 \  
 
@@ -203,7 +203,7 @@ This section presents results used to inform all subsequent data analysis, inter
 
 #### CRD weather data
 
-The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech WSA. Chris Creek weather station (560 m a.s.l) is near the headwaters of the Leech watershed and Martin's Gulch (512 m a.s.l) is located on a ridge near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in contextualizing Rack sampling events and seasons, while air temperature data were used in quality control assessments of Vertical Rack sample hold-times. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data (Appendix D2). 
+The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech WSA. Chris Creek weather station (560 m a.s.l) is near the headwaters of the Leech watershed and Martin's Gulch (512 m a.s.l) is located on a ridge near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in contextualizing Rack sampling events and seasons, while air temperature data were used in quality control assessments of Vertical Rack sample hold-times. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data (Appendix B2). 
 
 \  
  
@@ -216,7 +216,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
 
 \  
 
-Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix D2 for summary of data from each FWx station). Although these data likely over-represented rain amounts that generated runoff in this forested catchment, it  was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
+Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix B2 for summary of data from each FWx station). Although these data likely over-represented rain amounts that generated runoff in this forested catchment, it  was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
 
 \  
 
@@ -236,7 +236,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.pn
 
 \  
 
-On average, October 2018 through to February 2020 (the study period) was warmer (0.56o C) and drier (7.5 mm/month or 13.4%) than historical (1971-2000) climate normals (@PCIC2020; see Appendix D). 
+On average, October 2018 through to February 2020 (the study period) was warmer (0.56° C) and drier (7.5 mm/month or 13.4%) than historical (1971-2000) climate normals (@PCIC2020; see Appendix B). 
 
 \  
 
@@ -271,7 +271,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### Collaborative analyses for treatability and metals
 
-Relationships between DBP-FPs with DOC, SUVA~254~, E~2~:E~3~, and SAC~254~ (Figure \@ref(fig:treatability), see Appendix E1 for full details) revealed that SAC~254~ was the best indicator of NOM reactivity with respect to DBP-FPs. Results from two sets of samples at four selected sites (n=8) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). E~2~:E~3~ was not well correlated to DBP-FPs (not shown in Figure \@ref(fig:treatability)) and was used only as an (inverse) indicator of aqueous NOM aromaticity and molecular size (Peuravuori and Pihlaja 1997; Helms et al. 2008). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. 
+Relationships between DBP-FPs with DOC, SUVA~254~, E~2~:E~3~, and SAC~254~ (Figure \@ref(fig:treatability), see Appendix C1 for full details) revealed that SAC~254~ was the best indicator of NOM reactivity with respect to DBP-FPs. Results from two sets of samples at four selected sites (n=8) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). E~2~:E~3~ was not well correlated to DBP-FPs (not shown in Figure \@ref(fig:treatability)) and was used only as an (inverse) indicator of aqueous NOM aromaticity and molecular size (Peuravuori and Pihlaja 1997; Helms et al. 2008). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. 
 
 \  
 
@@ -283,7 +283,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatab
 
 \  
 
-Evaluation of DOC in relation to metals data provided by the CRD (see Appendix E2 for details and results plots) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
+Evaluation of DOC in relation to metals data provided by the CRD (see Appendix C2 for details and results plots) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
 
 \  
 

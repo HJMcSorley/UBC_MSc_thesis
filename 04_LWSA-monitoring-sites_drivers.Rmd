@@ -70,7 +70,7 @@ The watershed characteristics included in Table \@ref(tab:WTScharacterSubbasinTa
 
 #### Random Forests
 
-Breiman's Random Forests (RF) is a machine learning algorithm which composes a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Breiman2001; @Strobl2009]. RF does not require independence among samples and is unique in its capacity to evaluate variable importance metrics [@Tyralis2019; @Biau2016]. The relative importance of each feature in RF can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature (see Appendix G1 for extended background and details). Through the RF algorithm, variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. 
+Breiman's Random Forests (RF) is a machine learning algorithm which composes a statistical tool for non-parametric regression, prediction, classification and assessment of variable importance [@Breiman2001; @Strobl2009]. RF does not require independence among samples and is unique in its capacity to evaluate variable importance metrics [@Tyralis2019; @Biau2016]. The relative importance of each feature in RF can be determined by assessing the accuracy of how well the response variable (predictant) is anticipated in the absence or presence of each predictor feature (see Appendix E1 for extended background and details). Through the RF algorithm, variable importance measure (VIM) is assessed by removing predictor variables one at a time and measuring the decrease in prediction accuracy in their absence [@Breiman2001]. 
 
 \  
 
@@ -142,7 +142,7 @@ A variable of random numbers was included with watershed characteristic and samp
 
 ##### RF variable groupings
 
-Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. It was expected that the relative importance (as a percent) would shift when all predictant variables were combined, due to distribution of importance across a greater number of variables; however, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix G2, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM because each type inherently interacts differently with the predictant variable. 
+Sub-basin characteristics and conditions were evaluated independently as well as together to see if there was a shift in VIM relative rankings due to the combination of static and dynamic values. It was expected that the relative importance (as a percent) would shift when all predictant variables were combined, due to distribution of importance across a greater number of variables; however, it was not expected that the relative ranking would change -- but it did. When dynamic conditions and static characteristics were combined for RF VIM, the relative ranking of several predictants were changed compared to when conditions and characteristics were analyzed separately (see Appendix E2, Figure \@ref(fig:RFallvars), for plots of combined predictors). These results suggest that static and dynamic predictor variables should be separated for RF VIM because each type inherently interacts differently with the predictant variable. 
 
 \  
 
@@ -202,7 +202,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RFplot_sep-E
 
 #### Predictors in relation to NOM quantity and quality 
 
-When all variables were assessed together, sampling conditions were relatively more important than watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix G2, Figure \@ref(fig:RFallvars)). 
+When all variables were assessed together, sampling conditions were relatively more important than watershed characteristics for predicting NOM concentration and character across the Leech WSA monitoring sites (Appendix E2, Figure \@ref(fig:RFallvars)). 
 
 \  
 
@@ -233,7 +233,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png
 
 ###### Antecedent 7-day air temperature
 
-Antecedent 7-day air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10° C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix G2, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
+Antecedent 7-day air temperature (mean air temperature for the 7-day period prior to sample collection) ranked second most important for predicting DOC and E~2~:E~3~ and was the least important (third) sampling condition for predicting SAC~254~. The concentration, reactivity, aromaticity and molecular weight of NOM increased with antecedent air temperature up to approximately 10° C (Figure \@ref(fig:VIMtemp)). DOC and 7-day temperature were positively related in the wet season with no obvious relationship in the dry season (Appendix E2, Figure \@ref(fig:RFtempDOC)) and too few spectral samples were collected in the dry season to shed light on seasonal trends in NOM character with antecedent temperatures.
 
 \  
 
@@ -253,7 +253,7 @@ Antecedent 30-day cumulative rain (i.e. antecedent wetness) was the sampling con
 
 \  
 
-Fewer sample results were obtained for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ with antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For these available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris Creek, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix G2, Figure \@ref(fig:VIMrainSites)). 
+Fewer sample results were obtained for SAC~254~, with a data gap for samples collected between 200 mm and 400 mm of 30-day antecedent rain; therefore, the pattern of SAC~254~ with antecedent wetness was less precise (large uncertainty, Figure \@ref(fig:VIMrain)). For these available data, rain accumulation in the 30 days prior to sample collection was positively related to SAC~254~ up to approximately 150 mm and SAC~254~ was relatively low with antecedent 30-day rain above 400 mm. Though the relationship was non-linear, there was a slight initial increase in DOC with increasing antecedent wetness, followed by a gradual decline in DOC with increasing accumulated rain (Figure 18). Lower order streams (Weeks, Chris Creek, Leech-head) showed a steeper decline in DOC with increasing 30-day antecedent rain (site-specific plot in Appendix E2, Figure \@ref(fig:VIMrainSites)). 
 
 \  
 
@@ -502,7 +502,7 @@ In the future, Vertical Rack sampling (and matched filling-stage with continuous
 
 \  
 
-It was assumed that the arithmetic means of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations were representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix C2) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
+It was assumed that the arithmetic means of precipitation measured at Chris Creek and Martin's Gulch Fire Weather Stations were representative of conditions across the Leech WSA and mean rain data were applied to all monitoring sites (Chapter 2). However, it is entirely likely that the West Leech sub-basin experienced different weather than the rest of the watershed; observations during field work (Appendix A2) support this possibility. When a weather station is constructed in the West Leech basin, more precise explorations could be conducted with respect to antecedent wetness and water quality dynamics. 
 
 \  
 

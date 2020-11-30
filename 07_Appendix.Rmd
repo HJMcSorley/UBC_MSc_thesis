@@ -165,7 +165,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv",
 
 \  
 
-Most, though not all, months had weather anomalies that were warmer and drier than normal (Table \@ref(tab:PCICanomalies)). In the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal; the 2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal; the 2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal; and the 2019 wet season was 0.38 degrees warmer and 5% drier than normal, with two precipitation anomalies that departed from normal by more than 100%: Sept 2019 was 108% wetter than normal and January 2020 was 136% wetter than normal) 
+Most, though not all, months had weather anomalies that were warmer and drier than normal (Table \@ref(tab:PCICanomalies)). In the 4.5 months prior to the start of the project, it was 1.6° C warmer and 38 % drier than normal; the 2018 wet season (October 2018 - April 2019) was 0.5° C warmer and 26 % drier than normal; the 2019 dry season (May - Oct) was 0.9° C warmer and 1 % wetter than normal; and the 2019 wet season was 0.38° C warmer and 5% drier than normal, with two precipitation anomalies that departed from normal by more than 100%: Sept 2019 was 108% wetter than normal and January 2020 was 136% wetter than normal) 
 
 \  
 
