@@ -1,0 +1,4 @@
+site,description,count,DOCmean,DOCsd,RSD,DOCmin,DOCmedian,DOCmax
+Tunnel,"inlet of Leech Tunnel, LWSA outlet",9,3.7143333333333333,1.073692227782245,29,1.737,3.668,5.329
+Rithet-crk,"key tributary to Sooke Reservoir, SWSA",8,3.152,1.3972910526136944,44,1.637,2.755,6.29
+Judge-crk,"key tributary to Sooke Reservoir, SWSA",6,5.652333333333333,1.1393100836324879,20,4.421,5.252000000000001,7.569

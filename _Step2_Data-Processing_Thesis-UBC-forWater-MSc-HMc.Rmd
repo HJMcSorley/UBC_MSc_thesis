@@ -2803,6 +2803,33 @@ bind_rows(a, b) %>%
 
 ```
 
+### limited Tunnel-Rithet-Judge
+
+also, for comparing Tunnel to Rithet and Judge, limit the comarison to only overlapping periods
+```{r}
+Judge_dates <- synopticfilter %>%
+  filter(site == "Judge-crk") %>% 
+  select(Date_collected)
+
+# 
+synopticfilter %>%
+  filter(site == "Judge-crk" | site == "Tunnel" | site == "Rithet-crk") %>% 
+  filter(Date_collected == Judge_dates[[1,1]] | Date_collected == Judge_dates[[2,1]] | Date_collected == Judge_dates[[3,1]] | Date_collected == Judge_dates[[4,1]] | Date_collected == Judge_dates[[5,1]] | Date_collected == Judge_dates[[6,1]]) %>% 
+  filter(QAQC_flag == "OK") %>% 
+  filter(sample_type == "Grab" & sample == "Grab" | sample == "Treatability") %>%
+  group_by(site, description) %>% 
+  summarize(count = n(), 
+            DOCmean = mean(NPOC_ppm, na.rm = T), 
+            DOCsd = sd(NPOC_ppm, na.rm = T),
+            RSD = round((DOCsd/DOCmean)*100, 0),
+            DOCmin = min(NPOC_ppm, na.rm = T), 
+            DOCmedian = median(NPOC_ppm, na.rm = T), 
+            DOCmax = max(NPOC_ppm, na.rm = T)) %>% 
+write_csv(path = "R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary_Tunnel-Rithet-Judge.csv", col_names = T)
+
+```
+
+
 ## table: NOM Mean/Min/Max synoptic sites 
 ```{r, Grab-synoptic-table}
 
@@ -4593,9 +4620,10 @@ eventsample_table <- right_join(events_table,
                                   filter(!is.na(event_ID)) %>% 
                                   group_by(event_ID) %>% 
                                   summarise("Samples collected" = n(),
-                                            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T),
+                                            "mean DOC (mg/L)" = mean(NPOC_ppm, na.rm = T), 
+                                            max_DOC = max(NPOC_ppm, na.rm = T),
                                             mean_SAC254 = mean(SAC254_Abs.m, na.rm = T),
-                                            "mean SUVA" = mean(SUVA, na.rm = T) ,
+                                            #"mean SUVA" = mean(SUVA, na.rm = T) ,
                                             "mean E2E3" = mean(E2E3, na.rm = T), 
                                             mean_pseudo254 = mean(pseudo254, na.rm = T)
                                             #mean_pseudoSUVA = mean(pseudo_SUVA, na.rm = T)
@@ -4610,8 +4638,52 @@ eventsample_table <- right_join(events_table,
                                 # attach to event table
                                 by = c("Major event no." = "event_ID" )) %>% 
   # rename things
-  select(-c("Storm number", mean_pseudo254)) %>%
+  select(-c("Storm number", mean_pseudo254, "Duration (days)", "Percent of total rain for the study period")) %>%
+  # rearrange
+  select("Major event no.", "Start Date", "Rainfall (mm)", "Intensity (mm/24-hr)", "Samples collected", "mean DOC (mg/L)", "max_DOC", "mean_SAC254", "mean E2E3" ) %>% 
   write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv")
+
+
+# do it again and see if max DOC was related to the ranking of storm intensity??
+right_join( (events_table %>% 
+               rename(intensity = "Intensity (mm/24-hr)",
+                      event = 'Major event no.') %>% 
+               arrange(intensity) %>% 
+               mutate(intensity_rank = row_number(desc(intensity)),
+                      event = as.numeric(event)) %>% 
+               arrange(event) %>% 
+               mutate(event = factor(event))),
+            
+            ( sixfilter %>% 
+                filter(QAQC_flag == "OK") %>%
+                filter(!is.na(event_ID)) %>% 
+                group_by(event_ID) %>% 
+                summarise(sample_n = n(),
+                          mean_DOC = mean(NPOC_ppm, na.rm = T),
+                          max_DOC = max(NPOC_ppm, na.rm = T),
+                          mean_SAC254 = mean(SAC254_Abs.m, na.rm = T),
+                          mean_E2E3 = mean(E2E3, na.rm = T), 
+                          mean_pseudo254 = mean(pseudo254, na.rm = T)
+                          #mean_pseudoSUVA = mean(pseudo_SUVA, na.rm = T)
+                ) %>%  
+                mutate(mean_pseudo254 = as.character(mean_pseudo254)) %>% 
+                mutate(mean_SAC254 = case_when(
+                  event_ID == "1" ~ mean_pseudo254[[1]],
+                  event_ID == "2" ~ mean_pseudo254[[2]],
+                  event_ID == "3" ~ mean_pseudo254[[3]],
+                  TRUE ~ as.character(mean_SAC254)  )) %>%
+                mutate(mean_SAC254 = as.numeric(mean_SAC254)) %>%
+                arrange(max_DOC) %>% 
+               mutate(max_DOC_rank = row_number(desc(max_DOC))) %>% 
+                arrange(event_ID)) ,
+            # attach to event table
+            by = c("event" = "event_ID" )) %>% 
+  # drop things
+  select(-c("Storm number", "Duration (days)", "Percent of total rain for the study period", mean_pseudo254)) %>% 
+  arrange(max_DOC_rank)
+  
+# peak DOC occurred in low intensity storms early in the wet season
+# least concentrated DOC occurred in the winter cold months with high intensity storms
 
 
 ```

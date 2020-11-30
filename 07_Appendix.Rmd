@@ -15,43 +15,19 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 ```
 
-####### Technology summary
-
-Digital equipment used in this thesis are summarized in Table \@ref(tab:techsumm).  
-
-\  
-
-```{r techsumm}
-
-read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_MSc_technology-summary.csv", skip = 3, col_names = TRUE) %>% 
-  knitr::kable(caption = "Summary of hardware and sofware used in this thesis project")
-```
-
-\  
-
-####### Example calculations
-
-Some data were normalized to allow for relative comparison between sites where absolute values were not appropriate. For example, stage at each site was relative to the Vertical Rack stilling well and direct comparison between stage at each site would not be useful, but comparing min-max normalized stage allowed for relative comparison regardless of each "staff gauge" (measuring tape on the stilling well) datum.
-
-Equation 1: $$normalized ~ X_{i} = \frac { (X_{i} - X_{min}) }{ (X_{max} - X_{min}) }$$
-
-
-\  
-
-
 ####### NSERC forWater Network & the Capital Regional District 
 
-The forWater NSERC Network for source water protection strategies is a transdisciplinary, cross-Canada, applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, so forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economic with the ultimate goal of providing a framework for treatment demands as they relate to forested source water. 
+The forWater NSERC Network for source water protection strategies is a transdisciplinary, cross-Canada, applied research collaboration focused on the connections between treated drinking water quality and land-use impacts of forest management. The majority of source drinking water originates in forested headwaters, so forWater researchers are studying water quality in watersheds across Canada, under a variety of different forest management strategies. Through collaborative analyses, forWater is working to evaluate source water treatability metrics, downstream propagation effects, and resource economics with the goal of providing a framework for treatment demands as they relate to forested source water. 
 
 \  
 
 ######## Greater Victoria Regional Water Supply System, CRD
 
-The Capital Regional District (CRD) owns and operates the water supply system for the Greater Victoria region. As a water purveyor, CRD supplies an average of 130 million liters of treated water to customers each day (130,000 m^3^day^-1^) [@CapitalRegionDistrict2017]. The provision of safe and sustainable drinking water has three tiers of regulation above the CRD: federal, provincial, and regional. Federally, Health Canada publishes Canadian Drinking Water Quality Guidelines which outline quantitative bounds for microbial, chemical, radiological parameters and physical aesthetic characteristics for safe drinking water. The province of British Columbia sets requirements for planning, reporting and regualting of drinking water providers through the Drinking Water Protection Act and the Water Sustainability Act, and the Public Health Act and Regulations. Regionally, the CRD reports to the Vancouver Island Health Authority (Island Health) regarding water quality information and provincial legislation. 
+The Capital Regional District (CRD) owns and operates the water supply system for the Greater Victoria region. As a water purveyor, CRD supplies an average of 130 million liters of treated water to customers each day (130,000 m^3^ day^-1^) [@CapitalRegionDistrict2017]. The provision of safe and sustainable drinking water has three tiers of regulation above the CRD: federal, provincial, and regional. Federally, Health Canada publishes Canadian Drinking Water Quality Guidelines which outline quantitative bounds for microbial, chemical, radiological parameters and physical aesthetic characteristics for safe drinking water. The province of British Columbia sets requirements for planning, reporting and regulating of drinking water providers through the Drinking Water Protection Act and the Water Sustainability Act, and the Public Health Act and Regulations. Regionally, the CRD reports to the Vancouver Island Health Authority (Island Health) regarding water quality information and provincial legislation. 
 
 \  
 
-The Greater Victoria Water Supply Area (GVWSA) includes 20,549 hectares (205.49 km^2^) of protected drinking water catchment lands. The primary water supply is sourced from Sooke reservoir, the secondary supply source is Goldstream reservoir and the designated (supplemental) future water supply is the Leech River watershed {FIGURE YYY, figure of watersheds with insert of VanIsle (small) and western north america (even smaller)}. Unfiltered source water is first treated with ultraviolet light and free chlorine (to deactive parasites, bacteria and viruses); secondarily, ammonia is added to produce chloramine, a long-lasting disinfectant that persists through distribution systems [@CapitalRegionDistrict2017].  
+The Greater Victoria Water Supply Area (GVWSA) includes 20,549 hectares (205.49 km^2^) of protected drinking water catchment lands. The primary water supply is sourced from Sooke reservoir, the secondary supply source is Goldstream reservoir and the designated (supplemental) future water supply is the Leech River watershed. Unfiltered source water is first treated with ultraviolet light and free chlorine (to deactivate parasites, bacteria and viruses); secondarily, ammonia is added to produce chloramine, a long-lasting disinfectant that persists through distribution systems [@CapitalRegionDistrict2017].  
  
 \  
 
@@ -59,25 +35,25 @@ The Leech River watershed is a sub-catchment of the Sooke River watershed (~25% 
 
 \  
 
-In 1977, the CRD obtained a provincial water licence authorizing the diversion of up to 30.6 million cubic meters per year from the Leech River to the Sooke Reservoir [@Ussery2015]. Based on the 2017 strategic plan statement of a daily average water supply of 130,000 m^3^ [-@CapitalRegionDistrict2017], the Leech water license could contribute about 65% of 2017 average water supply. The license allows diversion only as long as minimum flows (>5.7 m^3^s^-1^) are maintained to protect fish and downstream ecology [@Ussery2015]. Based on current hydroclimatic dynamics, the water license flow requirements will exclude the summer months from inter-basin transfer and limit streamflow diversion to the winter (November to approximately April). The Leech Tunnel was constructed in the 1980's to transfer Leech River water into the Sooke Reservoir. The Tunnel is not currently operational, and it's anticipated that inter-basin transfer won't be required until 2050 or later. 
+In 1977, the CRD obtained a provincial water license authorizing the diversion of up to 30.6 million cubic meters per year from the Leech River to the Sooke Reservoir [@Ussery2015]. Based on the 2017 strategic plan statement of a daily average water supply of 130,000 m^3^ [-@CapitalRegionDistrict2017], the Leech water license could contribute about 65% of 2017 average water supply. The license allows diversion only as long as minimum flows (>5.7 m^3^ s^-1^) are maintained to protect fish and downstream ecology [@Ussery2015]. Based on current hydroclimatic dynamics, the water license flow requirements will exclude the summer months from inter-basin transfer and limit streamflow diversion to the winter (November to approximately April). The Leech Tunnel was constructed in the 1980s to transfer Leech River water into the Sooke Reservoir. The Tunnel is not currently operational, and it's anticipated that inter-basin transfer won't be required until 2050 or later. 
 
 \  
 
 ######## Leech water supply area monitoring sites: details and observations 
 
-The Leech River watershed ("the Leech") is located on south-east Vancouver Island, British Columbia, Canada. Like most of coastal BC, it is in the Coastal Western Hemlock Biogeoclimatic Zone. The hydroclimatic regime of the Leech is pluvial (i.e. rain-dominated). Annual rainfall is typically between xxxx - yyyy mm (~2500 mm/yr). This areas has a strong seasonal distribution of rainfall: approximately 90% of rain falls from September to April, with only about 10% of annual rainfall occurring from May to August [*REFS*]. Across the Leech, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. While the majority of precipitaiton falls as rain, snow does accumulate for short periods at higher elevations. 
+The Leech River watershed ("the Leech") is located on south-east Vancouver Island, British Columbia, Canada. Like most of coastal BC, it is in the Coastal Western Hemlock Biogeoclimatic Zone. The hydroclimatic regime of the Leech is pluvial (i.e. rain-dominated). Annual rainfall is typically around 2500 mm/yr. This areas has a strong seasonal distribution of rainfall: approximately 90% of rain falls from September to April, with only about 10% of annual rainfall occurring from May to August. Across the Leech, elevation ranges from approximately 200 m above sea level (asl), near the Leech Tunnel, to 941 m asl in the centre of the watershed, at the top of Survey Mountain. While the majority of precipitation falls as rain, snow does accumulate for short periods at higher elevations. 
 
 \  
 
-Around 99% of the Leech WSA is forested. The Leech forests are dominated by western red cedar, western hemlock, and Douglas fir; subspecies include Amabalis fir (Pacific silver fir), white pine, yellow cedar (at higher elevations), Alder, broadleaf maple, and arbutus. Prior to purchase by the CRD, the LWSA was privately managed forest land that was harvested from the mid-1940's to 2007 [@Ussery2015]. Approximately 95% of the Leech watershed was harvested by clear cut prior to 2007 [@Ussery2015, @CRD2019]; as a result, ~94% of LWSA forests are younger than 60 years old and a large portion of stands are under 30 years of age. Now designated as a Water Supply Area, the CRD manages the Leech for source water protection, ecosystem services, and forest resilience. As forest fires pose a serious threat to monocultured and even-aged stands (*REFS*), particularly during the drought of summer, forest fuel management is an important preemptive risk reduction for the CRD [@CRD2019]. 
+Around 99% of the Leech WSA is forested. The Leech forests are dominated by western red cedar, western hemlock, and Douglas fir; subspecies include Amabalis fir (Pacific silver fir), white pine, yellow cedar (at higher elevations), Alder, broadleaf maple, and arbutus. Prior to purchase by the CRD, the LWSA was privately managed forest land that was harvested from the mid-1940s to 2007 [@Ussery2015]. Approximately 95% of the Leech watershed was harvested by clear cut prior to 2007 [@Ussery2015, @CRD2019]; as a result, ~94% of LWSA forests are younger than 60 years old and a large portion of stands are under 30 years of age. Now designated as a Water Supply Area, the CRD manages the Leech for source water protection, ecosystem services, and forest resilience. As forest fires pose a serious threat to monocultured and even-aged stands, particularly during the drought of summer, forest fuel management is an important preemptive risk reduction for the CRD [@CRD2019]. 
 
 \  
 
-The Leech River system is composed of three mainstem rivers, numerous tributaries, and four small headwater lakes. Hydrologic responses vary with terrain steepness, soil infiltrability, vegetation, percent cover of lakes and wetlands, air temperature and the intensity and duration of precipitation. In the Leech, runoff peaks in the winter under saturated conditions. In the wet season, rivers in the Leech watershed are flashy: they respond rapidly to precipitation events, rising and falling dramatically. In 1993 CRD Water Services set up a hydrometric monitoring station on the Leech River (about 3.5 km downstream of the Tunnel) to measure discharge with hourly stage measurments [@Ussery2015]. Peak flow on the lower Leech River was recorded as 168 m^3^s^-1^ (in October, 2003) [@Ussery2015]. However, the rating curve at this historic gauging station was not verified over time and hydraulic action rendered it fairly unreliable.
+The Leech River system is composed of three mainstem rivers, numerous tributaries, and four small headwater lakes. Hydrologic responses vary with terrain steepness, soil infiltrability, vegetation, percent cover of lakes and wetlands, air temperature and the intensity and duration of precipitation. In the Leech, runoff peaks in the winter under saturated conditions. In the wet season, rivers in the Leech watershed are flashy: they respond rapidly to precipitation events, rising and falling dramatically. In 1993 CRD Water Services set up a hydrometric monitoring station on the Leech River (about 3.5 km downstream of the Tunnel) to measure discharge with hourly stage measurements [@Ussery2015]. Peak flow on the lower Leech River was recorded as 168 m^3^s^-1^ (in October, 2003) [@Ussery2015]. However, the rating curve at this historic gauging station was not verified over time and hydraulic action rendered it unreliable.
 
 \  
 
-Overall, the hydrology of the LWSA is poorly understood, as are water quality dynamics. In the mid-1980's, some water was transfered from the Leech River into Deception Gulch and Reservoir (adjacent to but physically separated from Sooke Reservoir). The mixing resulted in biological water quality problems that included odour and raised concerns about the operational usage of the existing tunnel. The Leech River Tunnel and anticipated inter-basin transfer will provide interesting research opportunities which are beyond the scope of this thesis research. Before work is done on inter-basin transfers, the hydrology and water quality of the Leech River system need to be better understood. Understanding source water quality, as well as the timing and magnitude of flows, is an essential component to multiple barrier approach to ensuring clean drinking water. 
+Overall, the hydrology of the LWSA is poorly understood, as are water quality dynamics. In the mid-1980s, some water was transferred from the Leech River into Deception Gulch and Reservoir (adjacent to but physically separated from Sooke Reservoir). The mixing resulted in biological water quality problems that included odour and raised concerns about the operational usage of the existing tunnel. The Leech River Tunnel and anticipated inter-basin transfer will provide interesting research opportunities which are beyond the scope of this thesis research. Before work is done on inter-basin transfers, the hydrology and water quality of the Leech River system need to be better understood. Understanding source water quality, as well as the timing and magnitude of flows, is an essential component to multiple barrier approach to ensuring clean drinking water. 
 
 \  
 
@@ -87,7 +63,7 @@ Six sites were selected across the Leech Water Supply Area. The six research sit
 
 ######### Weeks Creek (site 1)
 
-The Weeks Creek (on Weeks Main) research site monitored water draining approximately 16 km^2^ of the northwest Leech River watershed, including a wetland (Jordan Meadows fen) and Weeks Lake (approximately 27 ha) [@Ussery2015]. Jordan Meadows wetland drains to the east and joins the outflow of Weeks Lake (south end of the lake). The wetland and lake outflow streams join and flow east to Research Site #1, "Weeks", which is a third order stream (Strahler) of the western headwaters of Leech River. The channel is fairly straight, with bed and bank material appearing to be primarily silt/clay (fine grain, easily suspended). The water at this site was notably tannin-coloured. This research site was located about 0.4 km west (upstream) of the confluence with Chris Creek. 
+The Weeks Creek (on Weeks Main) research site monitored water draining approximately 16 km^2^ of the northwest Leech River watershed, including a wetland (Jordan Meadows fen) and Weeks Lake (approximately 27 ha) [@Ussery2015]. Jordan Meadows wetland drains to the east and joins the outflow of Weeks Lake (south end of the lake). The wetland and lake outflow streams join and flow east to Research Site #1, "Weeks", which is a third order stream (Strahler) of the western headwaters of Leech River. The channel is straight, with bed and bank material appearing to be primarily silt/clay (fine grain, easily suspended). The water at this site was notably tannin-coloured. This research site was located about 0.4 km west (upstream) of the confluence with Chris Creek. 
     
 \  
 
@@ -95,15 +71,23 @@ A large culvert upstream of the monitoring site was replace with a bridge in Aug
 
 \ 
 
+(Figure \@ref(fig:site1)).
+
+```{r site1, fig.cap = "Photo of Weeks Creek, site 1 in the Leech WSA"}
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/appendix/hydro-homies.jpg")
+```
+
+\  
+
 ######### Chris Creek (site 2)
 
-Chris Creek is the western headwaters of Leech River. This research site was approximately 0.2 km east (upstream) of the confluence with Site 1, Weeks Creek. The study site on Chris Creek monitored waters draining from approximately 9.6 km^2^ of forested land, including Worley Lake (approximately 3.5 ha) [@Ussery2015]. The monitoring site of Chris Creek was downstream of a bridge, on a slightly sinuous reach with boulders and bedrock and turbulent cascading step-pool morphology. Coarse woody debris was observed upstream of the Chris Creek monitoring site, with obvious new deposits on the banks following a high intensity rain event and assoicated flooding in January 2020.   
+Chris Creek is the western headwaters of Leech River. This research site was approximately 0.2 km east (upstream) of the confluence with Site 1, Weeks Creek. The study site on Chris Creek monitored waters draining from approximately 9.6 km^2^ of forested land, including Worley Lake (approximately 3.5 ha) [@Ussery2015]. The monitoring site of Chris Creek was downstream of a bridge, on a slightly sinuous reach with boulders and bedrock and turbulent cascading step-pool morphology. Coarse woody debris was observed upstream of the Chris Creek monitoring site, with obvious new deposits on the banks following a high intensity rain event and associated flooding in January 2020.   
 
 \  
 
 ######### Leech Head (site 3)
 
-Research site 3 was approximately 1.4 km downstream of the confluence of Weeks and Chris Creeks. The "Leech Head" study site, a 4th order stream, was in a pool between riffles with predominantly Schist bedrock and fairly low relief (~2%) and relatively straight morphology. The water at this site was often coloured by tannins (likely from Weeks, upstream). There once was a logging bridge across the river at this site; rip-rap remains on either bank. 
+Research site 3 was approximately 1.4 km downstream of the confluence of Weeks and Chris Creeks. The "Leech Head" study site, a 4th order stream, was in a pool between riffles with predominantly Schist bedrock and low relief (~2%) and relatively straight morphology. The water at this site was often coloured by tannins (likely from Weeks, upstream). There once was a logging bridge across the river at this site; rip-rap remains on either bank. 
 
 \  
 
@@ -113,27 +97,27 @@ Cragg Creek is a mainstem river that originates in the northeast of the Leech Ri
 
 \  
 
-A fall algae bloom was observed in Cragg Creek November 2019, and was also observed in most of the streams and creeks draining the east side of Survey Mountain. The Algae was identified by CRD microbiologist Huy Nguyen as Draparnaldia, a green-algal species, that occurs mostly in clean, cool (often spring-fed) streams (personal communication ***REF***).  
+A fall algae bloom was observed in Cragg Creek November 2019 and was also observed in most of the streams and creeks draining the east side of Survey Mountain. The Algae was identified by CRD microbiologist Huy Nguyen as Draparnaldia, a green-algal species, that occurs mostly in clean, cool (often spring-fed) streams (personal communication).  
 
 \  
 
 ```{r Draparnaldia, fig.cap = fig_cap}
-fig_cap = "\\label{fig:Draparnaldia} Draparnaldia species of green algae (nic-named 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019"
+fig_cap = "\\label{fig:Draparnaldia} Draparnaldia species of green algae (nicknamed 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019"
 
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCrk_2019-11-13.png")
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCreek_2019-11-13.png")
 ```
 
 \  
 
 ######### West Leech (site 5)
 
-Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, fairly straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River). During sampling trips, different weather patterns were consistently observed at the West Leech monitoring site compared to other sampling sites in the Leech watershed. For example, consistent rain was sometimes falling at the West Leech site, when other sites in the Leech were dry. 
+Originating in the west of the Leech River watershed, West Leech River is a 4th order mainstem river. The West Leech research site monitored a drainage area of approximately 35 km^2^ which included a small lake (Boulder lake) at the southwest of Leech watershed. This research site had boulder and bedrock substrate, straight channel with relatively high width-to-depth ratio and pool-riffle morphology. The West Leech site is approximately 120 m upstream of the confluence with Leech mainstem (~1.5 km downstream of the confluence of Cragg Creek with Leech River). During sampling trips, different weather patterns were consistently observed at the West Leech monitoring site compared to other sampling sites in the Leech watershed. For example, consistent rain was sometimes falling at the West Leech site, when other sites in the Leech were dry. 
 
 \  
 
 ######### Leech Tunnel (site 6)
 
-This research site was at the point of future diversion, the Leech River Tunnel. The Leech is a 5th order river, and this research site had a drainage area of approximately 96 km^2^ (the entire watershed above the point of diversion). The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised, but overall the river is wider than is is deep. The Tunnel site was approximately 1 km downstream of the West Leech confluence. 
+This research site was at the point of future diversion, the Leech River Tunnel. The Leech is a 5th order river, and this research site had a drainage area of approximately 96 km^2^ (the entire watershed above the point of diversion). The stream bed here is dominated by Schist bedrock and boulders. The bedrock in the center of the channel is deeply incised but overall, the river is wider than it is deep. The Tunnel site was approximately 1 km downstream of the West Leech confluence. 
 
 \  
 
@@ -147,7 +131,7 @@ Following the installation of a vertical sampling rack, the field protocol was t
 
 ######## Climate normals and weather anomalies
 
-The Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Crk. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
+The Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. Departures from normal were collated for monthly average daily maximum and minimum air temperature as well as total precipitation measured at two stations located southwest (Bear Creek. Res.) and northeast (Shawnigan Lake) of the GVWSA (Table \@ref(tab:PCICstns)).  
 
 \  
 
@@ -164,7 +148,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-stations.csv",
 
 \  
 
-Based on the PCIC weather anomaly data, the study period (October 2018 through to February 2020) was 0.56 degrees warmer and 13.4% drier than normal (Table \@ref(tab:PCICdepartures)). On average, each of the sampled wet seasons were drier than normal (26% and 5%) and the dry season was 1.4% wetter than normal. Prior to the start of the project, the summer/dry-season was 38% drier than normal and 1.6°C warmer.     
+Based on the PCIC weather anomaly data, the study period (October 2018 through to February 2020) was 0.56° C warmer and 13.4% drier than normal (Table \@ref(tab:PCICdepartures)). On average, each of the sampled wet seasons were drier than normal (26% and 5%) and the dry season was 1.4% wetter than normal. Prior to the start of the project, the summer/dry-season was 38% drier than normal and 1.6°C warmer.     
 
 \  
 
@@ -181,7 +165,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv",
 
 \  
 
-While not all months had weather anomalies that were warmer and drier than normal, the majority of months did (Table \@ref(tab:PCICanomalies)). In the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal; the 2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal; the 2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal; and the 2019 wet season was 0.38 degrees warmer and 5% drier than normal, with two precipitation anomalies that departed from normal by more than 100%: Sept 2019 was 108% wetter than normal and January 2020 was 136% wetter than normal) 
+Most, though not all, months had weather anomalies that were warmer and drier than normal (Table \@ref(tab:PCICanomalies)). In the 4.5 months prior to the start of the project, it was 1.6 degrees warmer and 38 % drier than normal; the 2018 wet season (October 2018 - April 2019) was 0.5 degrees warmer and 26 % drier than normal; the 2019 dry season (May - Oct) was 0.9 degrees warmer and 1 % wetter than normal; and the 2019 wet season was 0.38 degrees warmer and 5% drier than normal, with two precipitation anomalies that departed from normal by more than 100%: Sept 2019 was 108% wetter than normal and January 2020 was 136% wetter than normal) 
 
 \  
 
@@ -199,7 +183,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv",
 
 ######## FWx stations in the LWSA
 
-There were two weather stations that operated during the study period: Chris Creek station is located in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
+There were two weather stations that operated during the study period: Chris Creek station is in the headwaters of the LWSA and Martin's Gulch station is located near the future diversion point (Leech River Tunnel). 
 
 \  
 
@@ -225,7 +209,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-summary.csv", col_names 
 
 ######### Linear regression for air temperatures at Vertical Racks
 
-TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30 minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
+TidbiT temperature loggers (HOBO TidbiT v2 Temperature Data Logger, Onset, USA) were attached to the top and bottom of each vertical rack installation to record air and water temperature at 30-minute intervals. Loggers at the top of racks recorded air temperature and those at the bottom recorded water temperature (Figure \@ref(fig:TidbiTairwaterLine)). 
 
 \ 
 
@@ -236,7 +220,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_line-by-
 
 \  
 
-While loggers were installed in both positions (air and water) on each rack at the same time, it wasn't until mid-October that all sites' water temperature loggers were submerged. Figure \@ref(fig:TidbiTairwaterBox) shows the distributions of air and water temperatures at each site, where water temperature was limited to the period when all sites water temperature loggers were submerged. Median water temperatures increased from the headwaters of Leech River to the point of diversion (Leech-Head < Cragg-Crk < West-Leech < Tunnel).  
+While loggers were installed in both positions (air and water) on each rack at the same time, it wasn't until mid-October that all sites' water temperature loggers were submerged. Figure \@ref(fig:TidbiTairwaterBox) shows the distributions of air and water temperatures at each site, where water temperature was limited to the period when all sites water temperature loggers were submerged. Median water temperatures increased from the headwaters of Leech River to the point of diversion (Leech-Head < Cragg-Creek < West-Leech < Tunnel).  
 
 \  
 
@@ -260,7 +244,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs-FWx_ridg
 
 \  
 
-Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic (Table \@ref(tab:wilcoxonpvalues)) with no statistical difference (at 90% confidence) for Cragg Crk, West Leech and the Tunnel (sites 4, 5, 6). 
+Results of two-sided Wilcoxon rank sum tests revealed that 15-minute air temperatures at West Leech (site-5) were similar to LWSA FWx (p-value 0.02), and the differences between the other five sites and FWx were found to be significantly different (p-values << 0.001). However, when daily mean temperatures were compared (rather than 15 minute data) the differences between sites and FWx temperatures were less dramatic (Table \@ref(tab:wilcoxonpvalues)) with no statistical difference (at 90% confidence) for Cragg Creek, West Leech and the Tunnel (sites 4, 5, 6). 
 
 \  
 
@@ -325,7 +309,7 @@ These sites were selected to represent future supplemental source water, the fut
 
 \  
 
-Two sets of duplicate samples from the four sites were collected during winter of the 2020 water year (November 12, 2019 and February 18, 2020) and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, the samples (_n_ = 8) were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes (THMs) and haloacetic acids (HAAs) in μg/L), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), and Zeta Potential (mV). Relationships between disinfection by-product formation potentials (DBP-FPs), UV-absorbance at 254nm, and DOC concentrations were examined. 
+Two sets of duplicate samples from the four sites were collected during winter of the 2020 water year (November 12, 2019 and February 18, 2020) and were shipped to the Universities of Alberta and Waterloo for treatability analyses. At the University of Waterloo, the samples (_n_ = 8) were analyzed for treatability parameters including: maximum potential disinfection byproduct formation potential (for trihalomethanes (THMs) and haloacetic acids (HAAs) in μg/L), pH, UV~254~(cm^-1^), DOC (mg/L), Turbidity (NTU), and Zeta Potential (mV). Relationships between disinfection by-product formation potentials (DBP-FPs), UV-absorbance at 254 nm, and DOC concentrations were examined. 
 
 \  
 
@@ -336,14 +320,6 @@ Dissolved organic matter -- particularly high molecular weight aromatic compound
 \  
 
 Results from two sets of samples at four selected sites showed DBP-FPs were weakly correlated to DOC concentrations and SUVA~254~ and more strongly correlated to SAC~254~ (Figure \@ref(fig:treatability)). The relatively stronger correlation between DBP-FPs and SAC~254~ indicates that while DOC concentration is an important indicator of source water treatability challenges, SAC~254~ is a better indicator of NOM reactivity with respect to DBP-FPs (Table \@ref(tab:DBPcor), Figure \@ref(fig:treatability)). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); and was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Below levels of detection (thus not shows here) were DBP-FP results for tribromomethane (TBM), dibromoacetic acid (DBAA), dibromochloromethane (DBCM), monochloroacetic acid (MCAA), monobromoacetic acid (MBAA). 
-
-\  
-
-```{r treatability, fig.cap = fig_cap}
-fig_cap = "\\label{fig:treatability} Disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (left column), spectral absorbance coefficient at 254 nm (SAC~254~) and specific UV absorbance at 254nm (SUVA~254~). Duplicate samples collected at four sites in the Leech WSA on two occasions. DBPs include: total trihalomethanes (THM), trichloromethane (TCM), bromodichloromethane (BDCM), total haloacetic acids (HAAs), dichloroacetic acid (DCAA), trichloroacetic acid (TCAA)"
-
-knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png")
-```
 
 \  
 
@@ -443,7 +419,7 @@ Random Forest variable importance measure (VIM) treated static watershed charact
 
 
 ```{r RFallvars, fig.cap = fig_cap}
-fig_cap = "\\label{fig:RFallvars} Random Forest variable importance measure for NOM concentration and character using combined predictant types (dynamic conditions and static watershed chaaracteristics), which altered the relative importance ranking compared to when the groups were assessed separately"
+fig_cap = "\\label{fig:RFallvars} Random Forest variable importance measure for NOM concentration and character using combined predictant types (dynamic conditions and static watershed characteristics), which altered the relative importance ranking compared to when the groups were assessed separately"
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RFplot-summary_DOC-E2E3-SAC254.png")
 ```
@@ -462,7 +438,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Appendix-Ch4_RF_
 
 \  
 
-The relationships between NOM proxy parameters (DOC, SAC~254~ and E~2~:E~3~) with 30-day antecedent rain were slightly different at each site (Figure \@ref(fig:VIMrainSites)). Generally, DOC decreased with increasing 30-day antecedent rain at all site above approximately 200mm of accumulated rain. There were insufficient data at each site to tease out clear patterns with SAC~254~ or E~2~:E~3~. 
+The relationships between NOM proxy parameters (DOC, SAC~254~ and E~2~:E~3~) with 30-day antecedent rain were slightly different at each site (Figure \@ref(fig:VIMrainSites)). Generally, DOC decreased with increasing 30-day antecedent rain at all site above approximately 200 mm of accumulated rain. There were insufficient data at each site to tease out clear patterns with SAC~254~ or E~2~:E~3~. 
 
 \  
 
@@ -475,7 +451,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_rain-bysi
 
 \  
 
-####### Hysteresis (Chapter 4 bonus)
+####### Hysteresis (Chapter 4 Bonus!)
 
 ######## Background
 
@@ -546,3 +522,25 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4-A_RF_ant.rai
 ```
 
 \ 
+
+####### Technology summary
+
+Digital equipment used in this thesis are summarized in Table \@ref(tab:techsumm).  
+
+\  
+
+```{r techsumm}
+
+read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_MSc_technology-summary.csv", skip = 3, col_names = TRUE) %>% 
+  knitr::kable(caption = "Summary of hardware and sofware used in this thesis project")
+```
+
+\  
+
+####### Done
+
+Hannah McSorley thanks you for reading this thesis, and thanks her pal Stewart Butler again for helping with field installations in the coldest and darkest parts of 2018 and 2019 (Figure \@ref(fig:stewb)).
+
+```{r stewb, fig.cap = "Photo of Hannah J. McSorley and Stewart Butler near the Sooke Gate in the Greater Victoria Water Supply Area, circa November 2018"}
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/appendix/hydro-homies.jpg")
+```

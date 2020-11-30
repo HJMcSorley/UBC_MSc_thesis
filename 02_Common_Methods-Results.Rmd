@@ -17,12 +17,12 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Introduction
 
-A combination of synoptic and event-based sampling was used to capture the broad spatial characteristics of aqueous NOM dynamics across the GVWSA. The sampling design considered both limitations in ability to manually collect data and resource constraints to sample continuously. This chapter details methods and foundational results that were common to all subsequent chapters. 
+A combination of synoptic and event-based sampling was used to capture broad spatial and temporal dynamics of aqueous NOM across the GVWSA. The sampling design considered both limitations and resource constraints for manually collecting data through events and making continuous measurements. This chapter details methods and foundational results that are common to all subsequent chapters. 
 
 \  
 
 
-Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA). Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of 12 sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at 6 sites in the Leech WSA. 
+Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA). Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of twelve sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at six sites in the Leech WSA. 
 
 \  
 
@@ -32,19 +32,19 @@ Twelve sites were selected across the GVWSA, most of which were in the Leech WSA
 
 \  
 
-Rithet Creek (crk) is the largest tributary (11.12 km^2^ basin) to Sooke Reservoir and Judge crk is the second largest (8.33 km^2^ basin). The Leech River Tunnel (currently deactivated) terminates at Deception Gulch ('Deception'), a small tributary (4.02 km^2^ basin) to Deception Reservoir; as such, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. The Leech WSA includes two major tributary sub-basins: West Leech River (20.85 km^2^) and Cragg crk (28.06 km^2^). The Cragg crk sub-basin included two headwater sub-basins: Lazar (4.74 km^2^) and Jarvis (1.51 km^2^). The Leech-Beach site was located just downstream from the confluence of West Leech River with the Leech River mainstem (94.09 km^2^ sub-basin). And near the effective mouth of the Leech WSA, the Leech Tunnel basin included the entire Leech WSA (95.3 km^2^). Headwaters of the Leech River included Weeks crk and Chris crk sub-basins; Weeks sub-basin (11.52 km^2^) encompassed Weeks Lake and surrounding wetlands (Jordan Meadows fen), and Chris crk sub-basin (5.8 km^2^) included smaller Worley Lake. Below the confluence of Weeks and Chris crk is the Leech-head site (20.59 km^2^ sub-basin).  
+Rithet Creek is the largest tributary (11.12 km^2^ basin) to Sooke Reservoir and Judge Creek is the second largest (8.33 km^2^ basin). The Leech River Tunnel (currently deactivated) terminates at Deception Gulch ('Deception'), a small tributary (4.02 km^2^ basin) to Deception Reservoir; as such, Deception Reservoir could be used as a balancing reservoir for future inter-basin transfers, and it is separated entirely from the current water supply (Sooke Reservoir) by a dam. The Leech WSA includes two major tributary sub-basins: West Leech River (20.85 km^2^) and Cragg Creek (28.06 km^2^). The Cragg Creek sub-basin included two headwater sub-basins: Lazar (4.74 km^2^) and Jarvis (1.51 km^2^). The Leech-Beach site is located just downstream from the confluence of West Leech River with the Leech River mainstem (94.09 km^2^ sub-basin). And near the effective mouth of the Leech WSA, the Leech Tunnel basin included the entire Leech WSA (95.3 km^2^). Headwaters of the Leech River included Weeks Creek and Chris Creek sub-basins; Weeks sub-basin (11.52 km^2^) encompassed Weeks Lake and surrounding wetlands (Jordan Meadows fen), and Chris Creek sub-basin (5.8 km^2^) included smaller Worley Lake. Below the confluence of Weeks and Chris Creeks is the Leech-head site (20.59 km^2^ sub-basin).  
 
 \  
 
 ```{r sampleSitesMap, fig.cap = fig_cap}
-fig_cap = "\\label{fig:sampleSitesMap} Twelve synoptic sampling sites across the Leech and Sooke portions of the Greater Victoria Water Supply Area (BC, Canada). Sites with number were set up as monitoring sites and equipped with Vertical Rack samplers. Black lines delineate sub-basin boundaries (with the sampling point as the outlet)."
+fig_cap = "\\label{fig:sampleSitesMap} Twelve synoptic sampling sites across the Leech and Sooke portions of the Greater Victoria Water Supply Area (BC, Canada). Sites with numbers were set up as monitoring sites and equipped with Vertical Rack samplers. Black lines delineate sub-basin boundaries (with the sampling point as the outlet)."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/thesis_map_all_sites-catchments.png")
 ```
 
 \  
 
-Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl) to 941 m asl at the top of Survey Mountain near the center of the Leech WSA (Table \@ref(tab:siteCharacteristics)). The predominant geological formation across the GVWSA was metamorphic parent material (wark gneiss). The wark formation was common to all twelve sampling sub-basins except for West Leech sub-basin, which was underlain by a meta-sedimentary mudstone (argillite-metagreywacke) and the Metchosin Volcanics group (igneous). Median sub-basin slopes ranged from 5$^\circ$ to 13$^\circ$ with maximum WSA slope of 61$^\circ$.
+Across the GVWSA, elevation ranges from approximately 200 m above sea level (asl) to 941 m asl at the top of Survey Mountain near the center of the Leech WSA (Table \@ref(tab:siteCharacteristics)). The predominant geological formation across the GVWSA was metamorphic parent material (wark gneiss). The wark formation was common to all twelve sampling sub-basins except for West Leech sub-basin, which was underlain primarily by a meta-sedimentary mudstone (argillite-metagreywacke) and the Metchosin Volcanics group (igneous). Median sub-basin slopes ranged from 5$^\circ$ to 13$^\circ$ with maximum WSA slope of 61$^\circ$.
 
 \  
 
@@ -67,55 +67,51 @@ Synoptic samples from the 12 sampling sites were generally collected every two t
 
 \  
 
-Samples were manually collected (via wading) from within 2 meters of the same location at each sampling site, at the safest proximity to channel center, from approximately 10 cm below water surface. All samples were refrigerated between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of a dozen samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration and acidification. Samples for NOM spectroscopy were not acidified, they were confirmed to have zero turbidity (measured as FTU with spectrophotometer) and measured unfiltered with a spectro::lyser (details follow). 
+Samples were manually collected (via wading) from within 2 meters of the same location at each sampling site, at the safest proximity to channel center, from approximately 5-10 cm below water surface. All samples were refrigerated between collection and analysis. Grab samples collected for DOC quantification were filtered and acidified within 48 hours of collection, except for a set of a dozen samples that were collected by CRD staff in January 2020 which were refrigerated for almost two weeks prior to filtration and acidification. Samples for NOM spectroscopy were not acidified, they were confirmed to have zero turbidity (measured as FTU with spectrophotometer) and measured unfiltered with a spectro::lyser spectrophotometer (details follow). 
 
 \  
 
 ####    Monitoring & sampling stations 
 
-Six of the sampling sites in the Leech WSA were selected for more intensive monitoring (numbered sites in Figure \@ref(fig:sampleSitesMap)). These sites represent the drainage area upstream of the Leech River Tunnel and five sub-basins nested within the Leech Tunnel catchment. Site 6 included the drainage area for the entire Leech WSA and was located at the Leech River Tunnel. The five sub-basin sites represented important portions of the Leech River system: two headwater streams, Weeks and Chris Creek (sites 1 & 2) and the head of Leech River below their confluence (site 3); and two major tributaries that feed the Leech River, Cragg Creek and West Leech (sites 4 & 5). Monitoring sites were selected based on year-round access, suitability for installation and safety considerations.
+Six of the synoptic sampling sites in the Leech WSA were selected for more intensive monitoring (numbered sites in Figure \@ref(fig:sampleSitesMap)). These sites represent the drainage area upstream of the Leech River Tunnel and five sub-basins nested within the Leech Tunnel catchment. Site 6 included the drainage area for the entire Leech WSA and was located at the Leech River Tunnel. The five sub-basin sites represented important portions of the Leech River system: two headwater streams, Weeks and Chris Creek (sites 1 & 2) and the head of Leech River below their confluence (site 3); and two major tributaries that feed the Leech River, Cragg Creek and West Leech (sites 4 & 5). Monitoring sites were selected based on year-round access, suitability for installation and safety considerations.
 
 \  
 
-Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10-minute intervals. Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT V2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken every 15 minutes to confirm if streamflow was well mixed and to monitor installations.
+Monitoring included continuous river stage, air and water temperatures, and collection of whole surface water samples with passive siphon sampler bottles staggered vertically. Vertical Rack siphon sampling were a cost-effective, logistically practical, reliable and consistent method of passively sampling the rising limb of the hydrograph. In addition to passively collecting samples across the Leech watershed during increasing flow conditions, the vertical racks also recorded river stage at 10-minute intervals. 
+
+\  
+
+Each Vertical Rack included a central stilling well (3.81 cm (1.5 in) PCV pipe with 1.27 cm (0.5 in) holes along the length) with a measuring tape affixed to the front. Inside the stilling well was an Odyssey Capacitance Water Level Logger (Dataflow Systems Ltd., New Zealand) used to measure stage continuously and determine the date-time at which each siphon sample was collected. Slotted offset angle bars were installed on either side of the stilling well, which held siphon sampler bottles with hose clamps (Figure \@ref(fig:verticalRack)). Air and water temperatures were also measured at each site (30 minute intervals, using HOBO TidbiT V2 Temperature Data Loggers, Onset, USA).  Reconyx trail cameras were also installed at monitoring site locations; images were taken every 15 minutes to confirm if streamflow was well mixed and to monitor installations.
 
 \  
 
 ```{r verticalRack, fig.cap = fig_cap}
-fig_cap = "\\label{fig:verticalRack} Vertical sampling Rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek (site 2))."
+fig_cap = "\\label{fig:verticalRack} Vertical sampling Rack and siphon sampler bottle, illustrative of installations at six sites across the LWSA (shown here is Chris Creek, site 2)."
 
 knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Rack_diagram_full.png")
 ```  
 
 \  
 
-Siphon sample bottle design was based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). The siphon system was created by modifying lids of 250 mL amber HDPE wide-mouth bottles to include an inlet and exhaust tube. Two 1/4" (O.D.) stainless steel tubes (14 cm and 22 cm length), each with a 180° bend at the top end, were inserted into a pre-drilled cap. The taller tube formed the air vent, the shorter acted as the water inlet (Figure \@ref(fig:verticalRack)). The sample bottle filled when water reached the top of the inlet tube bend. When a siphon bottle was submerged below the filling height, a sample was collected in less than 60 seconds. To ensure a water-tight seal around the inlet and exhaust tubes, marine epoxy was applied to the outside of siphon caps and inert silicone sealant was added to the inside of lids. The siphon samplers collected stream water from approximately 5 cm below the surface (the distance between bend at top of intake tube to inlet orifice). Sampled water filled each siphon bottle with approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
+Siphon sample bottle design was based on a USGS single stage sediment sampler design (US U-59, 1961, [see @Graczyk2000]). The siphon system was created by modifying lids of 250 mL HDPE wide-mouth bottles to include an inlet and exhaust tube. Two 1/4" (O.D.) stainless steel tubes (14 cm and 22 cm length), each with a 180° bend at the top end, were inserted into a pre-drilled cap. The taller tube formed the air vent, the shorter acted as the water inlet (Figure \@ref(fig:verticalRack)). The sample bottle filled when water reached the top of the inlet tube bend. When a siphon bottle was submerged below the filling height, a sample was collected in less than 60 seconds. To ensure a water-tight seal around the inlet and exhaust tubes, marine epoxy was applied to the outside of siphon caps and inert silicone sealant was added to the inside of lids. The siphon samplers collected stream water from approximately 5 cm below the surface (distance between the bend at top of intake tube to inlet orifice). A filled siphon bottle had approximately 1 cm of head space between the water level and sealed lid, such that a sample was not in direct contact with the siphon lid.   
 
 \  
 
-Each site was visited during synoptic sampling campaigns and acid-washed sample bottles with siphon lids were set out on vertical racks. Sampling bottles were generally staggered at 10-20 cm intervals; the Rack design allowed for bottles to be attached at any height so that the rising limb was well sampled. Bottle filling-stage was recorded from the stilling-well measuring tape at the height that corresponded to the top of each siphon intake tube bend; these positions were used to relate Rack sample collection to continuously recorded stage. Samples were retrieved on subsequent field trips, at which point the filling-stage was double checked. 
+Each site was visited during synoptic sampling campaigns and acid-washed sample bottles with siphon lids were set out on vertical racks. Sampling bottles were generally staggered at 10-20 cm intervals; the Rack design allowed for bottles to be attached at any height so that the rising limb was well sampled. Bottle filling-stage was recorded from the stilling-well measuring tape at the height that corresponded to the top of each siphon intake tube bend; these positions were used to relate Rack sample collection to continuously recorded stage. Samples were retrieved on subsequent field trips, at which point the filling-stage was double checked. Each siphon bottle's filling-stage was referenced to level-logger data to determine the date and time of collection for each rising-stage sample. The timestamps were used to assess temporal variability in DOC & NOM (later Chapters) and to inform quality management of samples.   
 
 \  
 
-Each siphon bottle's filling-stage was referenced to level-logger data to determine the date and time of collection for each rising-stage sample. The timestamps were used to assess temporal variability in DOC & NOM (later Chapters) and to inform quality management of samples.   
-
-\  
-
-The representativeness of Vertical Rack samples rely on two key assumptions: (1) well mixed water column (no stratification); and (2) the samples were discrete, such that there was no infiltration or mixing between surrounding water and the sample in the bottle once it was filled. Trail camera images and a circulating dye test were used to assess the assumptions of well-mixed water and discrete sample collection (respectively).
+The representativeness of Vertical Rack samples rely on two key assumptions: (1) well mixed water column (no stratification); and (2) each sample was discrete, such that there was no infiltration or mixing between surrounding water and the sample in the bottle once it was filled. Trail camera images and a circulating dye test were used to assess the assumptions of well-mixed water and discrete sample collection (respectively).
 
 \  
 
 #####    Vertical Rack sample hold-time experiments
 
-Every effort was made to retrieve samples as quickly as possible from the Vertical Racks following hydrologic events. None the less, some Rack samples remained in the field from 3 to 40 days due to logistical, access and safety considerations (e.g. during the winter of 2018/2019, snow limited site access). Hold-time experiments were conducted at the Leech Tunnel site to assess the stability of surface water samples held in siphon bottles between Rack sample collection and retrieval. 
+Every effort was made to retrieve samples as quickly as possible from the Vertical Racks following hydrologic events. None the less, some Rack samples remained in the field from 3 to 40 days due to logistical, access and safety considerations (e.g. during the winter of 2018/2019, snow limited site access). Hold-time experiments were conducted at the Leech Tunnel site to assess the stability of surface water samples held in siphon bottles between Rack sample collection and retrieval. Air temperature data collected at each Vertical Rack were used as part of the hold-time assessment for sample stability. 
 
 \  
 
 The hold-time experiments included replicate surface water sample collection (_n_ = 10) where half the samples were capped with siphon lids and placed out of water on the Vertical Rack ("held" samples), and the other half of samples were immediately returned to the lab for analysis ("fresh" samples). Three sets of hold-time experiments were completed such that the simulated-rack samples were left in the field for 11, 20 and 34 days before being retrieved for analysis and comparison to their counterpart replicates (details in _'Foundation Results'_). The hold-time intervals were selected organically based on sampling campaign trips where the longest interval included a field visit without sample retrieval; these represented a common period between setting bottles on Racks and retrieving full samples (11 days), a longer period between setting and collecting (20 days) and an extended delay (34 days). 
-
-\  
-
-Air temperature data collected at each Vertical Rack were used as part of the hold-time assessment for sample stability. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data (Appendix D2).
 
 \  
 
@@ -181,31 +177,33 @@ The spectral quotient E~2~:E~3~ is inversely related to aromaticity and molecula
 
 #### Collaborative analyses for treatability and metals
 
-Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). Results from forWater DBP-FP experiments (_n_ = 8) were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.   
+Synoptic grab samples were collected for treatability analyses with partners in the forWater Network and for metals analyses with the CRD (see Appendix E for details). To verify that DOC plays a role in metals transport, relationships between DOC and aqueous metals concentrations were assessed.  
 
 \  
 
+Aqueous NOM, particularly high molecular weight aromatic compounds, are precursors to chlorinated DBPs. Drinking water supply for the CRD is treated simply by chlorinating raw source water, and therefore NOM could have important implications for treatability. To assess sample reactivity with respect to forming potentially harmful DBPs, samples were collected from four locations and sent to partners at the University of Waterloo for analyses of DBP-FPs (Appendix E1). Results from forWater DBP-FP experiments were used to evaluate relationships between DOC, SAC~254~, SUVA~254~, E~2~:E~3~ with individual DBP-FPs. 
 
+\  
 
 ### Defining seasons 
 
-Coastal BC climate is characterized by a predominantly wet season and dry season, and the timing and length of seasons can vary year to year. Here, seasons were defined by sampling method restrictions such that the "wet" season was defined by conditions that generated stream responses significant enough for Vertical Racks to collect rising limb samples, and the "dry" season was defined by baseflow conditions where stream response was not detected at the Vertical Racks. 
+Coastal BC climate is characterized by a predominantly wet and predominantly dry season, and the timing and length of seasons can vary year to year. Here, seasons were differentiated by sampling method restrictions. As Vertical Rack sampling was initiated by stream stage changes and ended when streamflow dropped, the “dry” season was characterized by baseflow conditions where stream response was not detected at the six Vertical Racks, and the onset of the “wet” season was signified by stream responses that triggered sample collection by Vertical Racks at all of the six monitoring sites across the Leech WSA.. 
 
 \ 
 
-Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) were used to define events that corresponded to Rack sample collection. Rain events were defined using the 'RMevents' function in the R package _Rainmaker_ (github.com/USGS-R/Rainmaker), in which threshold rain and inter-event period parameters were tuned to find conditions that defined events which aligned with stream response across the Leech WSA. Defined events were used to help distinguish the start and end of wet and dry seasons, where wet season began when Vertical Rack sampling was initiated by stream stage changes, and ended when streamflow dropped off and Vertical Rack samples were no longer collected. Snow was qualitatively considered when defining seasons, as it did not contribute to event definitions but did contribute to stream levels at the monitoring sites. 
+Leech WSA rain data (average of Chris Creek and Martin's Gulch FWx stations) were used to define events that corresponded to Rack sample collection. Rain events were defined using the 'RMevents' function in the R package _Rainmaker_ (github.com/USGS-R/Rainmaker), in which threshold rain and inter-event period parameters were tuned to define events which aligned with stream response across the Leech WSA. Rain event data were used to put sampled events in context of one another.
 
 \  
 
 ### Foundational results
 
-This section presents results used to inform all subsequent data analysis, interpretation and evaluations discussed in following chapters. Elemental results presented here include weather data and its application in seasonal delineation and quality control for Vertical Rack sampling method development. 
+This section presents results used to inform all subsequent data analysis, interpretation and evaluations discussed in following chapters. Results presented here include weather data and its application in seasonal delineation and quality control for Vertical Rack sampling method development. 
 
 \  
 
 #### CRD weather data
 
-The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech WSA. Chris Creek weather station (560 m a.s.l) is near the headwaters of the Leech watershed and Martin's Gulch (512 m a.s.l) is located on a ridge near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in defining sampling seasons and air temperature data were used in quality control assessments of Vertical Rack sample hold-times. 
+The Capital Regional District (CRD) provided data from two fire-weather ("FWx") stations located in the Leech WSA. Chris Creek weather station (560 m a.s.l) is near the headwaters of the Leech watershed and Martin's Gulch (512 m a.s.l) is located on a ridge near the future point of diversion, the Leech River Tunnel (Table \@ref(tab:StnSummary)). Rain data were used in contextualizing Rack sampling events and seasons, while air temperature data were used in quality control assessments of Vertical Rack sample hold-times. Daily mean air temperatures at each monitoring site were measured and recorded with Hobo TidbiT loggers from 2019-08-24 to 2020-02-18 (field study end), and temperatures prior to TidbiT deployment were estimated by linear regression with CRD weather station data (Appendix D2). 
 
 \  
  
@@ -218,7 +216,7 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/methods_FWx_Stn_summary.csv",
 
 \  
 
-Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix D2 for summary of data from each FWx station). It was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
+Average LWSA weather data were calculated as arithmetic means from Chris Creek and Martin's Gulch FWx stations data (Table \@ref(tab:meanWxLWSAdata), Figure \@ref(fig:meanWxLWSA); see Appendix D2 for summary of data from each FWx station). Although these data likely over-represented rain amounts that generated runoff in this forested catchment, it  was assumed that the arithmetic means of rainfall from Chris Creek and Martin's Gulch stations were representative of rain conditions across the Leech WSA and were used to define rain events that corresponded to Vertical Rack sample collection at the six monitoring sites. 
 
 \  
 
@@ -231,20 +229,20 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 \  
 
 ```{r meanWxLWSA, fig.cap = fig_cap}
-fig_cap = "\\label{fig:meanWxLWSA} Average weather from Chris Creek (560 m a.s.l) and Martin's Gulch (512 m a.s.l) fire-weather stations in the Leech Water Supply Area, where the highlighted section indicates the study period."
+fig_cap = "\\label{fig:meanWxLWSA} Mean daily air temperature, rain and accumulated snow from Chris Creek (560 m a.s.l) and Martin's Gulch (512 m a.s.l) fire-weather stations in the Leech Water Supply Area, where the coloured sections following the dashed "Project Start" line indicate the study period."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
 ```
 
 \  
 
-October 2018 through to February 2020 (the study period) was warmer and drier than historical climate normals according to the Pacific Climate Impacts Consortium (PCIC, pacificclimate.org) which assembles data from BC Ministry of Environment and Climate Change’s Monitoring Program to provide BC climate data of monthly weather anomalies from 1970 onward. On average. the study period was 0.56 degrees warmer and 13.4% drier than normal (Appendix D).
+On average, October 2018 through to February 2020 (the study period) was warmer (0.56o C) and drier (7.5 mm/month or 13.4%) than historical (1971-2000) climate normals (@PCIC2020; see Appendix D). 
 
 \  
 
-#### Seasonal delineation & Rack sample collection  
+#### Seasonal delineation and Rack sample collection  
 
-The wet seasons included 18 rain events big enough to trigger Vertical Rack sample collection. Rack samples were collected for rain events 50 mm and larger, with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)).  
+A total of 18 rain events were captured using Rack samplers. Events were defined as 50 mm and larger, with a period of at least 14 hours between 50 mm rain accumulation (Table \@ref(tab:EventsTable)).  
 
 \  
 
@@ -253,18 +251,18 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
          col_names = TRUE) %>% 
   select(-c("Storm number")) %>% 
   knitr::kable(digits = c(0, 0, 1, 1, 0), 
-               caption = "Rain events defined by Vertical Rack sample collection (corresponding to a threshold of 50 mm accumulation with 14-hour inter-event period)" )
+               caption = "Rain events where Vertical Rack samples were collected along the rising hydrograph limb of the event (corresponding to a threshold of 50 mm accumulation with 14-hour inter-event period)" )
 
 ```
 
 \  
 
-The sixteen-month study period was separated into "wet" and "dry" seasons based on detectable stream response at each monitoring site and across the GVWSA. Stream response was primarily driven by the presence of major rain events (Table \@ref(tab:EventsTable)); however, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included when delineating the 2018/2019 wet season, despite the lack of defined rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, with streamflow governed by snowmelt rather than rainfall during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
+Stream response was primarily driven by major rain events (Table \@ref(tab:EventsTable)); however, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included in the 2018/2019 wet season, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, with snowmelt primarily contributing to streamflow in the Leech WSA during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
 
 \  
 
 ```{r seasonalMegaPlot, fig.cap = fig_cap}
-fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area air temperature and precipitation plotted with stream responses and sample collection at six monitoring sites. Vertical yellow lines indicate seasons, distinguished by stormflow Vertical Rack sampling (wet season). The dashed yellow line shows the 2018/2019 wet season separation of rain and rain/snowmelt dominated streamflow." 
+fig_cap = "\\label{fig:seasonalMegaPlot} Leech Water Supply Area air temperature, rain and snow depth [@CRD2020] plotted with stream responses and sample collection at six monitoring sites. Vertical yellow lines indicate seasons, distinguished by rising limb Vertical Rack sampling (wet season). The dashed yellow line shows the 2018/2019 wet season separation of rain and rain/snowmelt dominated streamflow." 
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasins_season-megaplot2.png")
 ```
@@ -273,11 +271,19 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### Collaborative analyses for treatability and metals
 
-Relationships between DBP-FPs with DOC, SUVA~254~ and SAC~254~ (see Appendix E1 for full details) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539).  Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. E~2~:E~3~ was not well correlated to DBP-FP but was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size [@Peuravuori1997; @Helms2008].   
+Relationships between DBP-FPs with DOC, SUVA~254~, E~2~:E~3~, and SAC~254~ (Figure \@ref(fig:treatability), see Appendix E1 for full details) revealed that SAC~254~ was the best indicator of NOM reactivity with respect to DBP-FPs. Results from two sets of samples at four selected sites (n=8) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). E~2~:E~3~ was not well correlated to DBP-FPs (not shown in Figure \@ref(fig:treatability)) and was used only as an (inverse) indicator of aqueous NOM aromaticity and molecular size (Peuravuori and Pihlaja 1997; Helms et al. 2008). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. 
 
 \  
 
-Results of collaborative sample analysis with the CRD (see Appendix E2) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
+```{r treatability, fig.cap = fig_cap}
+fig_cap = "\\label{fig:treatability} Disinfection by-product formation potentials (DBP-FPs) with dissolved organic carbon (DOC, left column), spectral absorbance coefficient at 254 nm (SAC~254~) and specific UV absorbance at 254nm (SUVA~254~). Duplicate samples collected at four sites in the Leech WSA on two occasions. DBPs include: total trihalomethanes (THM), trichloromethane (TCM), bromodichloromethane (BDCM), total haloacetic acids (HAAs), dichloroacetic acid (DCAA), trichloroacetic acid (TCAA). Below levels of detection (thus not shows here) were DBP-FP results for tribromomethane (TBM), dibromoacetic acid (DBAA), dibromochloromethane (DBCM), monochloroacetic acid (MCAA), monobromoacetic acid (MBAA)."
+
+knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png")
+```
+
+\  
+
+Evaluation of DOC in relation to metals data provided by the CRD (see Appendix E2 for details and results plots) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
 
 \  
 
@@ -353,11 +359,15 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 #### Foundational results summary 
 
-Results of hold-time experiments suggest that early-wet-season ("first flush") samples may contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contain DOC which is relatively more stable for up to and including 20 days when held at temperatures that approximate a refrigerator. A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character (i.e. aromaticity, molecular size, reactivity); and while DOC concentrations were not statistically altered, there was a notable increase in held sample DOC standard deviation. Additional tests would be required to determine if the change in NOM character was caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%. 
+A challenge of Vertical Rack sampling is rapid retrieval of collected samples. Sample retrieval may be delayed due to field access timing and logistics, and high water can prohibit safe access to the Rack. By coupling continuously recorded stage with manually recorded siphon-bottle heights, sample hold-times were calculated for quality assurance filtering of data for samples that had exceeded an acceptable hold time.
 
 \  
 
-Hold-times were calculated for each sample as the time between sample collection and analysis. Any sample that remained held for fewer than 20 days at temperatures between 0-7° C were flagged as acceptable for further data analysis; Rack samples that were held for 20 days or longer were flagged for exceeding a reliable hold-time; and samples identified as early-wet-season ("first-flush") that had a hold-time of 7 days or longer were flagged as unreliable and not included in further data analysis. Because of possible freeze-thaw changes to DOC and NOM, any sample that underwent suspected or confirmed freezing was also flagged for temperature effects. Hold-time test experiments indicate that extended time in the field on a Vertical Rack could result in a decrease in DOC but not an increase, therefore no positive bias in DOC result should be suspected from event-based samples.    
+Results of hold-time experiments showed that early-wet-season (“first flush”) samples contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contained DOC which was relatively more stable for up to and including 20 days when held at field temperatures that mimicked a refrigerator (0° C to 7° C). A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character (i.e. aromaticity, molecular size, reactivity) and greater variability in DOC concentrations among replicate samples. Additional tests would be required to determine if changes in NOM character were caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Freezing has been shown to decrease sample DOC concentrations in laboratory experiments [@Fellman2008]. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%.
+
+\  
+
+Hold-times were calculated for each sample as the time between sample collection and analysis. Any sample that remained held for fewer than 20 days at temperatures between 0-7° C were flagged as acceptable for further data analysis; Rack samples that were held for 20 days or longer were flagged for exceeding a reliable hold-time; and samples identified as early-wet-season (“first-flush”) that had a hold-time of 7 days or longer (based on logistics of field access) were flagged as unreliable and not included in further data analysis. Because of possible freeze-thaw changes to DOC and NOM, any sample that underwent suspected or confirmed freezing was also flagged for temperature effects. Hold-time test experiments indicate that extended time in the field on a Vertical Rack could result in a decrease in DOC but not an increase, therefore no positive bias in DOC result should be suspected from event-based samples.
 
 \  
 
@@ -365,6 +375,7 @@ In future studies, more in-depth ‘discrete sample collection’ validation tes
 
 \  
 
-DOC has been called a master variable for its influence on water chemistry and role in contaminant transport [@Stanley2012; @Zarnetske2018; @Ruhala2017; @Kellerman2018; @LaZerte1991]. This statement was supported by correlations between DOC concentration and aqueous metals in the Leech WSA streams. Relationships between DOC, SAC~254~ and SUVA~254~ clarified that SAC~254~ was better correlated to most DBP-FPs that the other two measured NOM proxy variables. These results are in agreement with findings by Chow et al. [-@Chow2008], and clarify that SAC~254~ should be used as an indicator of NOM reactivity with respect to DBP-FP, rather than SUVA~254~. 
+DOC has been called a master variable for its influence on water chemistry and role in contaminant transport [@Stanley2012; @Zarnetske2018; @Ruhala2017; @Kellerman2018; @LaZerte1991]. This statement was supported by correlations between DOC concentration and aqueous metals in the Leech WSA streams (particularly mercury, iron, manganese and aluminum). 
+Additionally, NOM in drinking source water supply is partially responsible for the formation of disinfection by-products (DBPs) in treated drinking water [@Yang2015; @Chow2008; @Beauchamp2018]. As a predictor of DBP-FPs, SAC~254~ was better correlated than SUVA~254~ or DOC concentration. These results are in agreement with findings by Chow et al. [-@Chow2008], and clarified that SAC~254~ should be used as an indicator of NOM reactivity with respect to DBP-FP, rather than SUVA~254~. 
 
 \  
