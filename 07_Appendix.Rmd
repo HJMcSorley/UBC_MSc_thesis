@@ -69,14 +69,6 @@ The Weeks Creek (on Weeks Main) research site monitored water draining approxima
 
 A large culvert upstream of the monitoring site was replace with a bridge in August of 2019. The culvert had been perched above the streambed level and was obstructing the movement of fish and water flow. Prior to the culvert removal, several groundwater seeps were observed downstream; these seeps maintained base flow of summer waters in this low-relief stream reach.  There were high levels of iron (above Guideline aesthetic objectives) in the water downstream of the culvert, possibly due to culvert rust. 
 
-\ 
-
-(Figure \@ref(fig:site1)).
-
-```{r site1, fig.cap = "Photo of Weeks Creek, site 1 in the Leech WSA"}
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/appendix/hydro-homies.jpg")
-```
-
 \  
 
 ######### Chris Creek (site 2)
@@ -104,7 +96,7 @@ A fall algae bloom was observed in Cragg Creek November 2019 and was also observ
 ```{r Draparnaldia, fig.cap = fig_cap}
 fig_cap = "\\label{fig:Draparnaldia} Draparnaldia species of green algae (nicknamed 'Christmas Tree') identified in a fall bloom at Cragg Creek (site 4) November 2019"
 
-knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCreek_2019-11-13.png")
+knitr::include_graphics("R-inputs_UBC-forWater-MSc_HMc/images/Draparnaldia_CraggCrk_2019-11-13.png")
 ```
 
 \  
@@ -158,9 +150,10 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-departures.csv",
   rename("Sampling season" = Sampling_season,
          "Date range" = Date_range,
          "Temperature departure (°C)" = temp_depart,
-         "Precipitation departure (%)" = precip_depart) %>% 
+         "Precipitation departure (%)" = precip_depart_percent,
+         "Precipitation departure (mm/mo)" = precip_depart_mm) %>% 
   knitr::kable(caption = "Average weather departures from climate normals from Bear Creek Reservoir and Shawnigan Lake weather stations", 
-               digits = c(0, 0, 2, 1))
+               digits = c(0, 0, 2, 1, 2))
 ``` 
 
 \  
@@ -174,9 +167,10 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_PCIC-anomalies.csv",
          skip = 1, col_names = TRUE) %>% 
   rename("Min. temp. departure (°C)" = temp_min_depart,
          "Max. temp. departure (°C)" = temp_max_depart,
-         "Precipitation departure (%)" = precip_depart ) %>% 
+         "Precipitation departure (%)" = precip_depart_percent,
+         "Precipitation departure (mm/mo)" = precip_depart_mmmo) %>% 
   knitr::kable(caption = "Average monthly weather anomalies from 1970 onward at Bear Creek Reservoir and Shawnigan Lake weather stations", 
-               digits = c(0, 0, 2, 2, 1))
+               digits = c(0, 0, 2, 2, 1, 1))
 ``` 
 
 \ 
@@ -536,8 +530,6 @@ read_csv("R-inputs_UBC-forWater-MSc_HMc/tables/Appendix_MSc_technology-summary.c
 ```
 
 \  
-
-####### Done
 
 Hannah McSorley thanks you for reading this thesis, and thanks her pal Stewart Butler again for helping with field installations in the coldest and darkest parts of 2018 and 2019 (Figure \@ref(fig:stewb)).
 

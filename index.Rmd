@@ -32,73 +32,14 @@ library(knitr)    # for tidy tables
 _(max 350 words) - roman numeral TOC_
 
 
-This project set out to characterize spatial and temporal dynamics in aqueous NOM quantity and quality across the Greater Victoria Water Supply Area (GVWSA), and to explore relationships between watershed variables and sample results across the Leech WSA. Chapters two and three tackled the first research question, which focused on method refinement for measuring variability and ranges of aqueous NOM. Spatiotemporal NOM data were collected through (1) six sub-basin sites equipped with Vertical Racks which logged river stage at 10-minute intervals, air and water temperature, and passively collected whole water samples during stormflow on the rising limb of the hydrograph; and (2) twelve sites, including the six sub-basin sites, were synoptically sampled every two to four weeks. 
+Most drinking water in Canada originates in forested headwaters, therefore forest management is intimately tied to the quality and quantity of water supply for many communities. However, without a baseline understanding of a watershed’s hydrochemical dynamics, it is difficult to determine if observations indicate a departure from natural variance due to forest treatments, or if observations fall within baseline variation. Monitoring source water quality and hydrologic dynamics is a crucial part of a multi-barrier approach to clean drinking water. This research established a stream water sampling program across a second-growth forested drinking water supply area (Greater Victoria, British Columbia, Canada) to evaluate spatial and temporal patterns and variance in natural organic matter (NOM), a master variable in aquatic systems.  Over sixteen months (October 2018 to February 2020), 426 stream water samples were collected from twelve sites (ranging in size from 9.6 to 37 km^2^, elevation 215 to 870 m a.s.l) and were measured for NOM quality (via UV-Vis absorbance parameters) and quantity (as dissolved organic carbon, DOC). Mean sub-basin DOC concentrations ranged from 4.2 ± 1.8 mg L^-1^ to 9.9 ± 3.4 mg L^-1^ (DOC range spanned 1.64 - 19.1 mg L^-1^). From upstream to downstream NOM quantity and reactive character decreased. There was a seasonal shift in NOM character, from predominantly aliphatic in the dry season to predominantly aromatic in the wet season. Antecedent wetness was important for stream NOM molecular quality, and hydrologic connectivity to terrestrial source pools increased throughout the wet season. Approximately 80% of the time, DOC concentration peaked with stage. Early wet season NOM was not stable when held for 11 days (should be analyzed immediately), whereas the more aromatic, allochthonous NOM found in mid to late wet season samples was stable up to 20 days at temperatures between 0-7° C. DOC concentration was loosely correlated to air temperature, with higher concentrations occurring at warmer temperatures and lower concentrations occurring at lower temperatures; and freezing changed NOM molecular attributes in samples. Sub-sets of samples were evaluated for drinking water treatability parameters (n = 8) and total metals contents (n = 42). Dissolved organic carbon (DOC) concentration was well correlated with several metals  (R^2^ values for Hg: 0.99; Al: 0.81; Fe: 0.72; Cu: 0.47; Ba: 0.25; Mn: 0.21), evidence that NOM is indeed a master variable important in contaminant transport. Evaluation of treatability data with UV-Vis spectroscopic results revealed the spectral absorbance coefficient at 254 nm (SAC254) was a better indicator of disinfection byproduct formation potential (DBP-FP) than was DOC concentration or specific UV absorbance at 254 nm (SUVA254). SAC254 was well correlated with total trihalomethanes (r = 0.9882) and total haloacetic acids (HAAs, r = 0.9927), but was only weakly correlated to bromodichloromethane (BDCM, r = 0.6539). Six sites in the Leech River watershed (~96 km^2^), future supplemental drinking water supply area, were studied with vertical passive sampling racks to evaluate aqueous NOM dynamics on the rising hydrograph limb. Random Forest variable importance measure (RF VIM) evaluation of monitoring site data identified warm and wet conditions as key drivers for NOM dynamics. RF VIM showed that forest age and harvest history were important predictor variables for NOM aromaticity and molecular size but determined that subsurface parent material was a more important driver for NOM quantity and quality. Results were framed in context of continued water quality monitoring and planning for drinking water supply and future inter-basin transfers.
 
-\  
-
-Results from across the twelve synoptically samples sites were used to assess broad spatial and temporal patterns in stream NOM dynamics. More in-depth analyses were completed for the six monitoring sites, where sample results were related to watershed characteristics and hydrometric sampling conditions to identify drivers for NOM dynamics across the Leech WSA (~96 km^2^) and its nested catchments (ranging in size from 9.6 to 37 km^2^).
-
-\  
-
-In the wet season, when hydrologic connectivity was greatest, the West Leech sub-basin had aromaticity and molecular size comparable to that of the wetland and lake-dominated Weeks crk sub-basin. But in the dry season, Weeks crk maintained highly aromatic character of stream NOM while the other sub-basins had lower molecular weight, less aromatic NOM than was found at the Tunnel site. 
-
-
-
-\  
-
-Results showed spatial patterns that were predicted by the river continuum concept (RCC), including higher levels of NOM in headwaters with attenuation in quantity along stream reaches. Longitudinal reduction in DOC (decreasing concentrations from upstream to downstream) were observed across the GVWSA sampling sites.
-
-
-Key points:
-
-* refined method of vertical Rack passive sampling of rising stage in streams
-* there were seasonal differences in spatial patterns to NOM character, although the dry and wet season mean concentrations were the same.
-* mixing and reservoir effects will change riverine water quality prior to intake at the tower
-
-\  
-
-...
-Streams are intrinsically linked to their watersheds through dynamic biotic-abiotic interactions and hydroclimatic relationships; as a result, aqueous biogeochemicals like NOM represent an important link between ecosystem processes, land-use, hydrology, and water resources. These water-quality signatures are useful tracers to better understand catchment processes and regional hydrology, as they are indicative of flow paths, sources, chemical origins and transport pathways [@Abbott2018; @Meyer1983; @Vidon2008; @Rautu2019].  
-...
-
-\  
-
-...
-
-The sampling period spanned sixteen months, from October 2018 to February 2020. Seasons were defined as 'wet' and 'dry' and were distinguished by the activity of passive Vertical Rack sample collection. The wet season was characterized by conditions that generated event responses which triggered rising-stage sample collection in the six Leech WSA monitoring site streams (Chapter 2). Based on this definition of seasons, Vertical Racks collected rising limb samples only in the wet season (fall/winter/spring) while Grab samples were collected throughout the entire sampling period. During events, Grab samples were collected prior to stream rise, on the falling limb or between events, but not on the rising limb (not by design, but by happenstance). Sampling began after the start of the 2018/2019 wet season, which extended until mid-May 2019. The dry season spanned from mid-May to late September 2019, the start of the 2019/2020 wet season. 
-
-...
-
-
-
-
-
-Quantifying the organic carbon that forms NOM's backbone is a proxy for the quantity of complex organic assemblies that comprises NOM. The molecular structure of NOM (i.e. it's quality) can vary from large, highly aromatic compounds to smaller aliphatic molecules and differences can be attributed to the source material. Terrestrial humic substances (i.e. allochthonous NOM) tends to be higher molecular weight, larger and more aromatic in structure; while in-stream sources of NOM (i.e. autochthonous NOM), such as algae, are typically more aliphatic in structure. In this research, the quantity of aqueous NOM was measured as the concentration of dissolved organic carbon (DOC) in each sample. The molecular quality of NOM was assessed by UV-Vis spectrophotometry. The specific absorbance coefficient at 254 nm wavelength (SAC~254~) was used as an indicator of NOM molecular aromaticity and reactivity (Appendix VVVVVV; @Weishaar2003; @Vidon2008; @Abbott2018), and the quotient of SAC at 250 nm and 365 nm (E~2~:E~3~) was used to indicate (inversely) aromaticity and molecular size of aquatic humic solutes [@Peuravuori1997; @Helms2008].
-
-...
-
-***to be updated following completion of results*** 
-
-Monitoring source water quality and hydrologic dynamics is a crucial part of a multi-barrier approach to clean drinking water. 
-In a riverine system, hydrochemical pulses have a range of magnitudes, timings and relationships amongst sub-catchments. 
-As the majority of drinking water in Canada originates in forested headwaters, forest management is intimately tied to drinking water supplies for many communities. There are many ways in which forest management can effect the hydrology of a catchment, as well as the water quality. However, without a baseline understanding of hydrochemical dynamics, it's difficult to say whether observations fit within baseline variability or indicate a departure from a catchment's range due to forest prescriptions. 
-
-As part of the NSERC 'forWater' Network for Forested Drinking Water Source Protection Technologies, this research was conducted in partnership with a regional protected water supply to characterize the relative ranges of hydrochemical dynamics and the syncrony of rainfall response among subbasins. Six subbasin sites were equipped with vertical sampling racks to continuously log river stage and passively collect water samples on the rising limb of the hydrograph. Samples were analyzed for dissolved organic carbon (DOC) and dissolved organic matter (DOM) through high temperature combustion and UV-Vis spectroscopy (respectively) to assess landscape connectivity, and a subset of samples were analyzed for a suite of metals to assess DOM transport relationships. 
-
-As a case study, understanding the baseline of hydrochemical dynamics in this protected water supply area can help pave the way for future experimental forest treatments, such as preventative forest fuel management, and can help to anticipate changes in treatment requirements due to hydrodynamic forcing across the watershed. More broadly, these analyses add to our understanding of "natural" variability across a recently undisturbed second growth forested catchment.  
-
-This research explored the spatial and temporal dynamics of hydrochemcial synchrony 
-
-
-******************
-
-Most drinking water in Canada originates in forested headwaters, therefore forest management is intimately tied to the quality and quantity of water supply for many communities. However, without a baseline understanding of a watershed’s hydrochemical dynamics, it is difficult to determine if observations indicate a departure from natural variance due to forest treatments, or if observations fall within baseline variation. This research was conducted in the Leech River Watershed (~96 km^2^, elevation 215 to 870 m a.s.l) which experienced extensive forest harvesting prior to 2007 and is designated as a future supplemental drinking water supply area for Greater Victoria, British Columbia, Canada. The primary objective of this study was to characterize the range of hydrochemical dynamics and the synchrony of rainfall responses among sub-basins ranging in size from 9.6 to 37 km^2^. Six sites were equipped with vertical racks to passively collect water samples on the rising limb of the hydrograph while measuring stream stage. Synoptic water sampling was completed every two to four weeks from November 2018 to February 2020. A total of 458 samples (204 Rack and 254 Synoptic Grab samples) were collected and analyzed for dissolved organic carbon (DOC) and dissolved organic matter (DOM). Additionally, a subset of 42 samples were analyzed for a suite of total metals to assess aqueous DOM transport relationships. Mean sub-basin DOC concentrations ranged from 7.4 ± 1.5 mg L^-1^ to 10.4 ± 3.6 mg L^-1^ (DOC range spanned 2.5 - 29.75 mg L^-1^). Across the Leech watershed, there was an overall reduction in DOC concentration from low to high order streams, and DOC concentrations decreased throughout the wet season (Oct-Mar). Concentrations of DOC exhibited a positive relationship with concentrations of several metals (R^2^ values for Hg: 0.99; Al: 0.81; Fe: 0.72; Cu: 0.47; Ba: 0.25; Mn: 0.21). Seasonal differences in DOM character were assessed by SUVA~254~ and other spectral indices derived from UV-Vis absorbance full-scan data. DOC concentration patterns during stormflow will be used to indicate whether DOC flux was driven by DOM supply limitation or hydrologic controls. Rainfall response will be discussed on a per-storm basis regarding response synchrony among sub-basins. This research establishes a baseline of hydrochemical dynamics across a water supply area where commercial forest management ceased more than a decade ago. These data may also be useful for future assessment of forest management strategies to reduce wildfire risk. Furthermore, results from this work will aid source water protection strategies when the Leech Water Supply Area becomes an active source for the Greater Victoria water supply via inter-basin transfer. 
 
 # Lay Summary 
 
 _(max 150 words) - roman numeral TOC_
 
-***to be updated following completion of results*** 
+***to be updated following completion of abstract*** 
 
 This research contributes to understanding the variability in DOM and DOC across a forested riverine watershed: the Leech River watershed on Vancouver Island, British Columbia, Canada. Land-use impacts are controlled in this research area as 96% of the watershed is protected as drinking water supply area (Leech Water Supply Area). Like most forested areas on Vancouver Island, the Leech watershed is second-growth softwood forest with a history of extensive harvest (nearly 96% cleared).
 

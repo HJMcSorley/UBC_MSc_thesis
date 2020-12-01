@@ -1,7 +1,7 @@
-Average weather departures from normal (relative to 1970 onward) from Bear Creek Reservoir and Shawnigan Lake weather stations ,,,,,
-Sampling season,Date range,Temperature departure (°C),Precipitation departure (%),Precipitation departure (mm/month),note:
-Dry period before project start,June 2018 - Sept. 2018,1.58,-37.9,-14.8,"the 4.5 months prior to the start of the project, it was warmer and 38 % drier (14.8 mm/month) than normal"
-2018/2019 wet season,Oct. 2018 - May 2019,0.48,-26.2,-25.5,2018 wet season (October 2018 - April 2019) was slightly warmer and 26 % drier (25.5 mm/month) than normal 
-2019 dry season,June 2019 - Sept. 2019,0.94,1.4,6.4,2019 dry season (May - Oct) was warmer and 1 % wetter (6.4 mm/month) than normal
-2019/2020 wet season,Oct. 2019 - Feb. 2020,0.38,-4.6,10.2,"2019 wet season was warmer and 5 % drier (10.2 mm/month) than normal, with one extreme wet anomaly"
-Study period,Oct. 2018 - Feb. 2020,0.56,-13.35,-7.5,"overall, the study period was 0.6 degrees warmer and 10% drier than normal"
+Average weather departures from normal (relative to 1970 onward) from Bear Creek Reservoir and Shawnigan Lake weather stations ,,,,
+Sampling_season,Date_range,temp_depart,precip_depart_percent,precip_depart_mm
+Dry period before project start,June 2018 - Sept. 2018,1.58,-37.9,-14.8
+2018/2019 wet season,Oct. 2018 - May 2019,0.48,-26.2,-25.5
+2019 dry season,June 2019 - Sept. 2019,0.94,1.4,6.4
+2019/2020 wet season,Oct. 2019 - Feb. 2020,0.38,-4.6,10.2
+Study period,Oct. 2018 - Feb. 2020,0.56,-13.35,-7.5
