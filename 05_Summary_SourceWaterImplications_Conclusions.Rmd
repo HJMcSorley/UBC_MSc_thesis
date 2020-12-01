@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-## Recap, Summary and Conclusions
+## Recap and Conclusions
 
 ```{r discussion-setup, warning = FALSE, message = FALSE, include = FALSE, package.startup.message = FALSE}
 
@@ -19,13 +19,13 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Introduction
 
-This research was conducted to better understand spatial and temporal variations in source water quality across a second-growth forested watershed. Water quality dynamics were evaluated as the quantity and quality of natural organic matter (NOM), a master variable in aquatic systems. Three research questions and objectives were addressed in this thesis. The first research objective was to design a sampling strategy for evaluation of spatial and temporal patterns and variance in NOM quality and quantity across 12 sites in the Greater Victoria Water Supply Areas (Chapters 2 and 3). The second research objective was to identify which watershed characteristics and hydroclimatic conditions best explained the aqueous NOM dynamics observed through sampling (Chapter 4). This chapter speaks to the third research objective, of framing results in context of continued water quality monitoring and planning for drinking water supply and future inter-basin transfers.
+This research was conducted to better understand spatial and temporal variations in source water quality across a second-growth forested watershed. Water quality dynamics were evaluated as the quantity and quality of natural organic matter (NOM), a master variable in aquatic systems. Three research questions and objectives were addressed in this thesis. The first research objective was to design a sampling strategy for evaluation of spatial and temporal patterns and variance in NOM quality and quantity across 12 sites in the Greater Victoria Water Supply Areas (Chapters 2 and 3). The second research objective was to identify which watershed characteristics and hydroclimatic conditions best explained the aqueous NOM dynamics observed through sampling (Chapter 4). This chapter speaks to the third research objective, of framing results in context of continued water quality monitoring and planning for drinking water supply and future inter-basin transfers in the Greater Victoria Water Supply Areas (GVWASA).
 
 \  
 
 ### Synopsis
 
-Vertical Racks were used to passively sample the rising-limb of event hydrographs at six monitoring sites in the Leech WSA. Rack sampling was coupled with synoptic Grab sampling campaigns to measuring water quality changes over 16 months from October 2018 to February 2020. Aqueous natural organic matter (NOM) quantity was measured as the concentration of dissolved organic carbon (DOC), and NOM quality was assessed by proxy using UV-Vis spectroscopy. The spectral absorbance coefficient at 254 nm (SAC~254~) was used as an indicator of NOM reactivity and the quotient of SAC~250~ to SAC~365~ (E~2~:E~3~) was used as an indicator of NOM molecular size and aromaticity [@Peuravuori1997; @Helms2008]. Results of these studies yielded six key findings which are provided below and discussed in the following sections. 
+Vertical Racks were used to passively sample the rising-limb of event hydrographs at six monitoring sites in the Leech WSA. Rack sampling was coupled with synoptic Grab sampling campaigns to measuring water quality changes over 16 months from October 2018 to February 2020. Aqueous natural organic matter (NOM) quantity was measured as the concentration of dissolved organic carbon (DOC), and NOM quality was assessed by proxy using UV-Vis spectroscopic proxies. The spectral absorbance coefficient at 254 nm (SAC~254~) was used as an indicator of NOM reactivity and the quotient of SAC~250~ to SAC~365~ (E~2~:E~3~) was used as an indicator of NOM molecular size and aromaticity [@Peuravuori1997; @Helms2008]. Results of these studies yielded six key findings which are provided below and discussed in the following sections. 
 
 \  
 
@@ -47,17 +47,17 @@ Analyses of NOM quantity and quality over space and time clarified spatiotempora
 
 \    
 
-### Discussion and implications for drinking water supply and watershed management
+### Implications for drinking water supply and watershed management
 
-Treatability concerns could result from natural fluctuations in NOM character and concentrations across a water supply area and over time [@Levine2016]; @Li2014; @Yang2015). The molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM have different disinfection by-product formation potentials (DBP-FPs, @Delpla2016; @Yang2015; @HealthCanada2019a; @Chow2008), and aquatic ecosystem roles [@Cory2011]. As NOM is an aquatic master variable, site-specific knowledge of relationships between NOM quantity and quality with other water quality parameters or contaminants (e.g. metals, nutrients, algae blooms) could allow for extrapolation and anticipation of treatment challenges.
-
-\  
-
-Overall, DOC concentrations in the Leech WSA were higher than BC source water Guidelines suggest (4 mg/L). However, it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing [@Kalbitz2000; @Stanley2012; @Aiken2011; ?]. While it is important to understand the source, transport and fate of aqueous NOM (and its associated parameters) in the Leech WSA, the fluvial source water quality is unlikely to directly reflect the water at the intake tower due to reservoir residence times and the effects of photodegradation, physiochemcial reactions and changes, biodegradation, transformation, or possibly bioproduction of NOM. Having a sound understanding of the timing and magnitude of NOM flux and anticipating temporal changed in NOM quality (especially reactivity) will provide valuable baseline information to feed into further water supply studies.   
+The quantity and quality of aqueous NOM varied over space and through time; understanding these patterns can help to inform source drinking water management decisions by providing insights to the origins, transport and fate of aqueous NOM and other parameters associated with it (e.g. metals, correlated DBPs). Treatability concerns could result from natural fluctuations in NOM character and concentrations across a water supply area and over time [@Levine2016]; @Li2014; @Yang2015). The molecular composition and physical structure of NOM influence its functionality and reactivity, therefore different types of aqueous NOM have different DBP-FPs and aquatic ecosystem roles [@Cory2011; @Delpla2016; @Yang2015; @HealthCanada2019a; @Chow2008]. As NOM is an aquatic master variable, site-specific knowledge of relationships between NOM quantity and quality with other water quality parameters or contaminants (e.g. metals, nutrients, algae blooms) could allow for extrapolation and anticipation of treatment challenges.
 
 \  
 
-It will be informative to explore mixing studies between Leech River water with a balancing reservoir or other tributary in Sooke basin. The Leech River will introduce new material and new conditions (e.g. different temperatures, dissolved oxygen, carbonate for buffering or organic acids altering pH, new microbiota) and mixing is likely to change river source water -- a balancing reservoir to stabilize between river and reservoir may be extremely useful.
+Overall, DOC concentrations in the Leech WSA were higher than BC source water Guidelines suggest (4 mg/L). However, it should be noted that if Leech River water is transferred to a reservoir prior to treatment that NOM is likely to be photodegraded or diminished through microbial processing [@Kalbitz2000; @Stanley2012; @Aiken2011]. While it is important to understand the source, transport and fate of aqueous NOM (and its associated parameters) in the Leech WSA, the fluvial source water quality is unlikely to directly reflect the water at the intake tower due to reservoir residence times and the effects of photodegradation, physiochemical reactions and changes, biodegradation, transformation, or possibly bioproduction of NOM. Having a sound understanding of the timing and magnitude of NOM flux and anticipating temporal changed in NOM quality (especially reactivity) will provide valuable baseline information to feed into further water supply studies.   
+
+\  
+
+It will be informative to explore mixing studies between Leech River water with a balancing reservoir or other tributary in Sooke basin. The Leech River will introduce new material and new conditions (e.g. different temperatures, dissolved oxygen, carbonate for buffering or organic acids altering pH, new microbiota). As mixing is likely to change source water attributes, a balancing reservoir to stabilize between river and reservoir may be extremely useful. Future studies of Sooke Reservoir limnology and watershed water balance would be helpful to anticipate potential biogeochemical interactions and possible treatment challenges.
 
 \  
 
@@ -68,5 +68,9 @@ This research contributes to baseline understanding of spatiotemporal dynamics o
 \  
 
 Further evaluation of water quality data with hydrometeorological variables could foster the establishment of operational risk indices that link to current monitoring programs (i.e. wildfire risk index). And coupling Vertical Rack sampling methods with hydrometric monitoring and rating curves would contribute to estimates of fluvial mass transport and loads (e.g. of contaminants). 
+
+\  
+
+Although this research was site-specific to the GVWSA, results -- including sampling strategies and spatial and temporal variation in water quality -- can be applied in other forested hydrology water quality studies that examine adjacent basins and nested catchments.
 
 \  

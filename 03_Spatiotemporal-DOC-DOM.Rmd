@@ -19,19 +19,19 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, fig.cap=TRUE)
 
 ### Synopsis 
 
-The methods defined in Chapter 2 were used to collect and analyze surface water samples across the twelve Greater Victoria water supply area sites (GVWSA, refer to Figure \@ref(fig:sampleSitesMap) for map). The objective was to describe spatial and temporal patterns and variation of natural organic matter (NOM) concentrations (as dissolved organic carbon, DOC) and spectral character (SAC~254~ and E~2~:E~3~). Additionally, sampling results were interpreted with the goal of clarifying the influence of seasonality on quantity and quality of aqueous NOM.     
+The methods defined in Chapter 2 were used to collect and analyze surface water samples across the twelve Greater Victoria water supply area sites (GVWSA, refer to Figure \@ref(fig:sampleSitesMap) for map). The objective was to describe spatial and temporal patterns (including the influence of seasonality) of natural organic matter (NOM) quantity and molecular quality.
 
 \  
 
 ### Methods
 
-All samples were collected by methods described in Chapter 2, and all data were flagged and filtered based on quality assurance described therein. Here, NOM quantity was assessed based on concentrations of dissolved organic carbon (DOC) and NOM quality was indicated by SAC~254~ (reactivity) and E~2~:E~3~ (molecular size & aromaticity). 
+All samples were collected by methods described in Chapter 2, and all data were flagged and filtered based on quality assurance described therein. Here, NOM quantity was assessed based on concentrations of dissolved organic carbon (DOC) and NOM quality was indicated by SAC~254~ (reactivity) and E~2~:E~3~ (molecular size and aromaticity). 
 
 \  
 
 #### Spatial & temporal patterns
 
-Synoptic sample results were evaluated for spatial patterns by comparing low- to high-order streams, between the Leech and Sooke portions of the GVWSA, and by sampling methods at upstream and downstream sites. To assess temporal patterns, results were examined over the full study period (Oct 2018 to Feb 2020), and grouped by wet and dry seasons. For shorter scale temporal pattern assessment, rising limb event-based Rack samples from the six monitoring sites in the Leech WSA were compared to inter-event sampling results (i.e. standard Grab samples). 
+Synoptic sample results were evaluated for spatial patterns by comparing low- to high-order streams, between the Leech and Sooke portions of the GVWSA, and by sampling methods at upstream and downstream sites. To assess temporal patterns, synoptic sampling results were evaluated over the full study period (Oct 2018 to Feb 2020). To detect possible changes in NOM character, the relationship between DOC and SAC~254~ was explored in context of seasons.
 
 \  
 
@@ -39,17 +39,13 @@ Water quality monitoring is generally completed as synoptic sampling, but perhap
 
 \  
 
-Synoptic sampling results were evaluated over time to identify patterns in NOM quantity and quality. And to detect possible changes in NOM character, the relationship between DOC and SAC~254~ was explored in context of seasons.  
-
-\  
-
-Because the most heavily sampled sites were those equipped with Vertical Racks, which collected samples only during the wet season, sample results from the six monitoring sites were isolated. Wet season NOM quantity and quality results were evaluated to compare event-based rising-limb (Rack) samples to non-rising limb (Grab) samples.
+For shorter scale temporal pattern assessment, rising limb event-based Rack samples from the six monitoring sites in the Leech WSA were compared to non-rising limb sample results (i.e. standard Grab samples). As Vertical Racks only collected samples during the wet season, wet season sample results were isolated and evaluated.
 
 \  
 
 ### Results
 
-From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed by UV-Vis for NOM character assessment (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and constraints in instrument availability. Of the samples collected and analyzed, DOC data were reduced by 9.2% (to 387 samples) during hold-time quality control checks (described in Chapter 2). UV-Vis data were reduced by 19.5% (to 256 samples) through hold-time quality control (9% reduction in UV-Vis data) and, unfortunately, an additional 10.5% was lost during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10% (n = 20).  
+From October 2018 to February 2020, across the GVWSA 426 river samples were collected and analyzed for DOC, and 318 of those samples were analyzed by UV-Vis for NOM character assessment (Table \@ref(tab:samplecount)). Fewer samples were analyzed for UV-Vis properties than for DOC concentration due to method evolution at the start of the project and constraints in instrument availability. Of the samples collected and analyzed, DOC data were reduced by 9.2% (to 387 samples) during hold-time quality control checks (described in Chapter 2). UV-Vis data were reduced by 19.5% (to 256 samples) through hold-time quality control (9% reduction in UV-Vis data) and, unfortunately, an additional 10.5% was lost during instrument maintenance. Analysis of calibration verification standards resulted in an average analytical accuracy of 10% (_n_ = 20).  
 
 \  
 
@@ -70,7 +66,7 @@ From 366 quality-controlled river water samples collected over 16 months, DOC ra
 
 \  
 
-The headwaters sites of Weeks creek (11.52 km^2^ sub-basin) and Jarvis creek (1.51 km^2^ sub-basin) had the highest DOC concentrations of the twelve sampling sites (means of 9.9 mg/L (n=49) and 9.7 mg/L (n=12), respectively). The lowest DOC concentrations were recorded at the sampling sites of the Rithet Creek sub-basin (11.12 km^2^) and the Leech Tunnel sub-basin (95.3 km^2^) and their means (5.4 mg/L (n=13) and 4.8 mg/L (n=64), respectively) were not unlike other streams of 3rd order or above (overall average 5.18 mg/L). The greatest range in DOC concentrations was measured at the Rithet Creek site which had a relative standard deviation (RSD) of 71%. The site with the second highest DOC range was the West Leech sub-basin (20.85 km^2^) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD). Between these two sites with the highest DOC variance, the West Leech (a monitoring site) was more heavily sampled (n=57) than Rithet (n=13), which was a synoptic sampling site alone (Table \@ref(tab:synopticDOCdata)).  
+The headwaters sites of Weeks creek (11.52 km^2^ sub-basin) and Jarvis creek (1.51 km^2^ sub-basin) had the highest DOC concentrations of the twelve sampling sites (means of 9.9 mg/L (_n_ = 49) and 9.7 mg/L (_n_ = 12), respectively). The lowest DOC concentrations were recorded at the sampling sites of the Rithet Creek sub-basin (11.12 km^2^) and the Leech Tunnel sub-basin (95.3 km^2^) and their means (5.4 mg/L (_n_ = 13) and 4.8 mg/L (_n_ = 64), respectively) were not unlike other streams of 3rd order or above (overall average 5.18 mg/L). The greatest range in DOC concentrations was measured at the Rithet Creek site which had a relative standard deviation (RSD) of 71%. The site with the second highest DOC range was the West Leech sub-basin (20.85 km^2^) with mean DOC of 5.8 ± 2.4 mg/L (41% RSD). Between these two sites with the highest DOC variance, the West Leech (a monitoring site) was more heavily sampled (_n_ = 57) than Rithet (_n_ = 13), which was a synoptic sampling site alone (Table \@ref(tab:synopticDOCdata)).  
 
 \  
 
@@ -86,7 +82,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_DOC-Synoptic-summary.csv", c
 
 \  
 
-Mean DOC concentrations were similar between the Sooke WSA main tributaries to Sooke Reservoir: Judge Creek (5.7 ± 1.1 mg/L, n=6) and Rithet Creek (5.4 ± 3.9 mg/L, n = 13). Though these three sites were sampled over the same span of time, the number of samples collected at the Tunnel (n=64) was much greater due to less intense focus on the Sooke WSA and Vertical Rack sampling at the Leech Tunnel. Therefore, only overlapping sample dates were evaluated between these three sites to facilitate a preliminary WSA comparison between Sooke WSA main tributaries and the future supplemental supply (Table \@ref(tab:TunRitJud)). Mean DOC was similar between Rithet Creek (3.2 ± 1.4 mg/L, n = 8) and the Leech Tunnel (3.7 ± 1.1 mg/L, n = 9), but higher at Judge Creek (5.7 ± 1.1 mg/L, n = 6).
+Mean DOC concentrations were similar between the Sooke WSA main tributaries to Sooke Reservoir: Judge Creek (5.7 ± 1.1 mg/L, _n_ = 6) and Rithet Creek (5.4 ± 3.9 mg/L, _n_ = 13). Though these three sites were sampled over the same span of time, the number of samples collected at the Tunnel (_n_ = 64) was much greater due to less intense focus on the Sooke WSA and Vertical Rack sampling at the Leech Tunnel. Therefore, only overlapping sample dates were evaluated between these three sites to facilitate a preliminary WSA comparison between Sooke WSA main tributaries and the future supplemental supply (Table \@ref(tab:TunRitJud)). Mean DOC was similar between Rithet Creek (3.2 ± 1.4 mg/L, _n_ = 8) and the Leech Tunnel (3.7 ± 1.1 mg/L, _n_ = 9), but higher at Judge Creek (5.7 ± 1.1 mg/L, _n_ = 6).
 
 \  
 
@@ -168,7 +164,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch3_DOC-loess-tr
 
 \  
 
-There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparse period, appears to match with the overall pattern observed in available data. Indeed, in each sampling season, mean monthly DOC at each site was loosely correlated (r≈0.52) to mean monthly air temperature (Figure \@ref(fig:DOCvsTemp)), where low temperatures corresponded to low concentrations, and higher concentrations occurring at higher temperatures.
+There were few data points from mid-February through March 2019 (when snow limited field access); however, DOC concentrations were decreasing up to that gap, and were low following it. Thus, the loess trend line in Figure \@ref(fig:DOCloessAll), though it includes this data-sparse period, appears to match with the overall pattern observed in available data. Indeed, in each sampling season, mean monthly DOC at each site was loosely correlated (r ≈ 0.52) to mean monthly air temperature (Figure \@ref(fig:DOCvsTemp)), where low temperatures corresponded to low concentrations, and higher concentrations occurring at higher temperatures.
 
 \  
 
@@ -290,29 +286,29 @@ Weeks Creek, which drains from Weeks Lake and surrounding wetlands, had the grea
 
 \  
 
-Data from the West Leech suggests that the pulse shunt concept [@Raymond2016] is relevant to NOM transport in this sub-basin system. Samples from the West Leech site had high aromaticity compared to other higher-order streams and showed considerable event-based changes in NOM concentration (45% difference between Grab and Rack samples) relative to the other monitoring sites; but it was not clear why. The West Leech sub-basin (20.85 km^2^) was of similar size to Leech-head (20.59 km^2^) and Cragg creek sub-basin (28.06 km^2^), with lower percent wetland cover (0.4% compared to 2.6% and 1.6% at Leech-head and Cragg creek sub-basins). The West Leech sub-basin was the only synoptically sampled sub-basin that did not have metamorphic parent-material (wark gneiss). Chapter 4 evaluates watershed features and conditions to identify possible drivers that could explain differences among sites' NOM dynamics. 
+Data from the West Leech suggests that the pulse shunt concept [@Raymond2016] is particularly relevant to NOM transport in this sub-basin system. Samples from the West Leech site had high aromaticity compared to other higher-order streams and showed considerable event-based changes in NOM concentration (45% difference between Grab and Rack samples) relative to the other monitoring sites. The West Leech sub-basin (20.85 km^2^) was of similar size to Leech-head (20.59 km^2^) and Cragg creek sub-basin (28.06 km^2^), with lower percent wetland cover (0.4% compared to 2.6% and 1.6% at Leech-head and Cragg creek sub-basins). The West Leech sub-basin was the only sampled sub-basin that did not have metamorphic parent-material (wark gneiss). 
 
 \  
 
-Overall, lower DOC was observed in the streams draining from the eastern portion of the Leech WSA catchment (Cragg and Chris Creeks) and higher DOC was observed in the streams draining from the west (West Leech and Weeks Creek).The difference in subsurface geology in the west and east basins of the Leech WSA may have played an important role in NOM differences, this is explored in Chapter 4. 
+In the Leech Watershed, lower DOC was observed in the streams draining from the eastern portion of the Leech WSA catchment (Cragg and Chris Creeks) and higher DOC was observed in the streams draining from the west (West Leech and Weeks Creek).The difference in subsurface geology in the west and east basins of the Leech WSA may have played an important role in NOM differences, and is explored in Chapter 4. 
 
 \  
 
 #### Temporal patterns
 
-While the absolute magnitude of DOC varied among sites, NOM quantity across the GVWSA followed a near-sinusoidal pattern over time. DOC was highest in the early wet season, then progressively decreased with low concentrations occurring during the coldest periods. Low DOC during cold periods could have been due to intermittent soil frost (observed in the field), where freezing of terrestrial NOM sources effectively locked the source pool and reduced in-stream concentrations. It has been shown that freezing stream samples reduces DOC concentrations [@Fellman2008]. The period of lowest winter DOC in this study also corresponded to low flows and snow accumulation in the GVWSA (particularly the Leech WSA). Laudon et al. [-@Laudon2013] found that winter DOC export was positively correlated to mean winter temperature. In agreement, samples from the GVWSA showed positive correlation between mean monthly DOC concentrations and mean monthly air temperatures. Laudon also noted that DOC export was linked to water export, so the low DOC concentrations observed in winter could also have been due to low flows [@Laudon2013].  
+While the absolute magnitude of DOC varied among sites, NOM quantity across the GVWSA followed a near-sinusoidal pattern over time. DOC was highest in the early wet season, then progressively decreased with low concentrations occurring during the coldest periods. Low DOC during cold periods could have been due to intermittent soil frost (observed in the field), where freezing of terrestrial NOM sources effectively locked the source pool and reduced in-stream concentrations. It has also been shown that freezing stream samples reduces DOC concentrations [@Fellman2008]. The period of lowest winter DOC in this study also corresponded to low flows and snow accumulation in the GVWSA (particularly the Leech WSA). Laudon et al. [-@Laudon2013] found that winter DOC export was positively correlated to mean winter temperature. In agreement, samples from the GVWSA showed positive correlation between mean monthly DOC concentrations and mean monthly air temperatures. Laudon also noted that DOC export was linked to water export, so the low DOC concentrations observed in winter could also have been due to low flows [@Laudon2013].  
 
 \  
 
-DOC concentrations increased over the summer, reaching highs for the start of the wet season.  Overall, there was negligible difference in NOM quantity between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. Peak values for maximum and minimum concentration and reactivity were measured in samples from the wet season on the rising hydrograph limb. This shows that hydrologic pulses contained greater quantities of more reactive NOM. In general, stream DOC concentrations were higher than the recommended 4 mg/L of TOC for source water quality [@BC2019]. However, future inter-basin transfers would move Leech River water to a reservoir prior to intake for drinking water treatment, and reservoir dynamics would likely alter the quantity and quality of stream NOM [@Stanley2012; @Aiken1995]. 
+DOC concentrations increased over the summer, reaching highs for the start of the wet season. Overall, there was negligible difference in NOM quantity between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. Seasonal changes in the relationship between DOC and SAC~254~ were observed across the GVWSA. Aqueous NOM was larger, more aromatic and more reactive during the wet seasons than during the dry season. More aromatic NOM in the wet season was likely sourced from autochthonous terrestrial sources (e.g. humic and fluvic acids), while the less aromatic dry season NOM was probably made up of autochthonous NOM from in-stream processes (e.g. algae). The seasonal shift in NOM quality from autochthonous to allochthonous material was predicted by the river continuum concept [@Vannote1980; @Mosher2015; @Meyer1983]. 
+
+\ 
+
+The river continuum concept explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing. Results also supported the pulse shunt concept [@Raymond2016], in that event samples contained greater quantities of more reactive NOM. Peak values for maximum and minimum DOC concentration and NOM reactivity were measured in samples from the wet season on the rising hydrograph limb. Chapter 4 evaluates the Leech WSA monitoring site data more closely with respect to event-based changes, for a more detailed understanding of relationships between streamflow and NOM transport. 
 
 \  
 
-Seasonal changes in the relationship between DOC and SAC~254~ were observed across the GVWSA. Aqueous NOM was larger, more aromatic and more reactive during the wet seasons than during the dry season. More aromatic NOM in the wet season was likely sourced from autochthonous terrestrial sources (e.g. humic and fluvic acids), while the less aromatic dry season NOM was probably made up of autochthonous NOM from in-stream processes (e.g. algae). The seasonal shift in NOM quality from autochthonous to allochthonous material was predicted by the river continuum concept [@Vannote1980; @Mosher2015; @Meyer1983]. The RCC explains temporal changes in NOM character through variable mobilization of source material and biogeochemical processing.
-
-\  
-
-Rising limb samples generally had greater DOC concentrations and more reactive character than samples collected at other flows. Evaluating the Leech WSA monitoring site data more closely with respect to event-based changes will allow for a more detailed understanding of relationships between streamflow and NOM transport (Chapter 4).
+In general, stream DOC concentrations were higher than the recommended 4 mg/L of TOC for source water quality [@BC2019]. However, future inter-basin transfers would move Leech River water to a reservoir prior to intake for drinking water treatment, and reservoir dynamics would likely alter the quantity and quality of stream NOM [@Stanley2012; @Aiken1995]. 
 
 \  
 
@@ -322,17 +318,17 @@ Aside from Weeks Creek, which maintained highly aromatic NOM throughout the year
 
 \ 
 
-It was possible that UV-Vis interference caused the observed NOM quality pattern -- like chromophoric NOM (the target analyte), other dissolved inorganic species (e.g. iron, nitrate, nitrite, bromide) also absorb light at wavelengths around 254 nm [@StdMet5910]. Concentrations of iron and nitrogen species were not measured; therefore, their interference cannot be confirmed; however, the full scan absorption spectra (not shown) displayed gradual decrease in absorbance with increasing wavelength with no major spikes, suggesting few interferences. Therefore, the patterns in spectral indices were believed to be unbiased indication of greater NOM aromaticity at lower reaches in the dry months. 
+The relative elevation in downstream NOM aromaticity and molecular size during the dry season could indicate that more easily altered (i.e. labile) NOM was removed (via biotic or abiotic factors) and larger, more aromatic and recalcitrant NOM was transported downstream resulting in a longitudinal concentration in the dry season. Or, the more aromatic NOM character at lower reaches could have been due to humic inputs from NOM-rich tributaries feeding higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes. 
 
 \  
 
-The relative elevation in downstream NOM aromaticity and molecular size during the dry season could indicate that more easily altered (i.e. labile) NOM was removed (via biotic or abiotic factors) and larger, more aromatic and recalcitrant NOM was transported downstream resulting in a longitudinal concentration in the dry season. Or, the more aromatic NOM character at lower reaches could have been due to humic inputs from NOM-rich tributaries feeding higher order streams, or perhaps in-stream microbial processing of terrestrial organic matter (e.g. leaf litter) generated aqueous humic solutes. 
+It was possible that UV-Vis interference caused the observed NOM quality pattern -- like chromophoric NOM (the target analyte), other dissolved inorganic species (e.g. iron, nitrate, nitrite, bromide) also absorb light at wavelengths around 254 nm [@StdMet5910]. Concentrations of iron and nitrogen species were not measured; therefore, their interference cannot be confirmed; however, the full scan absorption spectra (not shown) displayed gradual decrease in absorbance with increasing wavelength with no major spikes, suggesting few interferences. Therefore, the patterns in spectral indices were believed to be unbiased indication of greater NOM aromaticity at lower reaches in the dry months. 
 
 \  
 
 ### Summary and future directions 
 
-The objective of this work was to design a sampling strategy to measure the ranges of NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on concentration and character of NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of NOM concentrations and character (aromaticity and reactivity), and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams.
+The objective of this work was to design a sampling strategy to measure the ranges of NOM between adjacent drainage basins and among nested sub-catchments and to evaluate the influence of seasonality on quantity and quality of aqueous NOM. The sampling strategy was a combination of synoptic Grab sampling across twelve sites in the Greater Victoria water supply area in tandem with Vertical Rack sampling at six of those sites in the Leech WSA. Sampling campaigns showed longitudinal attenuation of NOM concentrations and character (aromaticity and reactivity), and seasonal shifts from aliphatic NOM in the dry season to more aromatic NOM in the wet season. Across the GVWSA, DOC concentrations ranged from 1.64 mg/L to 19.1 mg/L with mean DOC of 6.1 ± 2.9 mg/L. NOM character was most aromatic and most variable in low-order headwater streams.
 
 \  
 

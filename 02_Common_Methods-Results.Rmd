@@ -22,7 +22,7 @@ A combination of synoptic and event-based sampling was used to capture broad spa
 \  
 
 
-Surface water samples were collected between October 2018 and February 2020 to measure dissolved organic carbon (DOC) concentration and natural organic matter (NOM) character through space and time in the Greater Victoria Water Supply Area (GVWSA). Samples were analyzed at UBC for DOC concentration and NOM character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of twelve sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at six sites in the Leech WSA. 
+Surface water samples were collected between October 2018 and February 2020 to measure the quantity and quality of aqueous natural organic matter (NOM) through space and time in the Greater Victoria Water Supply Area (GVWSA). Samples were analyzed at UBC for dissolved organic carbon (DOC) concentration and NOM molecular character via high temperature combustion and UV-Vis spectroscopy, respectively (details follow in *'Analytical Techniques'*). The sampling program designed for this project included synoptic sampling of twelve sites across the Sooke and Leech water supply areas (WSA), as well as installation of monitoring and sampling stations at six sites in the Leech WSA. 
 
 \  
 
@@ -229,14 +229,14 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_LWSA-mean-summary.csv", col_n
 \  
 
 ```{r meanWxLWSA, fig.cap = fig_cap}
-fig_cap = "\\label{fig:meanWxLWSA} Mean daily air temperature, rain and accumulated snow from Chris Creek (560 m a.s.l) and Martin's Gulch (512 m a.s.l) fire-weather stations in the Leech Water Supply Area, where the coloured sections following the dashed "Project Start" line indicate the study period."
+fig_cap = "\\label{fig:meanWxLWSA} Mean daily air temperature, rain and accumulated snow from Chris Creek (560 m a.s.l) and Martin's Gulch (512 m a.s.l) fire-weather stations in the Leech Water Supply Area, where the coloured sections following the dashed 'Project Start' line indicate data from the study period."
 
 knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx_LWSA-means.png")
 ```
 
 \  
 
-On average, October 2018 through to February 2020 (the study period) was warmer (0.56° C) and drier (7.5 mm/month or 13.4%) than historical (1971-2000) climate normals (@PCIC2020; see Appendix B). 
+On average, October 2018 through to February 2020 (the study period) was warmer (0.56° C) and drier (7.5 mm/month or 13.4%) than historical (1971-2000) climate normals (@PCIC2020; see Appendix B1 for full details). 
 
 \  
 
@@ -257,7 +257,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Wx_Events.csv",
 
 \  
 
-Stream response was primarily driven by major rain events (Table \@ref(tab:EventsTable)); however, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included in the 2018/2019 wet season, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season extended from the start of the project (October 2018) to mid-May 2019, with snowmelt primarily contributing to streamflow in the Leech WSA during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019, and the 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020).
+Stream response was primarily driven by major rain events (Table \@ref(tab:EventsTable)); however, there was a period of snowfall (winter of 2018/2019) when rainfall runoff subsided and melt generated streamflow response across the monitoring sites. That period of snow accumulation and melt was included in the 2018/2019 wet season, despite the lack of major rain events (Figure \@ref(fig:seasonalMegaPlot)). The 2018/2019 wet season, which was 26% drier (26 mm/mo) and 0.48° C warmer than normal on average, extended from the start of the project (October 2018) to mid-May 2019 with snowmelt primarily contributing to streamflow in the Leech WSA during the period from late January (event 8, Table \@ref(tab:EventsTable)) to mid-May 2019. The dry sampling season spanned from mid-May to late-September 2019 and was, on average, 1.4% wetter (6.4 mm/mo) and 0.94° C warmer than normal, though September 2019 was 132% wetter than normal [@PCIC2020]. The 2019/2020 wet season began mid-September (event 9, Table \@ref(tab:EventsTable)) and extended to the end of the field study period (Feb 20, 2020). Overall, the 2019/2020 wet season was 5% drier than normal on average, but January 2020 was 136% wetter than normal [@PCIC2020; Appendix B1]. 
 
 \  
 
@@ -271,7 +271,11 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Wx-stage_subbasi
 
 #### Collaborative analyses for treatability and metals
 
-Relationships between DBP-FPs with DOC, SUVA~254~, E~2~:E~3~, and SAC~254~ (Figure \@ref(fig:treatability), see Appendix C1 for full details) revealed that SAC~254~ was the best indicator of NOM reactivity with respect to DBP-FPs. Results from two sets of samples at four selected sites (n=8) revealed that SAC~254~ was better correlated to most DBP-FPs (r=0.68, overall) than was SUVA~254~ (r=0.36) or DOC (r=0.50). E~2~:E~3~ was not well correlated to DBP-FPs (not shown in Figure \@ref(fig:treatability)) and was used only as an (inverse) indicator of aqueous NOM aromaticity and molecular size (Peuravuori and Pihlaja 1997; Helms et al. 2008). In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r=0.9882) including trichloromethane (TCM, r=0.9869), total haloacetic acids (HAAs, r=0.9927) including dichloroacetic acid (DCAA, r=0.9945) and trichloroacetic acid (TCAA, r=0.9900); but was only weakly correlated to bromodichloromethane (BDCM, r=0.6539). Thus, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from results. 
+Relationships between DBP-FPs with DOC, SUVA~254~, E~2~:E~3~, and SAC~254~ (Figure \@ref(fig:treatability), see Appendix C1 for full details) revealed that SAC~254~ was the best indicator of NOM reactivity with respect to DBP-FPs. Results from two sets of samples at four selected sites (n = 8) revealed that SAC~254~ was better correlated to most DBP-FPs (r = 0.68, overall) than was SUVA~254~ (r = 0.36) or DOC (r = 0.50). E~2~:E~3~ was not well correlated to DBP-FPs (not shown in Figure \@ref(fig:treatability)).  
+
+\  
+
+In particular, SAC~254~ was well correlated with total trihalomethanes (THM, r = 0.9882) including trichloromethane (TCM, r = 0.9869); total haloacetic acids (HAAs, r = 0.9927), including dichloroacetic acid (DCAA, r = 0.9945) and trichloroacetic acid (TCAA,r = 0.9900). SAC~254~ was only weakly correlated to bromodichloromethane (BDCM, r = 0.6539). Based on these results, SAC~254~ was included as an indicator of aromatic NOM reactivity, and SUVA~254~ was omitted from analyses. E~2~:E~3~ was used as an (inverse) indicator of aqueous NOM aromaticity and molecular size (Peuravuori and Pihlaja 1997; Helms et al. 2008).
 
 \  
 
@@ -283,7 +287,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatab
 
 \  
 
-Evaluation of DOC in relation to metals data provided by the CRD (see Appendix C2 for details and results plots) showed that DOC was positively correlated with aqueous total mercury (r=0.9999), iron (r=0.8326), manganese (r=0.7706), and aluminum (r=0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r=0.4745), copper (r=0.4198), and arsenic (r=0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport and reinforces the importance of monitoring DOC concentration in source water supply. 
+Evaluation of DOC in relation to metals data provided by the CRD (see Appendix C2 for details and results plots) showed that DOC was positively correlated with aqueous total mercury (r = 0.9999), iron (r = 0.8326), manganese (r = 0.7706), and aluminum (r = 0.6297). While the relationships were not strong, DOC was also positively related to concentrations of barium (r = 0.4745), copper (r = 0.4198), and arsenic (r = 0.3335). Based on these results, it seems apt to consider DOC a master variable linked to metals transport (Appendix C2) and reinforces the importance of monitoring DOC concentration in source water supply. 
 
 \  
 
@@ -359,15 +363,15 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/HoldTime_boxplot
 
 #### Foundational results summary 
 
-A challenge of Vertical Rack sampling is rapid retrieval of collected samples. Sample retrieval may be delayed due to field access timing and logistics, and high water can prohibit safe access to the Rack. By coupling continuously recorded stage with manually recorded siphon-bottle heights, sample hold-times were calculated for quality assurance filtering of data for samples that had exceeded an acceptable hold time.
+A challenge of Vertical Rack sampling is rapid retrieval of collected samples; delays may arise due to logistics of field access and high water can prohibit safe access to the Rack. Sample hold-times were determined and applied as quality assurance in data analysis. Continuously recorded stage data was coupled with manually recorded siphon-bottle heights to determine date-times of sample collection and to calculate Rack sample hold-times, which were used to flag and filter data.
 
 \  
 
-Results of hold-time experiments showed that early-wet-season (“first flush”) samples contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection, whereas later season samples contained DOC which was relatively more stable for up to and including 20 days when held at field temperatures that mimicked a refrigerator (0° C to 7° C). A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character (i.e. aromaticity, molecular size, reactivity) and greater variability in DOC concentrations among replicate samples. Additional tests would be required to determine if changes in NOM character were caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Freezing has been shown to decrease sample DOC concentrations in laboratory experiments [@Fellman2008]. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%.
+Results of hold-time experiments showed that early-wet-season (“first flush”) samples contain more labile and aliphatic DOC which is unstable and should be analyzed immediately after collection. Later season samples contained DOC which was relatively more stable for up to and including 20 days when held at field temperatures that mimicked a refrigerator (0° C to 7° C). A hold-time of 34 days with periods of freezing resulted in significant changes to sample NOM molecular character (i.e. aromaticity, molecular size, reactivity) and greater variability in DOC concentrations among replicate samples. Additional tests would be required to determine if changes in NOM character were caused by the length of time the sample was held, or perhaps due only to freezing and thawing, or a combination of both time and temperature. Freezing has been shown to decrease sample DOC concentrations in laboratory experiments [@Fellman2008]. Based on these results, sample analyses data were updated to include quality-assurance/quality-control (QA/QC) flags which were used to filter sample data, reducing the effective number of samples included in results by less than 10%.
 
 \  
 
-Hold-times were calculated for each sample as the time between sample collection and analysis. Any sample that remained held for fewer than 20 days at temperatures between 0-7° C were flagged as acceptable for further data analysis; Rack samples that were held for 20 days or longer were flagged for exceeding a reliable hold-time; and samples identified as early-wet-season (“first-flush”) that had a hold-time of 7 days or longer (based on logistics of field access) were flagged as unreliable and not included in further data analysis. Because of possible freeze-thaw changes to DOC and NOM, any sample that underwent suspected or confirmed freezing was also flagged for temperature effects. Hold-time test experiments indicate that extended time in the field on a Vertical Rack could result in a decrease in DOC but not an increase, therefore no positive bias in DOC result should be suspected from event-based samples.
+Hold-times were calculated for each sample as the time between sample collection and analysis. Any sample that remained held for fewer than 20 days at temperatures between 0-7° C were flagged as acceptable for further data analysis; Rack samples that were held for 20 days or longer were flagged for exceeding a reliable hold-time; and samples identified as early-wet-season (“first-flush”) that had a hold-time of 7 days or longer (based on logistics of field access) were flagged as unreliable and not included in further data analysis. Because of possible freeze-thaw changes to NOM, any sample that underwent suspected or confirmed freezing was also flagged for temperature effects. Hold-time test experiments indicate that extended time in the field on a Vertical Rack could result in a decrease in DOC but not an increase, therefore no positive bias in DOC result should be suspected from event-based samples.
 
 \  
 

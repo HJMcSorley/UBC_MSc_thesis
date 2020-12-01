@@ -80,11 +80,11 @@ RF variable importance measures (VIMs) were used to assess the relative importan
 
 \  
 
-Sampling stages for each site were scaled (min-max-normalized) to account for differences between Vertical Rack installations and to allow for comparison between sites (Equation 1).
+Sampling stages for each site were scaled (min-max-normalized) to account for differences between Vertical Rack installations and to allow for comparison between sites (Equation 1). For antecedent rain and air temperatures, different periods of time were considered in exploratory data analysis. Intervals of 3, 5, 7, 14, 21 and 30 days prior to sample collection were evaluated for cross-correlations and relative VIM results.
+
+\  
 
 Equation 1: $$normalized ~ X_{i} = \frac { (X_{i} - X_{min}) }{ (X_{max} - X_{min}) }$$
-
-For antecedent rain and air temperatures, different periods of time were considered in exploratory data analysis. Intervals of 3, 5, 7, 14, 21 and 30 days prior to sample collection were evaluated for cross-correlations and relative VIM results.  
 
 \  
 
@@ -123,11 +123,7 @@ The nine selected predictor variables for RF VIM assessment included:
 
 \  
 
-The length of antecedent periods of 30 days for antecedent rain and 7 days for antecedent air temperature were chosen because (1) they were not cross correlated with other predictor variables or each other and (2) each was more easily distinguished in VIM results than other interval options.
-
-\  
-
-Furthermore, the amount of rainfall in the 30 days prior to sample collection could be considered as an indicator of overall antecedent landscape wetness. A longer period of antecedent rain may be indicative of greater connectivity of streams to distant/deeper terrestrial environments. Using the same VIM parameters tuned for DOC prediction, 30-day antecedent rain was relatively more important than 7-day rain (15.3% vs. 12.8%) for predicting E~2~:E~3~, and 7-day antecedent air temperatures were more important than 30-day air temperatures (8.5% vs. 6.5%). This confirmed that relatively short-term temperatures (rolling 7-day mean) and relatively long-term rain (rolling 30-day sum) were appropriate selections for the RF VIM assessments.
+The length of antecedent periods of 30 days for antecedent rain and 7 days for antecedent air temperature were chosen because (1) they were not cross correlated with other predictor variables or each other and (2) each was more easily distinguished in VIM results than other interval options. Furthermore, the amount of rainfall in the 30 days prior to sample collection could be considered as an indicator of overall antecedent landscape wetness. A longer period of antecedent rain may be indicative of greater connectivity of streams to distant/deeper terrestrial environments. Using the same VIM parameters tuned for DOC prediction, 30-day antecedent rain was relatively more important than 7-day rain (15.3% vs. 12.8%) for predicting E~2~:E~3~, and 7-day antecedent air temperatures were more important than 30-day air temperatures (8.5% vs. 6.5%). This confirmed that relatively short-term temperatures (rolling 7-day mean) and relatively long-term rain (rolling 30-day sum) were appropriate selections for the RF VIM assessments.
 
 \  
 
@@ -335,7 +331,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_logging-t
 
 ##### Variable importance Summary
 
-Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface materials were largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is a positive relationship between NOM and another parent material, probably the schist-like Leech River Formation. 
+Of the watershed characteristics examined, the percent of each basin with metamorphic wark gneiss parent material appeared to be the most relevant and was a common predictor variable to each of DOC, SAC~254~ and E~2~:E~3~. The absence of wark gneiss was not related to the site with highest DOC, despite DOC decreasing with increasing metamorphic representation. Because subsurface materials were largely cross-correlated, the observed patterns with wark gneiss may point to more nuanced relationships that couldn't be teased out in this RF analysis because of cross-correlations with other predictor variables. It could be that what is observed as a negative relationship with wark gneiss is a positive relationship between NOM and another parent material, possibly the schist-like Leech River Formation, or a dominant soil type. 
 
 \ 
 
@@ -345,11 +341,7 @@ Across the Leech WSA, warm and wet conditions were an important driver for NOM c
 
 #### Warm and wet: seasonal patterns and rain events
 
-Moisture and temperature, important to each of the three predictant variables, corresponded to different seasons. Given the evidence of strong seasonality for NOM character (Chapter 3), a comparison between wet and dry season sample results was used to assess spatial difference between seasons for DOC, SAC~254~ and E~2~:E~3~. 
-
-\  
-
-During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks Creek had greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris Creek and Leech-head in SAC~254~ than in E~2~:E~3~. These results show that dry season aqueous NOM increased in aromaticity from upstream to downstream sites. 
+Moisture and temperature, important to each of the three predictant variables, corresponded to different seasons. Given the evidence of strong seasonality for NOM character (Chapter 3), a comparison between wet and dry season sample results was used to assess spatial difference between seasons for DOC, SAC~254~ and E~2~:E~3~. During the dry-season, SAC~254~ and E~2~:E~3~ indicated that Weeks Creek had greater aromaticity compared to the other sites. Aside from the highly aromatic character of NOM observed at Weeks, E~2~:E~3~ suggested that aqueous NOM in the dry-season had increasing aromaticity from upstream to downstream sites; while this quotient can also be indicative of molecular size (by an inverse relationship), the simultaneous decrease in DOC concentration indicates that molecular weight was not increasing downstream (Figure \@ref(fig:seasonalNOM)). SAC~254~ showed a similar increase in aromatic character from headwaters to mouth during the dry season, albeit the pattern was less pronounced and there was a larger difference between Chris Creek and Leech-head in SAC~254~ than in E~2~:E~3~. These results show that dry season aqueous NOM increased in aromaticity from upstream to downstream sites. 
 
 \  
 
@@ -374,7 +366,7 @@ Antecedent moisture and/or sampling stage was important for each of the three pr
 
 ```{r EventsTab}
 read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/CH4_events-n-samples.csv") %>% 
-  knitr::kable(digits = c(0,0,1,1,1,0,2,2,2), 
+  knitr::kable(digits = c(0,0,1,1,0,2,2,2,2), 
                caption = "Rain events (with a threshold of 50 mm and 14-hour inter-event period) defined by Vertical Rack sample collection across the six monitoring sites of the Leech WSA",
                col.names = c("Major event no.", "Start Date", "Rainfall (mm)", "Intensity (mm/24-hr)", "Samples collected", "mean DOC (mg/L)", "max DOC (mg/L)", "mean SAC~254~", "mean E~2~:E~3~"))
 
@@ -440,11 +432,11 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/response_DOC-summary.csv", col_n
 
 ### Discussion 
 
-The sampling conditions and watershed characteristics included in Random Forest variable importance measures (RF VIM) showed that across the six monitoring sites in the Leech WSA, stream NOM quality and quantity were influenced by warm and wet conditions and the parent material in each basin. No model is perfect, and the relative importance derived from RF VIM in this chapter was limited to the data provided and the assumptions associated with those data. Based on the variables assessed, sampling stage and antecedent wetness ranked among the most important variables for predicting NOM quantity and quality, as did the percent of wark gneiss underlying each basin.  
+The sampling conditions and watershed characteristics included in Random Forest variable importance measures (RF VIM) showed that across the six monitoring sites in the Leech WSA, stream NOM quality and quantity were most influenced by warm and wet conditions and the parent material in each basin. No model is perfect, and the relative importance derived from RF VIM in this chapter was limited to the data provided and the assumptions associated with those data. Based on the variables assessed, sampling stage and antecedent wetness ranked among the most important variables for predicting NOM quantity and quality, as did the percent of wark gneiss underlying each basin.  
  
 \  
 
-NOM quantity and quality in each sub-basin was inversely related to representation of metamorphic wark gneiss parent material, but the absence of wark gneiss did not correspond to the site with greatest NOM quantity or reactive and aromatic character. The patterns observed between NOM and metamorphic parent material suggests that aqueous NOM may be affected by combinations of watershed characteristics and more complex relationships that weren't elucidated in this analysis. For example, combinations of parent materials and soil development may be more important than either variable alone. Similarly, the metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss in the monitoring basins and therefore was not included in RF VIM analyses. The Leech River formation was the predominant parent material on the west side of the Leech WSA. Sub-basins draining from the west, Weeks creek and West Leech, also had the lowest percent area harvested from 1980 to 2011 (~28% and ~26%, respectively), and had greater quantities of larger, more aromatic and reactive aqueous NOM. While there was no clear link between NOM quantity and quality with average tree age or harvest history, perhaps the combination of less logging on this more erodible metasedimentary geolith contributed to NOM dynamics more than either other those variables alone.
+NOM quantity and quality in each sub-basin was inversely related to representation of metamorphic wark gneiss parent material, but the absence of wark gneiss did not correspond to the site with greatest NOM quantity or reactive character. The patterns observed between NOM and metamorphic parent material suggests that aqueous NOM may be affected by combinations of watershed characteristics and more complex relationships that weren't elucidated in this analysis. For example, combinations of parent materials and soil development may be more important than either variable alone. Similarly, the metasedimentary Leech River formation (argillite metagreywacke and metagreywacke) was inversely correlated (-0.92) to wark gneiss (and cross correlated to other variables) in the monitoring basins and therefore was not included in RF VIM analyses. The Leech River formation was the predominant parent material on the west side of the Leech WSA. Sub-basins draining from the west, Weeks creek and West Leech, also had the lowest percent area harvested from 1980 to 2011 (~28% and ~26%, respectively), and had greater quantities of larger, more aromatic and reactive aqueous NOM. While there was no clear link between NOM quantity and quality with average tree age or harvest history, perhaps the combination of less logging on this more erodible metasedimentary geolith contributed to NOM dynamics more than either other those variables alone.
 
 \  
 
@@ -452,7 +444,7 @@ Sub-basin slope was negatively correlated to percent wetland (-0.73), and wetlan
 
 \  
  
-Stream stage was an important variable for predicting the quantity and reactivity of NOM in streams, whereas antecedent wetness conditions were more important for predicting the molecular size and aromaticity of aqueous NOM. The relative sensitivity of DOC concentration to stream stage points to hydrologic mass transport, whereas the sensitivity to antecedent wetness points to the importance of hydrologic connectivity between streams and the terrestrial landscape as a source of allochthonous NOM. 
+Stream stage was an important variable for predicting the quantity and reactivity of NOM in streams, whereas antecedent wetness conditions were more important for predicting NOM molecular size and aromaticity. The relative sensitivity of DOC concentration to stream stage points to hydrologic mass transport, whereas the sensitivity of NOM molecular character to antecedent wetness points to the importance of hydrologic connectivity between streams and the terrestrial landscape as a source of allochthonous NOM. 
 
 \  
 
@@ -460,7 +452,8 @@ Antecedent wetness is an important watershed driver for NOM export as it influen
 
 \  
 
-A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). Early in the wet season there was a decrease in NOM quantity with increasing flows (higher stage), and as the wet season progresses, stream NOM quantity and aromaticity increased with increasing flows. These findings were in line with the pulse-shunt concept (PSC, @Raymond2016, @Aguilera2018). In the Leech WSA monitoring sites, the most aromatic and highest molecular weight NOM samples were collected late in the wet season.
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). Early in the wet season there was a decrease in NOM quantity with increasing flows (higher stage), and as the wet season progresses, stream NOM quantity and aromaticity increased with increasing flows. 
+These results show a temporal shift in NOM source pools, from those of limited supply early in the wet season, to those of near-unlimited supply later in the wet season [@Zarnetske2018]. In the Leech WSA monitoring sites, the most aromatic and highest molecular weight NOM samples were collected late in the wet season. Late wet-season samples results were more in line with the pulse-shunt concept than early wet-season samples (PSC, @Raymond2016, @Aguilera2018).
 
 \  
 
@@ -480,9 +473,9 @@ The quantity of stream NOM was greatest early in the wet season, with peak DOC c
 
 \  
 
-### Summary and future directions
+### Summary 
 
-Spatial variation in aqueous NOM quantity and quality was determined to be driven by sub-basin parent material. Parent material and soil types are linked to chemical loads in surface waters, which can be partially attributed to differences in hydraulic conductivity and water storage capacity [@Musolff2015]. Geological factors have been linked to stream alkalinity and total dissolved solids (e.g. @Johnson1997) and inorganic chemicals [@Feller2005]. As geological weathering is strongly linked to temperature, as well as physical forces (e.g. @Feller2005), the RF VIM results of warm and wet conditions coupled with sub-basin parent material point to a set of interrelated abiotic drivers for aqueous NOM dynamics. Although the precise relationship was not completely resolved, it was evident that a greater proportion of metamorphic parent material corresponded to lower concentrations of less aromatic and less reactive NOM in streams. Not studied in this project were biotic variables (e.g. in-stream and riparian invertebrates, microbes and algae), which would also be affected by temperature regimes and would display dynamic fluctuations with NOM quantity and quality.
+Spatial variation in aqueous NOM quantity and quality was determined to be partly driven by sub-basin parent material. Parent material and soil types are linked to chemical loads in surface waters, which can be partially attributed to differences in hydraulic conductivity and water storage capacity [@Musolff2015]. Geological factors have been linked to stream alkalinity and total dissolved solids (e.g. @Johnson1997) and inorganic chemicals [@Feller2005]. As geological weathering is strongly linked to temperature, as well as physical forces (e.g. @Feller2005), the RF VIM results of warm and wet conditions coupled with sub-basin parent material point to a set of interrelated abiotic drivers for aqueous NOM dynamics. Although the precise relationship was not completely resolved, it was evident that a greater proportion of metamorphic parent material corresponded to lower concentrations of less aromatic and less reactive NOM in streams. Not studied in this project were biotic variables (e.g. in-stream and riparian invertebrates, microbes and algae), which would also be affected by temperature regimes and would display dynamic fluctuations with NOM quantity and quality.
 
 \  
 
@@ -490,13 +483,15 @@ Approximately 80% of the time during hydrologic pulses in the wet season, monito
 
 \  
 
-Wet season NOM dynamics followed the Pulse Shunt Concept, with greater concentrations of DOC moving through the streams near peak flow, relative to other stream stages. There was also a longitudinal reduction in wet-season NOM quantity and reactive quality along the reach of Leech WSA streams. In the wet season, spatial NOM dynamics also followed predictions of the River Continuum Concept (RCC) in that NOM quantity and reactive quality decreased from headwaters to higher order streams, though this may have been due more to dilution effects than ecological processing. Counter to anticipated RCC-based patterns, NOM with greater aromaticity and molecular size was found at downstream sites in the dry season. Further exploration of NOM quality across stream reaches in the dry season may yield insights into variable sources such as relative groundwater contributions to dry-season baseflow.   
+Overall, wet season NOM dynamics followed the Pulse Shunt Concept, with greater concentrations of DOC moving through the streams near peak flow, relative to other stream stages. There was also a longitudinal reduction in wet-season NOM quantity and reactive quality along the reach of Leech WSA streams. In the wet season, spatial NOM dynamics also followed predictions of the River Continuum Concept (RCC) in that NOM quantity and reactive quality decreased from headwaters to higher order streams, though this may have been due more to dilution effects than ecological processing. Counter to anticipated RCC-based patterns, NOM with greater aromaticity and molecular size was found at downstream sites in the dry season. Further exploration of NOM quality across stream reaches in the dry season may yield insights into variable sources such as relative groundwater contributions to dry-season baseflow.   
 
 \  
 
 Although sampling stage was directly related to rain conditions in the Leech WSA, in that more rain generated greater stream rise (and therefore discharge), antecedent rain was relatively more important as a predictor for NOM quality than sampling stage was. These results indicated that antecedent landscape wetness created greater hydrologic connectivity to terrestrial NOM source pools, and that connectivity was more important than stream stage itself. Antecedent wetness has been shown to be important for pre-concentration of soluble allochthonous NOM and associated constituents [@Oswald2014], and increasing hydrologic connectivity for greater fluvial NOM export [@Kiewiet2020; @McMillan2018; @Biron1999; @McGuire2010; @Musolff2018]. 
 
 \  
+
+### Future directions
 
 In the future, Vertical Rack sampling (and matched filling-stage with continuous logger stage) could be combined with a rating curve to determine mass transport or loading. Combining methods of vertical sampling racks with standard synoptic grab sampling provided useful time-stamped discrete river samples data that could be adapted and correlated to local rating curves to calculate loads of river material (e.g. nutrients, metals, organics, etc.) exported from monitored catchments. Material transport loads are important for management decisions and comprehensive system understanding. 
 
