@@ -1,7 +1,7 @@
 --- 
 title: "Spatial and temporal variation in natural organic matter quantity (as dissolved organic carbon) and quality (via UV-Vis spectroscopy) across a second growth forested drinking water supply area on Vancouver Island, BC"
 author: "Hannah J. McSorley"
-date: "2020"
+date: "December 2020"
 site: bookdown::bookdown_site
 output:
   bookdown::word_document2:

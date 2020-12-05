@@ -56,13 +56,9 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/summary_samples-count.csv", col_
 
 \  
 
-Mean DOC across the GVWSA was 6.1 mg/L (± 43%), which included the rising limb samples collected in the Leech WSA. This average concentration was similar to Malcolm Knapp Research Forest, near Maple Ridge on the lower mainland (near Vancouver, BC), where a forested basin (0.97 km^2^) had a mean baseflow DOC concentration of approximately 4.5 mg/L with ~2 mg/L increase during events [@Mistick2019]. 
-
-\  
-
 #### Spatial patterns in NOM quantity and quality  
 
-From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation (RSD = std.dev/mean) for DOC in each of the synoptically sampled sites was at least 24% and at most 71%.
+From 366 quality-controlled river water samples collected over 16 months, DOC ranged from 1.6 to 19.1 mg/L (5.7 mg/L median) with mean DOC of 6.1 ± 2.9 mg/L overall. The relative standard deviation (RSD = std.dev/mean) for DOC in each of the synoptically sampled sites was at least 24% and at most 71%. Mean DOC across the GVWSA was 6.1 mg/L (± 43%), which included the rising limb samples collected in the Leech WSA.
 
 \  
 
@@ -193,7 +189,7 @@ read_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Ch3_seasonal-summary_conc-char.c
 
 \  
 
-DOC concentration (as NPOC) was well correlated with SAC~254~ during the wet season (R^2^ = 0.896, _n_ = 149) and during the transition from dry to wet seasons (first-flush event, R^2^ = 0.916, _n_ = 14), but the relationship between DOC concentration and SAC~254~ was weak during the dry season (R^2^ = 0.396, _n_ = 25). The seasonal discrepancy between NOM concentration and spectral character is indicative of a shift in NOM source pools between seasons, with allochthonous (humic-like, aromatic) sources contributing in the wet season and autochthonous (biolabile algal-derived, aliphatic) sources dominating in the dry season (Figure \@ref(fig:seasonalDOCest)). 
+DOC concentration (as NPOC) was well correlated with SAC~254~ during the wet season (r = 0.9466, _n_ = 149) and during the transition from dry to wet seasons (first-flush event, r = 0.9571, _n_ = 14), but the relationship between DOC concentration and SAC~254~ was weak during the dry season (r = 0.6293, _n_ = 25). The seasonal discrepancy between NOM concentration and spectral character is indicative of a shift in NOM source pools between seasons, with allochthonous (humic-like, aromatic) sources contributing in the wet season and autochthonous (biolabile algal-derived, aliphatic) sources dominating in the dry season (Figure \@ref(fig:seasonalDOCest)). 
 
 \  
 
@@ -236,7 +232,7 @@ At all monitoring sites rising-limb Rack samples had higher mean DOC compared to
 
 \  
 
-Four of the six monitoring sites had more reactive NOM in on the rising limb than at other sampled flows. Leech-head and Weeks Creek both had slightly less reactivity NOM in rising-limb samples. These two sites also had higher minimum concentration of DOC collected outside of the hydrograph rising limb, by Grab sample (Table \@ref(tab:wetDOCinstallSites)). Weeks Creek had the greatest quantity of NOM with the most reactive character of all monitoring sites. Weeks had more variable but less reactive NOM moving through the rising limb of event flows (SAC~254~ 28.7 m^-1^ ± 47%) compared to other flow conditions (33.0 m^-1^ ± 9%). A similar pattern was seen downstream at Leech-head, where slightly more variable and less reactive NOM (SAC~254~ 24.04 m^-1^ ± 26%) occurred in rising limb samples than not (24.92 m^-1^ ± 8%). The other monitoring sites showed consistently more reactive NOM with greater variance in rising limb event flows (Table \@ref(tab:wetDOCinstallSites)). 
+Four of the six monitoring sites had more reactive NOM on the rising limb than at other sampled flows. Leech-head and Weeks Creek both had slightly less reactivity NOM in rising-limb samples. These two sites also had higher minimum concentration of DOC collected outside of the hydrograph rising limb, by Grab sample (Table \@ref(tab:wetDOCinstallSites)). Weeks Creek had the greatest quantity of NOM with the most reactive character of all monitoring sites. Weeks had more variable but less reactive NOM moving through the rising limb of event flows (SAC~254~ 28.7 m^-1^ ± 47%) compared to other flow conditions (33.0 m^-1^ ± 9%). A similar pattern was seen downstream at Leech-head, where slightly more variable and less reactive NOM (SAC~254~ 24.04 m^-1^ ± 26%) occurred in rising limb samples than not (24.92 m^-1^ ± 8%). The other monitoring sites showed consistently more reactive NOM with greater variance in rising limb event flows (Table \@ref(tab:wetDOCinstallSites)). 
 
 \  
 
@@ -286,7 +282,7 @@ Weeks Creek, which drains from Weeks Lake and surrounding wetlands, had the grea
 
 \  
 
-Data from the West Leech suggests that the pulse shunt concept [@Raymond2016] is particularly relevant to NOM transport in this sub-basin system. Samples from the West Leech site had high aromaticity compared to other higher-order streams and showed considerable event-based changes in NOM concentration (45% difference between Grab and Rack samples) relative to the other monitoring sites. The West Leech sub-basin (20.85 km^2^) was of similar size to Leech-head (20.59 km^2^) and Cragg creek sub-basin (28.06 km^2^), with lower percent wetland cover (0.4% compared to 2.6% and 1.6% at Leech-head and Cragg creek sub-basins). The West Leech sub-basin was the only sampled sub-basin that did not have metamorphic parent-material (wark gneiss). 
+Data from the West Leech suggests that the pulse shunt concept [@Raymond2016] is particularly relevant to NOM transport in this sub-basin system. Samples from the West Leech site had high aromaticity compared to other higher-order streams and showed considerable event-based changes in NOM concentration (45% difference between Grab and Rack samples) relative to the other monitoring sites. The West Leech sub-basin (20.85 km^2^) was of similar size to Leech-head (20.59 km^2^) and Cragg Creek sub-basin (28.06 km^2^), with lower percent wetland cover (0.4% compared to 2.6% and 1.6% at Leech-head and Cragg creek sub-basins). The West Leech sub-basin was the only sampled sub-basin that did not have metamorphic parent-material (wark gneiss). Chapter 4 evaluates watershed features and hydroclimatic conditions to identify possible drivers that could explain differences among sites’ NOM dynamics.
 
 \  
 
@@ -300,7 +296,7 @@ While the absolute magnitude of DOC varied among sites, NOM quantity across the 
 
 \  
 
-DOC concentrations increased over the summer, reaching highs for the start of the wet season. Overall, there was negligible difference in NOM quantity between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. Seasonal changes in the relationship between DOC and SAC~254~ were observed across the GVWSA. Aqueous NOM was larger, more aromatic and more reactive during the wet seasons than during the dry season. More aromatic NOM in the wet season was likely sourced from autochthonous terrestrial sources (e.g. humic and fluvic acids), while the less aromatic dry season NOM was probably made up of autochthonous NOM from in-stream processes (e.g. algae). The seasonal shift in NOM quality from autochthonous to allochthonous material was predicted by the river continuum concept [@Vannote1980; @Mosher2015; @Meyer1983]. 
+DOC concentrations increased over the summer, reaching highs for the start of the wet season. Overall, there was negligible difference in average NOM quantity between seasons; both wet and dry seasons had mean DOC of 6 ± 3 mg/L. Seasonal changes in the relationship between DOC and SAC~254~ were observed across the GVWSA. Aqueous NOM was larger, more aromatic and more reactive during the wet seasons than during the dry season. More aromatic NOM in the wet season was likely sourced from autochthonous terrestrial sources (e.g. humic and fluvic acids), while the less aromatic dry season NOM was probably made up of autochthonous NOM from in-stream processes (e.g. algae). The seasonal shift in NOM quality from autochthonous to allochthonous material was predicted by the river continuum concept [@Vannote1980; @Mosher2015; @Meyer1983]. 
 
 \ 
 
@@ -308,7 +304,7 @@ The river continuum concept explains temporal changes in NOM character through v
 
 \  
 
-In general, stream DOC concentrations were higher than the recommended 4 mg/L of TOC for source water quality [@BC2019]. However, future inter-basin transfers would move Leech River water to a reservoir prior to intake for drinking water treatment, and reservoir dynamics would likely alter the quantity and quality of stream NOM [@Stanley2012; @Aiken1995]. 
+Mean DOC across the GVWSA (6.1 mg/L ± 43%) was similar to Malcolm Knapp Research Forest, near Maple Ridge on the lower mainland (near Vancouver, BC), where a forested basin (0.97 km^2^) had a mean baseflow DOC concentration of approximately 4.5 mg/L with ~2 mg/L increase during events [@Mistick2019]. In general, stream DOC concentrations were higher than the recommended 4 mg/L of TOC for source water quality [@BC2019]. However, future inter-basin transfers would move Leech River water to a reservoir prior to intake for drinking water treatment, and reservoir dynamics would likely alter the quantity and quality of stream NOM [@Stanley2012; @Aiken1995]. 
 
 \  
 
@@ -332,11 +328,12 @@ The objective of this work was to design a sampling strategy to measure the rang
 
 \  
 
-The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method can achieve good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be informative to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Expanded comparisons between the Leech Tunnel site, with Rithet and Judge Creeks would be particularly informative if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegradation of NOM).  
+The combination of Vertical Rack sampling with Grab sampling at the Leech Tunnel captured the same variance in DOC concentrations as Grab sampling alone at three upstream sites, which indicates that this combined method can achieve good resolution for water quality monitoring. For further comparisons between the Leech and Sooke WSA, it would be informative to install Vertical Racks at the main tributaries to Sooke Reservoir, Rithet and Judge creeks, to compare event-based changes in more detail to Leech River. Collecting samples on the recession limb would further improve comparisons between the Leech Tunnel site, with Rithet and Judge Creeks. These comparisons would be particularly informative if conducted in conjunction with Sooke Reservoir water balance and residence time studies to evaluate changes to riverine source water in a reservoir (e.g. photodegradation of NOM).  
 
 \  
 
-Longitudinal attenuation of NOM concentration and character suggests that there is a downstream dilution effect. These results imply that if a disturbance in headwater systems were to affect NOM (as well as related water quality parameters), the effect would be greatly reduced at downstream sites (e.g. Leech Tunnel). This is encouraging for possible experimental forest treatments (e.g. prescribed burning) in the Leech WSA headwaters. The scaling of DOC from upstream to downstream also bodes well for future inter-basin transfers and drinking water treatability, as lower DOC and SAC~254~ typically result in fewer DBPS being generated, lower risk of biofouling and more effective disinfection with oxidants. Similar DOC concentrations observed at Rithet Creek (primary tributary to Sooke Reservoir) and Leech River at the Tunnel is promising from a source water perspective for future supplemental supply from the Leech.
+Longitudinal attenuation of NOM concentration and character suggests that there is a downstream dilution effect. These results imply that if a disturbance in headwater systems were to affect NOM (as well as related water quality parameters), the effect could be greatly reduced at downstream sites (e.g. Leech Tunnel). This is encouraging for possible experimental forest treatments (e.g. prescribed burning) in the Leech WSA headwaters. Prescribed burning (e.g. broadcast or pile and burn) affects stream nutrients, sediments, dissolved solids and dissolved oxygen [@Pike2010]. While fire-related changes to NOM DBP-FP reactivity are dependent on the fire temperature and oxygen availability [@Wang2015], a burned catchment will generally have elevated turbidity and DOC concentrations [@Emelko2011]. 
+The scaling of DOC from upstream to downstream also bodes well for future inter-basin transfers and drinking water treatability, as lower DOC and SAC~254~ typically result in fewer DBPS being generated, lower risk of biofouling and more effective disinfection with oxidants. Similar DOC concentrations observed at Rithet Creek (primary tributary to Sooke Reservoir) and Leech River at the Tunnel is promising from a source water perspective for future supplemental supply from the Leech.
 
 \ 
 

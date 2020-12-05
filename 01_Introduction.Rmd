@@ -2,7 +2,7 @@
 output: bookdown::word_document2
 ---
 
-##	Introduction & background
+##	Introduction and Background
 
 ###	Forested source water and drinking water treatment 
 	
@@ -14,7 +14,7 @@ In Canada, drinking water is deemed safe for human use and consumption if it mee
 
 \  
 
-Drinking water treatment requirements vary with source water quality [@Levine2016], thus guidelines are in place for source water as well as those for treated drinking water [@HealthLinkBC2018; @BC2019]. Source water quality affects treatment requirements, thus there are guidelines for parameters like turbidity, temperature, dissolved oxygen, pH and dissolved organic matter. Stable source water conditions lead to predictable treatment procedures, while fluctuating source water quality can create treatment challenges [@Emelko2011]. Treatment effectiveness is influenced, for example, by turbidity levels (i.e. suspended solids), varying temperature, dissolved oxygen, pH and dissolved natural organic matter. Because of this, having both an understanding of source water dynamics and impacts of land use/disturbance is critical to designing effective treatment.
+Source water quality affects treatment requirements, thus guidelines are in place for source water parameters like turbidity, temperature, dissolved oxygen, pH and dissolved organic matter [@Levine2016; @HealthLinkBC2018; @BC2019]. Stable source water conditions lead to predictable treatment procedures, while fluctuating source water quality can create treatment challenges [@Emelko2011]. Treatment effectiveness is influenced, for example, by turbidity levels (i.e. suspended solids), varying temperature, dissolved oxygen, pH and dissolved natural organic matter. Because of this, having both an understanding of source water dynamics and impacts of land use/disturbance is critical to designing effective treatment.
 
 \  
 
@@ -80,7 +80,7 @@ Aspects of both the RCC and PSC were illustrated in a recent nested catchment st
 
 \  
 
-Forest management and landscape disturbances can also affect water quality by altering material inputs, biogeochemical processes and stream ecology, as well as changing preferential flow-paths and the mobilization, transport and dilution of biogeochemical components [@Meyer1983]. For example, wildfire combined with post-fire salvage logging in the slopes of Alberta's southern Rockies resulted in higher turbidity and DOC compared to basins that experienced fire without salvage logging, and both disturbed basins had elevated suspended solids and DOC compared to un-burned catchments [@Emelko2011]. In other studies, it was shown that two to three years post-harvest, baseflow DOC concentrations were higher in forested catchments than in clear-cut catchments; however, these studies also showed variable stormflow DOC responses in harvested and forested catchments [@Meyer1983; @Mistick2019]. In the absence of long-term baseline data (i.e. pre- and post-disturbance data sets), the natural variability in fluvial processes complicates land-use studies and anthropogenic climate change can further confound our interpretations. Overall, NOM relationships to land-use are highly dependent on catchment attributes and hydrology. Understanding the hydrochemistry of a water supply area is key to conducting informed preventative forest management applications.
+Forest management and landscape disturbances can also affect water quality by altering material inputs, biogeochemical processes and stream ecology, as well as changing preferential flow-paths and the mobilization, transport and dilution of biogeochemical components [@Meyer1983]. For example, wildfire combined with post-fire salvage logging in the slopes of Alberta's southern Rockies resulted in higher turbidity and DOC compared to basins that experienced fire without salvage logging, and both disturbed basins had elevated suspended solids and DOC compared to un-burned catchments [@Emelko2011]. In other studies, it was shown that two to three years post-harvest, baseflow DOC concentrations were higher in forested catchments than in clear-cut catchments; however, these studies also showed variable stormflow DOC responses in harvested and forested catchments [@Meyer1983; @Mistick2019]. In the absence of long-term baseline data (i.e. pre- and post-disturbance data sets), the natural variability in fluvial processes complicates land-use studies and anthropogenic climate change can further confound our interpretations. Overall, NOM relationships to land-use are highly dependent on catchment attributes and hydrology. Understanding the hydrochemistry of a water supply area is key to interpreting changes in water quality related to forest management or landscape level disturbances.
 
 \  
 

@@ -5,7 +5,7 @@ bookdown::word_document2:
   lof: true
   lot: true
   fig_caption: yes
-  toc_depth: 4
+  toc_depth: 5
   toc_unnumbered: no
   toc_appendix: yes
   keep_tex: true

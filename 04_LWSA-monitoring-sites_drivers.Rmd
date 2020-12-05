@@ -88,11 +88,11 @@ Equation 1: $$normalized ~ X_{i} = \frac { (X_{i} - X_{min}) }{ (X_{max} - X_{mi
 
 \  
 
-RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a means for quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results (below). 
+RF is a black box; for that reason, a variable of random numbers was included in the VIM assessment as a means for quality assurance (QA). VIM assessment, with the QA variable, was completed for watershed characteristics and conditions to ensure that random numbers were not assigned any predictor importance. The QA variable was removed from final assessment and is not displayed in results. 
 
 \  
 
-Following RF VIM analyses, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Results of RF VIM assessment were also used to retrospectively infer importance of variables that were excluded from VIM due to their cross correlation(s). Where possible, important predictor variables were assessed for hysteretic behaviour. 
+Following RF VIM analyses, the variables with relatively greatest predictor importance were further explored by evaluating their one-on-one relationships with NOM concentration and character. Results of RF VIM assessment were also used to retrospectively infer importance of variables that were excluded from VIM due to their cross correlation(s). Where possible, important predictor variables were assessed for hysteretic behavior. 
 
 \  
 
@@ -148,7 +148,13 @@ Here, variables were separated based on whether they were static or dynamic with
 
 ### Results
 
+\  
+
 #### Random Forest variable importance
+
+Watershed characteristic variables (i.e. metamorphic parent-material, percent igneous parent material, drainage area, mean basin slope, average tree age, logging history) and sampling conditions (i.e. antecedent 7-day mean air temperatures, antecedent 30-day cumulative rain, normalized sampling stage) were evaluated using RF VIM. 
+
+\  
 
 ##### Predicting DOC concentration: NOM quantity 
 
@@ -226,6 +232,7 @@ knitr::include_graphics("R-outputs_UBC-forWater-MSc_HMc/figures/Ch4_RF_stage.png
 ```
 
 \  
+
 
 ###### Antecedent 7-day air temperature
 
@@ -452,8 +459,7 @@ Antecedent wetness is an important watershed driver for NOM export as it influen
 
 \  
 
-A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). Early in the wet season there was a decrease in NOM quantity with increasing flows (higher stage), and as the wet season progresses, stream NOM quantity and aromaticity increased with increasing flows. 
-These results show a temporal shift in NOM source pools, from those of limited supply early in the wet season, to those of near-unlimited supply later in the wet season [@Zarnetske2018]. In the Leech WSA monitoring sites, the most aromatic and highest molecular weight NOM samples were collected late in the wet season. Late wet-season samples results were more in line with the pulse-shunt concept than early wet-season samples (PSC, @Raymond2016, @Aguilera2018).
+A pattern in DOC concentration during rising stage can provide information about NOM source and flux dynamics. Increasing DOC with rising stage suggests NOM transport dynamics were driven by hydrologic connectivity to an unlimited supply of source material. Alternatively, if DOC concentrations decreased with rising stage it's likely that the NOM source pool was limited [@Zarnetske2018]. Event-based rising limb changes in DOC concentration varied from a little more than 1% (at Leech-head and the Tunnel) to 95% (at West Leech). Early in the wet season there was a decrease in NOM quantity with increasing flows (higher stage), and as the wet season progresses, stream NOM quantity and aromaticity increased with increasing flows. These results show a temporal shift in NOM source pools, from those of limited supply early in the wet season, to those of near-unlimited supply later in the wet season [@Zarnetske2018]. In the Leech WSA monitoring sites, the most aromatic and highest molecular weight NOM samples were collected late in the wet season. Late wet-season samples results were more in line with the pulse-shunt concept than early wet-season samples (PSC, @Raymond2016, @Aguilera2018).
 
 \  
 
@@ -461,7 +467,7 @@ Certainly, stream discharge is well respected as a key driver for NOM flux in st
 
 \  
 
-Across the Leech WSA, stream samples with the highest DOC were collected at the highest sampled stage 83% of the time; and there was an 80% co-occurrence of low DOC with low sampling stage. These results indicate an overall pattern of increasing DOC with stage, suggesting that approximately 80% of the time Leech Watershed streams were hydrologically connected to a rich supply of NOM. Furthermore, there was a positive relationship between sample aromaticity and stage at the Tunnel, where streamflow from all sub-basins' is integrated; when coupled with the observed stage-DOC dynamics, this indicates that the supply of NOM was humic in origin approximately 80% of the time.
+Across the Leech WSA, stream samples with the highest DOC were collected at the highest sampled stage 83% of the time; and there was an 80% co-occurrence of low DOC with low sampling stage. These results indicate an overall pattern of increasing DOC with stage, suggesting that approximately 80% of the time Leech Watershed streams were hydrologically connected to a near-unlimited supply of NOM. Furthermore, there was a positive relationship between sample aromaticity and stage at the Tunnel, where streamflow from all sub-basins' is integrated; when coupled with the observed stage-DOC dynamics, this indicates that the supply of NOM was humic in origin approximately 80% of the time. These results also parallel numbers found in a large (n = 1006) and geographically diverse data study across ecoregions in the United States which showed that increasing flows systematically increased DOC fluxes in 80% of watersheds [@Zarnetske2018].
 
 \  
 
@@ -473,7 +479,7 @@ The quantity of stream NOM was greatest early in the wet season, with peak DOC c
 
 \  
 
-### Summary 
+### Summary
 
 Spatial variation in aqueous NOM quantity and quality was determined to be partly driven by sub-basin parent material. Parent material and soil types are linked to chemical loads in surface waters, which can be partially attributed to differences in hydraulic conductivity and water storage capacity [@Musolff2015]. Geological factors have been linked to stream alkalinity and total dissolved solids (e.g. @Johnson1997) and inorganic chemicals [@Feller2005]. As geological weathering is strongly linked to temperature, as well as physical forces (e.g. @Feller2005), the RF VIM results of warm and wet conditions coupled with sub-basin parent material point to a set of interrelated abiotic drivers for aqueous NOM dynamics. Although the precise relationship was not completely resolved, it was evident that a greater proportion of metamorphic parent material corresponded to lower concentrations of less aromatic and less reactive NOM in streams. Not studied in this project were biotic variables (e.g. in-stream and riparian invertebrates, microbes and algae), which would also be affected by temperature regimes and would display dynamic fluctuations with NOM quantity and quality.
 
