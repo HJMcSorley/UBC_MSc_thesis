@@ -5374,6 +5374,15 @@ RF_DOC_allChrc_RelImp1_MSE <- randomForest::importance(DOC_allVars_RF, type = 1)
       predictor == "till (DU-HFP, %)" ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group)) 
 
+# write a table summarizing VIM
+RF_DOC_allChrc_RelImp1_MSE %>% 
+  mutate(MSE_percent = round(MSE_percent, 2)) %>% 
+  select(predictor, variable_group, MSE_percent) %>% 
+  arrange(-MSE_percent) %>% 
+  rename("Predictor" = predictor,
+         "Variable Group" = variable_group, 
+         "Relative Importance (%)" = MSE_percent ) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix-Ch4_RF_DOC.csv")
 
 
 # VIM plot
@@ -5562,6 +5571,17 @@ RF_E2E3_allChrc_RelImp1_MSE <- randomForest::importance(E2E3_allVars_RF, type = 
   mutate(variable_group = factor(variable_group))  
 
 
+# write a table summarizing VIM
+RF_E2E3_allChrc_RelImp1_MSE %>% 
+  mutate(MSE_percent = round(MSE_percent, 2)) %>% 
+  select(predictor, variable_group, MSE_percent) %>% 
+  arrange(-MSE_percent) %>% 
+  rename("Predictor" = predictor,
+         "Variable Group" = variable_group, 
+         "Relative Importance (%)" = MSE_percent ) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix-Ch4_RF_E2E3.csv")
+
+
 # VIM plot
 RFplot_all_E2E3 <- RF_E2E3_allChrc_RelImp1_MSE %>% 
   ggplot(aes(x = predictor, y = MSE_percent)) +
@@ -5667,6 +5687,17 @@ RF_SAC254_allChrc_RelImp1_MSE <- randomForest::importance(SAC254_allVars_RF, typ
     predictor == "metamorphic (%)" |
       predictor == "igneous (%)"  ~ "Parent material") ) %>%
   mutate(variable_group = factor(variable_group))  
+
+
+# write a table summarizing VIM
+RF_SAC254_allChrc_RelImp1_MSE %>% 
+  mutate(MSE_percent = round(MSE_percent, 2)) %>% 
+  select(predictor, variable_group, MSE_percent) %>% 
+  arrange(-MSE_percent) %>% 
+  rename("Predictor" = predictor,
+         "Variable Group" = variable_group, 
+         "Relative Importance (%)" = MSE_percent ) %>% 
+  write_csv("R-outputs_UBC-forWater-MSc_HMc/tables/Appendix-Ch4_RF_SAC254.csv")
 
 
 # VIM plot

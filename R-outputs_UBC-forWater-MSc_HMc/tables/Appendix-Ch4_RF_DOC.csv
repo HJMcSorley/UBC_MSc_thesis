@@ -1,0 +1,10 @@
+Predictor,Variable Group,Relative Importance (%)
+antecedent 7-day air temp,Conditions,14.94
+antecedent 30-day rain,Conditions,12.92
+"slope (mean, degrees)",Surface characteristics,11.93
+metamorphic (%),Parent material,11.22
+sampling stage,Conditions,10.94
+"tree age (average, yrs)",Surface characteristics,10.85
+drainage area,Surface characteristics,10.09
+logging history (1980-2011),Surface characteristics,9.57
+igneous (%),Parent material,7.53
