@@ -677,6 +677,28 @@ Hobo %>%
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_box-by-location_daily.png", 
        width = 5.5, height = 5.5, units = "in") 
+
+
+# compare air and water temps (linear relations?)
+Hobo %>%
+  #filter(rain_season == "dry") %>% 
+  #filter(rain_season == "wet") %>%
+  select(DateTime, TidbiT_location, site, Date, rain_season, Temp_C_fullwet) %>% 
+  pivot_wider(names_from = TidbiT_location,
+              values_from = Temp_C_fullwet) %>% 
+  ggplot(aes(x = air, y = water))+
+  geom_point(alpha = 0.5)+
+  scale_color_brewer(palette = "Dark2")+ 
+  theme_bw()+
+  facet_wrap(~site, ncol = 2, scales = "free", strip.position = "top") +
+  labs(x = "Air Temperature (°C)", y = "Water Temperature (°C)")+
+  theme(text = element_text(size = 12))
+
+# save
+ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/TidbiTs_air-water.png", 
+       width = 6, height = 7, units = "in")
+
+
 ```
 
 ## Compare Hobo / LWSA
@@ -9101,7 +9123,7 @@ d <- treatdat_full %>%
 
 # join side by side
 cowplot::plot_grid(a, b, c, 
-                   ncol = 3, align = "h", rel_widths = c(1.25, 1, 2.15)) 
+                   ncol = 3, align = "h", rel_widths = c(1.25, 1, 1.9)) 
 # save
 ggsave("R-outputs_UBC-forWater-MSc_HMc/figures/appendix_treatability_DOC-UV254-SUVA.png",
        width = 6, height = 6.5, units = "in")
